@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Activity as ActivityIcon, Wrench } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type ActivityEvent } from "@/lib/api-client";
 import { fmtDateTime, humanize, timeAgo } from "@/lib/format";
@@ -42,17 +43,20 @@ function ActivityPage() {
     >
       <div className="mt-6">
         {events.length === 0 ? (
-          <div className="rounded-3xl bg-card p-10 text-center shadow-[var(--shadow-card)]">
-            <ActivityIcon className="mx-auto size-8 text-muted-foreground" />
-            <p className="mt-3 font-medium">No activity yet</p>
-            <p className="text-sm text-muted-foreground">Booking events will show up here.</p>
-          </div>
+          <EmptyState
+            icon={ActivityIcon}
+            title="No activity yet"
+            description="Booking events — confirmations, payments, updates — will show up here."
+            actionLabel="Browse Services"
+            actionTo="/services"
+          />
         ) : (
           <ol className="space-y-3">
             {events.map((ev, idx) => (
               <li
                 key={idx}
-                className="flex items-start gap-4 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)]"
+                style={{ animationDelay: `${idx * 40}ms` }}
+                className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-start gap-4 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)]"
               >
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Wrench className="size-5" />
