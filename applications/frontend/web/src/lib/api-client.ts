@@ -163,6 +163,8 @@ export interface SupportTicket {
   created_at: string;
   updated_at: string;
   message_count?: number;
+  first_response_at?: string | null;
+  last_support_message_at?: string | null;
 }
 
 export interface TicketMessage {
