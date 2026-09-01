@@ -107,8 +107,13 @@ export interface Promotion {
   promo_id: string;
   code: string;
   name: string;
+  description?: string | null;
   discount_type: string;
   discount_value: number;
+  min_amount?: number | null;
+  max_discount?: number | null;
+  usage_limit?: number | null;
+  used_count?: number;
   valid_from: string;
   valid_until: string;
 }
