@@ -17,6 +17,12 @@ class RatingSubmitRequest(BaseModel):
 router = APIRouter(prefix="/ratings", tags=["ratings"])
 
 
+@router.get("")
+async def list_mine(customer: CurrentCustomer) -> dict:
+    svc = get_composition().rating_service()
+    return ok(await svc.list_mine(str(customer["customer_id"])))
+
+
 @router.post("/{booking_id}", status_code=201)
 async def submit_rating(booking_id: str, payload: RatingSubmitRequest, customer: CurrentCustomer) -> dict:
     svc = get_composition().rating_service()
