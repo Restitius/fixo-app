@@ -15,6 +15,7 @@ import {
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { BookingDetailsDialog } from "@/components/dashboard/BookingDetailsDialog";
 import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { useAuth } from "@/lib/auth-context";
@@ -142,10 +143,10 @@ function BookingsPage() {
   const currency = rows?.[0]?.currency ?? "TZS";
 
   const STATS = [
-    { icon: Calendar, iconBg: "bg-primary/10", iconColor: "text-primary", value: String(upcomingCount), label: "Upcoming Bookings" },
-    { icon: CheckCircle2, iconBg: "bg-success-muted", iconColor: "text-success-foreground", value: String(completedThisMonth), label: "Completed This Month" },
-    { icon: CreditCard, iconBg: "bg-[oklch(0.93_0.09_75)]", iconColor: "text-[oklch(0.55_0.16_60)]", value: fmtMoney(pendingPayments.reduce((s, b) => s + b.agreed_amount, 0), currency), label: "Pending Payments" },
-    { icon: TrendingUp, iconBg: "bg-primary/10", iconColor: "text-primary", value: fmtMoney(totalSpent, currency), label: "Total Spent" },
+    { icon: Calendar, tone: "primary" as const, value: String(upcomingCount), label: "Upcoming Bookings", hint: "Scheduled ahead" },
+    { icon: CheckCircle2, tone: "success" as const, value: String(completedThisMonth), label: "Completed This Month", hint: "This calendar month" },
+    { icon: CreditCard, tone: "amber" as const, value: fmtMoney(pendingPayments.reduce((s, b) => s + b.agreed_amount, 0), currency), label: "Pending Payments", hint: "Awaiting authorization" },
+    { icon: TrendingUp, tone: "primary" as const, value: fmtMoney(totalSpent, currency), label: "Total Spent", hint: "All time" },
   ];
 
   const emptyStateFor: Record<(typeof TABS)[number], { icon: typeof CalendarX; title: string; description: string; actionLabel: string; actionTo: string }> = {
@@ -196,13 +197,7 @@ function BookingsPage() {
       {/* Stat cards */}
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {STATS.map((s) => (
-          <div key={s.label} className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-            <span className={`flex size-11 items-center justify-center rounded-2xl ${s.iconBg} ${s.iconColor}`}>
-              <s.icon className="size-5" />
-            </span>
-            <p className="mt-4 text-2xl font-bold tracking-tight">{s.value}</p>
-            <p className="mt-0.5 text-sm text-muted-foreground">{s.label}</p>
-          </div>
+          <MetricCard key={s.label} icon={s.icon} label={s.label} value={s.value} hint={s.hint} tone={s.tone} />
         ))}
       </div>
 
