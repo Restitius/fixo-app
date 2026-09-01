@@ -147,6 +147,15 @@ export interface BookingHistoryRow {
   provider_name?: string | null;
 }
 
+export interface BookingRating {
+  rating_id: string;
+  booking_id: string;
+  provider_id: string;
+  rating: number;
+  comment?: string | null;
+  created_at: string;
+}
+
 export interface TimelineEvent {
   event: string;
   detail?: string | null;
@@ -291,6 +300,14 @@ export const fixoSdk = {
   activityFeed: (event?: string, limit = 50, offset = 0) =>
     apiClient
       .get<ActivityEvent[]>(`/history/activity${qs({ event, limit, offset })}`)
+      .then((r) => r.data),
+
+  // ---- Ratings --------------------------------------------------------------
+  // GET /ratings/{id} errors (and toasts) when a booking has no rating yet, so
+  // it isn't safe to poll speculatively — the Feedback page only submits.
+  submitRating: (bookingId: string, rating: number, comment?: string) =>
+    apiClient
+      .post<BookingRating>(`/ratings/${bookingId}`, { rating, comment: comment || undefined })
       .then((r) => r.data),
 
   // ---- Notifications ------------------------------------------------------
