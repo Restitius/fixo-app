@@ -18,6 +18,7 @@ import {
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { BookingDetailSheet } from "@/components/dashboard/BookingDetailSheet";
 import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { Button } from "@/components/ui/button";
@@ -182,19 +183,19 @@ function PaymentsPage() {
       onLogout={logout}
     >
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard
+        <MetricCard
           icon={CreditCard}
           label="Saved Methods"
           value={String((methods ?? []).length)}
           hint={methods && methods.length > 0 ? `${defaultCount} default · ${backupCount} backup` : "No methods yet"}
         />
-        <StatCard
+        <MetricCard
           icon={TrendingUp}
           label="This Month Charges"
           value={fmtMoney(thisMonthCharges.reduce((s, c) => s + c.agreed_amount, 0), thisMonthCharges[0]?.currency ?? "TZS")}
           hint={`Across ${thisMonthCharges.length} booking${thisMonthCharges.length === 1 ? "" : "s"}`}
         />
-        <StatCard
+        <MetricCard
           icon={ShieldCheck}
           label="Pending Authorizations"
           value={fmtMoney(pending.reduce((s, c) => s + c.agreed_amount, 0), pending[0]?.currency ?? "TZS")}
@@ -405,29 +406,6 @@ function PaymentsPage() {
         title="Charge details"
       />
     </PageShell>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  hint,
-}: {
-  icon: typeof CreditCard;
-  label: string;
-  value: string;
-  hint: string;
-}) {
-  return (
-    <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-      <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-        <Icon className="size-5" />
-      </span>
-      <p className="mt-4 text-sm text-muted-foreground">{label}</p>
-      <p className="mt-0.5 text-2xl font-bold tracking-tight">{value}</p>
-      <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
-    </div>
   );
 }
 

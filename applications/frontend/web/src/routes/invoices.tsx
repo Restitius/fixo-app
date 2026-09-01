@@ -32,6 +32,7 @@ import {
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type InvoiceDetail, type InvoiceRow, type PaymentMethod } from "@/lib/api-client";
@@ -182,10 +183,10 @@ function InvoicesPage() {
         {/* Main column — squeezes left when the panel is open */}
         <div className="min-w-0 flex-1">
           <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <StatCard icon={FileText} label="Total Invoices" hint="All time" value={String(totalInvoices)} />
-            <StatCard icon={CheckCircle2} label="Paid Invoices" hint="Completed" value={String(paidCount)} tone="success" />
-            <StatCard icon={Clock} label="Pending" hint="Awaiting payment" value={String(pendingCount)} tone="amber" />
-            <StatCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
+            <MetricCard icon={FileText} label="Total Invoices" hint="All time" value={String(totalInvoices)} />
+            <MetricCard icon={CheckCircle2} label="Paid Invoices" hint="Completed" value={String(paidCount)} tone="success" />
+            <MetricCard icon={Clock} label="Pending" hint="Awaiting payment" value={String(pendingCount)} tone="amber" />
+            <MetricCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
@@ -335,34 +336,6 @@ function InvoicesPage() {
   );
 }
 
-function StatCard({
-  icon: Icon,
-  label,
-  hint,
-  value,
-  tone,
-}: {
-  icon: typeof FileText;
-  label: string;
-  hint: string;
-  value: string;
-  tone?: "success" | "amber";
-}) {
-  return (
-    <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-      <span
-        className={`flex size-12 items-center justify-center rounded-2xl ${
-          tone === "success" ? "bg-success/15 text-success" : tone === "amber" ? "bg-amber-500/15 text-amber-600" : "bg-primary/10 text-primary"
-        }`}
-      >
-        <Icon className="size-6" />
-      </span>
-      <p className="mt-4 font-semibold">{label}</p>
-      <p className="text-2xl font-bold tracking-tight">{value}</p>
-      <p className="mt-0.5 text-sm text-muted-foreground">{hint}</p>
-    </div>
-  );
-}
 
 function Field({ icon: Icon, label, value }: { icon: typeof MapPin; label: string; value: string }) {
   return (

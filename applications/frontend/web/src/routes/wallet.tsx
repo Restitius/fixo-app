@@ -12,6 +12,7 @@ import {
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -107,30 +108,9 @@ function WalletPage() {
   return (
     <PageShell title="Wallet" subtitle="Your service wallet and ledger" userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <div
-          className="rounded-3xl p-5 text-primary-foreground shadow-[var(--shadow-card)]"
-          style={{ backgroundImage: "var(--gradient-primary)" }}
-        >
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-white/15">
-            <WalletIcon className="size-5" />
-          </span>
-          <p className="mt-4 text-2xl font-bold tracking-tight">{balance ? fmtMoney(balance.balance, balance.currency) : "—"}</p>
-          <p className="mt-0.5 text-sm opacity-80">Available Balance</p>
-        </div>
-        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-success/15 text-success">
-            <ArrowDownLeft className="size-5" />
-          </span>
-          <p className="mt-4 text-2xl font-bold tracking-tight">{fmtMoney(credited, currency)}</p>
-          <p className="mt-0.5 text-sm text-muted-foreground">Total Credited</p>
-        </div>
-        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-destructive/15 text-destructive">
-            <ArrowUpRight className="size-5" />
-          </span>
-          <p className="mt-4 text-2xl font-bold tracking-tight">{fmtMoney(debited, currency)}</p>
-          <p className="mt-0.5 text-sm text-muted-foreground">Total Debited</p>
-        </div>
+        <MetricCard icon={WalletIcon} label="Available Balance" hint="Right now" value={balance ? fmtMoney(balance.balance, balance.currency) : "—"} hero />
+        <MetricCard icon={ArrowDownLeft} label="Total Credited" hint="All time" value={fmtMoney(credited, currency)} tone="success" />
+        <MetricCard icon={ArrowUpRight} label="Total Debited" hint="All time" value={fmtMoney(debited, currency)} tone="destructive" />
       </div>
 
       <div className="mt-6 flex flex-wrap items-end gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
