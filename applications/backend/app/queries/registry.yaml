@@ -141,6 +141,13 @@ queries:
       ownership_filter_required: false
       requires_auth: false
     sql: customers/auth/session_revoke.sql
+  CUS.AUTH.SESSION.LIST_FOR_CUSTOMER:
+    description: CUS.AUTH.SESSION.LIST_FOR_CUSTOMER registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/auth/list_sessions.sql
   CUS.AUTH.SESSION.REVOKE_ALL:
     description: CUS.AUTH.SESSION.REVOKE_ALL registered query.
     operation: update

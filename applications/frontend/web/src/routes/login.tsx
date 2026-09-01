@@ -53,7 +53,7 @@ function LoginPage() {
         }
         navigate({ to: "/verify-otp", search: { email: values.email } });
       } else {
-        await login(values.email, values.password);
+        await login(values.email, values.password, navigator.userAgent);
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Login failed");
