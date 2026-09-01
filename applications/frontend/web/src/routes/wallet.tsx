@@ -1,9 +1,10 @@
 // Wallet — balance, ledger, and credit/debit actions.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useEffect, useState, useCallback } from "react";
-import { Wallet as WalletIcon, ArrowDownLeft, ArrowUpRight, RefreshCw } from "lucide-react";
+import { Wallet as WalletIcon, ArrowDownLeft, ArrowUpRight, RefreshCw, Receipt } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -125,13 +126,20 @@ function WalletPage() {
           <h3 className="text-lg font-semibold">Transactions</h3>
           <p className="mb-4 text-sm text-muted-foreground">Credits, debits and holds in order.</p>
           {txns.length === 0 ? (
-            <p className="py-10 text-center text-sm text-muted-foreground">
-              No transactions yet.
-            </p>
+            <EmptyState
+              icon={Receipt}
+              title="No transactions yet"
+              description="Credits, debits and holds on your wallet will show up here."
+              compact
+            />
           ) : (
-            <ul className="divide-y divide-border">
+            <ul className="space-y-2.5">
               {txns.map((t, i) => (
-                <li key={t.entry_id ?? i} className="flex items-center justify-between gap-3 py-3">
+                <li
+                  key={t.entry_id ?? i}
+                  style={{ animationDelay: `${i * 40}ms` }}
+                  className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-3 rounded-2xl border border-border p-4 transition-colors hover:bg-muted/40"
+                >
                   <div className="flex items-center gap-3">
                     <span
                       className={`flex size-9 items-center justify-center rounded-full ${
