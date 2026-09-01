@@ -244,6 +244,9 @@ export interface InvoiceDetail extends InvoiceRow {
   subtotal: number;
   tax_amount: number;
   scheduled_date?: string | null;
+  category_name?: string | null;
+  address_city?: string | null;
+  address_region?: string | null;
   items: InvoiceItem[];
 }
 
