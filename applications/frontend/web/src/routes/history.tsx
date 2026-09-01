@@ -26,6 +26,7 @@ import {
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { BookingDetailSheet } from "@/components/dashboard/BookingDetailSheet";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import {
   Select,
@@ -131,22 +132,6 @@ function HistoryPage() {
   );
 }
 
-function StatCard({ icon: Icon, label, value, tone }: { icon: typeof ClipboardList; label: string; value: string; tone?: "success" | "destructive" }) {
-  return (
-    <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-      <span
-        className={`flex size-11 items-center justify-center rounded-2xl ${
-          tone === "success" ? "bg-success/15 text-success" : tone === "destructive" ? "bg-destructive/15 text-destructive" : "bg-primary/10 text-primary"
-        }`}
-      >
-        <Icon className="size-5" />
-      </span>
-      <p className="mt-4 text-2xl font-bold tracking-tight">{value}</p>
-      <p className="mt-0.5 text-sm text-muted-foreground">{label}</p>
-    </div>
-  );
-}
-
 function statusColor(status: string) {
   const s = status.toUpperCase();
   if (["PAID", "CLOSED", "COMPLETED"].includes(s)) return "bg-success/15 text-success";
@@ -213,15 +198,15 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         {mode === "bookings" ? (
           <>
-            <StatCard icon={Calendar} label="Total Bookings" value={String(total)} />
-            <StatCard icon={CheckCircle2} label="Paid Jobs" value={String(paid)} tone="success" />
-            <StatCard icon={XCircle} label="Cancelled" value={String(cancelled)} tone="destructive" />
+            <MetricCard icon={Calendar} label="Total Bookings" hint="All time" value={String(total)} />
+            <MetricCard icon={CheckCircle2} label="Paid Jobs" hint="Completed" value={String(paid)} tone="success" />
+            <MetricCard icon={XCircle} label="Cancelled" hint="All time" value={String(cancelled)} tone="destructive" />
           </>
         ) : (
           <>
-            <StatCard icon={Receipt} label="Total Charged" value={fmtMoney(totalCharged, rows?.[0]?.currency ?? "TZS")} />
-            <StatCard icon={Clock} label="Pending Authorizations" value={String(authorized)} />
-            <StatCard icon={CheckCircle2} label="Fully Paid" value={String(paid)} tone="success" />
+            <MetricCard icon={Receipt} label="Total Charged" hint="All time" value={fmtMoney(totalCharged, rows?.[0]?.currency ?? "TZS")} />
+            <MetricCard icon={Clock} label="Pending Authorizations" hint="Awaiting capture" value={String(authorized)} tone="amber" />
+            <MetricCard icon={CheckCircle2} label="Fully Paid" hint="Completed" value={String(paid)} tone="success" />
           </>
         )}
       </div>
@@ -318,9 +303,9 @@ function WalletSection() {
   return (
     <>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard icon={ArrowDownLeft} label="Total Credited" value={fmtMoney(credits, currency)} tone="success" />
-        <StatCard icon={ArrowUpRight} label="Total Debited" value={fmtMoney(debits, currency)} tone="destructive" />
-        <StatCard icon={WalletIcon} label="Current Balance" value={fmtMoney(balance, currency)} />
+        <MetricCard icon={ArrowDownLeft} label="Total Credited" hint="All time" value={fmtMoney(credits, currency)} tone="success" />
+        <MetricCard icon={ArrowUpRight} label="Total Debited" hint="All time" value={fmtMoney(debits, currency)} tone="destructive" />
+        <MetricCard icon={WalletIcon} label="Current Balance" hint="Right now" value={fmtMoney(balance, currency)} />
       </div>
 
       <TableFilterBar
@@ -405,9 +390,9 @@ function LoyaltySection() {
   return (
     <>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard icon={ArrowDownLeft} label="Points Earned" value={fmtPoints(earned)} tone="success" />
-        <StatCard icon={ArrowUpRight} label="Points Spent" value={fmtPoints(spent)} tone="destructive" />
-        <StatCard icon={Award} label="Current Balance" value={fmtPoints(balance)} />
+        <MetricCard icon={ArrowDownLeft} label="Points Earned" hint="All time" value={fmtPoints(earned)} tone="success" />
+        <MetricCard icon={ArrowUpRight} label="Points Spent" hint="All time" value={fmtPoints(spent)} tone="destructive" />
+        <MetricCard icon={Award} label="Current Balance" hint="Right now" value={fmtPoints(balance)} />
       </div>
 
       <TableFilterBar
@@ -492,9 +477,9 @@ function InvoicesSection() {
   return (
     <>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard icon={FileText} label="Total Invoices" value={String(total)} />
-        <StatCard icon={CheckCircle2} label="Paid" value={String(paid)} tone="success" />
-        <StatCard icon={Receipt} label="Outstanding" value={fmtMoney(outstanding, rows?.[0]?.currency ?? "TZS")} />
+        <MetricCard icon={FileText} label="Total Invoices" hint="All time" value={String(total)} />
+        <MetricCard icon={CheckCircle2} label="Paid" hint="Completed" value={String(paid)} tone="success" />
+        <MetricCard icon={Receipt} label="Outstanding" hint="Awaiting payment" value={fmtMoney(outstanding, rows?.[0]?.currency ?? "TZS")} tone="amber" />
       </div>
 
       <TableFilterBar
