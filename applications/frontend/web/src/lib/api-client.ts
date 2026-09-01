@@ -333,4 +333,163 @@ export const fixoSdk = {
     apiClient.get<DataExport[]>("/account/privacy/exports").then((r) => r.data),
 };
 
+// ---------------------------------------------------------------------------
+// Booking flow — catalog browsing, addresses, service requests, matching,
+// quotations and bookings. Maps 1:1 onto the real customer booking workflow:
+// create request -> submit -> match -> select provider -> accept quote ->
+// confirm booking -> authorize payment.
+// ---------------------------------------------------------------------------
+
+export interface CatalogCategory {
+  category_id: string;
+  code: string;
+  name: string;
+  description: string;
+  icon: string;
+  service_count: number;
+}
+
+export interface CatalogServiceResult {
+  service_id: string;
+  slug: string;
+  name: string;
+  description: string;
+  icon: string;
+  category_code: string;
+  category_name: string;
+  score?: number;
+}
+
+export interface Address {
+  address_id: string;
+  label: string;
+  recipient_name: string;
+  phone: string;
+  street_address: string;
+  city: string;
+  region?: string | null;
+  postal_code?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  delivery_instructions?: string | null;
+  is_default: boolean;
+  created_at?: string;
+}
+
+export interface ServiceRequestRow {
+  request_id: string;
+  request_number: string;
+  status: string;
+  description: string;
+  preferred_date?: string | null;
+  time_window?: string | null;
+  validation_notes?: string | null;
+  submitted_at?: string | null;
+  service_id: string;
+  service_name?: string;
+  service_slug?: string;
+  address_id?: string | null;
+  address_label?: string | null;
+  address_city?: string | null;
+  address_region?: string | null;
+  selected_provider_id?: string | null;
+}
+
+export interface MatchCandidate {
+  match_id: string;
+  provider_id: string;
+  strategy: string;
+  score: number;
+  rank_pos: number;
+  reasons: string;
+  display_name: string;
+  headline: string;
+  city: string;
+  rating_avg: number;
+  jobs_completed: number;
+}
+
+export interface Quote {
+  quote_id: string;
+  provider_id: string;
+  amount: number;
+  currency: string;
+  lead_time_days: number;
+  message: string;
+  status: string;
+  valid_until: string;
+  created_at: string;
+  display_name: string;
+  headline: string;
+  rating_avg: number;
+  request_status?: string;
+}
+
+export interface BookingRow {
+  booking_id: string;
+  booking_number: string;
+  status: string;
+  agreed_amount: number;
+  currency: string;
+  scheduled_date: string;
+  time_window?: string | null;
+  arrival_code?: string;
+  selected_provider_id: string;
+  provider_name?: string;
+  provider_headline?: string;
+  service_name?: string;
+  request_number?: string;
+  address_label?: string;
+  address_street?: string;
+  address_city?: string;
+  payment?: { payment_id: string; status: string; gateway_ref?: string | null };
+}
+
+export const bookingApi = {
+  catalogCategories: () =>
+    apiClient.get<CatalogCategory[]>("/catalog/categories").then((r) => r.data),
+  catalogSearch: (q: string) =>
+    apiClient
+      .get<{ term: string; count: number; results: CatalogServiceResult[] }>(
+        `/catalog/search${qs({ q })}`,
+      )
+      .then((r) => r.data),
+
+  listAddresses: () => apiClient.get<Address[]>("/locations/addresses").then((r) => r.data),
+  createAddress: (payload: Omit<Address, "address_id" | "created_at">) =>
+    apiClient.post<Address>("/locations/addresses", payload).then((r) => r.data),
+
+  createServiceRequest: (payload: {
+    service_id: string;
+    description: string;
+    address_id?: string;
+    preferred_date?: string;
+    time_window?: string;
+  }) => apiClient.post<ServiceRequestRow>("/service-requests", payload).then((r) => r.data),
+  submitServiceRequest: (id: string) =>
+    apiClient.post<ServiceRequestRow>(`/service-requests/${id}/submit`).then((r) => r.data),
+
+  runMatching: (id: string) =>
+    apiClient
+      .post<{ strategy: string; outcome: string; matches: MatchCandidate[] }>(
+        `/service-requests/${id}/match`,
+      )
+      .then((r) => r.data),
+  selectProvider: (id: string, providerId: string) =>
+    apiClient
+      .post<ServiceRequestRow>(`/service-requests/${id}/select-provider`, {
+        provider_id: providerId,
+      })
+      .then((r) => r.data),
+  listQuotes: (id: string) =>
+    apiClient.get<Quote[]>(`/service-requests/${id}/quotes`).then((r) => r.data),
+  acceptQuote: (quoteId: string) =>
+    apiClient.post<Quote>(`/quotes/${quoteId}/accept`).then((r) => r.data),
+
+  confirmBooking: (quoteId: string) =>
+    apiClient.post<BookingRow>("/bookings", { quote_id: quoteId }).then((r) => r.data),
+  authorizeBookingPayment: (bookingId: string) =>
+    apiClient.post<BookingRow>(`/bookings/${bookingId}/authorize-payment`).then((r) => r.data),
+};
+
 export const apiClientInstance = apiClient;
