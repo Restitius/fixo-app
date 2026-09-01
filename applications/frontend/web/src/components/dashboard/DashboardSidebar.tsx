@@ -51,7 +51,7 @@ const groups = [
       { title: "Activity", icon: Activity, to: "/activity" },
       { title: "Settings", icon: Settings, to: "/profile" },
       { title: "Feedback", icon: MessageSquareHeart, to: "/feedback" },
-      { title: "Help", icon: HelpCircle },
+      { title: "Help", icon: HelpCircle, to: "/help" },
     ],
   },
 ];
