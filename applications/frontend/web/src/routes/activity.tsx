@@ -27,7 +27,7 @@ function ActivityPage() {
     try {
       setEvents(await fixoSdk.activityFeed(undefined, 100, 0));
     } catch {
-      // toast emitted by client
+      setEvents((prev) => prev ?? []);
     }
   }, []);
 

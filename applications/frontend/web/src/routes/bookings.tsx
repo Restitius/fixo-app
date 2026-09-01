@@ -84,7 +84,7 @@ function BookingsPage() {
   const PAGE_SIZE = 6;
 
   const load = useCallback(() => {
-    void fixoSdk.bookingHistory(undefined, 100, 0).then(setRows);
+    void fixoSdk.bookingHistory(undefined, 100, 0).then(setRows).catch(() => setRows([]));
   }, []);
 
   useEffect(() => {

@@ -39,7 +39,7 @@ function LoyaltyPage() {
       setAccount(acc);
       setTxns(list);
     } catch {
-      // toast emitted by client
+      setTxns((prev) => prev ?? []);
     }
   }, []);
 

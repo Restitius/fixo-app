@@ -181,7 +181,7 @@ function AddressesTab() {
   });
 
   const load = useCallback(() => {
-    void bookingApi.listAddresses().then(setAddresses);
+    void bookingApi.listAddresses().then(setAddresses).catch(() => setAddresses([]));
   }, []);
 
   useEffect(() => load(), [load]);
@@ -326,7 +326,7 @@ function PaymentsTab({ onManage }: { onManage: () => void }) {
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
 
   useEffect(() => {
-    void fixoSdk.listPaymentMethods().then(setMethods);
+    void fixoSdk.listPaymentMethods().then(setMethods).catch(() => setMethods([]));
   }, []);
 
   return (
@@ -496,8 +496,8 @@ function PrivacyTab() {
   const [requesting, setRequesting] = useState(false);
 
   const load = useCallback(() => {
-    void fixoSdk.listConsents().then(setConsents);
-    void fixoSdk.listDataExports().then(setExports);
+    void fixoSdk.listConsents().then(setConsents).catch(() => setConsents([]));
+    void fixoSdk.listDataExports().then(setExports).catch(() => setExports([]));
   }, []);
 
   useEffect(() => load(), [load]);
