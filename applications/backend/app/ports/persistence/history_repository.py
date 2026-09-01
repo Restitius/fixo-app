@@ -1,0 +1,9 @@
+"""History read-model ports — dedicated registered reads (Phase 14)."""
+from __future__ import annotations
+from typing import Any, Protocol
+
+
+class HistoryRepositoryPort(Protocol):
+    async def list_bookings(self, customer_id: str, status: str | None, limit: int, offset: int) -> list[dict[str, Any]]: ...
+    async def booking_timeline(self, customer_id: str, booking_id: str) -> list[dict[str, Any]]: ...
+    async def list_activity(self, customer_id: str, event: str | None, limit: int, offset: int) -> list[dict[str, Any]]: ...

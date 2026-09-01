@@ -1,0 +1,1 @@
+"""Integration-specific exception hierarchy."""

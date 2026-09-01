@@ -1,0 +1,1 @@
+"""Liabilities notification definitions."""

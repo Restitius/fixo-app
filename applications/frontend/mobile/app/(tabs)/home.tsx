@@ -1,0 +1,119 @@
+import { useState } from 'react'
+import { Pressable, ScrollView, Text, View } from 'react-native'
+import { router } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Avatar from '../../components/Avatar'
+import ProviderCard from '../../components/ProviderCard'
+import { BellIcon, BookmarkIcon, SearchIcon, SlidersIcon } from '../../components/icons'
+import { CATEGORIES, OFFERS, PROVIDERS, USER } from '../../data/mock'
+
+function greeting() {
+  const h = new Date().getHours()
+  if (h < 12) return 'Good Morning'
+  if (h < 18) return 'Good Afternoon'
+  return 'Good Evening'
+}
+
+const HOME_CATEGORIES = CATEGORIES.slice(0, 7)
+
+export default function Home() {
+  const popular = [...PROVIDERS].sort((a, b) => b.rating - a.rating).slice(0, 4)
+  const [offerIndex, setOfferIndex] = useState(0)
+  const offer = OFFERS[offerIndex]
+
+  return (
+    <SafeAreaView className="flex-1 bg-white" edges={['top']}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 110 }}>
+        <View className="flex-row items-center gap-3 px-6 pt-2">
+          <Avatar label={USER.avatar} size={48} />
+          <View className="flex-1">
+            <Text className="text-[13px] text-muted">{greeting()} 👋</Text>
+            <Text numberOfLines={1} className="text-[16px] font-bold text-ink">
+              {USER.name}
+            </Text>
+          </View>
+          <Pressable onPress={() => router.push('/notifications')} className="relative items-center justify-center size-11 rounded-full bg-[#f5f5f5]">
+            <BellIcon size={20} color="#0B111F" />
+            <View className="absolute top-2.5 right-2.5 size-2 rounded-full bg-[#FF6B6B]" />
+          </Pressable>
+          <Pressable onPress={() => router.push('/bookmarks')} className="items-center justify-center size-11 rounded-full bg-[#f5f5f5]">
+            <BookmarkIcon size={20} color="#0B111F" />
+          </Pressable>
+        </View>
+
+        <View className="flex-row items-center gap-3 mx-6 mt-5">
+          <Pressable onPress={() => router.push('/search')} className="flex-1 flex-row items-center gap-3 rounded-2xl bg-[#f5f5f5] px-5 py-4">
+            <SearchIcon size={20} color="#6C7585" />
+            <Text className="text-[15px] text-[#9e9e9e]">Search services...</Text>
+          </Pressable>
+          <Pressable onPress={() => router.push('/search')} className="items-center justify-center size-[52px] rounded-2xl bg-[#f5f5f5]">
+            <SlidersIcon size={20} color="#7210FF" />
+          </Pressable>
+        </View>
+
+        <View className="flex-row items-center justify-between px-6 mt-7">
+          <Text className="text-[17px] font-bold text-ink">Special Offers</Text>
+          <Pressable onPress={() => router.push('/offers')}>
+            <Text className="text-[13px] font-semibold text-primary">See All</Text>
+          </Pressable>
+        </View>
+        <Pressable
+          onPress={() => router.push('/offers')}
+          className="mx-6 mt-3 flex-row items-center justify-between overflow-hidden rounded-3xl p-6"
+          style={{ backgroundColor: offer.color }}
+        >
+          <View>
+            <Text className="text-[34px] font-extrabold text-white leading-none">{offer.discount.replace(/[^0-9%$]/g, '')}</Text>
+            <Text className="text-[18px] font-bold text-white mt-2">{offer.title}</Text>
+            <Text className="text-[12px] text-white/90 mt-1" style={{ maxWidth: 160 }}>
+              {offer.subtitle}. Only valid for today.
+            </Text>
+          </View>
+          <Text style={{ fontSize: 56, opacity: 0.9 }}>🧽</Text>
+        </Pressable>
+        <View className="flex-row items-center justify-center gap-1.5 mt-3">
+          {OFFERS.map((o, i) => (
+            <Pressable key={o.id} onPress={() => setOfferIndex(i)}>
+              <View className={`h-1.5 rounded-full ${i === offerIndex ? 'w-5 bg-primary' : 'w-1.5 bg-[#e0e0e0]'}`} />
+            </Pressable>
+          ))}
+        </View>
+
+        <View className="flex-row items-center justify-between px-6 mt-7">
+          <Text className="text-[17px] font-bold text-ink">Services</Text>
+          <Pressable onPress={() => router.push('/services')}>
+            <Text className="text-[13px] font-semibold text-primary">See All</Text>
+          </Pressable>
+        </View>
+        <View className="flex-row flex-wrap px-6 mt-4" style={{ rowGap: 16 }}>
+          {HOME_CATEGORIES.map((c) => (
+            <Pressable key={c.id} onPress={() => router.push(`/services/${c.id}` as any)} className="items-center gap-2" style={{ width: '25%' }}>
+              <View className="items-center justify-center size-14 rounded-2xl" style={{ backgroundColor: `${c.color}14` }}>
+                <Text style={{ fontSize: 24 }}>{c.emoji}</Text>
+              </View>
+              <Text className="text-[11px] font-medium text-ink text-center">{c.name}</Text>
+            </Pressable>
+          ))}
+          <Pressable onPress={() => router.push('/services')} className="items-center gap-2" style={{ width: '25%' }}>
+            <View className="items-center justify-center size-14 rounded-2xl bg-primary/8">
+              <SlidersIcon size={20} color="#7210FF" />
+            </View>
+            <Text className="text-[11px] font-medium text-ink">More</Text>
+          </Pressable>
+        </View>
+
+        <View className="flex-row items-center justify-between px-6 mt-7">
+          <Text className="text-[17px] font-bold text-ink">Most Popular Services</Text>
+          <Pressable onPress={() => router.push('/popular')}>
+            <Text className="text-[13px] font-semibold text-primary">See All</Text>
+          </Pressable>
+        </View>
+        <View className="gap-3 px-6 mt-3">
+          {popular.map((p) => (
+            <ProviderCard key={p.id} provider={p} />
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  )
+}

@@ -1,0 +1,16 @@
+"""CustomerRepository — persistence port for the customer aggregate.
+
+Application services depend on THIS protocol; query IDs live in the adapter.
+"""
+from __future__ import annotations
+
+from typing import Any, Protocol, runtime_checkable
+
+
+@runtime_checkable
+class CustomerRepository(Protocol):
+    async def create(self, params: dict[str, Any]) -> Any | None: ...
+    async def get_by_email(self, email: str) -> Any | None: ...
+    async def get_by_id(self, user_id: str) -> Any | None: ...
+    async def mark_verified(self, user_id: str, *, email: bool, phone: bool) -> Any | None: ...
+    async def update_profile(self, user_id: str, params: dict[str, Any]) -> Any | None: ...

@@ -1,0 +1,95 @@
+# =============================================================================
+# FIXO-APP — whole-application container stack.
+#
+# One compose PROJECT named FIXO-APP so Docker Desktop groups every service of
+# this application together. It covers the backend (FastAPI), the web frontend
+# (TanStack Start / React), our own PostgreSQL and Redis — each in its own
+# container, fully isolated from any other project on this machine.
+#
+#   FIXO-APP
+#   ├── fixo-postgres    :5434   our PostgreSQL (dedicated volume)
+#   ├── fixo-redis       :6370   cache / queues
+#   ├── fixo-api         :8000   FastAPI backend
+#   └── fixo-web         :3000   web frontend
+# =============================================================================
+name: FIXO-APP
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fixo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fixo
+      POSTGRES_PASSWORD: fixo_dev_password
+      POSTGRES_DB: fixo
+    ports:
+      - "5434:5432"
+    volumes:
+      - fixo_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fixo -d fixo"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    container_name: fixo-redis
+    restart: unless-stopped
+    ports:
+      - "6370:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  api:
+    build:
+      context: ./applications/backend
+      dockerfile: Dockerfile
+    image: fixo-api:latest
+    container_name: fixo-api
+    restart: unless-stopped
+    env_file:
+      - ./applications/backend/.env
+    environment:
+      PRIMARY_DB_URL: postgresql+asyncpg://fixo:fixo_dev_password@postgres:5432/fixo
+      REDIS_URL: redis://redis:6379/0
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173,http://localhost:8081,http://localhost:5190,http://localhost:5191
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./applications/backend/storage:/srv/storage
+      # Dev mounts — source changes are live on container restart (no rebuild).
+      - ./applications/backend/app:/srv/app
+      - ./applications/backend/migrations:/srv/migrations
+
+  web:
+    build:
+      context: ./applications/frontend/web
+      dockerfile: Dockerfile
+    image: fixo-web:latest
+    container_name: fixo-web
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:8000/api/v1
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    volumes:
+      # Dev mounts — per-directory so TanStack's generated routeTree.gen.ts
+      # (written to /app/src root) stays on the container filesystem.
+      - ./applications/frontend/web/src/routes:/app/src/routes
+      - ./applications/frontend/web/src/lib:/app/src/lib
+      - ./applications/frontend/web/src/components:/app/src/components
+
+volumes:
+  fixo_pgdata:

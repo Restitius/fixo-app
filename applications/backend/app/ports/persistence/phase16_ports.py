@@ -1,0 +1,13 @@
+"""Ports for Phase 16 — Completion (Module 51: Ratings, Module 53: Booking Close)."""
+from __future__ import annotations
+from typing import Any, Protocol
+
+
+class RatingRepositoryPort(Protocol):
+    async def submit(self, booking_id: str, customer_id: str, rating: int, comment: str | None) -> dict[str, Any] | None: ...
+    async def get_for_booking(self, booking_id: str, customer_id: str) -> dict[str, Any] | None: ...
+    async def provider_stars(self, provider_id: str) -> dict[str, Any] | None: ...
+
+
+class BookingClosePort(Protocol):
+    async def close_booking(self, booking_id: str) -> dict[str, Any] | None: ...

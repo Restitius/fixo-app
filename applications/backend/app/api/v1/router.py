@@ -1,0 +1,90 @@
+"""API v1 aggregate router — contains NO business logic (section 34).
+
+Only aggregation happens here: domain routers + platform routers.
+"""
+from __future__ import annotations
+
+from fastapi import APIRouter
+
+from app.api.v1.cancellations import router as cancellations_router  # noqa: E402
+from app.api.v1.support import router as support_router  # noqa: E402
+from app.api.v1.disputes import router as disputes_router  # noqa: E402
+from app.api.v1.assets import router as assets_router
+from app.api.v1.auth import router as auth_router
+from app.api.v1.bookings import router as bookings_router
+from app.api.v1.catalog import router as catalog_router
+from app.api.v1.change_requests import router as change_requests_router
+from app.api.v1.home import router as home_router
+from app.api.v1.integrations import router as integrations_router
+from app.api.v1.internal import router as internal_router
+from app.api.v1.invoices import router as invoices_router
+from app.api.v1.liabilities import router as liabilities_router
+from app.api.v1.locations import router as locations_router
+from app.api.v1.matching import router as matching_router
+from app.api.v1.messaging import router as messaging_router
+from app.api.v1.notifications import router as notifications_router
+from app.api.v1.onboarding import router as onboarding_router
+from app.api.v1.properties import router as properties_router
+from app.api.v1.providers import router as providers_router
+from app.api.v1.quotations import router as quotations_router
+from app.api.v1.tracking import router as tracking_router
+from app.api.v1.public import router as public_router
+from app.api.v1.reviews import router as reviews_router
+from app.api.v1.ratings import router as ratings_router
+from app.api.v1.service_requests import router as service_requests_router
+from app.api.v1.system import router as system_router
+from app.api.v1.transactions import router as transactions_router
+from app.api.v1.users import router as users_router
+from app.api.v1.warranties import router as warranties_router
+from app.api.v1.favorites import router as favorites_router
+from app.api.v1.rebook import router as rebook_router
+from app.api.v1.recurring import router as recurring_router
+from app.api.v1.maintenance import router as maintenance_router
+from app.api.v1.account import router as account_router
+from app.api.v1.wallet import router as wallet_router
+from app.api.v1.promotions import router as promotions_router
+from app.api.v1.loyalty import router as loyalty_router
+from app.api.v1.history import router as history_router
+
+api_v1_router = APIRouter()
+
+api_v1_router.include_router(system_router)
+api_v1_router.include_router(public_router)
+api_v1_router.include_router(auth_router)
+api_v1_router.include_router(onboarding_router)
+api_v1_router.include_router(home_router)
+api_v1_router.include_router(locations_router)
+api_v1_router.include_router(properties_router)
+api_v1_router.include_router(catalog_router)
+api_v1_router.include_router(service_requests_router)
+api_v1_router.include_router(matching_router)
+api_v1_router.include_router(quotations_router)
+api_v1_router.include_router(providers_router)
+api_v1_router.include_router(bookings_router)
+api_v1_router.include_router(change_requests_router)
+api_v1_router.include_router(invoices_router)
+api_v1_router.include_router(messaging_router)
+api_v1_router.include_router(tracking_router)
+api_v1_router.include_router(notifications_router)
+api_v1_router.include_router(internal_router)
+api_v1_router.include_router(users_router)
+api_v1_router.include_router(assets_router)
+api_v1_router.include_router(transactions_router)
+api_v1_router.include_router(liabilities_router)
+api_v1_router.include_router(notifications_router)
+api_v1_router.include_router(reviews_router)
+api_v1_router.include_router(ratings_router, tags=["ratings"])
+api_v1_router.include_router(warranties_router)
+api_v1_router.include_router(favorites_router)
+api_v1_router.include_router(rebook_router)
+api_v1_router.include_router(recurring_router)
+api_v1_router.include_router(maintenance_router)
+api_v1_router.include_router(integrations_router)
+api_v1_router.include_router(cancellations_router, tags=["cancellations"])
+api_v1_router.include_router(support_router, tags=["support"])
+api_v1_router.include_router(disputes_router, tags=["disputes"])
+api_v1_router.include_router(account_router, tags=["account"])
+api_v1_router.include_router(wallet_router, tags=["wallet"])
+api_v1_router.include_router(promotions_router, tags=["promotions"])
+api_v1_router.include_router(loyalty_router, tags=["loyalty"])
+api_v1_router.include_router(history_router, tags=["history"])
