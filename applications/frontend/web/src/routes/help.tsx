@@ -1,10 +1,12 @@
 // Help — support tickets: create, browse and message a real helpdesk thread.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, HelpCircle, Plus, Send } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FilterX, HelpCircle, Plus, Send } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type SupportTicket, type TicketMessage } from "@/lib/api-client";
-import { fmtDateTime, humanize } from "@/lib/format";
+import { fmtDate, fmtDateTime, humanize } from "@/lib/format";
 import { toast } from "sonner";
 
 const title = "Help — FIXO";
@@ -38,6 +40,7 @@ export const Route = createFileRoute("/help")({
 
 const CATEGORIES = ["GENERAL", "BOOKING", "PAYMENT", "ACCOUNT", "PROVIDER"] as const;
 const PRIORITIES = ["LOW", "MEDIUM", "HIGH", "URGENT"] as const;
+const PAGE_SIZE = 8;
 
 function statusStyle(status: string) {
   const s = status.toUpperCase();
@@ -52,10 +55,10 @@ function HelpPage() {
   const [showForm, setShowForm] = useState(false);
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState({ subject: "", category: "GENERAL" as string, priority: "MEDIUM" as string });
-  const [openId, setOpenId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Record<string, TicketMessage[]>>({});
-  const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
-  const [sending, setSending] = useState<string | null>(null);
+  const [openTicket, setOpenTicket] = useState<SupportTicket | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1);
 
   const load = useCallback(async () => {
     try {
@@ -68,6 +71,16 @@ function HelpPage() {
   useEffect(() => {
     if (access_token && !loading) void load();
   }, [access_token, loading, load]);
+
+  const filtered = useMemo(
+    () =>
+      (tickets ?? []).filter((t) => {
+        const matchesStatus = statusFilter === "all" || t.status === statusFilter;
+        const matchesSearch = !search || [t.subject, t.ticket_number].some((f) => f.toLowerCase().includes(search.toLowerCase()));
+        return matchesStatus && matchesSearch;
+      }),
+    [tickets, statusFilter, search],
+  );
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
@@ -93,36 +106,9 @@ function HelpPage() {
     }
   }
 
-  async function toggle(id: string) {
-    if (openId === id) {
-      setOpenId(null);
-      return;
-    }
-    setOpenId(id);
-    if (!messages[id]) {
-      try {
-        const msgs = await fixoSdk.listTicketMessages(id);
-        setMessages((prev) => ({ ...prev, [id]: msgs }));
-      } catch {
-        // toast emitted by client
-      }
-    }
-  }
-
-  async function sendReply(id: string) {
-    const body = (replyDrafts[id] ?? "").trim();
-    if (!body) return;
-    setSending(id);
-    try {
-      const msg = await fixoSdk.addTicketMessage(id, body);
-      setMessages((prev) => ({ ...prev, [id]: [...(prev[id] ?? []), msg] }));
-      setReplyDrafts((prev) => ({ ...prev, [id]: "" }));
-    } catch {
-      // toast emitted by client
-    } finally {
-      setSending(null);
-    }
-  }
+  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const hasActiveFilters = search.trim() !== "" || statusFilter !== "all";
 
   return (
     <PageShell title="Help" subtitle="Support tickets and helpdesk" userName={customer?.full_name} onLogout={logout}>
@@ -185,111 +171,155 @@ function HelpPage() {
         </div>
       )}
 
-      <div className="mt-6">
-        {tickets === null ? (
-          <LoadingRows />
-        ) : tickets.length === 0 ? (
-          <EmptyState
-            icon={HelpCircle}
-            title="No support tickets"
-            description="Need help with a booking, payment or your account? Open a ticket and we'll get back to you."
-            actionLabel="New Ticket"
-            onAction={() => setShowForm(true)}
-          />
-        ) : (
-          <div className="space-y-3">
-            {tickets.map((t, i) => (
-              <div
-                key={t.ticket_id}
-                style={{ animationDelay: `${i * 40}ms` }}
-                className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both rounded-3xl bg-card shadow-[var(--shadow-card)]"
-              >
-                <button
-                  onClick={() => void toggle(t.ticket_id)}
-                  className="flex w-full flex-col gap-2 p-5 text-left sm:flex-row sm:items-center sm:justify-between"
-                >
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold">{t.subject}</h3>
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle(t.status)}`}>
-                        {humanize(t.status)}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 text-sm text-muted-foreground">
-                      {t.ticket_number} · {humanize(t.category)} · {humanize(t.priority)} priority
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <p className="text-xs text-muted-foreground">{t.message_count ?? 0} messages</p>
-                    {openId === t.ticket_id ? (
-                      <ChevronUp className="size-5 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="size-5 text-muted-foreground" />
-                    )}
-                  </div>
-                </button>
+      <TableFilterBar
+        search={search}
+        onSearchChange={(v) => { setSearch(v); setPage(1); }}
+        searchPlaceholder="Search tickets..."
+        filters={[
+          {
+            value: statusFilter,
+            onChange: (v) => { setStatusFilter(v); setPage(1); },
+            placeholder: "Status",
+            options: [
+              { value: "all", label: "All Statuses" },
+              { value: "OPEN", label: "Open" },
+              { value: "RESOLVED", label: "Resolved" },
+              { value: "CLOSED", label: "Closed" },
+            ],
+          },
+        ]}
+      />
 
-                {openId === t.ticket_id && (
-                  <div className="border-t border-border px-5 py-4">
-                    {!messages[t.ticket_id] ? (
-                      <p className="text-sm text-muted-foreground">Loading…</p>
-                    ) : (
-                      <div className="space-y-3">
-                        {messages[t.ticket_id]!.length === 0 ? (
-                          <p className="text-sm text-muted-foreground">No messages yet.</p>
-                        ) : (
-                          messages[t.ticket_id]!.map((m) => (
-                            <div
-                              key={m.message_id}
-                              className={`max-w-md rounded-2xl p-3 text-sm ${
-                                m.sender === "CUSTOMER"
-                                  ? "ml-auto bg-primary/10 text-right"
-                                  : "bg-muted/50"
-                              }`}
-                            >
-                              <p>{m.body}</p>
-                              <p className="mt-1 text-xs text-muted-foreground">{fmtDateTime(m.created_at)}</p>
-                            </div>
-                          ))
-                        )}
-                        {t.status !== "CLOSED" && (
-                          <div className="flex gap-2 pt-2">
-                            <Input
-                              value={replyDrafts[t.ticket_id] ?? ""}
-                              onChange={(e) =>
-                                setReplyDrafts((prev) => ({ ...prev, [t.ticket_id]: e.target.value }))
-                              }
-                              placeholder="Type a message..."
-                              onKeyDown={(e) => e.key === "Enter" && void sendReply(t.ticket_id)}
-                            />
-                            <Button
-                              size="icon"
-                              disabled={sending === t.ticket_id}
-                              onClick={() => void sendReply(t.ticket_id)}
-                            >
-                              <Send className="size-4" />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {tickets === null ? (
+        <div className="mt-6 h-64 animate-pulse rounded-3xl bg-muted/60" />
+      ) : filtered.length === 0 ? (
+        <div className="mt-6">
+          {hasActiveFilters ? (
+            <EmptyState icon={FilterX} title="No matching tickets" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); }} />
+          ) : (
+            <EmptyState
+              icon={HelpCircle}
+              title="No support tickets"
+              description="Need help with a booking, payment or your account? Open a ticket and we'll get back to you."
+              actionLabel="New Ticket"
+              onAction={() => setShowForm(true)}
+            />
+          )}
+        </div>
+      ) : (
+        <TableCard>
+          <TableScroll minWidth={780}>
+            <TableHead columns={["Ticket #", "Subject", "Category", "Priority", "Status", "Messages"]} />
+            <tbody>
+              {paged.map((t) => (
+                <tr key={t.ticket_id} onClick={() => setOpenTicket(t)} className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40">
+                  <td className="px-6 py-4 font-semibold text-primary">{t.ticket_number}</td>
+                  <td className="px-4 py-4">{t.subject}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{humanize(t.category)}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{humanize(t.priority)}</td>
+                  <td className="px-4 py-4">
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(t.status)}`}>{humanize(t.status)}</span>
+                  </td>
+                  <td className="px-4 py-4 text-muted-foreground">{t.message_count ?? 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </TableScroll>
+          <TablePagination
+            page={page}
+            pageCount={pageCount}
+            onPageChange={setPage}
+            from={(page - 1) * PAGE_SIZE + 1}
+            to={Math.min(page * PAGE_SIZE, filtered.length)}
+            total={filtered.length}
+            itemLabel="tickets"
+          />
+        </TableCard>
+      )}
+
+      <TicketThreadSheet ticket={openTicket} onOpenChange={(o) => !o && setOpenTicket(null)} />
     </PageShell>
   );
 }
 
-function LoadingRows() {
+function TicketThreadSheet({ ticket, onOpenChange }: { ticket: SupportTicket | null; onOpenChange: (open: boolean) => void }) {
+  const [messages, setMessages] = useState<TicketMessage[] | null>(null);
+  const [reply, setReply] = useState("");
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    if (!ticket) {
+      setMessages(null);
+      setReply("");
+      return;
+    }
+    let cancelled = false;
+    fixoSdk.listTicketMessages(ticket.ticket_id).then((msgs) => {
+      if (!cancelled) setMessages(msgs);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ticket]);
+
+  async function sendReply() {
+    if (!ticket || !reply.trim()) return;
+    setSending(true);
+    try {
+      const msg = await fixoSdk.addTicketMessage(ticket.ticket_id, reply.trim());
+      setMessages((prev) => [...(prev ?? []), msg]);
+      setReply("");
+    } catch {
+      // toast emitted by client
+    } finally {
+      setSending(false);
+    }
+  }
+
   return (
-    <div className="space-y-3">
-      {[0, 1].map((i) => (
-        <div key={i} className="h-20 animate-pulse rounded-3xl bg-muted/60" />
-      ))}
-    </div>
+    <Sheet open={!!ticket} onOpenChange={(o) => !o && onOpenChange(false)}>
+      <SheetContent className="flex w-full flex-col sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>{ticket?.subject}</SheetTitle>
+        </SheetHeader>
+        {ticket && (
+          <>
+            <p className="text-sm text-muted-foreground">
+              {ticket.ticket_number} · {humanize(ticket.category)} · {humanize(ticket.priority)} priority · {fmtDate(ticket.created_at)}
+            </p>
+            <div className="mt-4 flex-1 space-y-3 overflow-y-auto">
+              {messages === null ? (
+                <p className="text-sm text-muted-foreground">Loading…</p>
+              ) : messages.length === 0 ? (
+                <p className="text-sm text-muted-foreground">No messages yet.</p>
+              ) : (
+                messages.map((m) => (
+                  <div
+                    key={m.message_id}
+                    className={`max-w-[85%] rounded-2xl p-3 text-sm ${m.sender === "CUSTOMER" ? "ml-auto bg-primary/10 text-right" : "bg-muted/50"}`}
+                  >
+                    <p>{m.body}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{fmtDateTime(m.created_at)}</p>
+                  </div>
+                ))
+              )}
+            </div>
+            {ticket.status !== "CLOSED" && (
+              <div className="mt-3 flex gap-2 border-t border-border pt-3">
+                <Input
+                  value={reply}
+                  onChange={(e) => setReply(e.target.value)}
+                  placeholder="Type a message..."
+                  onKeyDown={(e) => e.key === "Enter" && void sendReply()}
+                />
+                <Button size="icon" disabled={sending} onClick={() => void sendReply()}>
+                  <Send className="size-4" />
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }
