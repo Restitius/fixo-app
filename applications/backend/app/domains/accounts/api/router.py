@@ -91,6 +91,12 @@ async def revoke_sessions(customer: CurrentCustomer, reason: str = Body("securit
     return ok(await svc.revoke_all_sessions(str(customer["customer_id"]), reason), title="Sessions revoked")
 
 
+@router.get("/security/sessions")
+async def list_sessions(customer: CurrentCustomer) -> dict:
+    svc = get_composition().security_service()
+    return ok(await svc.list_sessions(str(customer["customer_id"])))
+
+
 @router.get("/consents")
 async def list_consents(customer: CurrentCustomer) -> dict:
     svc = get_composition().privacy_service()

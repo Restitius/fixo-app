@@ -66,9 +66,11 @@ class SecurityService:
         self,
         repo: SecurityRepositoryPort,
         hasher: Any | None = None,
+        sessions_repo: Any | None = None,
     ) -> None:
         self._repo = repo
         self._hasher = hasher
+        self._sessions = sessions_repo
 
     async def change_password(self, customer_id: str, current_password: str, new_password: str) -> bool:
         if len(new_password) < 8:
@@ -85,6 +87,11 @@ class SecurityService:
         if result is None:
             raise RuntimeError("Failed to revoke sessions")
         return result
+
+    async def list_sessions(self, customer_id: str) -> list[dict[str, Any]]:
+        if self._sessions is None:
+            return []
+        return await self._sessions.list_for_customer(customer_id)
 
 
 class PrivacyService:
