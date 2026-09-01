@@ -19,8 +19,8 @@ export function PageShell({ title, subtitle, userName, onLogout, children }: Pag
     .toUpperCase() || "U";
 
   return (
-    <div className="min-h-screen bg-background p-4 lg:p-6">
-      <div className="mx-auto flex max-w-[1500px] gap-6">
+    <div className="min-h-screen w-full bg-background p-4 lg:p-6">
+      <div className="flex w-full gap-6">
         <DashboardSidebar />
 
         <main className="min-w-0 flex-1">
