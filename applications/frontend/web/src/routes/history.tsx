@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Calendar, Clock, ChevronDown, ChevronUp, History as HistoryIcon } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type BookingHistoryRow, type TimelineEvent } from "@/lib/api-client";
 import { fmtDate, fmtDateTime, fmtMoney, humanize } from "@/lib/format";
@@ -88,14 +89,20 @@ function HistoryPage() {
 
       <div className="mt-6 space-y-4">
         {rows.length === 0 ? (
-          <div className="rounded-3xl bg-card p-10 text-center shadow-[var(--shadow-card)]">
-            <HistoryIcon className="mx-auto size-8 text-muted-foreground" />
-            <p className="mt-3 font-medium">No bookings yet</p>
-            <p className="text-sm text-muted-foreground">Completed and paid jobs will appear here.</p>
-          </div>
+          <EmptyState
+            icon={HistoryIcon}
+            title="No bookings yet"
+            description="Completed and paid jobs will appear here."
+            actionLabel="Browse Services"
+            actionTo="/services"
+          />
         ) : (
-          rows.map((b) => (
-            <div key={b.booking_id} className="rounded-3xl bg-card shadow-[var(--shadow-card)]">
+          rows.map((b, i) => (
+            <div
+              key={b.booking_id}
+              style={{ animationDelay: `${i * 40}ms` }}
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both rounded-3xl bg-card shadow-[var(--shadow-card)]"
+            >
               <button
                 onClick={() => void toggle(b.booking_id)}
                 className="flex w-full flex-col gap-3 p-5 text-left sm:flex-row sm:items-center sm:justify-between"
