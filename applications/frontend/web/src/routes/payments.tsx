@@ -1,23 +1,37 @@
 // Payments — saved payment methods and charge history across bookings.
-import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Banknote,
+  ChevronRight,
   CreditCard,
   Landmark,
+  Lock,
+  MoreVertical,
   Plus,
   Receipt,
   ShieldCheck,
   Smartphone,
   Star,
   Trash2,
+  TrendingUp,
 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { BookingDetailSheet } from "@/components/dashboard/BookingDetailSheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -46,32 +60,34 @@ export const Route = createFileRoute("/payments")({
   component: PaymentsPage,
 });
 
-const METHOD_TYPES = [
-  { value: "card", label: "Card", icon: CreditCard },
-  { value: "mpesa", label: "Mobile Money", icon: Smartphone },
-  { value: "bank", label: "Bank Account", icon: Landmark },
-] as const;
+const MOBILE_PROVIDERS = ["Tigo Pesa", "M-Pesa", "Airtel Money", "HaloPesa"] as const;
+const CHARGE_TABS = ["All", "Authorized", "Paid"] as const;
 
-function methodIcon(type: string) {
-  return METHOD_TYPES.find((t) => t.value === type)?.icon ?? Banknote;
+function brandFromCardNumber(num: string) {
+  return num.startsWith("4") ? "Visa" : num.startsWith("5") ? "Mastercard" : "Card";
 }
 
-function statusStyle(status: string) {
+function methodIcon(type: string) {
+  if (type === "mpesa") return Smartphone;
+  if (type === "bank") return Landmark;
+  return CreditCard;
+}
+
+function chargeStatusStyle(status: string) {
   const s = status.toUpperCase();
-  if (["PAYMENT_AUTHORIZED", "CONFIRMED", "COMPLETED", "PAID", "CLOSED"].includes(s))
-    return "bg-success/15 text-success";
-  if (["CANCELLED", "FAILED", "DISPUTED", "REFUNDED"].includes(s))
-    return "bg-destructive/15 text-destructive";
+  if (["PAID", "CLOSED"].includes(s)) return "bg-success/15 text-success";
+  if (["CANCELLED", "FAILED", "DISPUTED"].includes(s)) return "bg-destructive/15 text-destructive";
   return "bg-amber-500/15 text-amber-600";
 }
 
 function PaymentsPage() {
   const { access_token, loading, logout, customer } = useAuth();
+  const navigate = useNavigate();
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
   const [charges, setCharges] = useState<BookingHistoryRow[] | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [draft, setDraft] = useState({ type: "card", provider: "", last4: "" });
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [chargeTab, setChargeTab] = useState<(typeof CHARGE_TABS)[number]>("All");
+  const [openBookingId, setOpenBookingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -95,34 +111,11 @@ function PaymentsPage() {
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
-  async function addMethod() {
-    if (!draft.last4.trim() || draft.last4.trim().length < 4) {
-      toast.error("Enter at least the last 4 digits");
-      return;
-    }
-    setSaving(true);
-    try {
-      const created = await fixoSdk.addPaymentMethod(
-        draft.type,
-        draft.provider.trim() || null,
-        { last4: draft.last4.trim().slice(-4) },
-        (methods ?? []).length === 0,
-      );
-      setMethods((prev) => [...(prev ?? []), created]);
-      setDraft({ type: "card", provider: "", last4: "" });
-      setShowForm(false);
-      toast.success("Payment method added");
-    } catch {
-      // toast emitted by client
-    } finally {
-      setSaving(false);
-    }
-  }
-
   async function setDefault(id: string) {
     try {
       await fixoSdk.setDefaultPaymentMethod(id);
       setMethods((prev) => prev?.map((m) => ({ ...m, is_default: m.method_id === id })) ?? null);
+      toast.success("Default payment method updated");
     } catch {
       // toast emitted by client
     }
@@ -138,180 +131,464 @@ function PaymentsPage() {
     }
   }
 
+  const now = new Date();
+  const thisMonthCharges = (charges ?? []).filter((c) => {
+    const d = new Date(c.created_at);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  });
+  const pending = (charges ?? []).filter((c) => c.status === "PAYMENT_AUTHORIZED");
+  const defaultCount = (methods ?? []).filter((m) => m.is_default).length;
+  const backupCount = (methods ?? []).length - defaultCount;
+
+  const filteredCharges = (charges ?? []).filter((c) => {
+    if (chargeTab === "Authorized") return c.status === "PAYMENT_AUTHORIZED";
+    if (chargeTab === "Paid") return ["PAID", "CLOSED"].includes(c.status);
+    return true;
+  });
+
   return (
     <PageShell
       title="Payments"
-      subtitle="Saved payment methods and charge history"
+      subtitle="Manage saved methods and track charges"
       userName={customer?.full_name}
       onLogout={logout}
     >
+      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <StatCard
+          icon={CreditCard}
+          label="Saved Methods"
+          value={String((methods ?? []).length)}
+          hint={methods && methods.length > 0 ? `${defaultCount} default · ${backupCount} backup` : "No methods yet"}
+        />
+        <StatCard
+          icon={TrendingUp}
+          label="This Month Charges"
+          value={fmtMoney(thisMonthCharges.reduce((s, c) => s + c.agreed_amount, 0), thisMonthCharges[0]?.currency ?? "TZS")}
+          hint={`Across ${thisMonthCharges.length} booking${thisMonthCharges.length === 1 ? "" : "s"}`}
+        />
+        <StatCard
+          icon={ShieldCheck}
+          label="Pending Authorizations"
+          value={fmtMoney(pending.reduce((s, c) => s + c.agreed_amount, 0), pending[0]?.currency ?? "TZS")}
+          hint={`${pending.length} authorization${pending.length === 1 ? "" : "s"}`}
+        />
+      </div>
+
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.3fr]">
         {/* Payment methods */}
         <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Payment methods</h3>
-            <Button size="sm" onClick={() => setShowForm((v) => !v)} className="gap-2">
-              <Plus className="size-4" /> Add
+            <div>
+              <h3 className="text-lg font-semibold">Payment methods</h3>
+              <p className="text-sm text-muted-foreground">Saved methods for faster, secure payments</p>
+            </div>
+            <Button size="sm" onClick={() => setShowAddDialog(true)} className="gap-2">
+              <Plus className="size-4" /> Add Method
             </Button>
           </div>
-          <p className="mb-4 text-sm text-muted-foreground">Cards, mobile money and bank accounts.</p>
 
-          {showForm && (
-            <div className="mb-4 space-y-3 rounded-2xl border border-border p-4 animate-in fade-in slide-in-from-top-1">
-              <div className="space-y-2">
-                <Label>Type</Label>
-                <Select value={draft.type} onValueChange={(v) => setDraft((d) => ({ ...d, type: v }))}>
+          <div className="mt-4">
+            {methods === null ? (
+              <LoadingRows />
+            ) : methods.length === 0 ? (
+              <EmptyState
+                icon={CreditCard}
+                title="No payment methods yet"
+                description="Add a card, mobile money or bank account to speed up checkout."
+                actionLabel="Add Payment Method"
+                onAction={() => setShowAddDialog(true)}
+                compact
+              />
+            ) : (
+              <ul className="space-y-2.5">
+                {methods.map((m, i) => {
+                  const Icon = methodIcon(m.type);
+                  const masked = (m.details_masked?.["last4"] as string | undefined) ?? "••••";
+                  const expiry = m.details_masked?.["expiry"] as string | undefined;
+                  return (
+                    <li
+                      key={m.method_id}
+                      style={{ animationDelay: `${i * 40}ms` }}
+                      className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-3 rounded-2xl border border-border p-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="size-5" />
+                        </span>
+                        <div>
+                          <p className="flex items-center gap-2 text-sm font-medium">
+                            {m.provider || humanize(m.type)} •••• {masked}
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                m.is_default ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                              }`}
+                            >
+                              {m.is_default ? "Default" : "Backup"}
+                            </span>
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {expiry ? `Expires ${expiry}` : humanize(m.type)}
+                          </p>
+                        </div>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
+                            <MoreVertical className="size-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          {!m.is_default && (
+                            <DropdownMenuItem onClick={() => void setDefault(m.method_id)} className="gap-2">
+                              <Star className="size-4" /> Set as default
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem
+                            onClick={() => void removeMethod(m.method_id)}
+                            className="gap-2 text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="size-4" /> Remove
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 rounded-2xl bg-muted/50 p-3 text-xs text-muted-foreground">
+            <ShieldCheck className="size-4 shrink-0" />
+            Your payment details are encrypted and only masked information is stored.
+          </div>
+        </div>
+
+        {/* Recent charges */}
+        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-semibold">Recent charges</h3>
+              <p className="text-sm text-muted-foreground">Latest charges and authorizations</p>
+            </div>
+            <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
+              {CHARGE_TABS.map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setChargeTab(t)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    chargeTab === t ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4">
+            {charges === null ? (
+              <LoadingRows />
+            ) : filteredCharges.length === 0 ? (
+              <EmptyState
+                icon={Receipt}
+                title="No charges yet"
+                description="Once you complete a booking and authorize payment, it will show up here."
+                actionLabel="Browse Services"
+                actionTo="/services"
+                compact
+              />
+            ) : (
+              <ul className="space-y-2.5">
+                {filteredCharges.slice(0, 6).map((b, i) => (
+                  <li
+                    key={b.booking_id}
+                    style={{ animationDelay: `${i * 40}ms` }}
+                    className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+                  >
+                    <button
+                      onClick={() => setOpenBookingId(b.booking_id)}
+                      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-border p-4 text-left transition-colors hover:bg-muted/40"
+                    >
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-medium">{b.service_name ?? "Service"}</p>
+                          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${chargeStatusStyle(b.status)}`}>
+                            {humanize(b.status)}
+                          </span>
+                        </div>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {b.booking_number} · {fmtDate(b.scheduled_date)}
+                          {b.provider_name ? ` · ${b.provider_name}` : ""}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <p className="font-semibold">{fmtMoney(b.agreed_amount, b.currency)}</p>
+                        <ChevronRight className="size-4 text-muted-foreground" />
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {filteredCharges.length > 6 && (
+              <button
+                onClick={() => navigate({ to: "/history", search: { category: "payments" } })}
+                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              >
+                View all charges <ChevronRight className="size-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <AddPaymentMethodDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        isFirst={(methods ?? []).length === 0}
+        onAdded={(created) => setMethods((prev) => [...(prev ?? []), created])}
+      />
+
+      <BookingDetailSheet
+        bookingId={openBookingId}
+        onOpenChange={(o) => !o && setOpenBookingId(null)}
+        title="Charge details"
+      />
+    </PageShell>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  hint,
+}: {
+  icon: typeof CreditCard;
+  label: string;
+  value: string;
+  hint: string;
+}) {
+  return (
+    <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+        <Icon className="size-5" />
+      </span>
+      <p className="mt-4 text-sm text-muted-foreground">{label}</p>
+      <p className="mt-0.5 text-2xl font-bold tracking-tight">{value}</p>
+      <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>
+    </div>
+  );
+}
+
+function AddPaymentMethodDialog({
+  open,
+  onOpenChange,
+  isFirst,
+  onAdded,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  isFirst: boolean;
+  onAdded: (m: PaymentMethod) => void;
+}) {
+  const [tab, setTab] = useState<"card" | "mpesa" | "bank">("card");
+  const [card, setCard] = useState({ name: "", number: "", expiry: "", cvv: "" });
+  const [mobile, setMobile] = useState({ provider: MOBILE_PROVIDERS[0] as string, phone: "" });
+  const [bank, setBank] = useState({ bankName: "", account: "" });
+  const [makeDefault, setMakeDefault] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  function reset() {
+    setCard({ name: "", number: "", expiry: "", cvv: "" });
+    setMobile({ provider: MOBILE_PROVIDERS[0], phone: "" });
+    setBank({ bankName: "", account: "" });
+    setMakeDefault(false);
+    setTab("card");
+  }
+
+  async function save() {
+    let provider: string;
+    let details: Record<string, unknown>;
+
+    if (tab === "card") {
+      const digits = card.number.replace(/\s/g, "");
+      if (!card.name.trim() || digits.length < 4 || !card.expiry.trim()) {
+        toast.error("Fill in cardholder name, card number and expiry date");
+        return;
+      }
+      provider = brandFromCardNumber(digits);
+      details = { last4: digits.slice(-4), expiry: card.expiry.trim(), cardholder: card.name.trim() };
+    } else if (tab === "mpesa") {
+      if (mobile.phone.trim().length < 7) {
+        toast.error("Enter a valid phone number");
+        return;
+      }
+      provider = mobile.provider;
+      details = { last4: mobile.phone.trim().slice(-4) };
+    } else {
+      if (!bank.bankName.trim() || bank.account.trim().length < 4) {
+        toast.error("Enter bank name and account number");
+        return;
+      }
+      provider = bank.bankName.trim();
+      details = { last4: bank.account.trim().slice(-4) };
+    }
+
+    setSaving(true);
+    try {
+      const created = await fixoSdk.addPaymentMethod(tab, provider, details, makeDefault || isFirst);
+      onAdded({ ...created, is_default: makeDefault || isFirst });
+      toast.success("Payment method added");
+      reset();
+      onOpenChange(false);
+    } catch {
+      // toast emitted by client
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function handleOpenChange(v: boolean) {
+    onOpenChange(v);
+    if (!v) reset();
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Add payment method</DialogTitle>
+        </DialogHeader>
+
+        <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="card" className="gap-1.5">
+              <CreditCard className="size-4" /> Card
+            </TabsTrigger>
+            <TabsTrigger value="mpesa" className="gap-1.5">
+              <Smartphone className="size-4" /> Mobile Money
+            </TabsTrigger>
+            <TabsTrigger value="bank" className="gap-1.5">
+              <Landmark className="size-4" /> Bank
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <div className="space-y-4">
+          {tab === "card" && (
+            <>
+              <div className="space-y-1.5">
+                <Label>Cardholder name</Label>
+                <Input
+                  placeholder="e.g. Restitius Rushambya"
+                  value={card.name}
+                  onChange={(e) => setCard((d) => ({ ...d, name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Card number</Label>
+                <Input
+                  placeholder="1234 5678 9012 3456"
+                  value={card.number}
+                  onChange={(e) => setCard((d) => ({ ...d, number: e.target.value }))}
+                  maxLength={19}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Expiry date</Label>
+                  <Input
+                    placeholder="MM / YY"
+                    value={card.expiry}
+                    onChange={(e) => setCard((d) => ({ ...d, expiry: e.target.value }))}
+                    maxLength={7}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>CVV</Label>
+                  <Input
+                    placeholder="123"
+                    value={card.cvv}
+                    onChange={(e) => setCard((d) => ({ ...d, cvv: e.target.value }))}
+                    maxLength={4}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab === "mpesa" && (
+            <>
+              <div className="space-y-1.5">
+                <Label>Provider</Label>
+                <Select value={mobile.provider} onValueChange={(v) => setMobile((d) => ({ ...d, provider: v }))}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {METHOD_TYPES.map((t) => (
-                      <SelectItem key={t.value} value={t.value}>
-                        {t.label}
+                    {MOBILE_PROVIDERS.map((p) => (
+                      <SelectItem key={p} value={p}>
+                        {p}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label>Provider (optional)</Label>
+              <div className="space-y-1.5">
+                <Label>Billing phone</Label>
                 <Input
-                  placeholder="e.g. Visa, M-Pesa, CRDB"
-                  value={draft.provider}
-                  onChange={(e) => setDraft((d) => ({ ...d, provider: e.target.value }))}
+                  placeholder="+255 712 345 678"
+                  value={mobile.phone}
+                  onChange={(e) => setMobile((d) => ({ ...d, phone: e.target.value }))}
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Last 4 digits / number</Label>
+            </>
+          )}
+
+          {tab === "bank" && (
+            <>
+              <div className="space-y-1.5">
+                <Label>Bank name</Label>
                 <Input
-                  placeholder="e.g. 4242"
-                  value={draft.last4}
-                  onChange={(e) => setDraft((d) => ({ ...d, last4: e.target.value }))}
+                  placeholder="e.g. CRDB Bank"
+                  value={bank.bankName}
+                  onChange={(e) => setBank((d) => ({ ...d, bankName: e.target.value }))}
                 />
               </div>
-              <div className="flex gap-2">
-                <Button disabled={saving} onClick={() => void addMethod()} className="flex-1">
-                  {saving ? "Saving..." : "Save method"}
-                </Button>
-                <Button variant="ghost" onClick={() => setShowForm(false)}>
-                  Cancel
-                </Button>
+              <div className="space-y-1.5">
+                <Label>Account number</Label>
+                <Input
+                  placeholder="0123456789"
+                  value={bank.account}
+                  onChange={(e) => setBank((d) => ({ ...d, account: e.target.value }))}
+                />
               </div>
-            </div>
+            </>
           )}
 
-          {methods === null ? (
-            <LoadingRows />
-          ) : methods.length === 0 && !showForm ? (
-            <EmptyState
-              icon={CreditCard}
-              title="No payment methods yet"
-              description="Add a card, mobile money or bank account to speed up checkout."
-              actionLabel="Add Payment Method"
-              onAction={() => setShowForm(true)}
-              compact
-            />
-          ) : (
-            <ul className="space-y-2.5">
-              {methods.map((m, i) => {
-                const Icon = methodIcon(m.type);
-                const masked = (m.details_masked?.["last4"] as string | undefined) ?? "••••";
-                return (
-                  <li
-                    key={m.method_id}
-                    style={{ animationDelay: `${i * 40}ms` }}
-                    className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-3 rounded-2xl border border-border p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                        <Icon className="size-5" />
-                      </span>
-                      <div>
-                        <p className="text-sm font-medium">
-                          {m.provider || humanize(m.type)} •••• {masked}
-                          {m.is_default && (
-                            <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                              Default
-                            </span>
-                          )}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{humanize(m.type)}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {!m.is_default && (
-                        <button
-                          onClick={() => void setDefault(m.method_id)}
-                          title="Set as default"
-                          className="rounded-lg p-2 text-muted-foreground hover:bg-muted"
-                        >
-                          <Star className="size-4" />
-                        </button>
-                      )}
-                      <button
-                        onClick={() => void removeMethod(m.method_id)}
-                        title="Remove"
-                        className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                      >
-                        <Trash2 className="size-4" />
-                      </button>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+          <label className="flex items-center gap-2 text-sm">
+            <Checkbox checked={makeDefault || isFirst} disabled={isFirst} onCheckedChange={(v) => setMakeDefault(!!v)} />
+            Set as default payment method
+          </label>
 
-          <div className="mt-4 flex items-center gap-2 rounded-2xl bg-muted/50 p-3 text-xs text-muted-foreground">
-            <ShieldCheck className="size-4 shrink-0" />
-            Only masked details are stored — never full card or account numbers.
+          <div className="flex items-start gap-2 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
+            <Lock className="mt-0.5 size-3.5 shrink-0" />
+            Your payment details are encrypted and securely stored.
+          </div>
+
+          <div className="flex gap-2">
+            <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button className="flex-1" disabled={saving} onClick={() => void save()}>
+              {saving ? "Saving..." : "Save Method"}
+            </Button>
           </div>
         </div>
-
-        {/* Charge history */}
-        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-          <h3 className="text-lg font-semibold">Charge history</h3>
-          <p className="mb-4 text-sm text-muted-foreground">Amounts billed across your bookings.</p>
-
-          {charges === null ? (
-            <LoadingRows />
-          ) : charges.length === 0 ? (
-            <EmptyState
-              icon={Receipt}
-              title="No charges yet"
-              description="Once you complete a booking and authorize payment, it will show up here."
-              actionLabel="Browse Services"
-              actionTo="/services"
-              compact
-            />
-          ) : (
-            <ul className="space-y-2.5">
-              {charges.map((b, i) => (
-                <li
-                  key={b.booking_id}
-                  style={{ animationDelay: `${i * 40}ms` }}
-                  className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-3 rounded-2xl border border-border p-4"
-                >
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">{b.service_name ?? "Service"}</p>
-                      <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusStyle(b.status)}`}>
-                        {humanize(b.status)}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
-                      {b.booking_number} · {fmtDate(b.scheduled_date)}
-                      {b.provider_name ? ` · ${b.provider_name}` : ""}
-                    </p>
-                  </div>
-                  <p className="shrink-0 font-semibold">{fmtMoney(b.agreed_amount, b.currency)}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </PageShell>
+      </DialogContent>
+    </Dialog>
   );
 }
 

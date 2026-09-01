@@ -579,6 +579,16 @@ export const bookingApi = {
     apiClient.post<BookingRow>("/bookings", { quote_id: quoteId }).then((r) => r.data),
   authorizeBookingPayment: (bookingId: string) =>
     apiClient.post<BookingRow>(`/bookings/${bookingId}/authorize-payment`).then((r) => r.data),
+  getBooking: (bookingId: string) =>
+    apiClient.get<BookingRow>(`/bookings/${bookingId}`).then((r) => r.data),
+
+  sendBookingMessage: (bookingId: string, body: string) =>
+    apiClient.post<{ message_id: string }>(`/bookings/${bookingId}/messages`, { body }).then((r) => r.data),
+
+  openDispute: (bookingId: string, category: string, description: string) =>
+    apiClient
+      .post<{ dispute_id: string }>("/disputes", { booking_id: bookingId, category, description })
+      .then((r) => r.data),
 };
 
 export const apiClientInstance = apiClient;
