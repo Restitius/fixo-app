@@ -71,7 +71,7 @@ class FinalPaymentService:
 
         # Invoice family snapshot follows the money.
         try:
-            inv = await self._invoices.get_for_booking(customer_id, booking_id)
+            inv = await self._invoices.get_by_booking(customer_id, booking_id)
             if inv and inv.get("status") == "ISSUED":
                 await self._invoices.mark_paid(customer_id, str(inv["invoice_id"]))
         except Exception as exc:  # pragmatic: money is safe; invoice is cosmetic

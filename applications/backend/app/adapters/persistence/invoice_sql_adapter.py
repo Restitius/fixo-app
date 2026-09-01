@@ -18,43 +18,43 @@ class InvoiceSqlAdapter:
     def __init__(self, sql_manager: SQLQueryManager) -> None:
         self._sql = sql_manager
 
-    async def finalize(self, booking_id: str, customer_id: str) -> dict[str, Any] | None:
+    async def finalize(self, customer_id: str, booking_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             InvoiceQueryIds.INVOICE_FINALIZE,
             {"booking_id": booking_id, "customer_id": customer_id},
             fetch="one",
         )
 
-    async def issue(self, invoice_id: str, customer_id: str) -> dict[str, Any] | None:
+    async def issue(self, customer_id: str, invoice_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             InvoiceQueryIds.INVOICE_ISSUE,
             {"invoice_id": invoice_id, "customer_id": customer_id},
             fetch="one",
         )
 
-    async def get_by_booking(self, booking_id: str, customer_id: str) -> dict[str, Any] | None:
+    async def get_by_booking(self, customer_id: str, booking_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             InvoiceQueryIds.INVOICE_GET_BY_BOOKING,
             {"booking_id": booking_id, "customer_id": customer_id},
             fetch="one",
         )
 
-    async def get_owned(self, invoice_id: str, customer_id: str) -> dict[str, Any] | None:
+    async def get_owned(self, customer_id: str, invoice_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             InvoiceQueryIds.INVOICE_GET_OWNED,
             {"invoice_id": invoice_id, "customer_id": customer_id},
             fetch="one",
         )
 
-    async def list(self, customer_id: str, page: int, limit: int) -> list[dict[str, Any]]:
+    async def list(self, customer_id: str, *, limit: int = 20, offset: int = 0) -> list[dict[str, Any]]:
         rows = await self._sql.execute(
             InvoiceQueryIds.INVOICE_LIST,
-            {"customer_id": customer_id, "page": page, "limit": limit},
+            {"customer_id": customer_id, "limit": limit, "offset": offset},
             fetch="all",
         )
         return list(rows or [])
 
-    async def mark_paid(self, invoice_id: str, customer_id: str) -> dict[str, Any] | None:
+    async def mark_paid(self, customer_id: str, invoice_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             InvoiceQueryIds.INVOICE_MARK_PAID,
             {"invoice_id": invoice_id, "customer_id": customer_id},

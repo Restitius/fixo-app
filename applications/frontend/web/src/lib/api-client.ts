@@ -188,6 +188,33 @@ export interface PaymentMethod {
   updated_at?: string;
 }
 
+export interface InvoiceRow {
+  invoice_id: string;
+  invoice_number: string;
+  total_amount: number;
+  currency: string;
+  status: string;
+  issued_at?: string | null;
+  paid_at?: string | null;
+  created_at: string;
+  booking_number: string;
+}
+
+export interface InvoiceItem {
+  item_id: string;
+  description: string;
+  quantity: number;
+  unit_amount: number;
+  line_total: number;
+}
+
+export interface InvoiceDetail extends InvoiceRow {
+  subtotal: number;
+  tax_amount: number;
+  provider_name: string;
+  items: InvoiceItem[];
+}
+
 export interface Consent {
   kind: string;
   consented: boolean;
@@ -307,6 +334,12 @@ export const fixoSdk = {
       .then((r) => r.data),
   removePaymentMethod: (methodId: string) =>
     apiClient.delete<null>(`/account/payment-methods/${methodId}`).then((r) => r.data),
+
+  // ---- Invoices -------------------------------------------------------------
+  listInvoices: (limit = 20, offset = 0) =>
+    apiClient.get<InvoiceRow[]>(`/invoices${qs({ limit, offset })}`).then((r) => r.data),
+  getInvoice: (invoiceId: string) =>
+    apiClient.get<InvoiceDetail>(`/invoices/${invoiceId}`).then((r) => r.data),
 
   // ---- Security ------------------------------------------------------------
   changePassword: (current_password: string, new_password: string) =>
