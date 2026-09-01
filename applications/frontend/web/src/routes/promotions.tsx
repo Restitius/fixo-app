@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { BadgePercent, Ticket, CheckCircle2 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -138,15 +139,19 @@ function PromotionsPage() {
           <h3 className="text-lg font-semibold">Active promotions</h3>
           <p className="mb-4 text-sm text-muted-foreground">Currently valid offers.</p>
           {promos.length === 0 ? (
-            <p className="py-10 text-center text-sm text-muted-foreground">
-              No active promotions.
-            </p>
+            <EmptyState
+              icon={Ticket}
+              title="No active promotions"
+              description="Check back soon — new deals and discounts show up here."
+              compact
+            />
           ) : (
             <ul className="space-y-3">
-              {promos.map((p) => (
+              {promos.map((p, i) => (
                 <li
                   key={p.promo_id}
-                  className="flex items-center justify-between gap-4 rounded-2xl border border-border p-4"
+                  style={{ animationDelay: `${i * 40}ms` }}
+                  className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-4 rounded-2xl border border-border p-4 transition-colors hover:bg-muted/40"
                 >
                   <div>
                     <p className="font-semibold">
