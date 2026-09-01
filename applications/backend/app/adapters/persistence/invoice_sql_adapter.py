@@ -18,10 +18,12 @@ class InvoiceSqlAdapter:
     def __init__(self, sql_manager: SQLQueryManager) -> None:
         self._sql = sql_manager
 
-    async def finalize(self, customer_id: str, booking_id: str) -> dict[str, Any] | None:
+    async def finalize(
+        self, customer_id: str, booking_id: str, tax_rate: float | None = None
+    ) -> dict[str, Any] | None:
         return await self._sql.execute(
             InvoiceQueryIds.INVOICE_FINALIZE,
-            {"booking_id": booking_id, "customer_id": customer_id},
+            {"booking_id": booking_id, "customer_id": customer_id, "tax_rate": tax_rate},
             fetch="one",
         )
 

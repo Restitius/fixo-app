@@ -2,8 +2,9 @@
 SELECT i.invoice_id, i.invoice_number, i.subtotal, i.tax_amount,
        i.total_amount, i.currency, i.status, i.issued_at, i.paid_at,
        i.created_at,
-       b.booking_number,
+       b.booking_number, b.scheduled_date,
        p.display_name AS provider_name,
+       s.name AS service_name,
        COALESCE((
            SELECT json_agg(json_build_object(
                       'item_id', it.item_id, 'description', it.description,
@@ -15,5 +16,6 @@ SELECT i.invoice_id, i.invoice_number, i.subtotal, i.tax_amount,
   FROM "INVOICES" i
   JOIN "BOOKINGS" b  ON b.booking_id = i.booking_id
   JOIN "PROVIDERS" p ON p.provider_id = i.provider_id
+  LEFT JOIN "SERVICES" s ON s.service_id = b.service_id
  WHERE i.invoice_id = CAST(:invoice_id AS uuid)
    AND i.customer_id = CAST(:customer_id AS uuid);
