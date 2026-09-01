@@ -29,6 +29,12 @@ class RatingSqlAdapter(RatingRepositoryPort):
         )
         return rows[0] if rows else None
 
+    async def list_mine(self, customer_id: str) -> list[dict[str, Any]]:
+        rows = await self._queries.execute(
+            "CUS.RATING.LIST_MINE", {"user_id": customer_id}
+        )
+        return list(rows or [])
+
 
 class BookingCloseSqlAdapter(BookingClosePort):
     def __init__(self, queries: SQLQueryManager) -> None:
