@@ -2,9 +2,8 @@
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Banknote,
-  ChevronRight,
   CreditCard,
+  FilterX,
   Landmark,
   Lock,
   MoreVertical,
@@ -20,6 +19,7 @@ import {
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { BookingDetailSheet } from "@/components/dashboard/BookingDetailSheet";
+import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -61,7 +61,7 @@ export const Route = createFileRoute("/payments")({
 });
 
 const MOBILE_PROVIDERS = ["Tigo Pesa", "M-Pesa", "Airtel Money", "HaloPesa"] as const;
-const CHARGE_TABS = ["All", "Authorized", "Paid"] as const;
+const PAGE_SIZE = 6;
 
 function brandFromCardNumber(num: string) {
   return num.startsWith("4") ? "Visa" : num.startsWith("5") ? "Mastercard" : "Card";
@@ -86,8 +86,14 @@ function PaymentsPage() {
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
   const [charges, setCharges] = useState<BookingHistoryRow[] | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [chargeTab, setChargeTab] = useState<(typeof CHARGE_TABS)[number]>("All");
   const [openBookingId, setOpenBookingId] = useState<string | null>(null);
+
+  const [methodSearch, setMethodSearch] = useState("");
+  const [methodTypeFilter, setMethodTypeFilter] = useState("all");
+
+  const [chargeSearch, setChargeSearch] = useState("");
+  const [chargeStatusFilter, setChargeStatusFilter] = useState("all");
+  const [chargePage, setChargePage] = useState(1);
 
   const load = useCallback(async () => {
     try {
@@ -105,6 +111,28 @@ function PaymentsPage() {
   useEffect(() => {
     if (access_token && !loading) void load();
   }, [access_token, loading, load]);
+
+  const filteredMethods = useMemo(
+    () =>
+      (methods ?? []).filter((m) => {
+        const matchesType = methodTypeFilter === "all" || m.type === methodTypeFilter;
+        const matchesSearch = !methodSearch || (m.provider ?? "").toLowerCase().includes(methodSearch.toLowerCase());
+        return matchesType && matchesSearch;
+      }),
+    [methods, methodTypeFilter, methodSearch],
+  );
+
+  const filteredCharges = useMemo(
+    () =>
+      (charges ?? []).filter((c) => {
+        const matchesStatus = chargeStatusFilter === "all" || c.status === chargeStatusFilter;
+        const matchesSearch =
+          !chargeSearch ||
+          [c.service_name, c.booking_number, c.provider_name].some((f) => (f ?? "").toLowerCase().includes(chargeSearch.toLowerCase()));
+        return matchesStatus && matchesSearch;
+      }),
+    [charges, chargeStatusFilter, chargeSearch],
+  );
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
@@ -140,11 +168,10 @@ function PaymentsPage() {
   const defaultCount = (methods ?? []).filter((m) => m.is_default).length;
   const backupCount = (methods ?? []).length - defaultCount;
 
-  const filteredCharges = (charges ?? []).filter((c) => {
-    if (chargeTab === "Authorized") return c.status === "PAYMENT_AUTHORIZED";
-    if (chargeTab === "Paid") return ["PAID", "CLOSED"].includes(c.status);
-    return true;
-  });
+  const chargePaged = filteredCharges.slice((chargePage - 1) * PAGE_SIZE, chargePage * PAGE_SIZE);
+  const chargePageCount = Math.max(1, Math.ceil(filteredCharges.length / PAGE_SIZE));
+  const chargeHasFilters = chargeSearch.trim() !== "" || chargeStatusFilter !== "all";
+  const methodHasFilters = methodSearch.trim() !== "" || methodTypeFilter !== "all";
 
   return (
     <PageShell
@@ -174,63 +201,82 @@ function PaymentsPage() {
         />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.3fr]">
-        {/* Payment methods */}
-        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Payment methods</h3>
-              <p className="text-sm text-muted-foreground">Saved methods for faster, secure payments</p>
-            </div>
-            <Button size="sm" onClick={() => setShowAddDialog(true)} className="gap-2">
-              <Plus className="size-4" /> Add Method
-            </Button>
-          </div>
+      {/* Payment methods */}
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-semibold">Payment methods</h3>
+          <p className="text-sm text-muted-foreground">Saved methods for faster, secure payments</p>
+        </div>
+        <Button size="sm" onClick={() => setShowAddDialog(true)} className="gap-2">
+          <Plus className="size-4" /> Add Method
+        </Button>
+      </div>
 
-          <div className="mt-4">
-            {methods === null ? (
-              <LoadingRows />
-            ) : methods.length === 0 ? (
-              <EmptyState
-                icon={CreditCard}
-                title="No payment methods yet"
-                description="Add a card, mobile money or bank account to speed up checkout."
-                actionLabel="Add Payment Method"
-                onAction={() => setShowAddDialog(true)}
-                compact
-              />
-            ) : (
-              <ul className="space-y-2.5">
-                {methods.map((m, i) => {
-                  const Icon = methodIcon(m.type);
-                  const masked = (m.details_masked?.["last4"] as string | undefined) ?? "••••";
-                  const expiry = m.details_masked?.["expiry"] as string | undefined;
-                  return (
-                    <li
-                      key={m.method_id}
-                      style={{ animationDelay: `${i * 40}ms` }}
-                      className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-3 rounded-2xl border border-border p-4"
-                    >
+      <TableFilterBar
+        search={methodSearch}
+        onSearchChange={setMethodSearch}
+        searchPlaceholder="Search payment methods..."
+        filters={[
+          {
+            value: methodTypeFilter,
+            onChange: setMethodTypeFilter,
+            placeholder: "Type",
+            options: [
+              { value: "all", label: "All Types" },
+              { value: "card", label: "Card" },
+              { value: "mpesa", label: "Mobile Money" },
+              { value: "bank", label: "Bank" },
+            ],
+            width: "w-[160px]",
+          },
+        ]}
+      />
+
+      {methods === null ? (
+        <div className="mt-6 h-40 animate-pulse rounded-3xl bg-muted/60" />
+      ) : filteredMethods.length === 0 ? (
+        <div className="mt-6">
+          {methodHasFilters ? (
+            <EmptyState icon={FilterX} title="No matching methods" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setMethodSearch(""); setMethodTypeFilter("all"); }} />
+          ) : (
+            <EmptyState
+              icon={CreditCard}
+              title="No payment methods yet"
+              description="Add a card, mobile money or bank account to speed up checkout."
+              actionLabel="Add Payment Method"
+              onAction={() => setShowAddDialog(true)}
+            />
+          )}
+        </div>
+      ) : (
+        <TableCard>
+          <TableScroll minWidth={640}>
+            <TableHead columns={["Method", "Type", "Status", "Actions"]} />
+            <tbody>
+              {filteredMethods.map((m) => {
+                const Icon = methodIcon(m.type);
+                const masked = (m.details_masked?.["last4"] as string | undefined) ?? "••••";
+                const expiry = m.details_masked?.["expiry"] as string | undefined;
+                return (
+                  <tr key={m.method_id} className="border-b border-border last:border-0 hover:bg-muted/40">
+                    <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                           <Icon className="size-5" />
                         </span>
                         <div>
-                          <p className="flex items-center gap-2 text-sm font-medium">
-                            {m.provider || humanize(m.type)} •••• {masked}
-                            <span
-                              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                                m.is_default ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                              }`}
-                            >
-                              {m.is_default ? "Default" : "Backup"}
-                            </span>
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {expiry ? `Expires ${expiry}` : humanize(m.type)}
-                          </p>
+                          <p className="font-semibold">{m.provider || humanize(m.type)} •••• {masked}</p>
+                          <p className="text-xs text-muted-foreground">{expiry ? `Expires ${expiry}` : "—"}</p>
                         </div>
                       </div>
+                    </td>
+                    <td className="px-4 py-4 text-muted-foreground">{humanize(m.type)}</td>
+                    <td className="px-4 py-4">
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${m.is_default ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                        {m.is_default ? "Default" : "Backup"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button className="rounded-lg p-2 text-muted-foreground hover:bg-muted">
@@ -251,97 +297,99 @@ function PaymentsPage() {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </TableScroll>
+        </TableCard>
+      )}
 
-          <div className="mt-4 flex items-center gap-2 rounded-2xl bg-muted/50 p-3 text-xs text-muted-foreground">
-            <ShieldCheck className="size-4 shrink-0" />
-            Your payment details are encrypted and only masked information is stored.
-          </div>
-        </div>
-
-        {/* Recent charges */}
-        <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="text-lg font-semibold">Recent charges</h3>
-              <p className="text-sm text-muted-foreground">Latest charges and authorizations</p>
-            </div>
-            <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
-              {CHARGE_TABS.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setChargeTab(t)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-                    chargeTab === t ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-4">
-            {charges === null ? (
-              <LoadingRows />
-            ) : filteredCharges.length === 0 ? (
-              <EmptyState
-                icon={Receipt}
-                title="No charges yet"
-                description="Once you complete a booking and authorize payment, it will show up here."
-                actionLabel="Browse Services"
-                actionTo="/services"
-                compact
-              />
-            ) : (
-              <ul className="space-y-2.5">
-                {filteredCharges.slice(0, 6).map((b, i) => (
-                  <li
-                    key={b.booking_id}
-                    style={{ animationDelay: `${i * 40}ms` }}
-                    className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
-                  >
-                    <button
-                      onClick={() => setOpenBookingId(b.booking_id)}
-                      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-border p-4 text-left transition-colors hover:bg-muted/40"
-                    >
-                      <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <p className="font-medium">{b.service_name ?? "Service"}</p>
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${chargeStatusStyle(b.status)}`}>
-                            {humanize(b.status)}
-                          </span>
-                        </div>
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {b.booking_number} · {fmtDate(b.scheduled_date)}
-                          {b.provider_name ? ` · ${b.provider_name}` : ""}
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-2">
-                        <p className="font-semibold">{fmtMoney(b.agreed_amount, b.currency)}</p>
-                        <ChevronRight className="size-4 text-muted-foreground" />
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-            {filteredCharges.length > 6 && (
-              <button
-                onClick={() => navigate({ to: "/history", search: { category: "payments" } })}
-                className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
-              >
-                View all charges <ChevronRight className="size-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
+      <div className="mt-4 flex items-center gap-2 rounded-2xl bg-muted/50 p-3 text-xs text-muted-foreground">
+        <ShieldCheck className="size-4 shrink-0" />
+        Your payment details are encrypted and only masked information is stored.
       </div>
+
+      {/* Recent charges */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold">Recent charges</h3>
+        <p className="text-sm text-muted-foreground">Latest charges and authorizations</p>
+      </div>
+
+      <TableFilterBar
+        search={chargeSearch}
+        onSearchChange={(v) => { setChargeSearch(v); setChargePage(1); }}
+        searchPlaceholder="Search charges..."
+        filters={[
+          {
+            value: chargeStatusFilter,
+            onChange: (v) => { setChargeStatusFilter(v); setChargePage(1); },
+            placeholder: "Status",
+            options: [
+              { value: "all", label: "All Statuses" },
+              { value: "PAYMENT_AUTHORIZED", label: "Authorized" },
+              { value: "PAID", label: "Paid" },
+              { value: "CLOSED", label: "Closed" },
+            ],
+          },
+        ]}
+      />
+
+      {charges === null ? (
+        <div className="mt-6 h-64 animate-pulse rounded-3xl bg-muted/60" />
+      ) : filteredCharges.length === 0 ? (
+        <div className="mt-6">
+          {chargeHasFilters ? (
+            <EmptyState icon={FilterX} title="No matching charges" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setChargeSearch(""); setChargeStatusFilter("all"); }} />
+          ) : (
+            <EmptyState icon={Receipt} title="No charges yet" description="Once you complete a booking and authorize payment, it will show up here." actionLabel="Browse Services" actionTo="/services" />
+          )}
+        </div>
+      ) : (
+        <TableCard>
+          <TableScroll minWidth={720}>
+            <TableHead columns={["Service", "Booking ID", "Date", "Provider", "Status", "Amount"]} />
+            <tbody>
+              {chargePaged.map((b) => (
+                <tr
+                  key={b.booking_id}
+                  onClick={() => setOpenBookingId(b.booking_id)}
+                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
+                >
+                  <td className="px-6 py-4 font-semibold">{b.service_name ?? "Service"}</td>
+                  <td className="px-4 py-4 text-primary font-semibold">{b.booking_number}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(b.scheduled_date)}</td>
+                  <td className="px-4 py-4">{b.provider_name ?? "—"}</td>
+                  <td className="px-4 py-4">
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${chargeStatusStyle(b.status)}`}>
+                      {humanize(b.status)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4 font-semibold">{fmtMoney(b.agreed_amount, b.currency)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </TableScroll>
+          <TablePagination
+            page={chargePage}
+            pageCount={chargePageCount}
+            onPageChange={setChargePage}
+            from={(chargePage - 1) * PAGE_SIZE + 1}
+            to={Math.min(chargePage * PAGE_SIZE, filteredCharges.length)}
+            total={filteredCharges.length}
+            itemLabel="charges"
+          />
+        </TableCard>
+      )}
+      {filteredCharges.length > 0 && (
+        <button
+          onClick={() => navigate({ to: "/history", search: { category: "payments" } })}
+          className="mt-3 text-sm font-semibold text-primary hover:underline"
+        >
+          View full payment history in History →
+        </button>
+      )}
 
       <AddPaymentMethodDialog
         open={showAddDialog}
@@ -589,15 +637,5 @@ function AddPaymentMethodDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function LoadingRows() {
-  return (
-    <div className="space-y-2.5">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="h-16 animate-pulse rounded-2xl bg-muted/60" />
-      ))}
-    </div>
   );
 }
