@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -113,31 +114,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     apiClient.onUnauthorized(async () => refreshAccessToken());
   }, [state.refresh_token]);
 
-  const refreshAccessToken = async (): Promise<boolean> => {
-    if (!state.refresh_token) return false;
+  // Refresh tokens are single-use/rotating server-side. When several requests
+  // 401 at once (e.g. a page firing parallel API calls right as the access
+  // token expires), each would otherwise race its own refresh call — the
+  // first rotates the refresh token, the second replays the now-stale one,
+  // fails, and logs the user out. Dedupe concurrent callers onto one in-flight
+  // refresh so only a single request actually hits the server.
+  const refreshInFlight = useRef<Promise<boolean> | null>(null);
 
-    try {
-      const resp = await apiClient.post("/auth/token/refresh", {
-        refresh_token: state.refresh_token,
-      });
-      const { access_token, refresh_token, customer } = resp.data;
-      setState((prev) => ({
-        ...prev,
-        access_token,
-        refresh_token,
-        customer: prev.customer ?? customer,
-      }));
-      return true;
-    } catch (err) {
-      console.error("Token refresh failed:", err);
-      setState({
-        access_token: null,
-        refresh_token: null,
-        customer: null,
-        loading: false,
-      });
-      return false;
-    }
+  const refreshAccessToken = (): Promise<boolean> => {
+    if (refreshInFlight.current) return refreshInFlight.current;
+
+    const run = async (): Promise<boolean> => {
+      if (!state.refresh_token) return false;
+      try {
+        const resp = await apiClient.post("/auth/token/refresh", {
+          refresh_token: state.refresh_token,
+        });
+        const { access_token, refresh_token, customer } = resp.data;
+        setState((prev) => ({
+          ...prev,
+          access_token,
+          refresh_token,
+          customer: prev.customer ?? customer,
+        }));
+        return true;
+      } catch (err) {
+        console.error("Token refresh failed:", err);
+        setState({
+          access_token: null,
+          refresh_token: null,
+          customer: null,
+          loading: false,
+        });
+        return false;
+      }
+    };
+
+    const promise = run().finally(() => {
+      refreshInFlight.current = null;
+    });
+    refreshInFlight.current = promise;
+    return promise;
   };
 
   const login = async (
