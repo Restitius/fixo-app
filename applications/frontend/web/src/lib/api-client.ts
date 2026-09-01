@@ -270,6 +270,15 @@ export interface DataExport {
   file_path?: string | null;
 }
 
+export interface AuthSession {
+  session_id: string;
+  device_info?: string | null;
+  ip_address?: string | null;
+  created_at: string;
+  expires_at: string;
+  revoked_at?: string | null;
+}
+
 export const fixoSdk = {
   // ---- Wallet -------------------------------------------------------------
   walletBalance: () =>
@@ -414,6 +423,8 @@ export const fixoSdk = {
     apiClient
       .post<{ revocation_id: string }>("/account/security/revoke-sessions", { reason })
       .then((r) => r.data),
+  listSessions: () =>
+    apiClient.get<AuthSession[]>("/account/security/sessions").then((r) => r.data),
 
   // ---- Privacy / consents --------------------------------------------------
   listConsents: () =>

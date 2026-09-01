@@ -53,6 +53,26 @@ export function timeAgo(iso?: string | null): string {
   return `${days}d ago`;
 }
 
+// Best-effort friendly label parsed from a real stored User-Agent string —
+// never invents a device, just reads what the browser actually reported.
+export function parseDeviceInfo(ua?: string | null): string {
+  if (!ua) return "Unknown device";
+  let os = "Unknown OS";
+  if (/windows/i.test(ua)) os = "Windows";
+  else if (/iphone|ipad/i.test(ua)) os = "iOS";
+  else if (/mac os x|macintosh/i.test(ua)) os = "macOS";
+  else if (/android/i.test(ua)) os = "Android";
+  else if (/linux/i.test(ua)) os = "Linux";
+
+  let browser = "Unknown browser";
+  if (/edg\//i.test(ua)) browser = "Edge";
+  else if (/chrome\//i.test(ua)) browser = "Chrome";
+  else if (/firefox\//i.test(ua)) browser = "Firefox";
+  else if (/safari\//i.test(ua) && !/chrome/i.test(ua)) browser = "Safari";
+
+  return `${browser} on ${os}`;
+}
+
 // Title-case a snake/UPPER status into a display label.
 export function humanize(value: string): string {
   return value

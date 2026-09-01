@@ -17,8 +17,10 @@ interface CustomerProfile {
   full_name: string;
   email: string;
   email_verified: boolean;
-  phone?: string;
-  preferred_language?: string;
+  phone?: string | null;
+  phone_verified?: boolean;
+  preferred_language?: string | null;
+  created_at?: string | null;
 }
 
 interface AuthState {
