@@ -4,13 +4,10 @@ import {
   Calendar,
   CalendarX,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
   Clock,
   CreditCard,
   Droplets,
   FilterX,
-  Search,
   TrendingUp,
   Wrench,
   XCircle,
@@ -19,13 +16,7 @@ import {
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { BookingDetailsDialog } from "@/components/dashboard/BookingDetailsDialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type BookingHistoryRow } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize } from "@/lib/format";
@@ -216,48 +207,28 @@ function BookingsPage() {
       </div>
 
       {/* Filter bar */}
-      <div className="mt-6 flex flex-wrap items-center gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
-        <div className="relative min-w-[220px] flex-1">
-          <input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Search bookings..."
-            className="h-11 w-full rounded-xl bg-muted pl-4 pr-11 text-sm outline-none placeholder:text-muted-foreground"
-          />
-          <Search className="absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        </div>
-
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-          <SelectTrigger className="h-11 w-[170px] rounded-xl border-0 bg-muted">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            {Array.from(new Set((rows ?? []).map((b) => b.status))).map((s) => (
-              <SelectItem key={s} value={s}>
-                {statusLabel(s)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={serviceFilter} onValueChange={(v) => { setServiceFilter(v); setPage(1); }}>
-          <SelectTrigger className="h-11 w-[170px] rounded-xl border-0 bg-muted">
-            <SelectValue placeholder="Service" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Services</SelectItem>
-            {services.map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <TableFilterBar
+        search={search}
+        onSearchChange={(v) => { setSearch(v); setPage(1); }}
+        searchPlaceholder="Search bookings..."
+        filters={[
+          {
+            value: statusFilter,
+            onChange: (v) => { setStatusFilter(v); setPage(1); },
+            placeholder: "Status",
+            options: [
+              { value: "all", label: "All Statuses" },
+              ...Array.from(new Set((rows ?? []).map((b) => b.status))).map((s) => ({ value: s, label: statusLabel(s) })),
+            ],
+          },
+          {
+            value: serviceFilter,
+            onChange: (v) => { setServiceFilter(v); setPage(1); },
+            placeholder: "Service",
+            options: [{ value: "all", label: "All Services" }, ...services.map((s) => ({ value: s, label: s }))],
+          },
+        ]}
+      />
 
       {/* Table */}
       {rows === null ? (
@@ -277,20 +248,10 @@ function BookingsPage() {
           )}
         </div>
       ) : (
-        <div className="mt-6 overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)]">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[860px] text-left text-sm">
-              <thead>
-                <tr className="border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  <th className="px-6 py-4 font-semibold">Service</th>
-                  <th className="px-4 py-4 font-semibold">Booking ID</th>
-                  <th className="px-4 py-4 font-semibold">Schedule</th>
-                  <th className="px-4 py-4 font-semibold">Provider</th>
-                  <th className="px-4 py-4 font-semibold">Status</th>
-                  <th className="px-4 py-4 font-semibold">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
+        <TableCard>
+        <TableScroll minWidth={860}>
+          <TableHead columns={["Service", "Booking ID", "Schedule", "Provider", "Status", "Amount"]} />
+          <tbody>
                 {paged.map((b) => (
                   <tr
                     key={b.booking_id}
@@ -345,35 +306,18 @@ function BookingsPage() {
                     <td className="px-4 py-4 font-semibold">{fmtMoney(b.agreed_amount, b.currency)}</td>
                   </tr>
                 ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex items-center justify-between px-6 py-4">
-            <p className="text-sm text-muted-foreground">
-              Showing {(page - 1) * PAGE_SIZE + 1} to {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} bookings
-            </p>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-40"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-              <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
-                {page}
-              </span>
-              <button
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                disabled={page === pageCount}
-                className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-40"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
-          </div>
-        </div>
+          </tbody>
+        </TableScroll>
+        <TablePagination
+          page={page}
+          pageCount={pageCount}
+          onPageChange={setPage}
+          from={(page - 1) * PAGE_SIZE + 1}
+          to={Math.min(page * PAGE_SIZE, filtered.length)}
+          total={filtered.length}
+          itemLabel="bookings"
+        />
+        </TableCard>
       )}
 
       <BookingDetailsDialog bookingId={openBookingId} onOpenChange={(o) => !o && setOpenBookingId(null)} />
