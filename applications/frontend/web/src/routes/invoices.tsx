@@ -1,7 +1,7 @@
 // Invoices — issued invoices with a detail drawer for line items.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileText, FilterX, Loader2 } from "lucide-react";
+import { CheckCircle2, Clock, Droplets, FileText, FilterX, Loader2, Printer, Receipt, Wrench } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
@@ -33,8 +33,14 @@ function statusStyle(status: string) {
   const s = status.toUpperCase();
   if (s === "PAID") return "bg-success/15 text-success";
   if (s === "VOID" || s === "CANCELLED") return "bg-destructive/15 text-destructive";
-  if (s === "ISSUED") return "bg-primary/10 text-primary";
-  return "bg-amber-500/15 text-amber-600";
+  if (s === "ISSUED") return "bg-amber-500/15 text-amber-600";
+  return "bg-muted text-muted-foreground";
+}
+
+function iconForService(name?: string | null) {
+  const n = (name ?? "").toLowerCase();
+  if (n.includes("plumb") || n.includes("leak") || n.includes("water")) return Droplets;
+  return Wrench;
 }
 
 function InvoicesPage() {
@@ -63,7 +69,10 @@ function InvoicesPage() {
       (rows ?? []).filter((r) => {
         const matchesStatus = statusFilter === "all" || r.status === statusFilter;
         const matchesSearch =
-          !search || [r.invoice_number, r.booking_number].some((f) => f.toLowerCase().includes(search.toLowerCase()));
+          !search ||
+          [r.invoice_number, r.booking_number, r.provider_name, r.service_name ?? ""].some((f) =>
+            f.toLowerCase().includes(search.toLowerCase()),
+          );
         return matchesStatus && matchesSearch;
       }),
     [rows, statusFilter, search],
@@ -89,6 +98,12 @@ function InvoicesPage() {
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const hasActiveFilters = search.trim() !== "" || statusFilter !== "all";
 
+  const totalInvoices = rows?.length ?? 0;
+  const paidCount = (rows ?? []).filter((r) => r.status === "PAID").length;
+  const pendingCount = (rows ?? []).filter((r) => r.status === "ISSUED").length;
+  const totalBilled = (rows ?? []).reduce((s, r) => s + r.total_amount, 0);
+  const currency = rows?.[0]?.currency ?? "TZS";
+
   return (
     <PageShell
       title="Invoices"
@@ -96,6 +111,13 @@ function InvoicesPage() {
       userName={customer?.full_name}
       onLogout={logout}
     >
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard icon={FileText} label="Total Invoices" value={String(totalInvoices)} />
+        <StatCard icon={CheckCircle2} label="Paid Invoices" value={String(paidCount)} tone="success" />
+        <StatCard icon={Clock} label="Pending" value={String(pendingCount)} tone="amber" />
+        <StatCard icon={Receipt} label="Total Billed" value={fmtMoney(totalBilled, currency)} />
+      </div>
+
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
@@ -108,11 +130,19 @@ function InvoicesPage() {
             options: [
               { value: "all", label: "All Statuses" },
               { value: "DRAFT", label: "Draft" },
-              { value: "ISSUED", label: "Issued" },
+              { value: "ISSUED", label: "Pending" },
               { value: "PAID", label: "Paid" },
             ],
           },
         ]}
+        trailing={
+          <button
+            onClick={() => window.print()}
+            className="flex h-11 items-center gap-2 rounded-xl bg-muted px-4 text-sm font-medium hover:bg-muted/70"
+          >
+            <Printer className="size-4" /> Print
+          </button>
+        }
       />
 
       {rows === null ? (
@@ -133,26 +163,37 @@ function InvoicesPage() {
         </div>
       ) : (
         <TableCard>
-          <TableScroll minWidth={700}>
-            <TableHead columns={["Invoice #", "Booking", "Date", "Status", "Amount"]} />
+          <TableScroll minWidth={760}>
+            <TableHead columns={["Service", "Invoice #", "Provider", "Issue Date", "Status", "Amount"]} />
             <tbody>
-              {paged.map((inv) => (
-                <tr
-                  key={inv.invoice_id}
-                  onClick={() => void openInvoice(inv.invoice_id)}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
-                >
-                  <td className="px-6 py-4 font-semibold text-primary">{inv.invoice_number}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{inv.booking_number}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(inv.created_at)}</td>
-                  <td className="px-4 py-4">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(inv.status)}`}>
-                      {humanize(inv.status)}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4 font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</td>
-                </tr>
-              ))}
+              {paged.map((inv) => {
+                const Icon = iconForService(inv.service_name);
+                return (
+                  <tr
+                    key={inv.invoice_id}
+                    onClick={() => void openInvoice(inv.invoice_id)}
+                    className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <Icon className="size-4" />
+                        </span>
+                        <p className="font-semibold">{inv.service_name ?? "Service"}</p>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 text-primary font-semibold">{inv.invoice_number}</td>
+                    <td className="px-4 py-4">{inv.provider_name}</td>
+                    <td className="px-4 py-4 text-muted-foreground">{fmtDate(inv.created_at)}</td>
+                    <td className="px-4 py-4">
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(inv.status)}`}>
+                        {inv.status === "ISSUED" ? "Pending" : humanize(inv.status)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </TableScroll>
           <TablePagination
@@ -177,30 +218,52 @@ function InvoicesPage() {
               <Loader2 className="size-6 animate-spin text-muted-foreground" />
             </div>
           ) : (
-            <div className="mt-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-semibold">{detail.invoice_number}</p>
-                  <p className="text-xs text-muted-foreground">Booking {detail.booking_number}</p>
+            <div className="mt-4 space-y-5">
+              <div className="flex items-center justify-between rounded-2xl bg-muted/40 p-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                    {(() => {
+                      const Icon = iconForService(detail.service_name);
+                      return <Icon className="size-5" />;
+                    })()}
+                  </span>
+                  <div>
+                    <p className="font-semibold">{detail.service_name ?? "Service"}</p>
+                    <p className="text-xs text-muted-foreground">{detail.invoice_number}</p>
+                  </div>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(detail.status)}`}>
-                  {humanize(detail.status)}
-                </span>
+                <div className="text-right">
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(detail.status)}`}>
+                    {detail.status === "ISSUED" ? "Pending" : humanize(detail.status)}
+                  </span>
+                  <p className="mt-1 font-bold">{fmtMoney(detail.total_amount, detail.currency)}</p>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground">Provider · {detail.provider_name}</p>
+
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <Field label="Provider" value={detail.provider_name} />
+                <Field label="Booking reference" value={detail.booking_number} />
+                <Field label="Invoice date" value={fmtDate(detail.created_at)} />
+                <Field label="Service date" value={detail.scheduled_date ? fmtDate(detail.scheduled_date) : "—"} />
+              </div>
+
               {detail.items.length > 0 && (
-                <ul className="divide-y divide-border rounded-2xl border border-border">
-                  {detail.items.map((it) => (
-                    <li key={it.item_id} className="flex items-center justify-between gap-4 p-3 text-sm">
-                      <span>
-                        {it.description}
-                        <span className="text-muted-foreground"> × {it.quantity}</span>
-                      </span>
-                      <span className="font-medium">{fmtMoney(it.line_total, detail.currency)}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div>
+                  <h4 className="mb-2 text-sm font-semibold">Billing breakdown</h4>
+                  <ul className="divide-y divide-border rounded-2xl border border-border">
+                    {detail.items.map((it) => (
+                      <li key={it.item_id} className="flex items-center justify-between gap-4 p-3 text-sm">
+                        <span>
+                          {it.description}
+                          {it.quantity > 1 ? <span className="text-muted-foreground"> × {it.quantity}</span> : null}
+                        </span>
+                        <span className="font-medium">{fmtMoney(it.line_total, detail.currency)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
+
               <div className="flex flex-col gap-1 rounded-2xl bg-muted/50 p-4 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
@@ -215,11 +278,54 @@ function InvoicesPage() {
                   <span>{fmtMoney(detail.total_amount, detail.currency)}</span>
                 </div>
               </div>
+
               {detail.paid_at && <p className="text-xs text-muted-foreground">Paid {fmtDate(detail.paid_at)}</p>}
+
+              <button
+                onClick={() => window.print()}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
+              >
+                <Printer className="size-4" /> Print Invoice
+              </button>
             </div>
           )}
         </SheetContent>
       </Sheet>
     </PageShell>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: typeof FileText;
+  label: string;
+  value: string;
+  tone?: "success" | "amber";
+}) {
+  return (
+    <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <span
+        className={`flex size-11 items-center justify-center rounded-2xl ${
+          tone === "success" ? "bg-success/15 text-success" : tone === "amber" ? "bg-amber-500/15 text-amber-600" : "bg-primary/10 text-primary"
+        }`}
+      >
+        <Icon className="size-5" />
+      </span>
+      <p className="mt-4 text-2xl font-bold tracking-tight">{value}</p>
+      <p className="mt-0.5 text-sm text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function Field({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-0.5 font-medium">{value}</p>
+    </div>
   );
 }

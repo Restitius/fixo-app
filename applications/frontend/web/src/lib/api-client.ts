@@ -228,6 +228,8 @@ export interface InvoiceRow {
   paid_at?: string | null;
   created_at: string;
   booking_number: string;
+  provider_name: string;
+  service_name?: string | null;
 }
 
 export interface InvoiceItem {
@@ -241,7 +243,7 @@ export interface InvoiceItem {
 export interface InvoiceDetail extends InvoiceRow {
   subtotal: number;
   tax_amount: number;
-  provider_name: string;
+  scheduled_date?: string | null;
   items: InvoiceItem[];
 }
 
