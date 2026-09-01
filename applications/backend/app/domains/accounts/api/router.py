@@ -61,7 +61,7 @@ async def add_payment_method(payload: PaymentMethodAddRequest, customer: Current
     svc = get_composition().payment_method_service()
     method = await svc.add(str(customer["customer_id"]), payload.type, payload.provider, payload.details_masked)
     if payload.make_default:
-        await svc.set_default(str(customer["customer_id"]), str(method["method_id"]))
+        method = await svc.set_default(str(customer["customer_id"]), str(method["method_id"])) or method
     return ok(method, title="Payment method added", status_code=201)
 
 
