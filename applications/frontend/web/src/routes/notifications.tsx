@@ -1,10 +1,11 @@
 // Notifications center — inbox, unread badge, read / mark-all.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
-import { Bell, CheckCheck } from "lucide-react";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { Bell, CheckCheck, FilterX } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type NotificationRow } from "@/lib/api-client";
@@ -15,22 +16,36 @@ export const Route = createFileRoute("/notifications")({
   component: NotificationsPage,
 });
 
+const PAGE_SIZE = 8;
+
 function NotificationsPage() {
   const { access_token, loading, logout, customer } = useAuth();
-  const [items, setItems] = useState<NotificationRow[]>([]);
-  const [unreadOnly, setUnreadOnly] = useState(false);
+  const [items, setItems] = useState<NotificationRow[] | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1);
 
   const load = useCallback(async () => {
     try {
-      setItems(await fixoSdk.notifications(unreadOnly, 50, 0));
+      setItems(await fixoSdk.notifications(false, 50, 0));
     } catch {
       // toast emitted by client
     }
-  }, [unreadOnly]);
+  }, []);
 
   useEffect(() => {
     if (access_token && !loading) void load();
-  }, [access_token, loading, unreadOnly, load]);
+  }, [access_token, loading, load]);
+
+  const filtered = useMemo(
+    () =>
+      (items ?? []).filter((n) => {
+        const matchesStatus = statusFilter === "all" || (statusFilter === "unread" ? !n.read_at : !!n.read_at);
+        const matchesSearch = !search || [n.title, n.body ?? ""].some((f) => f.toLowerCase().includes(search.toLowerCase()));
+        return matchesStatus && matchesSearch;
+      }),
+    [items, statusFilter, search],
+  );
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
@@ -41,9 +56,7 @@ function NotificationsPage() {
     try {
       const res = await fixoSdk.markNotificationRead(id);
       if (res.marked) {
-        setItems((prev) =>
-          prev.map((n) => (n.notification_id === id ? { ...n, read_at: new Date().toISOString() } : n)),
-        );
+        setItems((prev) => prev?.map((n) => (n.notification_id === id ? { ...n, read_at: new Date().toISOString() } : n)) ?? null);
       }
     } catch {
       // toast emitted by client
@@ -60,6 +73,11 @@ function NotificationsPage() {
     }
   };
 
+  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const hasActiveFilters = search.trim() !== "" || statusFilter !== "all";
+  const unreadCount = (items ?? []).filter((n) => !n.read_at).length;
+
   return (
     <PageShell
       title="Notifications"
@@ -67,85 +85,84 @@ function NotificationsPage() {
       userName={customer?.full_name}
       onLogout={logout}
     >
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex gap-1.5 rounded-2xl bg-card p-1.5 shadow-[var(--shadow-card)]">
-          <button
-            onClick={() => setUnreadOnly(false)}
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-              !unreadOnly ? "text-primary-foreground" : "text-foreground/70 hover:text-foreground"
-            }`}
-            style={!unreadOnly ? { backgroundImage: "var(--gradient-primary)" } : undefined}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setUnreadOnly(true)}
-            className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-              unreadOnly ? "text-primary-foreground" : "text-foreground/70 hover:text-foreground"
-            }`}
-            style={unreadOnly ? { backgroundImage: "var(--gradient-primary)" } : undefined}
-          >
-            Unread
-          </button>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => void markAll()} className="gap-2">
-          <CheckCheck className="size-4" /> Mark all read
-        </Button>
-      </div>
+      <TableFilterBar
+        search={search}
+        onSearchChange={(v) => { setSearch(v); setPage(1); }}
+        searchPlaceholder="Search notifications..."
+        filters={[
+          {
+            value: statusFilter,
+            onChange: (v) => { setStatusFilter(v); setPage(1); },
+            placeholder: "Status",
+            options: [
+              { value: "all", label: "All" },
+              { value: "unread", label: "Unread" },
+              { value: "read", label: "Read" },
+            ],
+          },
+        ]}
+        trailing={
+          <Button variant="outline" size="sm" onClick={() => void markAll()} disabled={unreadCount === 0} className="gap-2">
+            <CheckCheck className="size-4" /> Mark all read
+          </Button>
+        }
+      />
 
-      <div className="mt-6">
-        {items.length === 0 ? (
-          <EmptyState
-            icon={Bell}
-            title="All caught up"
-            description="No notifications here — updates and reminders will show up as they happen."
-          />
-        ) : (
-          <ul className="space-y-3">
-            {items.map((n, i) => {
-              const unread = !n.read_at;
-              return (
-                <li
-                  key={n.notification_id}
-                  style={{ animationDelay: `${i * 40}ms` }}
-                  className={`flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-start gap-4 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)] ${
-                    unread ? "border border-primary/30" : ""
-                  }`}
-                >
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Bell className="size-5" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">{n.title}</p>
+      {items === null ? (
+        <div className="mt-6 h-64 animate-pulse rounded-3xl bg-muted/60" />
+      ) : filtered.length === 0 ? (
+        <div className="mt-6">
+          {hasActiveFilters ? (
+            <EmptyState icon={FilterX} title="No matching notifications" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); }} />
+          ) : (
+            <EmptyState icon={Bell} title="All caught up" description="No notifications here — updates and reminders will show up as they happen." />
+          )}
+        </div>
+      ) : (
+        <TableCard>
+          <TableScroll minWidth={760}>
+            <TableHead columns={["Notification", "Type", "Date", "Status", "Actions"]} />
+            <tbody>
+              {paged.map((n) => {
+                const unread = !n.read_at;
+                return (
+                  <tr key={n.notification_id} className={`border-b border-border last:border-0 hover:bg-muted/40 ${unread ? "bg-primary/5" : ""}`}>
+                    <td className="px-6 py-4">
+                      <p className="font-semibold">{n.title}</p>
+                      {n.body && <p className="mt-0.5 max-w-xs truncate text-xs text-muted-foreground">{n.body}</p>}
+                    </td>
+                    <td className="px-4 py-4 text-muted-foreground">{humanize(n.type)}</td>
+                    <td className="px-4 py-4 text-muted-foreground">
+                      <span title={fmtDateTime(n.created_at)}>{timeAgo(n.created_at)}</span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${unread ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                        {unread ? "New" : "Read"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4">
                       {unread && (
-                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                          New
-                        </span>
+                        <Button size="sm" variant="ghost" onClick={() => void markOne(n.notification_id)} title="Mark as read">
+                          <CheckCheck className="size-4" />
+                        </Button>
                       )}
-                      <span className="text-xs text-muted-foreground">{timeAgo(n.created_at)}</span>
-                    </div>
-                    {n.body && <p className="mt-0.5 text-sm text-muted-foreground">{n.body}</p>}
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {humanize(n.type)} · {fmtDateTime(n.created_at)}
-                    </p>
-                  </div>
-                  {unread && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => void markOne(n.notification_id)}
-                      title="Mark as read"
-                    >
-                      <CheckCheck className="size-4" />
-                    </Button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </TableScroll>
+          <TablePagination
+            page={page}
+            pageCount={pageCount}
+            onPageChange={setPage}
+            from={(page - 1) * PAGE_SIZE + 1}
+            to={Math.min(page * PAGE_SIZE, filtered.length)}
+            total={filtered.length}
+            itemLabel="notifications"
+          />
+        </TableCard>
+      )}
     </PageShell>
   );
 }
