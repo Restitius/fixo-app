@@ -175,6 +175,10 @@ class AuthService:
                 "full_name": customer["full_name"],
                 "email": customer["email"],
                 "email_verified": customer["email_verified"],
+                "phone": customer.get("phone"),
+                "phone_verified": customer.get("phone_verified", False),
+                "preferred_language": customer.get("preferred_language"),
+                "created_at": str(customer["created_at"]) if customer.get("created_at") else None,
             },
         }
 

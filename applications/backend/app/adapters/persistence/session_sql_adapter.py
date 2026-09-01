@@ -11,6 +11,7 @@ class SessionQueryIds:
     GET_VALID = "CUS.AUTH.SESSION.GET_VALID"
     REVOKE = "CUS.AUTH.SESSION.REVOKE"
     REVOKE_ALL = "CUS.AUTH.SESSION.REVOKE_ALL"
+    LIST_FOR_CUSTOMER = "CUS.AUTH.SESSION.LIST_FOR_CUSTOMER"
 
 
 class SessionSqlAdapter:
@@ -38,3 +39,9 @@ class SessionSqlAdapter:
         return await self._sql.execute(
             SessionQueryIds.REVOKE_ALL, {"user_id": str(user_id)}, fetch="one"
         )
+
+    async def list_for_customer(self, user_id: str, limit: int = 20) -> list[dict[str, Any]]:
+        rows = await self._sql.execute(
+            SessionQueryIds.LIST_FOR_CUSTOMER, {"user_id": str(user_id), "limit": limit}, fetch="all"
+        )
+        return list(rows or [])
