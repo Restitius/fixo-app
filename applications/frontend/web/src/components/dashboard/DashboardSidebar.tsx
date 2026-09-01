@@ -32,8 +32,8 @@ const groups = [
     label: "Financial",
     items: [
       { title: "Wallet", icon: Wallet, to: "/wallet" },
-      { title: "Payments", icon: Receipt },
-      { title: "Invoices", icon: FileText },
+      { title: "Payments", icon: Receipt, to: "/payments" },
+      { title: "Invoices", icon: FileText, to: "/invoices" },
       { title: "History", icon: History, to: "/history" },
     ],
   },
