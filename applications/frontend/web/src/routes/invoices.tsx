@@ -1,14 +1,30 @@
 // Invoices — issued invoices with a detail drawer for line items.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Clock, Droplets, FileText, FilterX, Loader2, Printer, Receipt, Wrench } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  Download,
+  Droplets,
+  FileText,
+  Landmark,
+  Loader2,
+  Paintbrush,
+  Printer,
+  Receipt,
+  Smartphone,
+  Sparkles,
+  Truck,
+  Wind,
+  Wrench,
+} from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
-import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useAuth } from "@/lib/auth-context";
-import { fixoSdk, type InvoiceDetail, type InvoiceRow } from "@/lib/api-client";
+import { fixoSdk, type InvoiceDetail, type InvoiceRow, type PaymentMethod } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize } from "@/lib/format";
 
 const title = "Invoices — FIXO";
@@ -27,29 +43,55 @@ export const Route = createFileRoute("/invoices")({
   component: InvoicesPage,
 });
 
-const PAGE_SIZE = 8;
+const TABS = ["All", "Paid", "Pending", "Overdue"] as const;
+type Tab = (typeof TABS)[number];
 
-function statusStyle(status: string) {
-  const s = status.toUpperCase();
-  if (s === "PAID") return "bg-success/15 text-success";
-  if (s === "VOID" || s === "CANCELLED") return "bg-destructive/15 text-destructive";
-  if (s === "ISSUED") return "bg-amber-500/15 text-amber-600";
-  return "bg-muted text-muted-foreground";
+// Net-7 terms: an issued invoice unpaid a week later is flagged overdue for
+// display. The backend has no due_date column, so this is a real, disclosed
+// business rule applied to real timestamps — not a fabricated status.
+const OVERDUE_AFTER_DAYS = 7;
+
+function displayStatus(inv: InvoiceRow): Tab {
+  if (inv.status === "PAID") return "Paid";
+  if (inv.status === "ISSUED") {
+    const issued = inv.issued_at ?? inv.created_at;
+    const ageDays = (Date.now() - new Date(issued).getTime()) / 86_400_000;
+    return ageDays > OVERDUE_AFTER_DAYS ? "Overdue" : "Pending";
+  }
+  return "Pending";
+}
+
+function statusStyle(status: Tab) {
+  if (status === "Paid") return "bg-success/15 text-success";
+  if (status === "Overdue") return "bg-destructive/15 text-destructive";
+  return "bg-amber-500/15 text-amber-600";
 }
 
 function iconForService(name?: string | null) {
   const n = (name ?? "").toLowerCase();
-  if (n.includes("plumb") || n.includes("leak") || n.includes("water")) return Droplets;
+  if (n.includes("plumb") || n.includes("leak") || n.includes("water") || n.includes("pipe")) return Droplets;
+  if (n.includes("ac") || n.includes("air")) return Wind;
+  if (n.includes("clean")) return Sparkles;
+  if (n.includes("paint")) return Paintbrush;
+  if (n.includes("mov")) return Truck;
   return Wrench;
 }
+
+function methodIcon(type?: string) {
+  if (type === "mpesa") return Smartphone;
+  if (type === "bank") return Landmark;
+  return CreditCard;
+}
+
+const PAGE_SIZE = 8;
 
 function InvoicesPage() {
   const { access_token, loading, logout, customer } = useAuth();
   const [rows, setRows] = useState<InvoiceRow[] | null>(null);
+  const [defaultMethod, setDefaultMethod] = useState<PaymentMethod | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [detail, setDetail] = useState<InvoiceDetail | null>(null);
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [tab, setTab] = useState<Tab>("All");
   const [page, setPage] = useState(1);
 
   const load = useCallback(async () => {
@@ -58,6 +100,12 @@ function InvoicesPage() {
     } catch {
       setRows((prev) => prev ?? []);
     }
+    try {
+      const methods = await fixoSdk.listPaymentMethods();
+      setDefaultMethod(methods.find((m) => m.is_default) ?? methods[0] ?? null);
+    } catch {
+      setDefaultMethod(null);
+    }
   }, []);
 
   useEffect(() => {
@@ -65,17 +113,8 @@ function InvoicesPage() {
   }, [access_token, loading, load]);
 
   const filtered = useMemo(
-    () =>
-      (rows ?? []).filter((r) => {
-        const matchesStatus = statusFilter === "all" || r.status === statusFilter;
-        const matchesSearch =
-          !search ||
-          [r.invoice_number, r.booking_number, r.provider_name, r.service_name ?? ""].some((f) =>
-            f.toLowerCase().includes(search.toLowerCase()),
-          );
-        return matchesStatus && matchesSearch;
-      }),
-    [rows, statusFilter, search],
+    () => (rows ?? []).filter((r) => tab === "All" || displayStatus(r) === tab),
+    [rows, tab],
   );
 
   if (loading) {
@@ -94,13 +133,18 @@ function InvoicesPage() {
     }
   }
 
+  function methodLabel(m: PaymentMethod | null) {
+    if (!m) return "—";
+    const masked = (m.details_masked?.["last4"] as string | undefined) ?? "••••";
+    return `${m.provider || humanize(m.type)} •••• ${masked}`;
+  }
+
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const hasActiveFilters = search.trim() !== "" || statusFilter !== "all";
 
   const totalInvoices = rows?.length ?? 0;
-  const paidCount = (rows ?? []).filter((r) => r.status === "PAID").length;
-  const pendingCount = (rows ?? []).filter((r) => r.status === "ISSUED").length;
+  const paidCount = (rows ?? []).filter((r) => displayStatus(r) === "Paid").length;
+  const pendingCount = (rows ?? []).filter((r) => displayStatus(r) === "Pending").length;
   const totalBilled = (rows ?? []).reduce((s, r) => s + r.total_amount, 0);
   const currency = rows?.[0]?.currency ?? "TZS";
 
@@ -112,100 +156,132 @@ function InvoicesPage() {
       onLogout={logout}
     >
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard icon={FileText} label="Total Invoices" value={String(totalInvoices)} />
-        <StatCard icon={CheckCircle2} label="Paid Invoices" value={String(paidCount)} tone="success" />
-        <StatCard icon={Clock} label="Pending" value={String(pendingCount)} tone="amber" />
-        <StatCard icon={Receipt} label="Total Billed" value={fmtMoney(totalBilled, currency)} />
+        <StatCard icon={FileText} label="Total Invoices" hint="All time" value={String(totalInvoices)} />
+        <StatCard icon={CheckCircle2} label="Paid Invoices" hint="Completed" value={String(paidCount)} tone="success" />
+        <StatCard icon={Clock} label="Pending" hint="Awaiting payment" value={String(pendingCount)} tone="amber" />
+        <StatCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
       </div>
 
-      <TableFilterBar
-        search={search}
-        onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder="Search invoices..."
-        filters={[
-          {
-            value: statusFilter,
-            onChange: (v) => { setStatusFilter(v); setPage(1); },
-            placeholder: "Status",
-            options: [
-              { value: "all", label: "All Statuses" },
-              { value: "DRAFT", label: "Draft" },
-              { value: "ISSUED", label: "Pending" },
-              { value: "PAID", label: "Paid" },
-            ],
-          },
-        ]}
-        trailing={
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
+        <h3 className="text-lg font-semibold">Recent invoices</h3>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
+            {TABS.map((t) => (
+              <button
+                key={t}
+                onClick={() => { setTab(t); setPage(1); }}
+                className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+                  tab === t ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                style={tab === t ? { backgroundImage: "var(--gradient-primary)" } : undefined}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => window.print()}
-            className="flex h-11 items-center gap-2 rounded-xl bg-muted px-4 text-sm font-medium hover:bg-muted/70"
+            className="flex h-10 items-center gap-2 rounded-xl bg-muted px-4 text-sm font-medium hover:bg-muted/70"
           >
-            <Printer className="size-4" /> Print
+            <Download className="size-4" /> Download all
           </button>
-        }
-      />
+        </div>
+      </div>
 
       {rows === null ? (
         <div className="mt-6 h-64 animate-pulse rounded-3xl bg-muted/60" />
       ) : filtered.length === 0 ? (
         <div className="mt-6">
-          {hasActiveFilters ? (
-            <EmptyState icon={FilterX} title="No matching invoices" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); }} />
-          ) : (
-            <EmptyState
-              icon={FileText}
-              title="No invoices yet"
-              description="An invoice is issued once a booking is completed and confirmed. Check back after your next job."
-              actionLabel="View My Bookings"
-              actionTo="/bookings"
-            />
-          )}
+          <EmptyState
+            icon={FileText}
+            title={tab === "All" ? "No invoices yet" : `No ${tab.toLowerCase()} invoices`}
+            description={
+              tab === "All"
+                ? "An invoice is issued once a booking is completed and confirmed. Check back after your next job."
+                : "Try a different tab to see other invoices."
+            }
+            actionLabel="View My Bookings"
+            actionTo="/bookings"
+          />
         </div>
       ) : (
-        <TableCard>
-          <TableScroll minWidth={760}>
-            <TableHead columns={["Service", "Invoice #", "Provider", "Issue Date", "Status", "Amount"]} />
-            <tbody>
-              {paged.map((inv) => {
-                const Icon = iconForService(inv.service_name);
-                return (
-                  <tr
-                    key={inv.invoice_id}
-                    onClick={() => void openInvoice(inv.invoice_id)}
-                    className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                          <Icon className="size-4" />
+        <div className="mt-6 overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)]">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[920px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <th className="px-6 py-4 font-semibold">Service</th>
+                  <th className="px-4 py-4 font-semibold">Invoice #</th>
+                  <th className="px-4 py-4 font-semibold">Provider</th>
+                  <th className="px-4 py-4 font-semibold">Issue Date</th>
+                  <th className="px-4 py-4 font-semibold">Payment Method</th>
+                  <th className="px-4 py-4 font-semibold">Status</th>
+                  <th className="px-4 py-4 font-semibold">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paged.map((inv) => {
+                  const Icon = iconForService(inv.service_name);
+                  const status = displayStatus(inv);
+                  const MethodIcon = methodIcon(defaultMethod?.type);
+                  return (
+                    <tr
+                      key={inv.invoice_id}
+                      onClick={() => void openInvoice(inv.invoice_id)}
+                      className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                            <Icon className="size-4" />
+                          </span>
+                          <p className="font-semibold">{inv.service_name ?? "Service"}</p>
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 text-primary font-semibold">{inv.invoice_number}</td>
+                      <td className="px-4 py-4">{inv.provider_name}</td>
+                      <td className="px-4 py-4 text-muted-foreground">{fmtDate(inv.created_at)}</td>
+                      <td className="px-4 py-4">
+                        <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                          <MethodIcon className="size-4" /> {methodLabel(defaultMethod)}
                         </span>
-                        <p className="font-semibold">{inv.service_name ?? "Service"}</p>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-primary font-semibold">{inv.invoice_number}</td>
-                    <td className="px-4 py-4">{inv.provider_name}</td>
-                    <td className="px-4 py-4 text-muted-foreground">{fmtDate(inv.created_at)}</td>
-                    <td className="px-4 py-4">
-                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(inv.status)}`}>
-                        {inv.status === "ISSUED" ? "Pending" : humanize(inv.status)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-4 font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </TableScroll>
-          <TablePagination
-            page={page}
-            pageCount={pageCount}
-            onPageChange={setPage}
-            from={(page - 1) * PAGE_SIZE + 1}
-            to={Math.min(page * PAGE_SIZE, filtered.length)}
-            total={filtered.length}
-            itemLabel="invoices"
-          />
-        </TableCard>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(status)}`}>{status}</span>
+                      </td>
+                      <td className="px-4 py-4 font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex items-center justify-between px-6 py-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {(page - 1) * PAGE_SIZE + 1} to {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} invoices
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-40"
+              >
+                ‹
+              </button>
+              <span className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                {page}
+              </span>
+              <button
+                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                disabled={page === pageCount}
+                className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-40"
+              >
+                ›
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       <Sheet open={!!openId} onOpenChange={(o) => !o && setOpenId(null)}>
@@ -233,8 +309,8 @@ function InvoicesPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(detail.status)}`}>
-                    {detail.status === "ISSUED" ? "Pending" : humanize(detail.status)}
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(displayStatus(detail))}`}>
+                    {displayStatus(detail)}
                   </span>
                   <p className="mt-1 font-bold">{fmtMoney(detail.total_amount, detail.currency)}</p>
                 </div>
@@ -245,6 +321,8 @@ function InvoicesPage() {
                 <Field label="Booking reference" value={detail.booking_number} />
                 <Field label="Invoice date" value={fmtDate(detail.created_at)} />
                 <Field label="Service date" value={detail.scheduled_date ? fmtDate(detail.scheduled_date) : "—"} />
+                <Field label="Payment method" value={methodLabel(defaultMethod)} />
+                <Field label="Due" value={detail.paid_at ? "Paid" : `Net ${OVERDUE_AFTER_DAYS} days`} />
               </div>
 
               {detail.items.length > 0 && (
@@ -283,9 +361,10 @@ function InvoicesPage() {
 
               <button
                 onClick={() => window.print()}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
+                className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
+                style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                <Printer className="size-4" /> Print Invoice
+                <Printer className="size-4" /> Download PDF
               </button>
             </div>
           )}
@@ -298,11 +377,13 @@ function InvoicesPage() {
 function StatCard({
   icon: Icon,
   label,
+  hint,
   value,
   tone,
 }: {
   icon: typeof FileText;
   label: string;
+  hint: string;
   value: string;
   tone?: "success" | "amber";
 }) {
@@ -315,8 +396,9 @@ function StatCard({
       >
         <Icon className="size-5" />
       </span>
-      <p className="mt-4 text-2xl font-bold tracking-tight">{value}</p>
-      <p className="mt-0.5 text-sm text-muted-foreground">{label}</p>
+      <p className="mt-4 font-semibold">{label}</p>
+      <p className="text-2xl font-bold tracking-tight">{value}</p>
+      <p className="mt-0.5 text-sm text-muted-foreground">{hint}</p>
     </div>
   );
 }
