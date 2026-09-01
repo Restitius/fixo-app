@@ -132,6 +132,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           refresh_token: state.refresh_token,
         });
         const { access_token, refresh_token, customer } = resp.data;
+        // Apply the new token to the API client synchronously — the retry
+        // fetch inside apiClient.request() fires immediately after this
+        // resolves, before React re-renders and runs the effect below. If we
+        // only relied on that effect, the retry would replay the stale token
+        // and 401 again, leaving every in-flight page fetch permanently
+        // unresolved (rows stuck at null, dropdowns empty, stats stuck at 0).
+        apiClient.setAuthToken(access_token);
         setState((prev) => ({
           ...prev,
           access_token,

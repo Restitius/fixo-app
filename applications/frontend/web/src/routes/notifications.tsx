@@ -29,7 +29,7 @@ function NotificationsPage() {
     try {
       setItems(await fixoSdk.notifications(false, 50, 0));
     } catch {
-      // toast emitted by client
+      setItems((prev) => prev ?? []);
     }
   }, []);
 

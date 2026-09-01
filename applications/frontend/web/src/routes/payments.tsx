@@ -104,7 +104,8 @@ function PaymentsPage() {
       setMethods(m);
       setCharges(c);
     } catch {
-      // toast emitted by client
+      setMethods((prev) => prev ?? []);
+      setCharges((prev) => prev ?? []);
     }
   }, []);
 
