@@ -180,6 +180,13 @@ export interface BookingRating {
   rating: number;
   comment?: string | null;
   created_at: string;
+  updated_at?: string;
+  booking_number?: string;
+  agreed_amount?: number;
+  currency?: string;
+  scheduled_date?: string | null;
+  provider_name?: string | null | undefined;
+  service_name?: string | null | undefined;
 }
 
 export interface TimelineEvent {
@@ -344,11 +351,13 @@ export const fixoSdk = {
 
   // ---- Ratings --------------------------------------------------------------
   // GET /ratings/{id} errors (and toasts) when a booking has no rating yet, so
-  // it isn't safe to poll speculatively — the Feedback page only submits.
+  // it isn't safe to poll speculatively — listMyRatings (a real bulk endpoint)
+  // is how the Feedback page finds out which bookings are already rated.
   submitRating: (bookingId: string, rating: number, comment?: string) =>
     apiClient
       .post<BookingRating>(`/ratings/${bookingId}`, { rating, comment: comment || undefined })
       .then((r) => r.data),
+  listMyRatings: () => apiClient.get<BookingRating[]>("/ratings").then((r) => r.data),
 
   // ---- Support --------------------------------------------------------------
   listTickets: (limit = 20, offset = 0) =>
