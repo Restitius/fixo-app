@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight,
   Calendar,
+  CalendarX,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
@@ -10,19 +11,21 @@ import {
   CreditCard,
   Download,
   Droplets,
+  FilterX,
   Lock,
   MapPin,
   MoreHorizontal,
   PaintRoller,
   Search,
-  SlidersHorizontal,
   TrendingUp,
   WashingMachine,
   Wind,
+  XCircle,
   Zap,
 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import {
   Select,
   SelectContent,
@@ -223,6 +226,38 @@ function BookingsPage() {
     return matchesTab && matchesSearch && matchesStatus && matchesService;
   });
 
+  const hasActiveFilters = search.trim() !== "" || statusFilter !== "all" || serviceFilter !== "all";
+
+  function clearFilters() {
+    setSearch("");
+    setStatusFilter("all");
+    setServiceFilter("all");
+  }
+
+  const emptyStateFor: Record<(typeof TABS)[number], { icon: typeof CalendarX; title: string; description: string; actionLabel: string; actionTo: string }> = {
+    Upcoming: {
+      icon: CalendarX,
+      title: "No upcoming bookings",
+      description: "You don't have any appointments scheduled yet. Book a service to see it here.",
+      actionLabel: "Book a Service",
+      actionTo: "/services",
+    },
+    Completed: {
+      icon: CheckCircle2,
+      title: "No completed bookings yet",
+      description: "Jobs your providers mark as finished will show up here.",
+      actionLabel: "Browse Services",
+      actionTo: "/services",
+    },
+    Cancelled: {
+      icon: XCircle,
+      title: "No cancelled bookings",
+      description: "Bookings you cancel will appear here for your records.",
+      actionLabel: "View Upcoming",
+      actionTo: "/bookings",
+    },
+  };
+
   return (
     <PageShell title="My Bookings" subtitle="Track your appointments and service history">
       {/* Tabs */}
@@ -314,6 +349,21 @@ function BookingsPage() {
       </div>
 
       {/* Table */}
+      {filtered.length === 0 ? (
+        <div className="mt-6">
+          {hasActiveFilters ? (
+            <EmptyState
+              icon={FilterX}
+              title="No matching bookings"
+              description="Try adjusting your search or filters to find what you're looking for."
+              actionLabel="Clear Filters"
+              onAction={clearFilters}
+            />
+          ) : (
+            <EmptyState {...emptyStateFor[activeTab]} />
+          )}
+        </div>
+      ) : (
       <div className="mt-6 overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)]">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[980px] text-left text-sm">
@@ -389,13 +439,6 @@ function BookingsPage() {
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={8} className="px-6 py-10 text-center text-muted-foreground">
-                    No bookings match your filters.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
@@ -417,6 +460,7 @@ function BookingsPage() {
           </div>
         </div>
       </div>
+      )}
     </PageShell>
   );
 }
