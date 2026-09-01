@@ -491,6 +491,8 @@ export const bookingApi = {
   listAddresses: () => apiClient.get<Address[]>("/locations/addresses").then((r) => r.data),
   createAddress: (payload: Omit<Address, "address_id" | "created_at">) =>
     apiClient.post<Address>("/locations/addresses", payload).then((r) => r.data),
+  setDefaultAddress: (addressId: string) =>
+    apiClient.post<Address>(`/locations/addresses/${addressId}/set-default`).then((r) => r.data),
 
   createServiceRequest: (payload: {
     service_id: string;
