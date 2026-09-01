@@ -50,7 +50,7 @@ function InvoicesPage() {
     try {
       setRows(await fixoSdk.listInvoices(50, 0));
     } catch {
-      // toast emitted by client
+      setRows((prev) => prev ?? []);
     }
   }, []);
 

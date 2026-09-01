@@ -27,6 +27,13 @@ import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { BookingDetailSheet } from "@/components/dashboard/BookingDetailSheet";
 import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/lib/auth-context";
 import {
   fixoSdk,
@@ -91,20 +98,22 @@ function HistoryPage() {
       userName={customer?.full_name}
       onLogout={logout}
     >
-      <div className="mt-6 flex flex-wrap gap-2">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c.id}
-            onClick={() => setCategory(c.id)}
-            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-              active === c.id ? "text-primary-foreground" : "bg-card text-foreground/80 shadow-[var(--shadow-card)] hover:bg-muted/50"
-            }`}
-            style={active === c.id ? { backgroundImage: "var(--gradient-primary)" } : undefined}
-          >
-            <c.icon className="size-4" />
-            {c.label}
-          </button>
-        ))}
+      <div className="mt-6 flex items-center gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
+        <span className="text-sm font-medium text-muted-foreground">Viewing</span>
+        <Select value={active} onValueChange={(v) => setCategory(v as CategoryId)}>
+          <SelectTrigger className="h-11 w-[200px] rounded-xl border-0 bg-muted">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {CATEGORIES.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                <span className="flex items-center gap-2">
+                  <c.icon className="size-4" /> {c.label}
+                </span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {active === "bookings" ? (
@@ -155,7 +164,7 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   const load = useCallback(() => {
-    void fixoSdk.bookingHistory(undefined, 100, 0).then(setRows);
+    void fixoSdk.bookingHistory(undefined, 100, 0).then(setRows).catch(() => setRows([]));
   }, []);
   useEffect(() => load(), [load]);
   useEffect(() => {
@@ -285,7 +294,7 @@ function WalletSection() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    void fixoSdk.walletTransactions(100, 0).then(setRows);
+    void fixoSdk.walletTransactions(100, 0).then(setRows).catch(() => setRows([]));
   }, []);
 
   const filtered = useMemo(
@@ -373,7 +382,7 @@ function LoyaltySection() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    void fixoSdk.loyaltyTransactions(100, 0).then(setRows);
+    void fixoSdk.loyaltyTransactions(100, 0).then(setRows).catch(() => setRows([]));
   }, []);
 
   const filtered = useMemo(
@@ -460,7 +469,7 @@ function InvoicesSection() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    void fixoSdk.listInvoices(50, 0).then(setRows);
+    void fixoSdk.listInvoices(50, 0).then(setRows).catch(() => setRows([]));
   }, []);
 
   const filtered = useMemo(
