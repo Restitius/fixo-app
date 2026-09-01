@@ -44,7 +44,7 @@ function FeedbackPage() {
     try {
       setRows(await fixoSdk.bookingHistory("CLOSED", 100, 0));
     } catch {
-      // toast emitted by client
+      setRows((prev) => prev ?? []);
     }
   }, []);
 

@@ -46,7 +46,7 @@ function WalletPage() {
       setBalance(bal);
       setTxns(list);
     } catch {
-      // toast already emitted by client
+      setTxns((prev) => prev ?? []);
     }
   }, []);
 

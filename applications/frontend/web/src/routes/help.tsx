@@ -64,7 +64,7 @@ function HelpPage() {
     try {
       setTickets(await fixoSdk.listTickets(50, 0));
     } catch {
-      // toast emitted by client
+      setTickets((prev) => prev ?? []);
     }
   }, []);
 

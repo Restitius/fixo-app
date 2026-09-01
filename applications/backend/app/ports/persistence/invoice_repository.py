@@ -5,7 +5,9 @@ from typing import Any
 
 class InvoiceRepositoryPort(ABC):
     @abstractmethod
-    async def finalize(self, customer_id: str, booking_id: str) -> dict[str, Any]: ...
+    async def finalize(
+        self, customer_id: str, booking_id: str, tax_rate: float | None = None
+    ) -> dict[str, Any]: ...
 
     @abstractmethod
     async def issue(self, customer_id: str, invoice_id: str) -> dict[str, Any]: ...
