@@ -14,6 +14,7 @@ import { Route as ActivityRouteImport } from './routes/activity'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -50,6 +51,11 @@ const BookingsRoute = BookingsRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvoicesRoute = InvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/book': typeof BookRoute
   '/bookings': typeof BookingsRoute
   '/history': typeof HistoryRoute
+  '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/notifications': typeof NotificationsRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/book': typeof BookRoute
   '/bookings': typeof BookingsRoute
   '/history': typeof HistoryRoute
+  '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/notifications': typeof NotificationsRoute
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/book': typeof BookRoute
   '/bookings': typeof BookingsRoute
   '/history': typeof HistoryRoute
+  '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/notifications': typeof NotificationsRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/bookings'
     | '/history'
+    | '/invoices'
     | '/login'
     | '/loyalty'
     | '/notifications'
@@ -198,6 +208,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/bookings'
     | '/history'
+    | '/invoices'
     | '/login'
     | '/loyalty'
     | '/notifications'
@@ -217,6 +228,7 @@ export interface FileRouteTypes {
     | '/book'
     | '/bookings'
     | '/history'
+    | '/invoices'
     | '/login'
     | '/loyalty'
     | '/notifications'
@@ -237,6 +249,7 @@ export interface RootRouteChildren {
   BookRoute: typeof BookRoute
   BookingsRoute: typeof BookingsRoute
   HistoryRoute: typeof HistoryRoute
+  InvoicesRoute: typeof InvoicesRoute
   LoginRoute: typeof LoginRoute
   LoyaltyRoute: typeof LoyaltyRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invoices': {
+      id: '/invoices'
+      path: '/invoices'
+      fullPath: '/invoices'
+      preLoaderRoute: typeof InvoicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -381,6 +401,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookRoute: BookRoute,
   BookingsRoute: BookingsRoute,
   HistoryRoute: HistoryRoute,
+  InvoicesRoute: InvoicesRoute,
   LoginRoute: LoginRoute,
   LoyaltyRoute: LoyaltyRoute,
   NotificationsRoute: NotificationsRoute,
