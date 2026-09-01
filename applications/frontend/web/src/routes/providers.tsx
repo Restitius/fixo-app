@@ -286,6 +286,9 @@ function ProvidersPage() {
               </div>
 
               <button
+                onClick={() =>
+                  navigate({ to: "/book", search: { category: pro.category, providerName: pro.name } })
+                }
                 className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
