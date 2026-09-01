@@ -5,6 +5,7 @@ import { Sparkles, Plus, Minus, Award, FilterX, RefreshCw } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -99,16 +100,7 @@ function LoyaltyPage() {
       onLogout={logout}
     >
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div
-          className="rounded-3xl p-5 text-primary-foreground shadow-[var(--shadow-card)]"
-          style={{ backgroundImage: "var(--gradient-primary)" }}
-        >
-          <span className="flex size-11 items-center justify-center rounded-2xl bg-white/15">
-            <Award className="size-5" />
-          </span>
-          <p className="mt-4 text-2xl font-bold tracking-tight">{fmtPoints(balance)}</p>
-          <p className="mt-0.5 text-sm opacity-80">Points Balance · {humanize(tier)} Tier</p>
-        </div>
+        <MetricCard icon={Award} label="Points Balance" hint={`${humanize(tier)} Tier`} value={fmtPoints(balance)} hero />
 
         <div className="flex flex-wrap items-end gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
           <div className="min-w-[140px] flex-1 space-y-1.5">
