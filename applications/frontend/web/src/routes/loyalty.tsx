@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Sparkles, Plus, Minus, Award, RefreshCw } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -126,13 +127,20 @@ function LoyaltyPage() {
           <h3 className="text-lg font-semibold">Points ledger</h3>
           <p className="mb-4 text-sm text-muted-foreground">Earns and redemptions in order.</p>
           {txns.length === 0 ? (
-            <p className="py-10 text-center text-sm text-muted-foreground">
-              No points activity yet.
-            </p>
+            <EmptyState
+              icon={Award}
+              title="No points activity yet"
+              description="Book a service to start earning loyalty points."
+              compact
+            />
           ) : (
-            <ul className="divide-y divide-border">
+            <ul className="space-y-2.5">
               {txns.map((t, i) => (
-                <li key={t.txn_id ?? i} className="flex items-center justify-between gap-3 py-3">
+                <li
+                  key={t.txn_id ?? i}
+                  style={{ animationDelay: `${i * 40}ms` }}
+                  className="flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-center justify-between gap-3 rounded-2xl border border-border p-4 transition-colors hover:bg-muted/40"
+                >
                   <div className="flex items-center gap-3">
                     <span
                       className={`flex size-9 items-center justify-center rounded-full ${
