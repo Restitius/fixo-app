@@ -147,6 +147,36 @@ export interface BookingHistoryRow {
   provider_name?: string | null;
 }
 
+export interface SupportTicket {
+  ticket_id: string;
+  ticket_number: string;
+  subject: string;
+  category: string;
+  priority: string;
+  status: string;
+  resolution?: string | null;
+  created_at: string;
+  updated_at: string;
+  message_count?: number;
+}
+
+export interface TicketMessage {
+  message_id: string;
+  ticket_id?: string;
+  sender: string;
+  body: string;
+  created_at: string;
+}
+
+export interface BookingRating {
+  rating_id: string;
+  booking_id: string;
+  provider_id: string;
+  rating: number;
+  comment?: string | null;
+  created_at: string;
+}
+
 export interface TimelineEvent {
   event: string;
   detail?: string | null;
@@ -291,6 +321,30 @@ export const fixoSdk = {
   activityFeed: (event?: string, limit = 50, offset = 0) =>
     apiClient
       .get<ActivityEvent[]>(`/history/activity${qs({ event, limit, offset })}`)
+      .then((r) => r.data),
+
+  // ---- Ratings --------------------------------------------------------------
+  // GET /ratings/{id} errors (and toasts) when a booking has no rating yet, so
+  // it isn't safe to poll speculatively — the Feedback page only submits.
+  submitRating: (bookingId: string, rating: number, comment?: string) =>
+    apiClient
+      .post<BookingRating>(`/ratings/${bookingId}`, { rating, comment: comment || undefined })
+      .then((r) => r.data),
+
+  // ---- Support --------------------------------------------------------------
+  listTickets: (limit = 20, offset = 0) =>
+    apiClient.get<SupportTicket[]>(`/support/tickets${qs({ limit, offset })}`).then((r) => r.data),
+  createTicket: (subject: string, category: string, priority: string) =>
+    apiClient
+      .post<SupportTicket>("/support/tickets", { subject, category, priority })
+      .then((r) => r.data),
+  listTicketMessages: (ticketId: string, limit = 100, offset = 0) =>
+    apiClient
+      .get<TicketMessage[]>(`/support/tickets/${ticketId}/messages${qs({ limit, offset })}`)
+      .then((r) => r.data),
+  addTicketMessage: (ticketId: string, body: string) =>
+    apiClient
+      .post<TicketMessage>(`/support/tickets/${ticketId}/messages`, { body })
       .then((r) => r.data),
 
   // ---- Notifications ------------------------------------------------------
@@ -491,6 +545,8 @@ export const bookingApi = {
   listAddresses: () => apiClient.get<Address[]>("/locations/addresses").then((r) => r.data),
   createAddress: (payload: Omit<Address, "address_id" | "created_at">) =>
     apiClient.post<Address>("/locations/addresses", payload).then((r) => r.data),
+  setDefaultAddress: (addressId: string) =>
+    apiClient.post<Address>(`/locations/addresses/${addressId}/set-default`).then((r) => r.data),
 
   createServiceRequest: (payload: {
     service_id: string;

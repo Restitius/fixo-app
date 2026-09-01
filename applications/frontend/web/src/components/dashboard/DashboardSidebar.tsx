@@ -50,8 +50,8 @@ const groups = [
       { title: "Notifications", icon: Bell, to: "/notifications" },
       { title: "Activity", icon: Activity, to: "/activity" },
       { title: "Settings", icon: Settings, to: "/profile" },
-      { title: "Feedback", icon: MessageSquareHeart },
-      { title: "Help", icon: HelpCircle },
+      { title: "Feedback", icon: MessageSquareHeart, to: "/feedback" },
+      { title: "Help", icon: HelpCircle, to: "/help" },
     ],
   },
 ];

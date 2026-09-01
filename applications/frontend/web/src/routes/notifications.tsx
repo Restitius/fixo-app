@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type NotificationRow } from "@/lib/api-client";
@@ -94,19 +95,20 @@ function NotificationsPage() {
 
       <div className="mt-6">
         {items.length === 0 ? (
-          <div className="rounded-3xl bg-card p-10 text-center shadow-[var(--shadow-card)]">
-            <Bell className="mx-auto size-8 text-muted-foreground" />
-            <p className="mt-3 font-medium">All caught up</p>
-            <p className="text-sm text-muted-foreground">No notifications here.</p>
-          </div>
+          <EmptyState
+            icon={Bell}
+            title="All caught up"
+            description="No notifications here — updates and reminders will show up as they happen."
+          />
         ) : (
           <ul className="space-y-3">
-            {items.map((n) => {
+            {items.map((n, i) => {
               const unread = !n.read_at;
               return (
                 <li
                   key={n.notification_id}
-                  className={`flex items-start gap-4 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)] ${
+                  style={{ animationDelay: `${i * 40}ms` }}
+                  className={`flex animate-in fade-in slide-in-from-bottom-2 fill-mode-both items-start gap-4 rounded-2xl bg-card p-4 shadow-[var(--shadow-card)] ${
                     unread ? "border border-primary/30" : ""
                   }`}
                 >
