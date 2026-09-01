@@ -1,10 +1,12 @@
-// Invoices — issued invoices with expandable line-item detail.
+// Invoices — issued invoices with a detail drawer for line items.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
-import { ChevronDown, ChevronUp, FileText } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FileText, FilterX, Loader2 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } from "@/components/dashboard/DataTable";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type InvoiceDetail, type InvoiceRow } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize } from "@/lib/format";
@@ -25,6 +27,8 @@ export const Route = createFileRoute("/invoices")({
   component: InvoicesPage,
 });
 
+const PAGE_SIZE = 8;
+
 function statusStyle(status: string) {
   const s = status.toUpperCase();
   if (s === "PAID") return "bg-success/15 text-success";
@@ -37,7 +41,10 @@ function InvoicesPage() {
   const { access_token, loading, logout, customer } = useAuth();
   const [rows, setRows] = useState<InvoiceRow[] | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
-  const [details, setDetails] = useState<Record<string, InvoiceDetail>>({});
+  const [detail, setDetail] = useState<InvoiceDetail | null>(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1);
 
   const load = useCallback(async () => {
     try {
@@ -51,26 +58,36 @@ function InvoicesPage() {
     if (access_token && !loading) void load();
   }, [access_token, loading, load]);
 
+  const filtered = useMemo(
+    () =>
+      (rows ?? []).filter((r) => {
+        const matchesStatus = statusFilter === "all" || r.status === statusFilter;
+        const matchesSearch =
+          !search || [r.invoice_number, r.booking_number].some((f) => f.toLowerCase().includes(search.toLowerCase()));
+        return matchesStatus && matchesSearch;
+      }),
+    [rows, statusFilter, search],
+  );
+
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
-  async function toggle(id: string) {
-    if (openId === id) {
-      setOpenId(null);
-      return;
-    }
+  async function openInvoice(id: string) {
     setOpenId(id);
-    if (!details[id]) {
-      try {
-        const d = await fixoSdk.getInvoice(id);
-        setDetails((prev) => ({ ...prev, [id]: d }));
-      } catch {
-        // toast emitted by client
-      }
+    setDetail(null);
+    try {
+      const d = await fixoSdk.getInvoice(id);
+      setDetail(d);
+    } catch {
+      // toast emitted by client
     }
   }
+
+  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const hasActiveFilters = search.trim() !== "" || statusFilter !== "all";
 
   return (
     <PageShell
@@ -79,108 +96,130 @@ function InvoicesPage() {
       userName={customer?.full_name}
       onLogout={logout}
     >
-      <div className="mt-6">
-        {rows === null ? (
-          <LoadingRows />
-        ) : rows.length === 0 ? (
-          <EmptyState
-            icon={FileText}
-            title="No invoices yet"
-            description="An invoice is issued once a booking is completed and confirmed. Check back after your next job."
-            actionLabel="View My Bookings"
-            actionTo="/bookings"
-          />
-        ) : (
-          <div className="space-y-3">
-            {rows.map((inv, i) => (
-              <div
-                key={inv.invoice_id}
-                style={{ animationDelay: `${i * 40}ms` }}
-                className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both rounded-3xl bg-card shadow-[var(--shadow-card)]"
-              >
-                <button
-                  onClick={() => void toggle(inv.invoice_id)}
-                  className="flex w-full flex-col gap-2 p-5 text-left sm:flex-row sm:items-center sm:justify-between"
+      <TableFilterBar
+        search={search}
+        onSearchChange={(v) => { setSearch(v); setPage(1); }}
+        searchPlaceholder="Search invoices..."
+        filters={[
+          {
+            value: statusFilter,
+            onChange: (v) => { setStatusFilter(v); setPage(1); },
+            placeholder: "Status",
+            options: [
+              { value: "all", label: "All Statuses" },
+              { value: "DRAFT", label: "Draft" },
+              { value: "ISSUED", label: "Issued" },
+              { value: "PAID", label: "Paid" },
+            ],
+          },
+        ]}
+      />
+
+      {rows === null ? (
+        <div className="mt-6 h-64 animate-pulse rounded-3xl bg-muted/60" />
+      ) : filtered.length === 0 ? (
+        <div className="mt-6">
+          {hasActiveFilters ? (
+            <EmptyState icon={FilterX} title="No matching invoices" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); }} />
+          ) : (
+            <EmptyState
+              icon={FileText}
+              title="No invoices yet"
+              description="An invoice is issued once a booking is completed and confirmed. Check back after your next job."
+              actionLabel="View My Bookings"
+              actionTo="/bookings"
+            />
+          )}
+        </div>
+      ) : (
+        <TableCard>
+          <TableScroll minWidth={700}>
+            <TableHead columns={["Invoice #", "Booking", "Date", "Status", "Amount"]} />
+            <tbody>
+              {paged.map((inv) => (
+                <tr
+                  key={inv.invoice_id}
+                  onClick={() => void openInvoice(inv.invoice_id)}
+                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
                 >
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="font-semibold">{inv.invoice_number}</h3>
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusStyle(inv.status)}`}>
-                        {humanize(inv.status)}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 text-sm text-muted-foreground">
-                      Booking {inv.booking_number} · {fmtDate(inv.created_at)}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <p className="font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</p>
-                    {openId === inv.invoice_id ? (
-                      <ChevronUp className="size-5 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="size-5 text-muted-foreground" />
-                    )}
-                  </div>
-                </button>
+                  <td className="px-6 py-4 font-semibold text-primary">{inv.invoice_number}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{inv.booking_number}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(inv.created_at)}</td>
+                  <td className="px-4 py-4">
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(inv.status)}`}>
+                      {humanize(inv.status)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4 font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </TableScroll>
+          <TablePagination
+            page={page}
+            pageCount={pageCount}
+            onPageChange={setPage}
+            from={(page - 1) * PAGE_SIZE + 1}
+            to={Math.min(page * PAGE_SIZE, filtered.length)}
+            total={filtered.length}
+            itemLabel="invoices"
+          />
+        </TableCard>
+      )}
 
-                {openId === inv.invoice_id && (
-                  <div className="border-t border-border px-5 py-4">
-                    {(() => {
-                      const d = details[inv.invoice_id];
-                      if (!d) return <p className="text-sm text-muted-foreground">Loading…</p>;
-                      return (
-                        <div className="space-y-3">
-                          <p className="text-sm text-muted-foreground">Provider · {d.provider_name}</p>
-                          {d.items.length > 0 && (
-                            <ul className="divide-y divide-border rounded-2xl border border-border">
-                              {d.items.map((it) => (
-                                <li key={it.item_id} className="flex items-center justify-between gap-4 p-3 text-sm">
-                                  <span>
-                                    {it.description}
-                                    <span className="text-muted-foreground"> × {it.quantity}</span>
-                                  </span>
-                                  <span className="font-medium">{fmtMoney(it.line_total, d.currency)}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                          <div className="flex flex-col gap-1 rounded-2xl bg-muted/50 p-4 text-sm sm:w-64 sm:self-end">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Subtotal</span>
-                              <span>{fmtMoney(d.subtotal, d.currency)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Tax</span>
-                              <span>{fmtMoney(d.tax_amount, d.currency)}</span>
-                            </div>
-                            <div className="flex justify-between font-semibold">
-                              <span>Total</span>
-                              <span>{fmtMoney(d.total_amount, d.currency)}</span>
-                            </div>
-                          </div>
-                          {d.paid_at && (
-                            <p className="text-xs text-muted-foreground">Paid {fmtDate(d.paid_at)}</p>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </div>
-                )}
+      <Sheet open={!!openId} onOpenChange={(o) => !o && setOpenId(null)}>
+        <SheetContent className="w-full overflow-y-auto sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>Invoice details</SheetTitle>
+          </SheetHeader>
+          {!detail ? (
+            <div className="mt-8 flex justify-center">
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="mt-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold">{detail.invoice_number}</p>
+                  <p className="text-xs text-muted-foreground">Booking {detail.booking_number}</p>
+                </div>
+                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(detail.status)}`}>
+                  {humanize(detail.status)}
+                </span>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <p className="text-sm text-muted-foreground">Provider · {detail.provider_name}</p>
+              {detail.items.length > 0 && (
+                <ul className="divide-y divide-border rounded-2xl border border-border">
+                  {detail.items.map((it) => (
+                    <li key={it.item_id} className="flex items-center justify-between gap-4 p-3 text-sm">
+                      <span>
+                        {it.description}
+                        <span className="text-muted-foreground"> × {it.quantity}</span>
+                      </span>
+                      <span className="font-medium">{fmtMoney(it.line_total, detail.currency)}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div className="flex flex-col gap-1 rounded-2xl bg-muted/50 p-4 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span>{fmtMoney(detail.subtotal, detail.currency)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Tax</span>
+                  <span>{fmtMoney(detail.tax_amount, detail.currency)}</span>
+                </div>
+                <div className="flex justify-between font-semibold">
+                  <span>Total</span>
+                  <span>{fmtMoney(detail.total_amount, detail.currency)}</span>
+                </div>
+              </div>
+              {detail.paid_at && <p className="text-xs text-muted-foreground">Paid {fmtDate(detail.paid_at)}</p>}
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
     </PageShell>
-  );
-}
-
-function LoadingRows() {
-  return (
-    <div className="space-y-3">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="h-20 animate-pulse rounded-3xl bg-muted/60" />
-      ))}
-    </div>
   );
 }
