@@ -14,6 +14,13 @@ const ICON_TONE: Record<Tone, string> = {
   destructive: "bg-destructive/15 text-destructive",
 };
 
+const VALUE_TONE: Record<Tone, string> = {
+  primary: "text-primary",
+  success: "text-success",
+  amber: "text-amber-600",
+  destructive: "text-destructive",
+};
+
 interface MetricCardProps {
   icon: LucideIcon;
   label: string;
@@ -22,9 +29,11 @@ interface MetricCardProps {
   tone?: Tone;
   /** Gradient "hero" variant (e.g. a wallet balance card) — white text on the brand gradient. */
   hero?: boolean;
+  /** Color the value with the tone color instead of always primary (some references tint every value to match its icon). */
+  tintValue?: boolean;
 }
 
-export function MetricCard({ icon: Icon, label, value, hint, tone = "primary", hero = false }: MetricCardProps) {
+export function MetricCard({ icon: Icon, label, value, hint, tone = "primary", hero = false, tintValue = false }: MetricCardProps) {
   return (
     <div
       className={`flex items-center gap-4 rounded-3xl p-5 shadow-[var(--shadow-card)] ${hero ? "text-primary-foreground" : "bg-card"}`}
@@ -37,7 +46,9 @@ export function MetricCard({ icon: Icon, label, value, hint, tone = "primary", h
       </span>
       <div className="min-w-0">
         <p className={`text-sm ${hero ? "text-primary-foreground/90" : "text-foreground"}`}>{label}</p>
-        <p className={`text-2xl font-bold tracking-tight ${hero ? "text-primary-foreground" : "text-primary"}`}>{value}</p>
+        <p className={`text-2xl font-bold tracking-tight ${hero ? "text-primary-foreground" : tintValue ? VALUE_TONE[tone] : "text-primary"}`}>
+          {value}
+        </p>
         <p className={`text-sm ${hero ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{hint}</p>
       </div>
     </div>
