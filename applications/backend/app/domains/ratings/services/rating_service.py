@@ -36,3 +36,6 @@ class RatingService:
         if result is None:
             return {"avg_rating": 0.0, "total_ratings": 0}
         return result
+
+    async def list_mine(self, customer_id: str) -> list[dict[str, Any]]:
+        return await self._repo.list_mine(customer_id)
