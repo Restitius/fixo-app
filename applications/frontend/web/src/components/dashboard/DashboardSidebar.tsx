@@ -32,7 +32,7 @@ const groups = [
     label: "Financial",
     items: [
       { title: "Wallet", icon: Wallet, to: "/wallet" },
-      { title: "Payments", icon: Receipt },
+      { title: "Payments", icon: Receipt, to: "/payments" },
       { title: "Invoices", icon: FileText },
       { title: "History", icon: History, to: "/history" },
     ],
