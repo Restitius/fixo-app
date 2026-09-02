@@ -263,16 +263,16 @@ function NotificationsPage() {
 
   return (
     <PageShell title="Notifications" subtitle="Updates, reminders and alerts" userName={customer?.full_name} onLogout={logout}>
-      <div className="flex gap-6">
-        <div className="min-w-0 flex-1">
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <MetricCard icon={Bell} label="Total Notifications" hint="This month" value={String(totalThisMonth)} />
-            <MetricCard icon={Mail} label="Unread" hint="Needs attention" value={String(unreadCount)} tone="amber" tintValue />
-            <MetricCard icon={Calendar} label="Booking Updates" hint="Service progress" value={String(bookingCount)} />
-            <MetricCard icon={Wallet} label="Payment Alerts" hint="Recent billing" value={String(paymentCount)} tone="success" tintValue />
-          </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard icon={Bell} label="Total Notifications" hint="This month" value={String(totalThisMonth)} />
+        <MetricCard icon={Mail} label="Unread" hint="Needs attention" value={String(unreadCount)} tone="amber" tintValue />
+        <MetricCard icon={Calendar} label="Booking Updates" hint="Service progress" value={String(bookingCount)} />
+        <MetricCard icon={Wallet} label="Payment Alerts" hint="Recent billing" value={String(paymentCount)} tone="success" tintValue />
+      </div>
 
-          <div className="mt-6 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <div className="mt-6 flex items-stretch gap-6">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex h-full flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-lg font-semibold">Recent notifications</h3>
               <div className="flex flex-wrap items-center gap-3">
@@ -296,10 +296,11 @@ function NotificationsPage() {
               </div>
             </div>
 
+            <div className="mt-4 flex-1">
             {items === null ? (
-              <div className="mt-6 h-64 animate-pulse rounded-3xl bg-muted/60" />
+              <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
             ) : filtered.length === 0 ? (
-              <div className="mt-6">
+              <div>
                 {tab !== "All" ? (
                   <EmptyState compact icon={FilterX} title="No matching notifications" description="Try a different tab." actionLabel="Show all" onAction={() => setTab("All")} />
                 ) : (
@@ -307,7 +308,7 @@ function NotificationsPage() {
                 )}
               </div>
             ) : (
-              <div className="mt-4 divide-y divide-border">
+              <div className="divide-y divide-border">
                 {filtered.map((n) => {
                   const { Icon, tone } = iconFor(n.type);
                   const badge = badgeFor(n);
@@ -337,12 +338,13 @@ function NotificationsPage() {
                 })}
               </div>
             )}
+            </div>
           </div>
         </div>
 
         {/* Payment / invoice updates — squeeze panel, no overlay */}
         {panelOpen && selected && (
-          <div className="mt-6 w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+          <div className="flex h-full w-[380px] shrink-0 flex-col animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Notification details</h3>
               <button onClick={closeAll} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
