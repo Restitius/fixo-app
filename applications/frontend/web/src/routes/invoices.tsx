@@ -461,7 +461,7 @@ function TimelineStep({ done, current, label, value }: { done?: boolean; current
     <li className="flex items-start gap-3">
       <span
         className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${
-          done ? "bg-primary text-primary-foreground" : current ? "border-2 border-primary text-primary" : "border-2 border-border text-muted-foreground"
+          done ? "bg-success text-white" : current ? "border-2 border-primary text-primary" : "border-2 border-border text-muted-foreground"
         }`}
       >
         {done ? <Check className="size-3" /> : <Circle className="size-2 fill-current" />}
@@ -516,7 +516,7 @@ function PaidInvoiceDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Invoice details</DialogTitle>
         </DialogHeader>
