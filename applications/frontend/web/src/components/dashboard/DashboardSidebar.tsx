@@ -9,7 +9,7 @@ import {
   Settings,
   MessageSquareHeart,
   HelpCircle,
-  Crown,
+  Gift,
   Sparkles,
   Ticket,
   History,
@@ -108,21 +108,21 @@ export function DashboardSidebar() {
         </nav>
       </div>
 
-      <div className="mt-8 rounded-2xl bg-foreground p-5 text-background">
-        <span className="mb-4 flex size-9 items-center justify-center rounded-xl bg-background/15">
-          <Crown className="size-4 text-[oklch(0.85_0.16_85)]" />
+      <Link to="/loyalty" className="mt-8 block rounded-2xl bg-primary/5 p-5 text-left">
+        <span className="mb-4 flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <Gift className="size-4" />
         </span>
-        <p className="text-base font-semibold">Upgrade Pro</p>
-        <p className="mt-1 text-xs text-background/70">
-          Priority handymen and same-day emergency callouts.
+        <p className="text-base font-semibold">Refer &amp; Earn Rewards!</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Invite friends and get exclusive rewards.
         </p>
-        <button
-          className="mt-4 w-full rounded-xl py-2.5 text-sm font-semibold text-primary-foreground"
+        <span
+          className="mt-4 block w-full rounded-xl py-2.5 text-center text-sm font-semibold text-primary-foreground"
           style={{ backgroundImage: "var(--gradient-primary)" }}
         >
-          Upgrade $30
-        </button>
-      </div>
+          Invite Now
+        </span>
+      </Link>
     </aside>
   );
 }

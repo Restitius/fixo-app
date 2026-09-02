@@ -16,10 +16,9 @@ const title = "Login — Fixo";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-type LoginValues = z.infer<typeof loginSchema>;
+type LoginValues = z.infer<typeof loginSchema> & { password?: string };
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -33,16 +32,19 @@ function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpMode, setIsOtpMode] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { isSubmitting, errors },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (values: LoginValues) => {
+    setPasswordError(null);
     try {
       if (isOtpMode) {
         const otp = await requestOtp(values.email);
@@ -53,7 +55,12 @@ function LoginPage() {
         }
         navigate({ to: "/verify-otp", search: { email: values.email } });
       } else {
-        await login(values.email, values.password, navigator.userAgent);
+        const password = getValues("password");
+        if (!password || password.length < 6) {
+          setPasswordError("Password must be at least 6 characters");
+          return;
+        }
+        await login(values.email, password, navigator.userAgent);
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Login failed");
@@ -109,10 +116,8 @@ function LoginPage() {
                   {showPassword ? <EyeOff /> : <Eye />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-xs text-destructive">
-                  {errors.password.message}
-                </p>
+              {passwordError && (
+                <p className="text-xs text-destructive">{passwordError}</p>
               )}
             </div>
           )}
