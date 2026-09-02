@@ -518,7 +518,7 @@ function RateDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg overflow-y-auto max-h-[90vh]">
+      <DialogContent className="max-w-2xl overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Rate your provider</DialogTitle>
           <p className="text-sm text-muted-foreground">Share your experience for this completed booking.</p>
