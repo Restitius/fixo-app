@@ -566,7 +566,7 @@ class Composition:
     def rating_service(self) -> Any:
         """RatingService  Module 51."""
         from app.domains.ratings.services.rating_service import RatingService
-        return RatingService(self.rating_repository)
+        return RatingService(self.rating_repository, bookings=self.booking_repository)
 
     def completion_service(self) -> Any:
         """CompletionService  Module 53 (atomic booking close)."""
