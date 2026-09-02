@@ -76,28 +76,43 @@ function Home() {
 
 function Landing() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <header className="container mx-auto flex items-center justify-between px-4 py-4">
-        <div className="flex items-center gap-2">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Hammer className="size-5" />
-          </span>
-          <span className="text-lg font-bold tracking-tight">FIXO</span>
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-[-12rem] -z-10 h-[36rem] opacity-40 blur-3xl"
+        style={{ backgroundImage: "radial-gradient(closest-side, var(--primary), transparent)" }}
+      />
+
+      <header className="sticky top-0 z-10 border-b border-transparent bg-background/70 backdrop-blur-md">
+        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+          <div className="flex items-center gap-2">
+            <span
+              className="flex size-9 items-center justify-center rounded-xl text-primary-foreground shadow-[var(--shadow-glow)]"
+              style={{ backgroundImage: "var(--gradient-primary)" }}
+            >
+              <Hammer className="size-5" />
+            </span>
+            <span className="text-lg font-bold tracking-tight">FIXO</span>
+          </div>
+          <nav className="flex items-center gap-2">
+            <Button asChild variant="ghost">
+              <Link to="/login">Sign in</Link>
+            </Button>
+            <Button asChild>
+              <Link to="/register">Create account</Link>
+            </Button>
+          </nav>
         </div>
-        <nav className="flex items-center gap-2">
-          <Button asChild variant="ghost">
-            <Link to="/login">Sign in</Link>
-          </Button>
-          <Button asChild>
-            <Link to="/register">Create account</Link>
-          </Button>
-        </nav>
       </header>
 
       <main className="container mx-auto flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
-        <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
+        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-primary">
+          <Sparkles className="size-3.5" /> Trusted by homeowners across Tanzania
+        </span>
+        <h1 className="mt-6 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
           Home repairs,{" "}
-          <span className="text-primary">handled by pros you can trust</span>
+          <span className="bg-[image:var(--gradient-primary)] bg-clip-text text-transparent">
+            handled by pros you can trust
+          </span>
         </h1>
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">
           Book verified handyman providers, follow every job live and keep your
@@ -118,7 +133,10 @@ function Landing() {
             { icon: ClipboardList, t: "Track live", d: "Follow arrival, work and completion." },
             { icon: PackageCheck, t: "Pay safely", d: "Funds released only when you confirm." },
           ].map(({ icon: Icon, t, d }) => (
-            <div key={t} className="rounded-2xl border bg-card p-6 text-left">
+            <div
+              key={t}
+              className="rounded-2xl bg-card p-6 text-left shadow-[var(--shadow-card)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]"
+            >
               <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Icon className="size-5" />
               </span>
@@ -129,7 +147,7 @@ function Landing() {
         </div>
       </main>
 
-      <footer className="border-t py-6 text-center text-sm text-muted-foreground">
+      <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
         © {new Date().getFullYear()} FIXO. All rights reserved.
       </footer>
     </div>

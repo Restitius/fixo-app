@@ -105,7 +105,19 @@
   --sidebar-border: oklch(0.93 0.008 289);
   --sidebar-ring: oklch(0.5198 0.2894 289.03);
   --gradient-primary: linear-gradient(135deg, oklch(0.6091 0.2481 298.76), oklch(0.4514 0.2532 287.24));
-  --shadow-card: 0 1px 2px oklch(0.3 0.05 289 / 0.04), 0 8px 24px oklch(0.3 0.05 289 / 0.06);
+  --card-hairline: oklch(0.3 0.05 289 / 0.06);
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Elevation scale — a crisp 1px inset hairline (simulated via inset
+     box-shadow, so it composes with the outer shadow in one declaration and
+     needs no border utility on every card) plus layered, low-opacity outer
+     shadows that read as soft/realistic rather than a single hard-edged
+     drop-shadow. */
+  --shadow-xs: inset 0 0 0 1px var(--card-hairline), 0 1px 2px oklch(0.3 0.05 289 / 0.05);
+  --shadow-sm: inset 0 0 0 1px var(--card-hairline), 0 1px 2px oklch(0.3 0.05 289 / 0.04), 0 2px 6px oklch(0.3 0.05 289 / 0.05);
+  --shadow-card: inset 0 0 0 1px var(--card-hairline), 0 1px 1px oklch(0.3 0.05 289 / 0.03), 0 2px 4px oklch(0.3 0.05 289 / 0.04), 0 12px 28px -8px oklch(0.3 0.05 289 / 0.09);
+  --shadow-lg: inset 0 0 0 1px var(--card-hairline), 0 2px 4px oklch(0.3 0.05 289 / 0.04), 0 16px 40px -12px oklch(0.3 0.05 289 / 0.16);
+  --shadow-glow: inset 0 1px 0 oklch(1 0 0 / 0.2), 0 1px 2px oklch(0.3 0.05 289 / 0.05), 0 8px 20px -4px oklch(0.5198 0.2894 289.03 / 0.35);
 }
 
 
@@ -142,6 +154,7 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+  --card-hairline: oklch(1 0 0 / 0.08);
 }
 
 @layer base {
@@ -149,9 +162,46 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01", "tnum";
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: oklch(0.5198 0.2894 289.03 / 0.2);
+    color: var(--color-foreground);
+  }
+
+  /* Thin, understated scrollbars — the default OS scrollbar reads as
+     unfinished inside an otherwise custom-designed shell. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.3 0.05 289 / 0.18) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: oklch(0.3 0.05 289 / 0.18);
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.3 0.05 289 / 0.32);
+    background-clip: content-box;
   }
 }

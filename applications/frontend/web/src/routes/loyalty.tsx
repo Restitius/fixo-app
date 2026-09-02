@@ -112,7 +112,7 @@ function LoyaltyPage() {
   const curIdx = tierIndex(tier);
   const nextTier = TIER_LADDER[curIdx + 1];
   const progressPct = nextTier
-    ? Math.min(100, Math.round(((balance - TIER_LADDER[curIdx].min) / (nextTier.min - TIER_LADDER[curIdx].min)) * 100))
+    ? Math.min(100, Math.round(((balance - TIER_LADDER[curIdx]!.min) / (nextTier.min - TIER_LADDER[curIdx]!.min)) * 100))
     : 100;
 
   const now = new Date();
