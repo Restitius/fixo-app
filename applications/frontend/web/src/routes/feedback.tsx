@@ -212,16 +212,16 @@ function FeedbackPage() {
 
   return (
     <PageShell title="Feedback" subtitle="Rate providers for your completed jobs" userName={customer?.full_name} onLogout={logout}>
-      <div className="flex gap-6">
-        <div className="min-w-0 flex-1">
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <MetricCard icon={MessageSquareHeart} label="Total Reviews" hint="All time reviews" value={dataLoaded ? String(submittedCount) : "—"} />
-            <MetricCard icon={ClipboardList} label="Pending Reviews" hint="Bookings to rate" value={dataLoaded ? String(pendingCount) : "—"} tone="amber" tintValue />
-            <MetricCard icon={Star} label="Average Rating" hint="Across all providers" value={dataLoaded ? avgRating.toFixed(1) : "—"} tone="success" tintValue />
-            <MetricCard icon={Users} label="Providers Rated" hint="Distinct providers" value={dataLoaded ? String(providersRated) : "—"} />
-          </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard icon={MessageSquareHeart} label="Total Reviews" hint="All time reviews" value={dataLoaded ? String(submittedCount) : "—"} />
+        <MetricCard icon={ClipboardList} label="Pending Reviews" hint="Bookings to rate" value={dataLoaded ? String(pendingCount) : "—"} tone="amber" tintValue />
+        <MetricCard icon={Star} label="Average Rating" hint="Across all providers" value={dataLoaded ? avgRating.toFixed(1) : "—"} tone="success" tintValue />
+        <MetricCard icon={Users} label="Providers Rated" hint="Distinct providers" value={dataLoaded ? String(providersRated) : "—"} />
+      </div>
 
-          <div className="mt-6 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <div className="mt-6 flex items-stretch gap-6">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex h-full flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
                 {TABS.map((t) => (
@@ -253,7 +253,7 @@ function FeedbackPage() {
               </div>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 flex-1">
               {!dataLoaded ? (
                 <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
               ) : filtered.length === 0 ? (
@@ -317,7 +317,7 @@ function FeedbackPage() {
         )}
 
         {!detailTarget && (
-          <div className="mt-6 w-[320px] shrink-0 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+          <div className="flex h-full w-[320px] shrink-0 flex-col rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Recent feedback</h3>
               <button onClick={() => setTab("Submitted")} className="text-sm font-semibold text-primary hover:underline">
@@ -327,7 +327,7 @@ function FeedbackPage() {
             {recentFeedback.length === 0 ? (
               <p className="mt-4 text-sm text-muted-foreground">Your submitted reviews will show up here.</p>
             ) : (
-              <div className="mt-4 divide-y divide-border">
+              <div className="mt-4 flex-1 divide-y divide-border">
                 {recentFeedback.map((row) => {
                   const decoded = decodeComment(row.rating?.comment);
                   return (
@@ -383,7 +383,7 @@ function ReviewDetailsPanel({ row, onClose, onEdit }: { row: FeedbackRow; onClos
   const hasAspects = aspectValues.length > 0;
 
   return (
-    <div className="mt-6 w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+    <div className="h-full w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Review details</h3>
         <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
