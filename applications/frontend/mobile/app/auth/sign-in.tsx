@@ -7,11 +7,32 @@ import TextField from '../../components/TextField'
 import Checkbox from '../../components/Checkbox'
 import Button from '../../components/Button'
 import { MailIcon, LockIcon } from '../../components/icons'
+import { useAuth, ApiError } from '../../lib/auth-context'
 
 export default function SignIn() {
+  const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function submit() {
+    setError(null)
+    if (!email.trim() || !password) {
+      setError('Enter your email and password')
+      return
+    }
+    setLoading(true)
+    try {
+      await login(email.trim(), password)
+      router.replace('/(tabs)/home')
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Login failed')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -29,8 +50,10 @@ export default function SignIn() {
             <Checkbox checked={remember} onChange={setRemember} label="Remember me" />
           </View>
 
+          {error && <Text className="text-center text-[13px] text-red-500 mt-4">{error}</Text>}
+
           <View className="mt-6">
-            <Button onPress={() => router.replace('/(tabs)/home')}>Sign in</Button>
+            <Button onPress={submit} loading={loading}>Sign in</Button>
           </View>
 
           <Link href="/auth/forgot-password" className="text-center text-primary font-semibold text-[14px] mt-4">

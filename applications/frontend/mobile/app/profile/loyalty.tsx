@@ -1,23 +1,72 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../components/ScreenHeader'
 import Button from '../../components/Button'
 import { CenterModal } from '../../components/Sheet'
 import { AwardIcon, GiftIcon, TagIcon } from '../../components/icons'
-import { LOYALTY, LOYALTY_TRANSACTIONS, REWARDS, type Reward } from '../../data/mock'
+import { fixoSdk, type LoyaltyAccount, type LoyaltyTxn } from '../../lib/api-client'
+import { fmtDateTime, humanize } from '../../lib/format'
+
+// The backend's `tier` column is a static default ("SILVER") — nothing
+// recalculates it from points. This ladder is a disclosed, client-defined
+// progression (mirrors web's loyalty page) used only to show "points to next
+// tier"; it doesn't override any real backend rule because none exists.
+const TIER_LADDER = [
+  { name: 'Bronze', min: 0 },
+  { name: 'Silver', min: 1000 },
+  { name: 'Gold', min: 3000 },
+  { name: 'Platinum', min: 6000 },
+] as const
+
+// A disclosed, hardcoded reward catalog — there's no backend rewards-catalog
+// domain, so this is product config, not user data. Redeeming spends real
+// points via the real loyalty API.
+const REWARD_CATALOG = [
+  { id: 'discount-5000', title: 'TZS 5,000 off', description: 'Applied to your next booking', pointsCost: 3000, activity: 'REWARD_DISCOUNT_5000' },
+  { id: 'priority-booking', title: 'Priority booking', description: 'Jump the matching queue', pointsCost: 2000, activity: 'REWARD_PRIORITY_BOOKING' },
+  { id: 'free-inspection', title: 'Free inspection', description: 'A complimentary site visit', pointsCost: 1500, activity: 'REWARD_FREE_INSPECTION' },
+] as const
+type Reward = (typeof REWARD_CATALOG)[number]
+
+function tierIndex(tierName: string) {
+  const i = TIER_LADDER.findIndex((t) => t.name.toLowerCase() === tierName.toLowerCase())
+  return i === -1 ? 0 : i
+}
 
 export default function Loyalty() {
-  const [points, setPoints] = useState(LOYALTY.pointsBalance)
+  const [account, setAccount] = useState<LoyaltyAccount | null>(null)
+  const [txns, setTxns] = useState<LoyaltyTxn[] | null>(null)
   const [redeeming, setRedeeming] = useState<Reward | null>(null)
   const [redeemed, setRedeemed] = useState<Reward | null>(null)
-  const progressPct = Math.min(100, Math.round((points / LOYALTY.nextTierAt) * 100))
+  const [redeemLoading, setRedeemLoading] = useState(false)
 
-  function confirmRedeem() {
+  function refresh() {
+    fixoSdk.loyaltyAccount().then(setAccount).catch(() => setAccount(null))
+    fixoSdk.loyaltyTransactions(50, 0).then(setTxns).catch(() => setTxns([]))
+  }
+
+  useEffect(refresh, [])
+
+  const points = account?.points_balance ?? 0
+  const tierName = account?.tier ? account.tier.charAt(0) + account.tier.slice(1).toLowerCase() : 'Bronze'
+  const curIdx = tierIndex(tierName)
+  const nextTier = TIER_LADDER[curIdx + 1]
+  const progressPct = nextTier ? Math.min(100, Math.round(((points - TIER_LADDER[curIdx]!.min) / (nextTier.min - TIER_LADDER[curIdx]!.min)) * 100)) : 100
+
+  async function confirmRedeem() {
     if (!redeeming || points < redeeming.pointsCost) return
-    setPoints((p) => p - redeeming.pointsCost)
-    setRedeemed(redeeming)
-    setRedeeming(null)
+    setRedeemLoading(true)
+    try {
+      await fixoSdk.loyaltySpend(redeeming.pointsCost, redeeming.activity)
+      refresh()
+      setRedeemed(redeeming)
+      setRedeeming(null)
+    } catch {
+      // apiClient throws on failure; points simply won't have moved
+    } finally {
+      setRedeemLoading(false)
+    }
   }
 
   return (
@@ -32,14 +81,14 @@ export default function Loyalty() {
               </View>
               <View>
                 <Text className="text-[13px] text-white/80">Current tier</Text>
-                <Text className="text-[20px] font-bold text-white">{LOYALTY.tier}</Text>
+                <Text className="text-[20px] font-bold text-white">{tierName}</Text>
               </View>
             </View>
             <View className="mt-5">
               <View className="flex-row items-center justify-between">
-                <Text className="text-[12px] text-white/80">Progress to {LOYALTY.nextTier}</Text>
+                <Text className="text-[12px] text-white/80">{nextTier ? `Progress to ${nextTier.name}` : 'Top tier reached'}</Text>
                 <Text className="text-[12px] text-white/80">
-                  {points} / {LOYALTY.nextTierAt} pts
+                  {points} {nextTier ? `/ ${nextTier.min} pts` : 'pts'}
                 </Text>
               </View>
               <View className="h-2 rounded-full bg-white/25 mt-2 overflow-hidden">
@@ -50,7 +99,7 @@ export default function Loyalty() {
 
           <Text className="text-[16px] font-bold text-ink mt-7 mb-3">Redeem Rewards</Text>
           <View className="flex-col gap-3">
-            {REWARDS.map((r) => (
+            {REWARD_CATALOG.map((r) => (
               <View key={r.id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
                 <View className="items-center justify-center size-11 rounded-full bg-primary/8 shrink-0">
                   <GiftIcon size={20} color="#7210FF" />
@@ -72,23 +121,29 @@ export default function Loyalty() {
 
           <Text className="text-[16px] font-bold text-ink mt-7 mb-3">Points Activity</Text>
           <View className="flex-col gap-3">
-            {LOYALTY_TRANSACTIONS.map((t) => (
-              <View key={t.id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
-                <View className={`items-center justify-center size-11 rounded-full shrink-0 ${t.points > 0 ? 'bg-[#00B894]/10' : 'bg-[#FF6B6B]/10'}`}>
-                  <TagIcon size={18} color={t.points > 0 ? '#00B894' : '#FF6B6B'} />
-                </View>
-                <View className="flex-1 min-w-0">
-                  <Text numberOfLines={1} className="font-semibold text-ink text-[14px]">
-                    {t.activity}
+            {txns === null ? (
+              <View className="h-20 rounded-2xl bg-[#f5f5f5]" />
+            ) : txns.length === 0 ? (
+              <Text className="text-[13px] text-muted">No points activity yet.</Text>
+            ) : (
+              txns.map((t, i) => (
+                <View key={t.txn_id ?? i} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
+                  <View className={`items-center justify-center size-11 rounded-full shrink-0 ${t.points > 0 ? 'bg-[#00B894]/10' : 'bg-[#FF6B6B]/10'}`}>
+                    <TagIcon size={18} color={t.points > 0 ? '#00B894' : '#FF6B6B'} />
+                  </View>
+                  <View className="flex-1 min-w-0">
+                    <Text numberOfLines={1} className="font-semibold text-ink text-[14px]">
+                      {humanize(t.activity)}
+                    </Text>
+                    <Text className="text-[12px] text-muted mt-0.5">{fmtDateTime(t.created_at)}</Text>
+                  </View>
+                  <Text className={`font-bold text-[14px] shrink-0 ${t.points > 0 ? 'text-[#00B894]' : 'text-ink'}`}>
+                    {t.points > 0 ? '+' : ''}
+                    {t.points}
                   </Text>
-                  <Text className="text-[12px] text-muted mt-0.5">{t.date}</Text>
                 </View>
-                <Text className={`font-bold text-[14px] shrink-0 ${t.points > 0 ? 'text-[#00B894]' : 'text-ink'}`}>
-                  {t.points > 0 ? '+' : ''}
-                  {t.points}
-                </Text>
-              </View>
-            ))}
+              ))
+            )}
           </View>
         </View>
       </ScrollView>
@@ -106,7 +161,7 @@ export default function Loyalty() {
             </Button>
           </View>
           <View className="flex-1">
-            <Button onPress={confirmRedeem}>Redeem</Button>
+            <Button onPress={confirmRedeem} loading={redeemLoading}>Redeem</Button>
           </View>
         </View>
       </CenterModal>

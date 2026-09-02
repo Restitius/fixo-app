@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Avatar from '../../components/Avatar'
 import Button from '../../components/Button'
 import { CenterModal } from '../../components/Sheet'
-import { USER } from '../../data/mock'
+import { useAuth } from '../../lib/auth-context'
 import {
   AwardIcon,
   BellIcon,
@@ -43,7 +43,14 @@ const MENU: { icon: (p: { size?: number; color?: string }) => ReactNode; label: 
 ]
 
 export default function ProfileHub() {
+  const { customer, logout } = useAuth()
   const [showLogout, setShowLogout] = useState(false)
+  const initials = (customer?.full_name ?? '?')
+    .split(' ')
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -51,13 +58,13 @@ export default function ProfileHub() {
         <Text className="text-[22px] font-extrabold text-ink px-6 pt-2">Profile & Settings</Text>
 
         <View className="flex-row items-center gap-4 px-6 mt-5">
-          <Avatar label={USER.avatar} size={64} />
+          <Avatar label={initials} size={64} />
           <View className="flex-1">
             <Text numberOfLines={1} className="font-bold text-ink">
-              {USER.name}
+              {customer?.full_name ?? '—'}
             </Text>
             <Text numberOfLines={1} className="text-[13px] text-muted">
-              {USER.email}
+              {customer?.email ?? ''}
             </Text>
           </View>
         </View>
@@ -100,7 +107,7 @@ export default function ProfileHub() {
             <Button
               onPress={() => {
                 setShowLogout(false)
-                router.replace('/auth/sign-in')
+                void logout()
               }}
             >
               Log Out
