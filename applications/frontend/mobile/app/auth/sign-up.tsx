@@ -12,6 +12,20 @@ export default function SignUp() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  function submit() {
+    setError(null)
+    if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
+      setError('Enter a valid email')
+      return
+    }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters')
+      return
+    }
+    router.push({ pathname: '/auth/fill-profile', params: { email: email.trim(), password } })
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -29,8 +43,10 @@ export default function SignUp() {
             <Checkbox checked={remember} onChange={setRemember} label="Remember me" />
           </View>
 
+          {error && <Text className="text-center text-[13px] text-red-500 mt-4">{error}</Text>}
+
           <View className="mt-6">
-            <Button onPress={() => router.push('/auth/fill-profile')}>Sign up</Button>
+            <Button onPress={submit}>Sign up</Button>
           </View>
 
           <Text className="text-center text-[14px] text-muted pt-8">

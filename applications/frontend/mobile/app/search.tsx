@@ -1,34 +1,43 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Sheet from '../components/Sheet'
 import Button from '../components/Button'
-import ProviderCard from '../components/ProviderCard'
-import { ArrowLeftIcon, FilterIcon, SearchIcon, StarIcon } from '../components/icons'
-import { CATEGORIES, PROVIDERS } from '../data/mock'
-
-const RECENT = ['House cleaning', 'Plumber near me', 'Car repair', 'Laundry service']
+import { ArrowLeftIcon, FilterIcon, SearchIcon } from '../components/icons'
+import { bookingApi, type CatalogCategory, type CatalogServiceResult } from '../lib/api-client'
+import { colorForSeed, emojiForCategory } from '../lib/category-visuals'
 
 export default function Search() {
   const [query, setQuery] = useState('')
   const [filterOpen, setFilterOpen] = useState(false)
-  const [minRating, setMinRating] = useState(0)
   const [category, setCategory] = useState<string | null>(null)
+  const [categories, setCategories] = useState<CatalogCategory[]>([])
+  const [results, setResults] = useState<CatalogServiceResult[] | null>(null)
 
-  const results = useMemo(() => {
-    if (!query.trim()) return null
-    const q = query.toLowerCase()
-    return PROVIDERS.filter((p) => {
-      const matchesQuery =
-        p.name.toLowerCase().includes(q) ||
-        p.categoryId.includes(q) ||
-        p.tags.some((t) => t.toLowerCase().includes(q))
-      const matchesRating = p.rating >= minRating
-      const matchesCategory = !category || p.categoryId === category
-      return matchesQuery && matchesRating && matchesCategory
-    })
-  }, [query, minRating, category])
+  useEffect(() => {
+    bookingApi.catalogCategories().then(setCategories).catch(() => setCategories([]))
+  }, [])
+
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults(null)
+      return
+    }
+    const t = setTimeout(() => {
+      bookingApi.catalogSearch(query.trim()).then((r) => setResults(r.results)).catch(() => setResults([]))
+    }, 300)
+    return () => clearTimeout(t)
+  }, [query])
+
+  const filtered = useMemo(() => {
+    if (!results) return null
+    if (!category) return results
+    const cat = categories.find((c) => c.category_id === category)
+    return cat ? results.filter((r) => r.category_code === cat.code) : results
+  }, [results, category, categories])
+
+  const categoryIdFor = (code: string) => categories.find((c) => c.code === code)?.category_id ?? ''
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -52,18 +61,11 @@ export default function Search() {
         </Pressable>
       </View>
 
-      {results === null ? (
+      {filtered === null ? (
         <View className="px-6 mt-4">
-          <Text className="text-[14px] font-semibold text-ink mb-3">Recent searches</Text>
-          <View className="flex-row flex-wrap gap-2">
-            {RECENT.map((r) => (
-              <Pressable key={r} onPress={() => setQuery(r)} className="px-4 py-2 rounded-full bg-[#f5f5f5]">
-                <Text className="text-[13px] text-ink">{r}</Text>
-              </Pressable>
-            ))}
-          </View>
+          <Text className="text-[13px] text-muted">Search across our real service catalog.</Text>
         </View>
-      ) : results.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <View className="flex-1 items-center justify-center px-10">
           <SearchIcon size={64} color="#e0e0e0" />
           <Text className="text-[16px] font-semibold text-ink mt-4">No results found</Text>
@@ -73,10 +75,23 @@ export default function Search() {
         <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
           <View className="flex-col gap-3 px-6 mt-4">
             <Text className="text-[13px] text-muted">
-              {results.length} results for "{query}"
+              {filtered.length} results for "{query}"
             </Text>
-            {results.map((p) => (
-              <ProviderCard key={p.id} provider={p} />
+            {filtered.map((r) => (
+              <Pressable
+                key={r.service_id}
+                onPress={() => router.push(`/services/${categoryIdFor(r.category_code)}` as any)}
+                className="w-full flex-row items-center gap-4 rounded-2xl border border-hairline p-3"
+              >
+                <View className="items-center justify-center size-14 rounded-2xl shrink-0" style={{ backgroundColor: `${colorForSeed(r.service_id)}14` }}>
+                  <Text style={{ fontSize: 24 }}>{emojiForCategory(r.icon)}</Text>
+                </View>
+                <View className="flex-1">
+                  <Text numberOfLines={1} className="font-bold text-ink">{r.name}</Text>
+                  <Text numberOfLines={1} className="text-[13px] text-muted mt-0.5">{r.description}</Text>
+                  <Text className="text-[12px] font-semibold text-primary mt-1">{r.category_name}</Text>
+                </View>
+              </Pressable>
             ))}
           </View>
         </ScrollView>
@@ -91,35 +106,15 @@ export default function Search() {
           <Pressable onPress={() => setCategory(null)} className={`px-4 py-2 rounded-full ${!category ? 'bg-primary' : 'bg-[#f5f5f5]'}`}>
             <Text className={`text-[13px] ${!category ? 'text-white' : 'text-ink'}`}>All</Text>
           </Pressable>
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Pressable
-              key={c.id}
-              onPress={() => setCategory(c.id)}
-              className={`px-4 py-2 rounded-full ${category === c.id ? 'bg-primary' : 'bg-[#f5f5f5]'}`}
+              key={c.category_id}
+              onPress={() => setCategory(c.category_id)}
+              className={`px-4 py-2 rounded-full ${category === c.category_id ? 'bg-primary' : 'bg-[#f5f5f5]'}`}
             >
-              <Text className={`text-[13px] ${category === c.id ? 'text-white' : 'text-ink'}`}>
-                {c.emoji} {c.name}
+              <Text className={`text-[13px] ${category === c.category_id ? 'text-white' : 'text-ink'}`}>
+                {emojiForCategory(c.icon)} {c.name}
               </Text>
-            </Pressable>
-          ))}
-        </View>
-
-        <Text className="text-[14px] font-semibold text-ink mb-2">Minimum rating</Text>
-        <View className="flex-row gap-2 mb-8">
-          {[0, 3, 4, 4.5].map((r) => (
-            <Pressable
-              key={r}
-              onPress={() => setMinRating(r)}
-              className={`flex-row items-center gap-1 px-4 py-2 rounded-full ${minRating === r ? 'bg-primary' : 'bg-[#f5f5f5]'}`}
-            >
-              {r === 0 ? (
-                <Text className={`text-[13px] ${minRating === r ? 'text-white' : 'text-ink'}`}>Any</Text>
-              ) : (
-                <>
-                  <StarIcon size={14} filled={minRating === r} />
-                  <Text className={`text-[13px] ${minRating === r ? 'text-white' : 'text-ink'}`}>{r}+</Text>
-                </>
-              )}
             </Pressable>
           ))}
         </View>
