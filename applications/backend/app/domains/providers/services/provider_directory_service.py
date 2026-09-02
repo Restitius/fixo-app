@@ -24,3 +24,8 @@ class ProviderDirectoryService:
         if not _SLUG.match(clean):
             raise ValidationError("Invalid service slug")
         return await self._providers.list_by_service(clean)
+
+    async def by_category(self, category_id: str) -> list[dict[str, Any]]:
+        if not str(category_id or "").strip():
+            raise ValidationError("category_id is required")
+        return await self._providers.list_by_category(category_id)
