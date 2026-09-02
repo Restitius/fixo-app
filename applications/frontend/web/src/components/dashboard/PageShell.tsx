@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Bell, LogOut, Menu, Search } from "lucide-react";
 
 import { DashboardSidebar } from "./DashboardSidebar";
@@ -13,6 +14,13 @@ interface PageShellProps {
 
 export function PageShell({ title, subtitle, userName, onLogout, children }: PageShellProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [headerQuery, setHeaderQuery] = useState("");
+  const navigate = useNavigate();
+
+  function runHeaderSearch() {
+    if (!headerQuery.trim()) return;
+    navigate({ to: "/search", search: { q: headerQuery.trim() } });
+  }
 
   const initials = (userName ?? "")
     .split(" ")
@@ -46,10 +54,15 @@ export function PageShell({ title, subtitle, userName, onLogout, children }: Pag
             <div className="flex items-center gap-2 sm:gap-4">
               <div className="relative hidden md:block">
                 <input
+                  value={headerQuery}
+                  onChange={(e) => setHeaderQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && runHeaderSearch()}
                   placeholder="Search here..."
                   className="h-12 w-64 rounded-2xl bg-card pl-5 pr-12 text-sm outline-none placeholder:text-muted-foreground"
                 />
-                <Search className="absolute right-4 top-1/2 size-5 -translate-y-1/2 text-foreground" />
+                <button onClick={runHeaderSearch} className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground">
+                  <Search className="size-5" />
+                </button>
               </div>
               <button className="relative flex size-11 shrink-0 items-center justify-center rounded-2xl bg-card sm:size-12">
                 <Bell className="size-5" />

@@ -7,6 +7,8 @@ import {
   ArrowLeft,
   ArrowRight,
   Award,
+  Bookmark,
+  BookmarkCheck,
   Briefcase,
   Calendar,
   Headset,
@@ -29,7 +31,7 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/lib/auth-context";
-import { bookingApi, type ProviderListing, type ProviderProfile } from "@/lib/api-client";
+import { bookingApi, favoritesApi, type ProviderListing, type ProviderProfile } from "@/lib/api-client";
 import { fmtMoney } from "@/lib/format";
 import { toast } from "sonner";
 
@@ -73,6 +75,7 @@ function ProvidersPage() {
   const [minRating, setMinRating] = useState("0");
   const [sort, setSort] = useState<Sort>("Recommended");
   const [selected, setSelected] = useState<ProviderListing | null>(null);
+  const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!(access_token && !loading)) return;
@@ -83,6 +86,26 @@ function ProvidersPage() {
     setProviders(null);
     void bookingApi.listProvidersByCategory(category_id).then(setProviders).catch(() => setProviders([]));
   }, [access_token, loading, category_id]);
+
+  useEffect(() => {
+    if (!(access_token && !loading)) return;
+    favoritesApi.list(1, 20).then((rows) => setFavoritedIds(new Set(rows.map((r) => r.provider_id)))).catch(() => {});
+  }, [access_token, loading]);
+
+  async function toggleFavorite(providerId: string) {
+    try {
+      const result = await favoritesApi.toggle(providerId);
+      setFavoritedIds((prev) => {
+        const next = new Set(prev);
+        if (result.is_favorite) next.add(providerId);
+        else next.delete(providerId);
+        return next;
+      });
+      toast.success(result.is_favorite ? "Saved to bookmarks" : "Removed from bookmarks");
+    } catch {
+      // apiClient already toasts the error
+    }
+  }
 
   const cities = useMemo(() => Array.from(new Set((providers ?? []).map((p) => p.city).filter((c): c is string => !!c))), [providers]);
 
@@ -227,6 +250,15 @@ function ProvidersPage() {
                         <span className="font-semibold text-primary">Starting from {fmtMoney(p.base_amount)}</span>
                       </div>
                       <div className="flex shrink-0 gap-2">
+                        <button
+                          onClick={() => toggleFavorite(p.provider_id)}
+                          title={favoritedIds.has(p.provider_id) ? "Remove bookmark" : "Save bookmark"}
+                          className={`flex items-center justify-center rounded-xl border px-3 py-2.5 ${
+                            favoritedIds.has(p.provider_id) ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:bg-muted/50"
+                          }`}
+                        >
+                          {favoritedIds.has(p.provider_id) ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
+                        </button>
                         <button onClick={() => setSelected(p)} className="rounded-xl border border-primary px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5">
                           View Profile
                         </button>
@@ -273,7 +305,13 @@ function ProvidersPage() {
         </>
       )}
 
-      <ProviderProfileDialog provider={selected} onClose={() => setSelected(null)} onBookNow={bookNow} />
+      <ProviderProfileDialog
+        provider={selected}
+        onClose={() => setSelected(null)}
+        onBookNow={bookNow}
+        favorited={!!selected && favoritedIds.has(selected.provider_id)}
+        onToggleFavorite={toggleFavorite}
+      />
     </PageShell>
   );
 }
@@ -282,10 +320,14 @@ function ProviderProfileDialog({
   provider,
   onClose,
   onBookNow,
+  favorited,
+  onToggleFavorite,
 }: {
   provider: ProviderListing | null;
   onClose: () => void;
   onBookNow: (p: ProviderListing) => void;
+  favorited: boolean;
+  onToggleFavorite: (providerId: string) => void;
 }) {
   const [profile, setProfile] = useState<ProviderProfile | null>(null);
 
@@ -403,6 +445,15 @@ function ProviderProfileDialog({
 
         <div className="mt-5 flex flex-wrap gap-3">
           <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">Close</button>
+          <button
+            onClick={() => onToggleFavorite(provider.provider_id)}
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium ${
+              favorited ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted"
+            }`}
+          >
+            {favorited ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
+            {favorited ? "Saved" : "Save"}
+          </button>
           <button
             onClick={() => toast.info("Direct messaging opens once you have an active booking with this provider.")}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
