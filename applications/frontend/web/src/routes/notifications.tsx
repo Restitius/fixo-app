@@ -9,7 +9,6 @@ import {
   Check,
   CheckCheck,
   CheckCircle2,
-  Circle,
   CreditCard,
   FileText,
   FilterX,
@@ -394,7 +393,7 @@ function NotificationsPage() {
                 <h4 className="mb-3 text-sm font-semibold">What happened</h4>
                 <ol className="space-y-3">
                   {siblings.map((s) => (
-                    <TimelineStep key={s.notification_id} current={s.notification_id === selected.notification_id} label={s.title} value={fmtDateTime(s.created_at)} />
+                    <TimelineStep key={s.notification_id} label={s.title} value={fmtDateTime(s.created_at)} />
                   ))}
                 </ol>
               </div>
@@ -436,7 +435,7 @@ function NotificationsPage() {
 
       {/* Booking / service updates — centered dialog with overlay */}
       <Dialog open={dialogOpen} onOpenChange={(o) => !o && closeAll()}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Notification details</DialogTitle>
             <p className="text-sm text-muted-foreground">Review the full update and take action</p>
@@ -489,17 +488,11 @@ function NotificationsPage() {
                   {siblings.map((s, i) => (
                     <div key={s.notification_id} className="flex min-w-0 flex-1 flex-col items-center text-center">
                       <div className="flex w-full items-center">
-                        <div className={`h-px flex-1 ${i === 0 ? "opacity-0" : "bg-primary/40"}`} />
-                        <span
-                          className={`flex size-8 shrink-0 items-center justify-center rounded-full ${
-                            s.notification_id === selected.notification_id
-                              ? "border-2 border-primary text-primary"
-                              : "bg-primary text-primary-foreground"
-                          }`}
-                        >
-                          {s.notification_id === selected.notification_id ? <Circle className="size-2 fill-current" /> : <Check className="size-4" />}
+                        <div className={`h-px flex-1 ${i === 0 ? "opacity-0" : "bg-success/40"}`} />
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-success text-white">
+                          <Check className="size-4" />
                         </span>
-                        <div className={`h-px flex-1 ${i === siblings.length - 1 ? "opacity-0" : "bg-primary/40"}`} />
+                        <div className={`h-px flex-1 ${i === siblings.length - 1 ? "opacity-0" : "bg-success/40"}`} />
                       </div>
                       <p className="mt-2 max-w-[8rem] text-xs font-medium">{s.title}</p>
                       <p className="text-[11px] text-muted-foreground">{fmtDateTime(s.created_at)}</p>
@@ -544,18 +537,14 @@ function NotificationsPage() {
   );
 }
 
-function TimelineStep({ current, label, value }: { current?: boolean; label: string; value: string }) {
+function TimelineStep({ label, value }: { label: string; value: string }) {
   return (
     <li className="flex items-start gap-3">
-      <span
-        className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${
-          current ? "border-2 border-primary text-primary" : "bg-primary text-primary-foreground"
-        }`}
-      >
-        {current ? <Circle className="size-2 fill-current" /> : <Check className="size-3" />}
+      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-success text-white">
+        <Check className="size-3" />
       </span>
       <div>
-        <p className={`text-sm font-medium ${current ? "text-primary" : ""}`}>{label}</p>
+        <p className="text-sm font-medium">{label}</p>
         <p className="text-xs text-muted-foreground">{value}</p>
       </div>
     </li>

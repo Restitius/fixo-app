@@ -510,7 +510,13 @@ function JourneyPanel({ event, booking, onClose }: { event: MergedEvent; booking
     }
   }, [event.booking_id]);
 
-  const steps = (timeline ?? []).map((t) => ({ ...metaFor(t.event), detail: t.detail, at: t.created_at }));
+  // Every real event that already happened gets ticked; anything in the
+  // standard journey not reached yet stays an honest hollow "Pending" step —
+  // the full checklist is always shown so progress reads at a glance.
+  const fullSteps = IDEAL_SEQUENCE.map((code) => {
+    const real = (timeline ?? []).find((t) => t.event === code);
+    return { code, meta: metaFor(code), done: !!real, at: real?.created_at ?? null };
+  });
 
   return (
     <div className="w-[380px] shrink-0 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
@@ -548,24 +554,20 @@ function JourneyPanel({ event, booking, onClose }: { event: MergedEvent; booking
           <p className="text-sm text-muted-foreground">Loading…</p>
         ) : (
           <ol className="space-y-3">
-            {steps.map((s, i) => {
-              const isCurrent = s.at === event.created_at && s.label === meta.label;
-              return (
-                <li key={i} className="flex items-start gap-3">
-                  <span className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${isCurrent ? "border-2 border-primary text-primary" : "bg-success text-white"}`}>
-                    {isCurrent ? <Circle className="size-2 fill-current" /> : <Check className="size-3" />}
-                  </span>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium">{s.label}</p>
-                      <span className="text-xs font-semibold text-success">Completed</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">{fmtDateTime(s.at)}</p>
+            {fullSteps.map((s) => (
+              <li key={s.code} className="flex items-start gap-3">
+                <span className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${s.done ? "bg-success text-white" : "border-2 border-border text-muted-foreground"}`}>
+                  {s.done ? <Check className="size-3" /> : <Circle className="size-2 fill-current" />}
+                </span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className={`text-sm font-medium ${s.done ? "" : "text-muted-foreground"}`}>{s.meta.label}</p>
+                    <span className={`text-xs font-semibold ${s.done ? "text-success" : "text-muted-foreground"}`}>{s.done ? "Completed" : "Pending"}</span>
                   </div>
-                </li>
-              );
-            })}
-            {pendingReviewStep(event, steps.length)}
+                  <p className="text-xs text-muted-foreground">{s.at ? fmtDateTime(s.at) : "Not yet reached"}</p>
+                </div>
+              </li>
+            ))}
           </ol>
         )}
       </div>
@@ -601,23 +603,6 @@ function JourneyPanel({ event, booking, onClose }: { event: MergedEvent; booking
   );
 }
 
-function pendingReviewStep(event: MergedEvent, doneCount: number) {
-  if (!event.pending) return null;
-  return (
-    <li key="pending" className="flex items-start gap-3">
-      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 text-amber-600">
-        <Circle className="size-2 fill-current" />
-      </span>
-      <div className="flex-1">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium">Review Pending</p>
-          <span className="text-xs font-semibold text-amber-600">Pending</span>
-        </div>
-        <p className="text-xs text-muted-foreground">{doneCount > 0 ? "Awaiting your review" : "Please share your feedback"}</p>
-      </div>
-    </li>
-  );
-}
 
 function PaymentDialog({
   event,
@@ -649,7 +634,7 @@ function PaymentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Activity details</DialogTitle>
           <p className="text-sm text-muted-foreground">Detailed information about this activity</p>
@@ -694,11 +679,11 @@ function PaymentDialog({
                   return (
                     <div key={i} className="flex min-w-0 flex-1 flex-col items-center text-center">
                       <div className="flex w-full items-center">
-                        <div className={`h-px flex-1 ${i === 0 ? "opacity-0" : "bg-primary/40"}`} />
-                        <span className={`flex size-8 shrink-0 items-center justify-center rounded-full ${t.event === event.event ? "border-2 border-primary text-primary" : "bg-primary text-primary-foreground"}`}>
-                          {t.event === event.event ? <Circle className="size-2 fill-current" /> : <Check className="size-4" />}
+                        <div className={`h-px flex-1 ${i === 0 ? "opacity-0" : "bg-success/40"}`} />
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-success text-white">
+                          <Check className="size-4" />
                         </span>
-                        <div className={`h-px flex-1 ${isLast ? "opacity-0" : "bg-primary/40"}`} />
+                        <div className={`h-px flex-1 ${isLast ? "opacity-0" : "bg-success/40"}`} />
                       </div>
                       <p className="mt-2 text-xs font-medium">{tMeta.label}</p>
                       <p className="text-[11px] text-muted-foreground">{fmtDate(t.created_at)}</p>
