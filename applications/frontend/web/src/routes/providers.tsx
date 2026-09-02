@@ -112,7 +112,10 @@ function ProvidersPage() {
   const minPrice = (providers ?? []).length ? Math.min(...(providers ?? []).map((p) => p.base_amount)) : null;
 
   function bookNow(p: ProviderListing) {
-    navigate({ to: "/book", search: { category: category_name, providerName: p.display_name } });
+    navigate({
+      to: "/book",
+      search: { category: category_name, categoryId: category_id, providerId: p.provider_id, providerName: p.display_name, path: "find-provider" },
+    });
   }
 
   return (
