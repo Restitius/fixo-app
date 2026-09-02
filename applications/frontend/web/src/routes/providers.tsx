@@ -8,15 +8,19 @@ import {
   ArrowRight,
   Award,
   Briefcase,
+  Calendar,
   Headset,
   Lock,
   MapPin,
+  MessageCircle,
   MessagesSquare,
   Search,
   ShieldCheck,
   Star,
   Tag,
   UserX,
+  Users,
+  Wrench,
   X,
 } from "lucide-react";
 
@@ -27,6 +31,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/lib/auth-context";
 import { bookingApi, type ProviderListing, type ProviderProfile } from "@/lib/api-client";
 import { fmtMoney } from "@/lib/format";
+import { toast } from "sonner";
 
 const title = "Find Providers — FIXO";
 const description = "Choose a trusted, real-reviewed professional for your service.";
@@ -301,9 +306,16 @@ function ProviderProfileDialog({
         </div>
 
         <div className="mt-4 flex items-center gap-4">
-          <span className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-lg font-bold text-primary">{initials(provider.display_name)}</span>
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-lg font-bold text-primary">{initials(provider.display_name)}</span>
           <div>
-            <h3 className="text-lg font-bold">{provider.display_name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold">{provider.display_name}</h3>
+              {provider.rating_avg >= 4.8 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                  <Award className="size-3" /> Top Rated
+                </span>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground">{provider.headline}</p>
             <p className="mt-1 flex items-center gap-1 text-sm">
               <Star className="size-3.5 fill-current text-[#FFB800]" /> {provider.rating_avg.toFixed(1)} ({provider.rating_count.toLocaleString()} reviews)
@@ -314,26 +326,86 @@ function ProviderProfileDialog({
 
         {profile?.bio && <p className="mt-4 text-sm text-muted-foreground">{profile.bio}</p>}
 
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-2xl border border-border p-3 text-center">
+            <Calendar className="mx-auto size-5 text-primary" />
+            <p className="mt-2 text-xs text-muted-foreground">Active Since</p>
+            <p className="text-sm font-bold">{profile ? new Date(profile.created_at).getFullYear() : "—"}</p>
+          </div>
+          <div className="rounded-2xl border border-border p-3 text-center">
+            <Briefcase className="mx-auto size-5 text-primary" />
+            <p className="mt-2 text-xs text-muted-foreground">Completed Jobs</p>
+            <p className="text-sm font-bold">{provider.jobs_completed.toLocaleString()}</p>
+          </div>
+          <div className="rounded-2xl border border-border p-3 text-center">
+            <Users className="mx-auto size-5 text-primary" />
+            <p className="mt-2 text-xs text-muted-foreground">Services Offered</p>
+            <p className="text-sm font-bold">{profile ? profile.services.length : "—"}</p>
+          </div>
+          <div className="rounded-2xl border border-border p-3 text-center">
+            <Tag className="mx-auto size-5 text-primary" />
+            <p className="mt-2 text-xs text-muted-foreground">Avg. Price</p>
+            <p className="text-sm font-bold">
+              {profile && profile.services.length > 0
+                ? fmtMoney(profile.services.reduce((s, x) => s + x.base_amount, 0) / profile.services.length)
+                : "—"}
+            </p>
+          </div>
+        </div>
+
         <div className="mt-4">
-          <h4 className="mb-2 font-semibold">Services &amp; pricing</h4>
+          <div className="mb-2 flex items-center justify-between">
+            <h4 className="font-semibold">Services &amp; Pricing</h4>
+            <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">All prices in TZS</span>
+          </div>
           {profile === null ? (
             <p className="text-sm text-muted-foreground">Loading…</p>
           ) : profile.services.length === 0 ? (
             <p className="text-sm text-muted-foreground">No services listed yet.</p>
           ) : (
-            <div className="divide-y divide-border rounded-2xl border border-border">
+            <div className="space-y-2">
               {profile.services.map((s) => (
-                <div key={s.service_id} className="flex items-center justify-between px-4 py-3 text-sm">
-                  <span>{s.name}</span>
-                  <span className="font-semibold text-primary">{fmtMoney(s.base_amount)}</span>
+                <div key={s.service_id} className="flex items-center gap-3 rounded-2xl border border-border p-3">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Wrench className="size-4" /></span>
+                  <span className="min-w-0 flex-1 text-sm font-medium">{s.name}</span>
+                  <span className="shrink-0 font-semibold text-primary">{fmtMoney(s.base_amount)}</span>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <div className="mt-5 flex gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-primary/5 p-4 text-xs sm:grid-cols-4">
+          <div>
+            <ShieldCheck className="size-5 text-primary" />
+            <p className="mt-1 font-semibold">Transparent Pricing</p>
+            <p className="text-muted-foreground">No hidden charges</p>
+          </div>
+          <div>
+            <Star className="size-5 text-primary" />
+            <p className="mt-1 font-semibold">{provider.rating_count.toLocaleString()} Real Reviews</p>
+            <p className="text-muted-foreground">From real customers</p>
+          </div>
+          <div>
+            <MapPin className="size-5 text-primary" />
+            <p className="mt-1 font-semibold">{provider.city ?? "Local"} Coverage</p>
+            <p className="text-muted-foreground">Local expert near you</p>
+          </div>
+          <div>
+            <Lock className="size-5 text-primary" />
+            <p className="mt-1 font-semibold">Secure Payments</p>
+            <p className="text-muted-foreground">Processed safely</p>
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3">
           <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">Close</button>
+          <button
+            onClick={() => toast.info("Direct messaging opens once you have an active booking with this provider.")}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
+          >
+            <MessageCircle className="size-4" /> Message Provider
+          </button>
           <button
             onClick={() => onBookNow(provider)}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
