@@ -601,7 +601,7 @@ function ActivityDetailSheet({
             <div>
               <h4 className="mb-2 text-sm font-semibold">Timeline</h4>
               <div className="flex items-start gap-3">
-                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-success text-white">
                   <Check className="size-3" />
                 </span>
                 <div>
