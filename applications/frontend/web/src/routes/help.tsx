@@ -185,16 +185,16 @@ function HelpPage() {
 
   return (
     <PageShell title="Help" subtitle="Support tickets and helpdesk" userName={customer?.full_name} onLogout={logout}>
-      <div className="flex gap-6">
-        <div className="min-w-0 flex-1">
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <MetricCard icon={Ticket} label="Open Tickets" hint="View all open" value={dataLoaded ? String(openCount) : "—"} />
-            <MetricCard icon={CheckCircle2} label="Resolved" hint="View resolved" value={dataLoaded ? String(resolvedCount) : "—"} tone="success" tintValue />
-            <MetricCard icon={Clock} label="Avg Response" hint="This month" value={dataLoaded ? (responded.length ? fmtDuration(avgResponseMs) : "—") : "—"} />
-            <MetricCard icon={Mail} label="Unread Replies" hint="View replies" value={dataLoaded ? String(unreadCount) : "—"} tone="amber" tintValue />
-          </div>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard icon={Ticket} label="Open Tickets" hint="View all open" value={dataLoaded ? String(openCount) : "—"} />
+        <MetricCard icon={CheckCircle2} label="Resolved" hint="View resolved" value={dataLoaded ? String(resolvedCount) : "—"} tone="success" tintValue />
+        <MetricCard icon={Clock} label="Avg Response" hint="This month" value={dataLoaded ? (responded.length ? fmtDuration(avgResponseMs) : "—") : "—"} />
+        <MetricCard icon={Mail} label="Unread Replies" hint="View replies" value={dataLoaded ? String(unreadCount) : "—"} tone="amber" tintValue />
+      </div>
 
-          <div className="mt-6 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+      <div className="mt-6 flex items-stretch gap-6">
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex h-full flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap items-center gap-3">
               <div className="relative min-w-[200px] flex-1">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -232,7 +232,7 @@ function HelpPage() {
               </button>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-4 flex flex-1 flex-col">
               {!dataLoaded ? (
                 <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
               ) : filtered.length === 0 ? (
@@ -295,7 +295,7 @@ function HelpPage() {
                       </tbody>
                     </table>
                   </div>
-                  <div className="flex items-center justify-between pt-4">
+                  <div className="mt-auto flex items-center justify-between pt-4">
                     <p className="text-sm text-muted-foreground">
                       Showing {(page - 1) * PAGE_SIZE + 1} to {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} tickets
                     </p>
@@ -340,7 +340,7 @@ function HelpSidebar({ onNewTicket }: { onNewTicket: () => void }) {
   ];
 
   return (
-    <div className="mt-6 w-[320px] shrink-0 space-y-6 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+    <div className="flex h-full w-[320px] shrink-0 flex-col rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
       <div>
         <div className="flex items-start gap-3">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -353,7 +353,7 @@ function HelpSidebar({ onNewTicket }: { onNewTicket: () => void }) {
         </div>
       </div>
 
-      <div>
+      <div className="mt-6">
         <p className="mb-2 font-semibold">FAQ shortcuts</p>
         <div className="divide-y divide-border">
           {faqs.map((f) => (
@@ -364,7 +364,7 @@ function HelpSidebar({ onNewTicket }: { onNewTicket: () => void }) {
         </div>
       </div>
 
-      <div className="border-t border-border pt-5">
+      <div className="mt-auto border-t border-border pt-5">
         <p className="font-semibold">Still need help?</p>
         <p className="mb-3 text-sm text-muted-foreground">Our support team is here for you.</p>
         <button onClick={onNewTicket} className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-semibold hover:bg-muted">
@@ -465,7 +465,7 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
   }, [ticket, messages]);
 
   return (
-    <div className="mt-6 w-[420px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+    <div className="flex h-full w-[420px] shrink-0 flex-col animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-start justify-between">
         <div>
           <p className="flex items-center gap-2 text-sm font-semibold text-primary">
@@ -531,7 +531,7 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
       </div>
 
       {ticket.status !== "CLOSED" ? (
-        <div className="mt-5 border-t border-border pt-4">
+        <div className="mt-auto border-t border-border pt-4">
           <p className="mb-2 text-sm font-semibold">Reply to customer</p>
           <div className="flex items-end gap-2">
             <button onClick={() => toast.info("Attachments aren't available on ticket replies yet.")} className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted">
@@ -544,7 +544,7 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
           </div>
         </div>
       ) : (
-        <div className="mt-5 flex items-center gap-2 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
+        <div className="mt-auto flex items-center gap-2 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
           <RotateCcw className="size-3.5" /> This ticket is closed. Open a new ticket if you need further help.
           <button onClick={() => navigate({ to: "/help" })} className="ml-auto font-semibold text-primary hover:underline">New Ticket</button>
         </div>
