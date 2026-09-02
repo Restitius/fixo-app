@@ -7,21 +7,34 @@ import Button from '../../components/Button'
 import { CenterModal } from '../../components/Sheet'
 import { USER } from '../../data/mock'
 import {
+  AwardIcon,
   BellIcon,
   ChevronRightIcon,
   CreditCardIcon,
   EditIcon,
+  FileTextIcon,
   GiftIcon,
   GlobeIcon,
   HelpCircleIcon,
+  HistoryIcon,
   LogoutIcon,
   ShieldIcon,
+  StarIcon,
+  TagIcon,
+  WalletIcon,
 } from '../../components/icons'
 
 const MENU: { icon: (p: { size?: number; color?: string }) => ReactNode; label: string; to: string }[] = [
   { icon: EditIcon, label: 'Edit Profile', to: '/profile/edit' },
   { icon: BellIcon, label: 'Notification Settings', to: '/profile/notifications' },
+  { icon: WalletIcon, label: 'Wallet', to: '/profile/wallet' },
   { icon: CreditCardIcon, label: 'Payment Methods', to: '/profile/payment' },
+  { icon: FileTextIcon, label: 'Invoices', to: '/profile/invoices' },
+  { icon: HistoryIcon, label: 'History', to: '/profile/history' },
+  { icon: AwardIcon, label: 'Loyalty & Rewards', to: '/profile/loyalty' },
+  { icon: TagIcon, label: 'Promotions', to: '/profile/promotions' },
+  { icon: HistoryIcon, label: 'Activity', to: '/profile/activity' },
+  { icon: StarIcon, label: 'Feedback', to: '/profile/feedback' },
   { icon: ShieldIcon, label: 'Security', to: '/profile/security' },
   { icon: GlobeIcon, label: 'Language', to: '/profile/language' },
   { icon: ShieldIcon, label: 'Privacy Policy', to: '/profile/privacy' },
