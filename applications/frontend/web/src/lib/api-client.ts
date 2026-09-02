@@ -198,6 +198,7 @@ export interface TimelineEvent {
 }
 
 export interface ActivityEvent {
+  booking_id?: string;
   booking_number: string;
   service_name?: string | null;
   event: string;
