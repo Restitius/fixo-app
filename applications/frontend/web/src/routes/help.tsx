@@ -518,7 +518,7 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
         <ol className="space-y-3">
           {timeline.map((s, i) => (
             <li key={i} className="flex items-start gap-3">
-              <span className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${s.done ? "bg-primary text-primary-foreground" : s.current ? "border-2 border-primary text-primary" : "border-2 border-border text-muted-foreground"}`}>
+              <span className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full ${s.done ? "bg-success text-white" : s.current ? "border-2 border-primary text-primary" : "border-2 border-border text-muted-foreground"}`}>
                 {s.done ? <Check className="size-3" /> : <Circle className="size-2 fill-current" />}
               </span>
               <div>
@@ -603,7 +603,7 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg overflow-y-auto max-h-[90vh]">
+      <DialogContent className="max-w-2xl overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>New Support Ticket</DialogTitle>
           <p className="text-sm text-muted-foreground">Tell us what went wrong and our team will help.</p>
