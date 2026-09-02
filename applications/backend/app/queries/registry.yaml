@@ -864,6 +864,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/properties/update_property.sql
+  CUS.PROVIDER.LIST_BY_CATEGORY:
+    description: CUS.PROVIDER.LIST_BY_CATEGORY registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/providers/list_by_category.sql
   CUS.PROVIDER.LIST_BY_SERVICE:
     description: CUS.PROVIDER.LIST_BY_SERVICE registered query.
     operation: read

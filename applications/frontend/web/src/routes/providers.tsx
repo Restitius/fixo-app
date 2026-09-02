@@ -1,16 +1,39 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+// Providers — real provider directory for a service category, backed by the
+// new GET /providers?category_id= endpoint (Module 14 extended this session).
+import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
-import { ArrowRight, BadgeCheck, Heart, MapPin, Search, SlidersHorizontal, Star, UserX, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Award,
+  Briefcase,
+  Headset,
+  Lock,
+  MapPin,
+  MessagesSquare,
+  Search,
+  ShieldCheck,
+  Star,
+  Tag,
+  UserX,
+  X,
+} from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/lib/auth-context";
+import { bookingApi, type ProviderListing, type ProviderProfile } from "@/lib/api-client";
+import { fmtMoney } from "@/lib/format";
 
-const title = "Find Professionals — FIXO";
-const description = "Browse verified handymen, contractors and service professionals near you.";
+const title = "Find Providers — FIXO";
+const description = "Choose a trusted, real-reviewed professional for your service.";
 
 const providersSearchSchema = z.object({
-  category: z.string().optional(),
+  category_id: z.string().optional(),
+  category_name: z.string().optional(),
 });
 
 export const Route = createFileRoute("/providers")({
@@ -22,283 +45,304 @@ export const Route = createFileRoute("/providers")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ProvidersPage,
 });
 
-const professionals = [
-  {
-    name: "Mike Ross",
-    role: "Master Plumber",
-    category: "Plumbing",
-    rating: 4.9,
-    reviews: 128,
-    jobs: 342,
-    rate: "$45/hr",
-    distanceMi: 1.2,
-    verified: true,
-    available: true,
-    initials: "MR",
-    color: "bg-[oklch(0.93_0.04_240)] text-[oklch(0.55_0.16_240)]",
-  },
-  {
-    name: "Sarah Lin",
-    role: "Licensed Electrician",
-    category: "Electrical",
-    rating: 4.8,
-    reviews: 96,
-    jobs: 215,
-    rate: "$60/hr",
-    distanceMi: 2.4,
-    verified: true,
-    available: false,
-    initials: "SL",
-    color: "bg-[oklch(0.93_0.09_75)] text-[oklch(0.55_0.16_60)]",
-  },
-  {
-    name: "Tom Hardy",
-    role: "Carpenter & Assembler",
-    category: "Carpentry",
-    rating: 4.7,
-    reviews: 84,
-    jobs: 198,
-    rate: "$55/hr",
-    distanceMi: 3.1,
-    verified: false,
-    available: true,
-    initials: "TH",
-    color: "bg-success-muted text-success-foreground",
-  },
-  {
-    name: "Elena Gomez",
-    role: "Cleaning Specialist",
-    category: "Cleaning",
-    rating: 4.9,
-    reviews: 210,
-    jobs: 567,
-    rate: "$40/hr",
-    distanceMi: 0.8,
-    verified: true,
-    available: true,
-    initials: "EG",
-    color: "bg-[oklch(0.92_0.06_190)] text-[oklch(0.55_0.1_190)]",
-  },
-  {
-    name: "David Kim",
-    role: "HVAC Technician",
-    category: "HVAC",
-    rating: 4.6,
-    reviews: 72,
-    jobs: 156,
-    rate: "$70/hr",
-    distanceMi: 4.5,
-    verified: true,
-    available: false,
-    initials: "DK",
-    color: "bg-primary/10 text-primary",
-  },
-  {
-    name: "Lisa Chen",
-    role: "Painter & Decorator",
-    category: "Painting",
-    rating: 4.8,
-    reviews: 115,
-    jobs: 289,
-    rate: "$50/hr",
-    distanceMi: 2.0,
-    verified: true,
-    available: true,
-    initials: "LC",
-    color: "bg-destructive/10 text-destructive",
-  },
-  {
-    name: "Marcus Reed",
-    role: "Moving & Hauling Crew Lead",
-    category: "Moving Help",
-    rating: 4.5,
-    reviews: 61,
-    jobs: 140,
-    rate: "$50/hr",
-    distanceMi: 3.6,
-    verified: true,
-    available: true,
-    initials: "MR",
-    color: "bg-[oklch(0.9_0.05_300)] text-[oklch(0.5_0.18_290)]",
-  },
-  {
-    name: "Priya Nair",
-    role: "Landscaping & Garden Care",
-    category: "Gardening",
-    rating: 4.6,
-    reviews: 88,
-    jobs: 203,
-    rate: "$35/hr",
-    distanceMi: 1.9,
-    verified: false,
-    available: true,
-    initials: "PN",
-    color: "bg-success-muted text-success-foreground",
-  },
-];
+const SORTS = ["Recommended", "Top Rated", "Lowest Price", "Most Jobs"] as const;
+type Sort = (typeof SORTS)[number];
 
-const SORTS = ["All", "Top Rated", "Nearest", "Available Now"] as const;
+function initials(name: string) {
+  return name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase() || "?";
+}
+const TONES = ["bg-sky-500/15 text-sky-600", "bg-primary/10 text-primary", "bg-success/15 text-success", "bg-amber-500/15 text-amber-600"];
 
 function ProvidersPage() {
+  const { access_token, loading, customer, logout } = useAuth();
   const navigate = useNavigate();
-  const { category } = Route.useSearch();
-  const [sort, setSort] = useState<(typeof SORTS)[number]>("All");
+  const { category_id, category_name } = Route.useSearch();
+  const [providers, setProviders] = useState<ProviderListing[] | null>(null);
   const [search, setSearch] = useState("");
+  const [location, setLocation] = useState("all");
+  const [minRating, setMinRating] = useState("0");
+  const [sort, setSort] = useState<Sort>("Recommended");
+  const [selected, setSelected] = useState<ProviderListing | null>(null);
+
+  useEffect(() => {
+    if (!(access_token && !loading)) return;
+    if (!category_id) {
+      setProviders([]);
+      return;
+    }
+    setProviders(null);
+    void bookingApi.listProvidersByCategory(category_id).then(setProviders).catch(() => setProviders([]));
+  }, [access_token, loading, category_id]);
+
+  const cities = useMemo(() => Array.from(new Set((providers ?? []).map((p) => p.city).filter((c): c is string => !!c))), [providers]);
 
   const filtered = useMemo(() => {
-    let list = professionals;
-    if (category) list = list.filter((p) => p.category === category);
+    let list = providers ?? [];
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter((p) => p.name.toLowerCase().includes(q) || p.role.toLowerCase().includes(q));
+      list = list.filter((p) => p.display_name.toLowerCase().includes(q) || (p.headline ?? "").toLowerCase().includes(q));
     }
-    if (sort === "Top Rated") list = [...list].sort((a, b) => b.rating - a.rating);
-    else if (sort === "Nearest") list = [...list].sort((a, b) => a.distanceMi - b.distanceMi);
-    else if (sort === "Available Now") list = list.filter((p) => p.available);
+    if (location !== "all") list = list.filter((p) => p.city === location);
+    if (minRating !== "0") list = list.filter((p) => p.rating_avg >= Number(minRating));
+    list = [...list];
+    if (sort === "Top Rated") list.sort((a, b) => b.rating_avg - a.rating_avg);
+    else if (sort === "Lowest Price") list.sort((a, b) => a.base_amount - b.base_amount);
+    else if (sort === "Most Jobs") list.sort((a, b) => b.jobs_completed - a.jobs_completed);
     return list;
-  }, [category, search, sort]);
+  }, [providers, search, location, minRating, sort]);
 
-  function clearCategory() {
-    navigate({ to: "/providers", search: {} });
+  if (loading) {
+    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+  }
+  if (!access_token) return <Navigate to="/login" replace />;
+
+  const dataLoaded = providers !== null;
+  const avgRating = (providers ?? []).length ? (providers ?? []).reduce((s, p) => s + p.rating_avg, 0) / (providers ?? []).length : 0;
+  const totalReviews = (providers ?? []).reduce((s, p) => s + p.rating_count, 0);
+  const minPrice = (providers ?? []).length ? Math.min(...(providers ?? []).map((p) => p.base_amount)) : null;
+
+  function bookNow(p: ProviderListing) {
+    navigate({ to: "/book", search: { category: category_name, providerName: p.display_name } });
   }
 
   return (
     <PageShell
-      title={category ? `${category} Professionals` : "Find Professionals"}
-      subtitle={category ? `Verified pros for ${category.toLowerCase()} near you` : "Browse verified handymen near your location"}
+      title={category_name ? `${category_name} Providers` : "Find Providers"}
+      subtitle="Choose a trusted professional for your service"
+      userName={customer?.full_name}
+      onLogout={logout}
     >
-      {category && (
-        <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary/10 py-1.5 pl-4 pr-2 text-sm font-medium text-primary animate-in fade-in slide-in-from-top-1">
-          Filtered by: {category}
-          <button onClick={clearCategory} className="rounded-full p-1 hover:bg-primary/15" aria-label="Clear category filter">
-            <X className="size-3.5" />
-          </button>
-        </div>
-      )}
+      <button onClick={() => navigate({ to: "/services" })} className="mt-6 flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+        <ArrowLeft className="size-4" /> Back to Services
+      </button>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <div className="relative min-w-[200px] flex-1">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search professionals..."
-            className="h-11 w-full rounded-xl bg-card pl-4 pr-11 text-sm shadow-[var(--shadow-card)] outline-none placeholder:text-muted-foreground"
-          />
-          <Search className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        </div>
-        <span className="inline-flex items-center gap-2 rounded-xl bg-card px-4 py-2.5 text-sm font-medium text-muted-foreground shadow-[var(--shadow-card)]">
-          <SlidersHorizontal className="size-4" />
-          Sort
-        </span>
-        {SORTS.map((s) => (
-          <button
-            key={s}
-            onClick={() => setSort(s)}
-            className={`shrink-0 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-              sort === s ? "text-primary-foreground" : "bg-card text-foreground/80 shadow-[var(--shadow-card)] hover:bg-sidebar-accent"
-            }`}
-            style={sort === s ? { backgroundImage: "var(--gradient-primary)" } : undefined}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
-
-      {filtered.length === 0 ? (
+      {!category_id ? (
         <div className="mt-6">
-          <EmptyState
-            icon={UserX}
-            title={category ? `No ${category.toLowerCase()} professionals right now` : "No professionals found"}
-            description={
-              category
-                ? `We don't have anyone available for ${category.toLowerCase()} matching your filters yet. Try another service or check back soon.`
-                : "Try a different search term or adjust your sort options."
-            }
-            actionLabel="View All Professionals"
-            onAction={() => {
-              setSearch("");
-              setSort("All");
-              if (category) clearCategory();
-            }}
-          />
+          <EmptyState icon={UserX} title="Pick a service first" description="Choose a service category to see the real providers who offer it." actionLabel="Browse Services" actionTo="/services" />
         </div>
       ) : (
-        <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((pro, i) => (
-            <div
-              key={pro.name}
-              style={{ animationDelay: `${i * 60}ms` }}
-              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] transition-all hover:-translate-y-1"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <span className={`flex size-14 items-center justify-center rounded-2xl text-lg font-bold ${pro.color}`}>
-                    {pro.initials}
-                  </span>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{pro.name}</h3>
-                      {pro.verified && <BadgeCheck className="size-4 text-primary" />}
-                    </div>
-                    <p className="text-sm text-muted-foreground">{pro.role}</p>
-                    {pro.available && (
-                      <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-success-foreground">
-                        <span className="size-1.5 rounded-full bg-success" /> Available now
+        <>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <MetricCard icon={Briefcase} label="Providers Found" hint="Matching this category" value={dataLoaded ? String((providers ?? []).length) : "—"} />
+            <MetricCard icon={Star} label="Average Rating" hint={`Based on ${totalReviews.toLocaleString()} reviews`} value={dataLoaded ? avgRating.toFixed(1) : "—"} tone="amber" tintValue />
+            <MetricCard icon={MessagesSquare} label="Total Reviews" hint="Across these providers" value={dataLoaded ? totalReviews.toLocaleString() : "—"} tone="success" tintValue />
+            <MetricCard icon={Tag} label="Starting From" hint="Competitive pricing" value={dataLoaded ? (minPrice != null ? fmtMoney(minPrice) : "—") : "—"} />
+          </div>
+
+          <div className="mt-6 flex items-start gap-6">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="relative min-w-[200px] flex-1">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search providers..."
+                    className="h-11 w-full rounded-xl border border-border bg-card pl-9 pr-4 text-sm shadow-[var(--shadow-card)] outline-none placeholder:text-muted-foreground"
+                  />
+                </div>
+                <Select value={location} onValueChange={setLocation}>
+                  <SelectTrigger className="w-[160px] bg-card shadow-[var(--shadow-card)]"><MapPin className="mr-1 size-4" /><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Locations</SelectItem>
+                    {cities.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={minRating} onValueChange={setMinRating}>
+                  <SelectTrigger className="w-[130px] bg-card shadow-[var(--shadow-card)]"><Star className="mr-1 size-4" /><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Any Rating</SelectItem>
+                    <SelectItem value="4">4.0+</SelectItem>
+                    <SelectItem value="4.5">4.5+</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={sort} onValueChange={(v) => setSort(v as Sort)}>
+                  <SelectTrigger className="w-[160px] bg-card shadow-[var(--shadow-card)]"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {SORTS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {!dataLoaded ? (
+                <div className="mt-6 space-y-4">
+                  {[0, 1, 2].map((i) => <div key={i} className="h-40 animate-pulse rounded-3xl bg-muted/60" />)}
+                </div>
+              ) : filtered.length === 0 ? (
+                <div className="mt-6">
+                  <EmptyState
+                    icon={UserX}
+                    title={`No ${category_name ?? ""} providers right now`}
+                    description="We don't have anyone matching your filters yet. Try widening your search."
+                    actionLabel="Clear Filters"
+                    onAction={() => { setSearch(""); setLocation("all"); setMinRating("0"); }}
+                  />
+                </div>
+              ) : (
+                <div className="mt-6 space-y-4">
+                  {filtered.map((p, i) => (
+                    <div
+                      key={p.provider_id}
+                      style={{ animationDelay: `${i * 50}ms` }}
+                      className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex flex-wrap items-center gap-4 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]"
+                    >
+                      <span className={`flex size-16 shrink-0 items-center justify-center rounded-2xl text-lg font-bold ${TONES[i % TONES.length]}`}>
+                        {initials(p.display_name)}
                       </span>
-                    )}
-                  </div>
+                      <div className="min-w-[180px] flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold">{p.display_name}</h3>
+                          {p.rating_avg >= 4.8 && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                              <Award className="size-3" /> Top Rated
+                            </span>
+                          )}
+                        </div>
+                        <p className="flex items-center gap-1 text-sm">
+                          <Star className="size-3.5 fill-current text-[#FFB800]" /> {p.rating_avg.toFixed(1)}
+                          <span className="text-muted-foreground">({p.rating_count.toLocaleString()} reviews)</span>
+                        </p>
+                        {p.headline && <p className="mt-0.5 text-sm text-muted-foreground">{p.headline}</p>}
+                        {p.city && (
+                          <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
+                            <MapPin className="size-3" /> {p.city}{p.region ? `, ${p.region}` : ""}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex shrink-0 flex-col items-end gap-1 text-sm">
+                        <span className="flex items-center gap-1 text-muted-foreground"><Briefcase className="size-3.5" /> {p.jobs_completed.toLocaleString()} jobs done</span>
+                        <span className="font-semibold text-primary">Starting from {fmtMoney(p.base_amount)}</span>
+                      </div>
+                      <div className="flex shrink-0 gap-2">
+                        <button onClick={() => setSelected(p)} className="rounded-xl border border-primary px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5">
+                          View Profile
+                        </button>
+                        <button
+                          onClick={() => bookNow(p)}
+                          className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+                          style={{ backgroundImage: "var(--gradient-primary)" }}
+                        >
+                          Book Now <ArrowRight className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <button className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-sidebar-accent">
-                  <Heart className="size-5" />
-                </button>
-              </div>
-
-              <div className="mt-5 grid grid-cols-3 gap-2 rounded-2xl bg-secondary/50 p-3">
-                <div className="text-center">
-                  <p className="flex items-center justify-center gap-1 text-sm font-semibold">
-                    <Star className="size-3.5 fill-current text-[#FFB800]" />
-                    {pro.rating}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Rating</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold">{pro.reviews}</p>
-                  <p className="text-xs text-muted-foreground">Reviews</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm font-semibold">{pro.jobs}</p>
-                  <p className="text-xs text-muted-foreground">Jobs</p>
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-between text-sm">
-                <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                  <MapPin className="size-4" />
-                  {pro.distanceMi} miles
-                </span>
-                <span className="font-semibold text-primary">{pro.rate}</span>
-              </div>
-
-              <button
-                onClick={() =>
-                  navigate({ to: "/book", search: { category: pro.category, providerName: pro.name } })
-                }
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-                style={{ backgroundImage: "var(--gradient-primary)" }}
-              >
-                Hire Now
-                <ArrowRight className="size-4" />
-              </button>
+              )}
             </div>
-          ))}
-        </div>
+
+            <div className="w-[320px] shrink-0 space-y-6">
+              <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+                <h3 className="flex items-center gap-2 font-semibold"><MapPin className="size-4 text-primary" /> Service Area</h3>
+                {cities.length === 0 ? (
+                  <p className="mt-2 text-sm text-muted-foreground">No location data yet for these providers.</p>
+                ) : (
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {cities.map((c) => (
+                      <span key={c} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{c}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="rounded-3xl bg-primary/5 p-5">
+                <h3 className="flex items-center gap-2 font-semibold text-primary"><ShieldCheck className="size-4" /> Our Recommendation</h3>
+                <p className="mt-1 text-xs text-muted-foreground">These providers are ranked by real customer ratings for {category_name ?? "this service"}.</p>
+                <ul className="mt-3 space-y-2 text-sm">
+                  <li className="flex items-center gap-2"><Star className="size-4 text-primary" /> Real reviews from real customers</li>
+                  <li className="flex items-center gap-2"><Tag className="size-4 text-primary" /> Transparent, per-job pricing</li>
+                  <li className="flex items-center gap-2"><Lock className="size-4 text-primary" /> Secure booking &amp; payments</li>
+                  <li className="flex items-center gap-2"><Headset className="size-4 text-primary" /> Support available if anything goes wrong</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </>
       )}
+
+      <ProviderProfileDialog provider={selected} onClose={() => setSelected(null)} onBookNow={bookNow} />
     </PageShell>
+  );
+}
+
+function ProviderProfileDialog({
+  provider,
+  onClose,
+  onBookNow,
+}: {
+  provider: ProviderListing | null;
+  onClose: () => void;
+  onBookNow: (p: ProviderListing) => void;
+}) {
+  const [profile, setProfile] = useState<ProviderProfile | null>(null);
+
+  useEffect(() => {
+    if (!provider) {
+      setProfile(null);
+      return;
+    }
+    setProfile(null);
+    void bookingApi.getProviderProfile(provider.provider_id).then(setProfile).catch(() => setProfile(null));
+  }, [provider?.provider_id]);
+
+  if (!provider) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-background p-6" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-start justify-between">
+          <h2 className="text-xl font-bold">Provider Profile</h2>
+          <button onClick={onClose} className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="size-5" /></button>
+        </div>
+
+        <div className="mt-4 flex items-center gap-4">
+          <span className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-lg font-bold text-primary">{initials(provider.display_name)}</span>
+          <div>
+            <h3 className="text-lg font-bold">{provider.display_name}</h3>
+            <p className="text-sm text-muted-foreground">{provider.headline}</p>
+            <p className="mt-1 flex items-center gap-1 text-sm">
+              <Star className="size-3.5 fill-current text-[#FFB800]" /> {provider.rating_avg.toFixed(1)} ({provider.rating_count.toLocaleString()} reviews)
+              <span className="text-muted-foreground"> · {provider.jobs_completed.toLocaleString()} jobs done</span>
+            </p>
+          </div>
+        </div>
+
+        {profile?.bio && <p className="mt-4 text-sm text-muted-foreground">{profile.bio}</p>}
+
+        <div className="mt-4">
+          <h4 className="mb-2 font-semibold">Services &amp; pricing</h4>
+          {profile === null ? (
+            <p className="text-sm text-muted-foreground">Loading…</p>
+          ) : profile.services.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No services listed yet.</p>
+          ) : (
+            <div className="divide-y divide-border rounded-2xl border border-border">
+              {profile.services.map((s) => (
+                <div key={s.service_id} className="flex items-center justify-between px-4 py-3 text-sm">
+                  <span>{s.name}</span>
+                  <span className="font-semibold text-primary">{fmtMoney(s.base_amount)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-5 flex gap-3">
+          <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">Close</button>
+          <button
+            onClick={() => onBookNow(provider)}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
+            style={{ backgroundImage: "var(--gradient-primary)" }}
+          >
+            Book Now <ArrowRight className="size-4" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
