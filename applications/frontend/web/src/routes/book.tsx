@@ -511,7 +511,7 @@ function BookPage() {
                         <button
                           key={c.category_id}
                           onClick={() => chooseCategory(c)}
-                          className="flex items-start gap-3 rounded-2xl border border-border p-4 text-left transition-colors hover:bg-muted/50"
+                          className="flex items-start gap-3 rounded-2xl bg-card p-4 text-left shadow-[var(--shadow-xs)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
                         >
                           <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                             <Icon className="size-5" />
@@ -555,8 +555,8 @@ function BookPage() {
                         <button
                           key={s.service_id}
                           onClick={() => setSelectedService(s)}
-                          className={`rounded-2xl border p-4 text-left transition-colors ${
-                            active ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+                          className={`rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
+                            active ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -580,8 +580,8 @@ function BookPage() {
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <button
                         onClick={() => setPath("direct")}
-                        className={`rounded-2xl border p-4 text-left transition-colors ${
-                          path === "direct" ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+                        className={`rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
+                          path === "direct" ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -595,8 +595,8 @@ function BookPage() {
                       </button>
                       <button
                         onClick={() => setPath("find-provider")}
-                        className={`rounded-2xl border p-4 text-left transition-colors ${
-                          path === "find-provider" ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+                        className={`rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
+                          path === "find-provider" ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -750,10 +750,10 @@ function BookPage() {
                           setSelectedAddressId(a.address_id);
                           setShowAddressForm(false);
                         }}
-                        className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-colors ${
+                        className={`flex w-full items-start gap-3 rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
                           selectedAddressId === a.address_id && !showAddressForm
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:bg-muted/50"
+                            ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]"
+                            : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
                         }`}
                       >
                         <MapPin className="mt-0.5 size-5 shrink-0 text-primary" />
@@ -786,7 +786,7 @@ function BookPage() {
                         <Plus className="size-4" /> Add a new address
                       </button>
                     ) : (
-                      <div className="rounded-2xl border border-border p-4">
+                      <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
                         <p className="mb-3 text-sm font-semibold">New address</p>
                         <div className="grid gap-3 sm:grid-cols-2">
                           <input
@@ -871,7 +871,7 @@ function BookPage() {
                   </button>
                   <button
                     onClick={() => setShowCalendar((v) => !v)}
-                    className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-foreground/80 hover:bg-muted/50"
+                    className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted/50"
                   >
                     {preferredDate && !isSameDay(preferredDate, new Date()) && !(() => { const t = new Date(); t.setDate(t.getDate() + 1); return isSameDay(preferredDate, t); })()
                       ? formatDate(preferredDate)
@@ -879,7 +879,7 @@ function BookPage() {
                   </button>
                 </div>
                 {showCalendar && (
-                  <div className="mt-3 rounded-2xl border border-border p-2">
+                  <div className="mt-3 rounded-2xl bg-card shadow-[var(--shadow-xs)] p-2">
                     <Calendar mode="single" selected={preferredDate} onSelect={setPreferredDate} disabled={{ before: new Date() }} />
                   </div>
                 )}
@@ -925,7 +925,7 @@ function BookPage() {
                 <h2 className="text-lg font-semibold">Review your request</h2>
                 <p className="mt-1 text-sm text-muted-foreground">Double check everything before we find you a pro.</p>
 
-                <div className="mt-5 divide-y divide-border rounded-2xl border border-border">
+                <div className="mt-5 divide-y divide-border rounded-2xl bg-card shadow-[var(--shadow-xs)]">
                   <ReviewRow label="Service" value={`${selectedService.name} (${categoryName ?? ""})`} onEdit={() => goTo("Service")} />
                   <ReviewRow label="Job details" value={jobDescription} onEdit={() => goTo("Details")} />
                   {photos.length > 0 && (
@@ -984,7 +984,7 @@ function BookPage() {
               </div>
 
               <div className="space-y-4">
-                <div className="rounded-2xl border border-border p-5">
+                <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
                   <div className="flex items-center gap-2 font-semibold"><Tag className="size-4 text-primary" /> Pricing estimate</div>
                   {preferredProviderPrice != null ? (
                     <p className="mt-2 text-2xl font-bold text-primary">{fmtMoney(preferredProviderPrice)}</p>
@@ -1210,7 +1210,7 @@ function DetailsSummary({
 }) {
   return (
     <div className="space-y-4">
-      <div className="rounded-2xl border border-border p-5">
+      <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Your selection</p>
         <p className="mt-2 font-semibold">{selectedService?.name ?? categoryName ?? "—"}</p>
         {selectedService?.description && <p className="mt-1 text-sm text-muted-foreground">{selectedService.description}</p>}
@@ -1273,7 +1273,7 @@ function PaymentStep({
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
         <div className="min-w-0">
-          <div className="rounded-2xl border border-border p-4">
+          <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground">Selected Provider</p>
@@ -1294,8 +1294,8 @@ function PaymentStep({
           <div className="mt-3 space-y-3">
             <button
               onClick={() => pick("WALLET", "FIXO Wallet")}
-              className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-colors ${
-                selectedPaymentKey === "WALLET" ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+              className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
+                selectedPaymentKey === "WALLET" ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -1321,8 +1321,8 @@ function PaymentStep({
                   <button
                     key={m.method_id}
                     onClick={() => pick(m.method_id, label)}
-                    className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-colors ${
-                      selectedPaymentKey === m.method_id ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+                    className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
+                      selectedPaymentKey === m.method_id ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -1363,7 +1363,7 @@ function PaymentStep({
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-2xl border border-border p-5">
+          <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
             <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total Amount</p>
             <p className="mt-2 text-2xl font-bold text-primary">{fmtMoney(booking.agreed_amount, booking.currency)}</p>
             <p className="mt-2 text-xs text-muted-foreground">This is the full amount for the job — no hidden fees.</p>
@@ -1486,20 +1486,20 @@ function DoneStep({
             </button>
             <button
               onClick={() => setShowMessageBox(!showMessageBox)}
-              className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-sm font-medium hover:bg-muted/50"
+              className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-sm font-medium transition-colors hover:bg-muted/50"
             >
               <MessageCircle className="size-4" /> Message Provider
             </button>
             <button
               onClick={onViewInvoices}
-              className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-sm font-medium hover:bg-muted/50"
+              className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-sm font-medium transition-colors hover:bg-muted/50"
             >
               <Tag className="size-4" /> View Invoice / Receipt
             </button>
           </div>
 
           {showMessageBox && (
-            <div className="rounded-2xl border border-border p-4">
+            <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
               {messageSent ? (
                 <p className="flex items-center gap-2 text-sm font-medium text-success"><CheckCircle2 className="size-4" /> Message sent to {booking.provider_name}.</p>
               ) : (
@@ -1534,7 +1534,7 @@ function DoneStep({
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-2xl border border-border p-5">
+          <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
             <div className="flex items-center justify-between">
               <p className="font-semibold">Payment Status</p>
               <span className="rounded-full bg-success-muted px-2.5 py-1 text-xs font-semibold text-success-foreground">
@@ -1562,7 +1562,7 @@ function DoneStep({
 
 function SummaryLine({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-border p-4">
+    <div className="flex items-center gap-3 rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon className="size-4" /></span>
       <div className="min-w-0">
         <p className="text-xs text-muted-foreground">{label}</p>
@@ -1578,11 +1578,11 @@ function Stepper({ current }: { current: number }) {
       {STEPS.map((s, i) => (
         <div key={s} className="flex shrink-0 items-center gap-1.5">
           <div
-            className={`flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
+            className={`flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold transition-all duration-300 ease-[var(--ease-premium)] ${
               i < current
                 ? "bg-primary/10 text-primary"
                 : i === current
-                  ? "text-primary-foreground"
+                  ? "text-primary-foreground shadow-[var(--shadow-glow)]"
                   : "bg-muted text-muted-foreground"
             }`}
             style={i === current ? { backgroundImage: "var(--gradient-primary)" } : undefined}
@@ -1590,7 +1590,9 @@ function Stepper({ current }: { current: number }) {
             {i < current ? <Check className="size-3.5" /> : <span>{i + 1}</span>}
             {s}
           </div>
-          {i < STEPS.length - 1 && <div className="h-px w-4 shrink-0 bg-border" />}
+          {i < STEPS.length - 1 && (
+            <div className={`h-px w-4 shrink-0 transition-colors duration-300 ${i < current ? "bg-primary/40" : "bg-border"}`} />
+          )}
         </div>
       ))}
     </div>
@@ -1605,7 +1607,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted/50"
+      className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50"
     >
       Back
     </button>
@@ -1617,7 +1619,7 @@ function NextButton({ onClick, disabled }: { onClick: () => void; disabled?: boo
     <button
       onClick={onClick}
       disabled={disabled}
-      className="ml-auto flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-40"
+      className="ml-auto flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)] disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-[var(--shadow-glow)]"
       style={{ backgroundImage: "var(--gradient-primary)" }}
     >
       Continue
