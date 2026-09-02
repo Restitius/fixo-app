@@ -386,7 +386,7 @@ function ServiceDetailsDialog({
             Find Providers <ArrowRight className="size-4" />
           </button>
           <button
-            onClick={() => navigate({ to: "/book", search: { category: category.name } })}
+            onClick={() => navigate({ to: "/book", search: { category: category.name, categoryId: category.category_id, path: "direct" } })}
             className="flex-1 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
