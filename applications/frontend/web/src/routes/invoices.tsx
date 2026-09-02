@@ -179,17 +179,17 @@ function InvoicesPage() {
       userName={customer?.full_name}
       onLogout={logout}
     >
-      <div className="flex gap-6">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard icon={FileText} label="Total Invoices" hint="All time" value={String(totalInvoices)} />
+        <MetricCard icon={CheckCircle2} label="Paid Invoices" hint="Completed" value={String(paidCount)} tone="success" />
+        <MetricCard icon={Clock} label="Pending" hint="Awaiting payment" value={String(pendingCount)} tone="amber" />
+        <MetricCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
+      </div>
+
+      <div className="mt-6 flex items-start gap-6">
         {/* Main column — squeezes left when the panel is open */}
         <div className="min-w-0 flex-1">
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <MetricCard icon={FileText} label="Total Invoices" hint="All time" value={String(totalInvoices)} />
-            <MetricCard icon={CheckCircle2} label="Paid Invoices" hint="Completed" value={String(paidCount)} tone="success" />
-            <MetricCard icon={Clock} label="Pending" hint="Awaiting payment" value={String(pendingCount)} tone="amber" />
-            <MetricCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
             <h3 className="text-lg font-semibold">Recent invoices</h3>
             <div className="flex flex-wrap items-center gap-3">
               <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
@@ -365,7 +365,7 @@ function PendingInvoicePanel({
   const navigate = useNavigate();
 
   return (
-    <div className="mt-6 w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+    <div className="w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Invoice details</h3>
         <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
