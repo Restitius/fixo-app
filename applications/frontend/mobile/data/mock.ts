@@ -338,3 +338,114 @@ export function reviewsFor(providerId: string): Review[] {
   const rotated = [...REVIEW_POOL.slice(seed % REVIEW_POOL.length), ...REVIEW_POOL.slice(0, seed % REVIEW_POOL.length)]
   return rotated.slice(0, 5).map((r, i) => ({ ...r, id: `${providerId}-r${i}` }))
 }
+
+// ---- Wallet (mirrors web's WalletBalance / WalletTxn shapes) --------------
+
+export const WALLET = { balance: 214.5, currency: 'USD' }
+
+export type WalletTxn = {
+  id: string
+  entryType: 'credit' | 'debit'
+  amount: number
+  runningBalance: number
+  note: string
+  date: string
+}
+
+export const WALLET_TRANSACTIONS: WalletTxn[] = [
+  { id: 'w1', entryType: 'debit', amount: 25, runningBalance: 214.5, note: 'House Cleaning — Sarah Johnson', date: 'Sep 1, 2026' },
+  { id: 'w2', entryType: 'credit', amount: 100, runningBalance: 239.5, note: 'Wallet top-up', date: 'Aug 28, 2026' },
+  { id: 'w3', entryType: 'debit', amount: 32, runningBalance: 139.5, note: 'Plumbing Repairing — Robert King', date: 'Aug 20, 2026' },
+  { id: 'w4', entryType: 'credit', amount: 15, runningBalance: 171.5, note: 'Refund — cancelled booking', date: 'Aug 15, 2026' },
+  { id: 'w5', entryType: 'debit', amount: 40, runningBalance: 156.5, note: 'Painting House Walls — Anna Smith', date: 'Aug 12, 2026' },
+]
+
+// ---- Loyalty (mirrors web's LoyaltyAccount / LoyaltyTxn shapes) -----------
+
+export const LOYALTY = { pointsBalance: 640, tier: 'Silver', nextTier: 'Gold', nextTierAt: 1000 }
+
+export type LoyaltyTxn = {
+  id: string
+  points: number
+  runningTotal: number
+  activity: string
+  date: string
+}
+
+export const LOYALTY_TRANSACTIONS: LoyaltyTxn[] = [
+  { id: 'l1', points: 25, runningTotal: 640, activity: 'Booking completed — House Cleaning', date: 'Sep 1, 2026' },
+  { id: 'l2', points: 50, runningTotal: 615, activity: 'Referral bonus — Florencio Dorrance joined', date: 'Aug 22, 2026' },
+  { id: 'l3', points: -100, runningTotal: 565, activity: 'Redeemed — $10 booking credit', date: 'Aug 18, 2026' },
+  { id: 'l4', points: 32, runningTotal: 665, activity: 'Booking completed — Plumbing Repairing', date: 'Aug 20, 2026' },
+  { id: 'l5', points: 40, runningTotal: 633, activity: 'Booking completed — Painting House Walls', date: 'Aug 12, 2026' },
+]
+
+export type Reward = { id: string; title: string; pointsCost: number; description: string }
+
+export const REWARDS: Reward[] = [
+  { id: 'rw1', title: '$5 Booking Credit', pointsCost: 200, description: 'Apply straight to your next booking total.' },
+  { id: 'rw2', title: '$10 Booking Credit', pointsCost: 350, description: 'Apply straight to your next booking total.' },
+  { id: 'rw3', title: 'Free Priority Booking', pointsCost: 500, description: 'Skip the queue on your next request.' },
+]
+
+// ---- Invoices (mirrors web's InvoiceRow shape) ----------------------------
+
+export type Invoice = {
+  id: string
+  invoiceNumber: string
+  bookingId: string
+  amount: number
+  currency: string
+  status: 'paid' | 'pending' | 'overdue'
+  issuedDate: string
+}
+
+export const INVOICES: Invoice[] = [
+  { id: 'inv1', invoiceNumber: 'INV-20260901-01', bookingId: 'b3', amount: 40, currency: 'USD', status: 'paid', issuedDate: 'Aug 12, 2026' },
+  { id: 'inv2', invoiceNumber: 'INV-20260901-02', bookingId: 'b4', amount: 15, currency: 'USD', status: 'paid', issuedDate: 'Jul 28, 2026' },
+  { id: 'inv3', invoiceNumber: 'INV-20260901-03', bookingId: 'b1', amount: 25, currency: 'USD', status: 'pending', issuedDate: 'Sep 1, 2026' },
+]
+
+export function invoiceById(id: string) {
+  return INVOICES.find((i) => i.id === id)
+}
+
+// ---- Activity (mirrors web's ActivityEvent shape) -------------------------
+
+export type ActivityEvent = {
+  id: string
+  bookingId: string
+  event: string
+  detail: string
+  date: string
+}
+
+export const ACTIVITY_EVENTS: ActivityEvent[] = [
+  { id: 'a1', bookingId: 'b1', event: 'Booking Created', detail: 'House Cleaning with Sarah Johnson', date: 'Sep 1, 2026' },
+  { id: 'a2', bookingId: 'b1', event: 'Payment Authorized', detail: 'Attempt #1 via wallet', date: 'Sep 1, 2026' },
+  { id: 'a3', bookingId: 'b2', event: 'Booking Confirmed', detail: 'Plumbing Repairing with Robert King', date: 'Aug 29, 2026' },
+  { id: 'a4', bookingId: 'b3', event: 'Review Submitted', detail: 'You rated the service 5/5', date: 'Aug 13, 2026' },
+  { id: 'a5', bookingId: 'b3', event: 'Invoice Ready', detail: 'INV-20260901-01 generated', date: 'Aug 12, 2026' },
+  { id: 'a6', bookingId: 'b5', event: 'Booking Cancelled', detail: 'Change of plans', date: 'Jul 15, 2026' },
+]
+
+// ---- Ratings / Feedback (mirrors web's BookingRating shape) ---------------
+
+export type Rating = { id: string; bookingId: string; rating: number; comment: string; date: string }
+
+export const RATINGS: Rating[] = [
+  { id: 'rt1', bookingId: 'b3', rating: 5, comment: 'Anna did an amazing job painting the living room!', date: 'Aug 13, 2026' },
+  { id: 'rt2', bookingId: 'b4', rating: 4, comment: 'Quick and careful with the laundry, will book again.', date: 'Jul 29, 2026' },
+]
+
+export function ratingForBooking(bookingId: string) {
+  return RATINGS.find((r) => r.bookingId === bookingId)
+}
+
+// ---- Promotion redemptions (mirrors web's PromotionValidation usage) ------
+
+export type PromoRedemption = { id: string; code: string; savings: number; bookingId: string; date: string }
+
+export const PROMO_REDEMPTIONS: PromoRedemption[] = [
+  { id: 'pr1', code: 'WELCOME10', savings: 4, bookingId: 'b4', date: 'Jul 28, 2026' },
+]
