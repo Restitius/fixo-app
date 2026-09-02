@@ -373,14 +373,14 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/disputes/withdraw.sql
-  CUS.FAVORITE.LIST.V1:
-    description: CUS.FAVORITE.LIST.V1 registered query.
+  CUS.FAVORITE.LIST:
+    description: CUS.FAVORITE.LIST registered query.
     operation: read
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/favorites/list.sql
-  CUS.FAVORITE.TOGGLE.V1:
+  CUS.FAVORITE.TOGGLE:
     description: DELETE wins when the pair exists (returning its row), otherwise INSERT.
     operation: read
     security:
