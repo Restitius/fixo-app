@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -7,7 +7,8 @@ import Tabs from '../../components/Tabs'
 import Button from '../../components/Button'
 import StatusBadge from '../../components/StatusBadge'
 import { CalendarEmptyIllustration, ChevronDownIcon, ChevronRightIcon, LocationIcon } from '../../components/icons'
-import { bookingsByStatus, providerById, type Booking } from '../../data/mock'
+import { bookingApi, fixoSdk, type BookingHistoryRow, type BookingRow } from '../../lib/api-client'
+import { fmtDate, fmtMoney, humanize, initialsOf } from '../../lib/format'
 
 const TABS = [
   { id: 'upcoming' as const, label: 'Upcoming' },
@@ -15,10 +16,32 @@ const TABS = [
   { id: 'cancelled' as const, label: 'Cancelled' },
 ]
 
+const UPCOMING_STATUSES = ['CONFIRMED', 'PAYMENT_AUTHORIZED', 'PROVIDER_SELECTED', 'QUOTE_ACCEPTED', 'ON_THE_WAY', 'ARRIVED', 'STARTED', 'IN_PROGRESS']
+const COMPLETED_STATUSES = ['PAID', 'CLOSED']
+
 export default function MyBookings() {
-  const [tab, setTab] = useState<Booking['status']>('upcoming')
+  const [tab, setTab] = useState<'upcoming' | 'completed' | 'cancelled'>('upcoming')
+  const [rows, setRows] = useState<BookingHistoryRow[] | null>(null)
   const [expanded, setExpanded] = useState<string | null>(null)
-  const bookings = bookingsByStatus(tab)
+  const [detail, setDetail] = useState<BookingRow | null>(null)
+
+  useEffect(() => {
+    fixoSdk.bookingHistory(undefined, 100, 0).then(setRows).catch(() => setRows([]))
+  }, [])
+
+  const bookings = (rows ?? []).filter((b) =>
+    tab === 'upcoming' ? UPCOMING_STATUSES.includes(b.status) : tab === 'completed' ? COMPLETED_STATUSES.includes(b.status) : b.status === 'CANCELLED',
+  )
+
+  function toggle(b: BookingHistoryRow) {
+    if (expanded === b.booking_id) {
+      setExpanded(null)
+      return
+    }
+    setExpanded(b.booking_id)
+    setDetail(null)
+    bookingApi.getBooking(b.booking_id).then(setDetail).catch(() => setDetail(null))
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -36,7 +59,9 @@ export default function MyBookings() {
           />
         </View>
 
-        {bookings.length === 0 ? (
+        {rows === null ? (
+          <View className="px-6 mt-5 h-24 rounded-2xl bg-[#f5f5f5]" />
+        ) : bookings.length === 0 ? (
           <View className="items-center px-10 pt-16">
             <CalendarEmptyIllustration size={130} />
             <Text className="text-[16px] font-semibold text-ink mt-4">No {tab} bookings</Text>
@@ -45,58 +70,68 @@ export default function MyBookings() {
         ) : (
           <View className="gap-3 px-6 mt-5">
             {bookings.map((b) => {
-              const provider = providerById(b.providerId)
-              if (!provider) return null
-              const isOpen = expanded === b.id
+              const isOpen = expanded === b.booking_id
               return (
-                <View key={b.id} className="rounded-2xl border border-hairline overflow-hidden">
-                  <Pressable onPress={() => setExpanded(isOpen ? null : b.id)} className="flex-row items-center gap-4 p-4">
-                    <Avatar label={provider.avatar} size={48} />
+                <View key={b.booking_id} className="rounded-2xl border border-hairline overflow-hidden">
+                  <Pressable onPress={() => toggle(b)} className="flex-row items-center gap-4 p-4">
+                    <Avatar label={initialsOf(b.provider_name ?? '?')} size={48} />
                     <View className="flex-1">
                       <Text numberOfLines={1} className="font-bold text-ink">
-                        {provider.name}
+                        {b.provider_name ?? b.service_name ?? 'Service'}
                       </Text>
                       <Text className="text-[13px] text-muted">
-                        {b.date} • {b.time}
+                        {fmtDate(b.scheduled_date)}{b.time_window ? ` • ${humanize(b.time_window)}` : ''}
                       </Text>
                     </View>
-                    <StatusBadge status={b.status} />
+                    <StatusBadge status={tab} />
                     <ChevronDownIcon size={16} color="#6C7585" />
                   </Pressable>
 
                   {isOpen && (
                     <View className="px-4 pb-4">
                       <View className="rounded-xl bg-[#f7f7f7] p-4 gap-2">
-                        <View className="flex-row items-start gap-2">
-                          <LocationIcon size={16} color="#6C7585" />
-                          <Text className="text-[13px] text-muted flex-1">{b.address}</Text>
-                        </View>
-                        <View className="flex-row justify-between pt-2 border-t border-hairline mt-1">
-                          <Text className="text-[13px] text-muted">Total paid</Text>
-                          <Text className="text-[13px] font-bold text-ink">${b.price}</Text>
-                        </View>
+                        {detail === null ? (
+                          <Text className="text-[13px] text-muted">Loading details…</Text>
+                        ) : (
+                          <>
+                            {detail.address_street && (
+                              <View className="flex-row items-start gap-2">
+                                <LocationIcon size={16} color="#6C7585" />
+                                <Text className="text-[13px] text-muted flex-1">
+                                  {detail.address_street}{detail.address_city ? `, ${detail.address_city}` : ''}
+                                </Text>
+                              </View>
+                            )}
+                            <View className="flex-row justify-between pt-2 border-t border-hairline mt-1">
+                              <Text className="text-[13px] text-muted">Total paid</Text>
+                              <Text className="text-[13px] font-bold text-ink">{fmtMoney(b.agreed_amount, b.currency)}</Text>
+                            </View>
+                          </>
+                        )}
                       </View>
 
                       <View className="flex-row gap-3 mt-3">
-                        <View className="flex-1">
-                          <Button variant="outline" onPress={() => router.push(`/service/${provider.id}` as any)}>
-                            View Provider
-                          </Button>
-                        </View>
-                        {b.status === 'upcoming' ? (
+                        {detail?.selected_provider_id && (
                           <View className="flex-1">
-                            <Button onPress={() => router.push(`/bookings/${b.id}/cancel` as any)}>Cancel Booking</Button>
+                            <Button variant="outline" onPress={() => router.push(`/service/${detail.selected_provider_id}` as any)}>
+                              View Provider
+                            </Button>
                           </View>
-                        ) : (
+                        )}
+                        {tab === 'upcoming' ? (
                           <View className="flex-1">
-                            <Button onPress={() => router.push(`/booking/${provider.id}/receipt` as any)}>
+                            <Button onPress={() => router.push(`/bookings/${b.booking_id}/cancel` as any)}>Cancel Booking</Button>
+                          </View>
+                        ) : tab === 'completed' ? (
+                          <View className="flex-1">
+                            <Button onPress={() => router.push(`/booking/${detail?.selected_provider_id ?? ''}/receipt` as any)}>
                               <View className="flex-row items-center gap-1.5">
                                 <Text className="text-white font-bold text-[16px]">E-Receipt</Text>
                                 <ChevronRightIcon size={16} color="#ffffff" />
                               </View>
                             </Button>
                           </View>
-                        )}
+                        ) : null}
                       </View>
                     </View>
                   )}

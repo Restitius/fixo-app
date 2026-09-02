@@ -1,33 +1,47 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../components/ScreenHeader'
 import Button from '../../components/Button'
 import Sheet from '../../components/Sheet'
 import { StarIcon } from '../../components/icons'
-import { BOOKINGS, providerById, ratingForBooking, RATINGS, type Rating } from '../../data/mock'
+import { fixoSdk, type BookingHistoryRow, type BookingRating } from '../../lib/api-client'
+import { fmtDate } from '../../lib/format'
 
 export default function Feedback() {
-  const [ratings, setRatings] = useState<Rating[]>(RATINGS)
-  const [target, setTarget] = useState<string | null>(null)
+  const [completed, setCompleted] = useState<BookingHistoryRow[] | null>(null)
+  const [ratings, setRatings] = useState<BookingRating[]>([])
+  const [target, setTarget] = useState<BookingHistoryRow | null>(null)
   const [stars, setStars] = useState(5)
   const [comment, setComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  const completed = BOOKINGS.filter((b) => b.status === 'completed')
-
-  function openRate(bookingId: string) {
-    setTarget(bookingId)
-    setStars(5)
-    setComment('')
+  function refresh() {
+    fixoSdk.bookingHistory('CLOSED', 100, 0).then(setCompleted).catch(() => setCompleted([]))
+    fixoSdk.listMyRatings().then(setRatings).catch(() => setRatings([]))
   }
 
-  function submit() {
+  useEffect(refresh, [])
+
+  function openRate(b: BookingHistoryRow) {
+    const existing = ratings.find((r) => r.booking_id === b.booking_id)
+    setTarget(b)
+    setStars(existing?.rating ?? 5)
+    setComment(existing?.comment ?? '')
+  }
+
+  async function submit() {
     if (!target) return
-    setRatings((prev) => [
-      { id: `local-${prev.length}`, bookingId: target, rating: stars, comment: comment.trim(), date: 'Just now' },
-      ...prev.filter((r) => r.bookingId !== target),
-    ])
-    setTarget(null)
+    setSubmitting(true)
+    try {
+      await fixoSdk.submitRating(target.booking_id, stars, comment.trim() || undefined)
+      refresh()
+      setTarget(null)
+    } catch {
+      // apiClient throws on failure; existing rating (if any) stays shown
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -37,32 +51,36 @@ export default function Feedback() {
         <View className="px-6 pt-2">
           <Text className="text-[16px] font-bold text-ink mb-3">Rate a completed job</Text>
           <View className="flex-col gap-3">
-            {completed.map((b) => {
-              const provider = providerById(b.providerId)
-              const existing = ratingForBooking(b.id) ?? ratings.find((r) => r.bookingId === b.id)
-              if (!provider) return null
-              return (
-                <View key={b.id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
-                  <View className="flex-1 min-w-0">
-                    <Text numberOfLines={1} className="font-bold text-ink text-[14px]">
-                      {provider.title}
-                    </Text>
-                    <Text className="text-[12px] text-muted mt-0.5">{provider.name} · {b.date}</Text>
-                    {existing && (
-                      <View className="flex-row items-center gap-1 mt-1.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <StarIcon key={i} size={14} filled={i < existing.rating} />
-                        ))}
+            {completed === null ? (
+              <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
+            ) : (
+              <>
+                {completed.map((b) => {
+                  const existing = ratings.find((r) => r.booking_id === b.booking_id)
+                  return (
+                    <View key={b.booking_id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
+                      <View className="flex-1 min-w-0">
+                        <Text numberOfLines={1} className="font-bold text-ink text-[14px]">
+                          {b.service_name ?? 'Service'}
+                        </Text>
+                        <Text className="text-[12px] text-muted mt-0.5">{b.provider_name ?? '—'} · {fmtDate(b.completed_at ?? b.created_at)}</Text>
+                        {existing && (
+                          <View className="flex-row items-center gap-1 mt-1.5">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <StarIcon key={i} size={14} filled={i < existing.rating} />
+                            ))}
+                          </View>
+                        )}
                       </View>
-                    )}
-                  </View>
-                  <Pressable onPress={() => openRate(b.id)} className="shrink-0 rounded-full border border-primary px-4 py-2">
-                    <Text className="text-[12px] font-semibold text-primary">{existing ? 'Edit' : 'Rate'}</Text>
-                  </Pressable>
-                </View>
-              )
-            })}
-            {completed.length === 0 && <Text className="text-center text-muted py-8 text-[14px]">No completed bookings yet.</Text>}
+                      <Pressable onPress={() => openRate(b)} className="shrink-0 rounded-full border border-primary px-4 py-2">
+                        <Text className="text-[12px] font-semibold text-primary">{existing ? 'Edit' : 'Rate'}</Text>
+                      </Pressable>
+                    </View>
+                  )
+                })}
+                {completed.length === 0 && <Text className="text-center text-muted py-8 text-[14px]">No completed bookings yet.</Text>}
+              </>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -88,7 +106,7 @@ export default function Feedback() {
           className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[14px] text-ink mt-6 min-h-[88px]"
         />
         <View className="mt-6">
-          <Button onPress={submit}>Submit Feedback</Button>
+          <Button onPress={submit} loading={submitting}>Submit Feedback</Button>
         </View>
       </Sheet>
     </SafeAreaView>
