@@ -72,7 +72,7 @@ export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetails
           </div>
         ) : (
           <div className="space-y-5">
-            <div className="flex items-center justify-between rounded-2xl bg-muted/40 p-4">
+            <div className="flex items-center justify-between rounded-2xl bg-muted/40 p-4 shadow-[var(--shadow-xs)]">
               <div className="flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                   <Icon className="size-5" />
@@ -113,7 +113,7 @@ export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetails
                     <div key={idx} className="flex min-w-[100px] flex-1 flex-col items-center text-center">
                       <div className="flex w-full items-center">
                         <div className={`h-px flex-1 ${idx === 0 ? "opacity-0" : "bg-primary/30"}`} />
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
                           <Check className="size-4" />
                         </span>
                         <div className={`h-px flex-1 ${idx === timeline.length - 1 ? "opacity-0" : "bg-primary/30"}`} />
@@ -126,7 +126,7 @@ export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetails
               )}
             </div>
 
-            <div className="flex items-center justify-between rounded-2xl bg-primary/5 p-4">
+            <div className="flex items-center justify-between rounded-2xl bg-primary/5 p-4 shadow-[var(--shadow-xs)]">
               <div className="flex items-center gap-2">
                 <RefreshCw className="size-4 text-primary" />
                 <div>
@@ -139,13 +139,13 @@ export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetails
             <div className="flex gap-2">
               <button
                 onClick={() => onOpenChange(false)}
-                className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
+                className="flex-1 rounded-xl border border-border py-3 text-sm font-medium transition-colors hover:bg-muted"
               >
                 Close
               </button>
               <button
                 onClick={() => navigate({ to: "/services" })}
-                className="flex-1 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
+                className="flex-1 rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)]"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
                 Rebook Service

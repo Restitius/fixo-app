@@ -143,7 +143,7 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 rounded-2xl bg-muted/40 p-4 text-sm">
+            <div className="grid grid-cols-2 gap-4 rounded-2xl bg-muted/40 p-4 text-sm shadow-[var(--shadow-xs)]">
               <InfoField icon={User} label="Provider" value={booking.provider_name ?? "—"} />
               <InfoField
                 icon={Calendar}
@@ -162,7 +162,7 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
               <InfoField icon={Wrench} label="Request" value={booking.request_number ?? "—"} />
             </div>
 
-            <div className="flex items-center justify-between rounded-2xl bg-primary/5 p-4">
+            <div className="flex items-center justify-between rounded-2xl bg-primary/5 p-4 shadow-[var(--shadow-xs)]">
               <span className="text-sm font-medium text-muted-foreground">Total amount</span>
               <span className="text-xl font-bold text-primary">
                 {fmtMoney(booking.agreed_amount, booking.currency)}
@@ -203,12 +203,12 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
                   <button
                     onClick={() => void sendMessage()}
                     disabled={sending}
-                    className="rounded-lg px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+                    className="rounded-lg px-4 py-2 text-xs font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0"
                     style={{ backgroundImage: "var(--gradient-primary)" }}
                   >
                     {sending ? "Sending..." : "Send"}
                   </button>
-                  <button onClick={() => setShowMessage(false)} className="rounded-lg px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-muted">
+                  <button onClick={() => setShowMessage(false)} className="rounded-lg px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted">
                     Cancel
                   </button>
                 </div>
@@ -227,11 +227,11 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
                   <button
                     onClick={() => void raiseDispute()}
                     disabled={sending}
-                    className="rounded-lg bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground disabled:opacity-60"
+                    className="rounded-lg bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground shadow-[var(--shadow-sm)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0"
                   >
                     {sending ? "Submitting..." : "Submit Dispute"}
                   </button>
-                  <button onClick={() => setShowDispute(false)} className="rounded-lg px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-muted">
+                  <button onClick={() => setShowDispute(false)} className="rounded-lg px-4 py-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted">
                     Cancel
                   </button>
                 </div>
@@ -241,19 +241,19 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
             <div className="flex flex-wrap gap-2 pt-2">
               <button
                 onClick={print}
-                className="flex items-center gap-1.5 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-muted"
+                className="flex items-center gap-1.5 rounded-xl border border-border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
               >
                 <Printer className="size-4" /> Print
               </button>
               <button
                 onClick={() => setShowMessage((v) => !v)}
-                className="flex items-center gap-1.5 rounded-xl border border-border px-4 py-2.5 text-sm font-medium hover:bg-muted"
+                className="flex items-center gap-1.5 rounded-xl border border-border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
               >
                 <MessageSquare className="size-4" /> Message Provider
               </button>
               <button
                 onClick={() => setShowDispute((v) => !v)}
-                className="flex items-center gap-1.5 rounded-xl border border-destructive/30 px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10"
+                className="flex items-center gap-1.5 rounded-xl border border-destructive/30 px-4 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10"
               >
                 <AlertTriangle className="size-4" /> Raise Dispute
               </button>
@@ -261,7 +261,7 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
 
             <button
               onClick={() => onOpenChange(false)}
-              className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground"
+              className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)]"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
               Done
