@@ -280,10 +280,10 @@ function PromotionsPage() {
         <MetricCard icon={Clock} label="Expiring Soon" hint="Within 7 days" value={String(expiringSoon)} />
       </div>
 
-      <div className="mt-6 flex items-start gap-6">
+      <div className="mt-6 flex min-h-0 flex-1 items-start gap-6">
         {/* Main column — squeezes left when the details panel is open */}
-        <div className="min-w-0 flex-1">
-          <div className="grid gap-6 lg:grid-cols-2">
+        <div className="flex h-full min-w-0 flex-1 flex-col">
+          <div className="shrink-0 grid gap-6 lg:grid-cols-2">
             {/* Promo code card */}
             <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
@@ -384,8 +384,8 @@ function PromotionsPage() {
           </div>
 
           {/* Recent redemptions */}
-          <div className="mt-6 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
-            <div className="flex items-center justify-between">
+          <div className="mt-6 flex grow shrink-0 flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
+            <div className="flex shrink-0 items-center justify-between">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <History className="size-5 text-primary" /> Recent redemptions
               </h3>
@@ -397,7 +397,7 @@ function PromotionsPage() {
             </div>
 
             {ledger.length === 0 ? (
-              <div className="mt-4">
+              <div className="mt-4 flex flex-1 flex-col justify-center">
                 <EmptyState
                   compact
                   icon={History}

@@ -158,7 +158,7 @@ function ProfilePage() {
 
   return (
     <PageShell title="Profile & Settings" subtitle="Manage your account and preferences" userName={customer?.full_name} onLogout={logout}>
-      <div className="mt-6 grid gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="mt-6 grid min-h-0 flex-1 gap-6 lg:grid-cols-[280px_1fr]">
         <div className="h-fit rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
           <div className="flex flex-col items-center text-center">
             <span className="flex size-20 items-center justify-center rounded-full bg-primary/10 text-2xl font-bold text-primary">

@@ -349,7 +349,7 @@ function PaymentsPage() {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
           <TableScroll minWidth={720}>
             <TableHead columns={["Service", "Booking ID", "Date", "Provider", "Status", "Amount"]} />
             <tbody>

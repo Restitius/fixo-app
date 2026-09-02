@@ -15,6 +15,7 @@ import {
   History,
   Activity,
   Bell,
+  X,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
@@ -56,73 +57,97 @@ const groups = [
   },
 ];
 
-export function DashboardSidebar() {
+function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
   return (
-    <aside className="hidden w-64 shrink-0 flex-col justify-between rounded-3xl bg-card p-5 lg:flex">
-      <div>
-        <div className="mb-8 flex items-center gap-3 px-2 pt-2">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Wrench className="size-5" />
-          </span>
-          <span className="text-xl font-bold tracking-tight">FIXO</span>
-        </div>
+    <>
+      <nav className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1 [scrollbar-gutter:stable]">
+        {groups.map((group) => (
+          <div key={group.label}>
+            <p className="mb-1 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              {group.label}
+            </p>
+            <ul className="space-y-0.5">
+              {group.items.map((item) => (
+                <li key={item.title} onClick={onNavigate}>
+                  <Link
+                    to={item.to}
+                    activeProps={{
+                      className:
+                        "flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-[var(--shadow-card)]",
+                      style: { backgroundImage: "var(--gradient-primary)" },
+                    }}
+                    inactiveProps={{
+                      className:
+                        "flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-sidebar-accent",
+                    }}
+                  >
+                    <item.icon className="size-[18px] shrink-0" />
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
 
-        <nav className="space-y-6">
-          {groups.map((group) => (
-            <div key={group.label}>
-              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {group.label}
-              </p>
-              <ul className="space-y-1">
-                {group.items.map((item) =>
-                  item.to ? (
-                    <li key={item.title}>
-                      <Link
-                        to={item.to}
-                        activeProps={{
-                          className:
-                            "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-primary-foreground shadow-[var(--shadow-card)]",
-                          style: { backgroundImage: "var(--gradient-primary)" },
-                        }}
-                        inactiveProps={{
-                          className:
-                            "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground/80 transition-colors hover:bg-sidebar-accent",
-                        }}
-                      >
-                        <item.icon className="size-5" />
-                        {item.title}
-                      </Link>
-                    </li>
-                  ) : (
-                    <li key={item.title}>
-                      <button className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground/80 transition-colors hover:bg-sidebar-accent">
-                        <item.icon className="size-5" />
-                        {item.title}
-                      </button>
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-          ))}
-        </nav>
-      </div>
-
-      <Link to="/loyalty" className="mt-8 block rounded-2xl bg-primary/5 p-5 text-left">
-        <span className="mb-4 flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      <Link to="/loyalty" onClick={onNavigate} className="mt-3 flex shrink-0 items-center gap-3 rounded-2xl bg-primary/5 p-3 text-left">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Gift className="size-4" />
         </span>
-        <p className="text-base font-semibold">Refer &amp; Earn Rewards!</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Invite friends and get exclusive rewards.
-        </p>
-        <span
-          className="mt-4 block w-full rounded-xl py-2.5 text-center text-sm font-semibold text-primary-foreground"
-          style={{ backgroundImage: "var(--gradient-primary)" }}
-        >
-          Invite Now
-        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold">Refer &amp; Earn</p>
+          <p className="text-xs font-medium text-primary">Invite Now →</p>
+        </div>
       </Link>
-    </aside>
+    </>
+  );
+}
+
+function Logo() {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+        <Wrench className="size-5" />
+      </span>
+      <span className="text-xl font-bold tracking-tight">FIXO</span>
+    </div>
+  );
+}
+
+export function DashboardSidebar({
+  mobileOpen = false,
+  onMobileOpenChange,
+}: {
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
+}) {
+  return (
+    <>
+      <aside className="hidden h-full w-60 shrink-0 flex-col rounded-3xl bg-card p-4 lg:flex">
+        <div className="shrink-0 px-2 pb-4 pt-1">
+          <Logo />
+        </div>
+        <SidebarBody />
+      </aside>
+
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => onMobileOpenChange?.(false)} />
+          <aside className="relative flex h-full w-72 max-w-[85vw] flex-col bg-card p-4">
+            <div className="flex shrink-0 items-center justify-between px-2 pb-4 pt-1">
+              <Logo />
+              <button
+                onClick={() => onMobileOpenChange?.(false)}
+                className="flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted"
+              >
+                <X className="size-4" />
+              </button>
+            </div>
+            <SidebarBody onNavigate={() => onMobileOpenChange?.(false)} />
+          </aside>
+        </div>
+      )}
+    </>
   );
 }
