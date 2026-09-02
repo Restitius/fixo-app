@@ -79,12 +79,12 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
                     to={item.to}
                     activeProps={{
                       className:
-                        "flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-[var(--shadow-card)]",
+                        "flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-sm font-medium text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)]",
                       style: { backgroundImage: "var(--gradient-primary)" },
                     }}
                     inactiveProps={{
                       className:
-                        "flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-sidebar-accent",
+                        "flex w-full items-center gap-3 rounded-xl px-3 py-1.5 text-sm font-medium text-foreground/80 transition-all duration-200 ease-[var(--ease-premium)] hover:translate-x-0.5 hover:bg-sidebar-accent",
                     }}
                   >
                     <item.icon className="size-[18px] shrink-0" />
@@ -97,7 +97,11 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
 
-      <Link to="/loyalty" onClick={onNavigate} className="mt-2 flex shrink-0 items-center gap-3 rounded-2xl bg-primary/5 p-2.5 text-left">
+      <Link
+        to="/loyalty"
+        onClick={onNavigate}
+        className="mt-2 flex shrink-0 items-center gap-3 rounded-2xl bg-primary/5 p-2.5 text-left shadow-[var(--shadow-xs)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-sm)]"
+      >
         <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Gift className="size-4" />
         </span>
@@ -113,7 +117,10 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
 function Logo() {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+      <span
+        className="flex size-9 items-center justify-center rounded-xl text-primary-foreground shadow-[var(--shadow-glow)]"
+        style={{ backgroundImage: "var(--gradient-primary)" }}
+      >
         <Wrench className="size-5" />
       </span>
       <span className="text-xl font-bold tracking-tight">FIXO</span>
@@ -130,7 +137,7 @@ export function DashboardSidebar({
 }) {
   return (
     <>
-      <aside className="hidden h-full w-60 shrink-0 flex-col rounded-3xl bg-card p-4 lg:flex">
+      <aside className="hidden h-full w-60 shrink-0 flex-col rounded-3xl bg-card p-4 shadow-[var(--shadow-card)] lg:flex">
         <div className="shrink-0 px-2 pb-3 pt-1">
           <Logo />
         </div>
@@ -139,13 +146,16 @@ export function DashboardSidebar({
 
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => onMobileOpenChange?.(false)} />
-          <aside className="relative flex h-full w-72 max-w-[85vw] flex-col bg-card p-4">
+          <div
+            className="absolute inset-0 animate-in fade-in bg-black/50 duration-200"
+            onClick={() => onMobileOpenChange?.(false)}
+          />
+          <aside className="relative flex h-full w-72 max-w-[85vw] animate-in slide-in-from-left flex-col bg-card p-4 shadow-[var(--shadow-lg)] duration-300 ease-[var(--ease-premium)]">
             <div className="flex shrink-0 items-center justify-between px-2 pb-4 pt-1">
               <Logo />
               <button
                 onClick={() => onMobileOpenChange?.(false)}
-                className="flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted"
+                className="flex size-9 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-muted"
               >
                 <X className="size-4" />
               </button>
