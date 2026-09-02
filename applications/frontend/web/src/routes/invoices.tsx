@@ -186,10 +186,10 @@ function InvoicesPage() {
         <MetricCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
       </div>
 
-      <div className="mt-6 flex items-start gap-6">
+      <div className="mt-6 flex min-h-0 flex-1 items-start gap-6">
         {/* Main column — squeezes left when the panel is open */}
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
+        <div className="flex h-full min-w-0 flex-1 flex-col">
+          <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
             <h3 className="text-lg font-semibold">Recent invoices</h3>
             <div className="flex flex-wrap items-center gap-3">
               <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
@@ -232,7 +232,7 @@ function InvoicesPage() {
               />
             </div>
           ) : (
-            <div className="mt-6 overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)]">
+            <div className="mt-6 flex grow shrink-0 flex-col overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)]">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[920px] text-left text-sm">
                   <thead>
@@ -286,7 +286,7 @@ function InvoicesPage() {
                 </table>
               </div>
 
-              <div className="flex items-center justify-between px-6 py-4">
+              <div className="mt-auto flex shrink-0 items-center justify-between border-t border-border px-6 py-4">
                 <p className="text-sm text-muted-foreground">
                   Showing {(page - 1) * PAGE_SIZE + 1} to {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} invoices
                 </p>

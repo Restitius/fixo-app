@@ -167,7 +167,7 @@ function WalletPage() {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
           <TableScroll minWidth={640}>
             <TableHead columns={["Type", "Date", "Amount", "Balance After"]} />
             <tbody>
