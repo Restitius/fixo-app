@@ -273,17 +273,17 @@ function PromotionsPage() {
       userName={customer?.full_name}
       onLogout={logout}
     >
-      <div className="flex gap-6">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard icon={Ticket} label="Active Promotions" hint="Currently available" value={String(activeCount)} />
+        <MetricCard icon={Wallet} label="Total Savings" hint="Across all redemptions" value={fmtMoney(totalSavings)} />
+        <MetricCard icon={Calendar} label="Used This Month" hint="Applied on bookings" value={String(usedThisMonth)} />
+        <MetricCard icon={Clock} label="Expiring Soon" hint="Within 7 days" value={String(expiringSoon)} />
+      </div>
+
+      <div className="mt-6 flex items-start gap-6">
         {/* Main column — squeezes left when the details panel is open */}
         <div className="min-w-0 flex-1">
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <MetricCard icon={Ticket} label="Active Promotions" hint="Currently available" value={String(activeCount)} />
-            <MetricCard icon={Wallet} label="Total Savings" hint="Across all redemptions" value={fmtMoney(totalSavings)} />
-            <MetricCard icon={Calendar} label="Used This Month" hint="Applied on bookings" value={String(usedThisMonth)} />
-            <MetricCard icon={Clock} label="Expiring Soon" hint="Within 7 days" value={String(expiringSoon)} />
-          </div>
-
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-6 lg:grid-cols-2">
             {/* Promo code card */}
             <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
@@ -438,7 +438,7 @@ function PromotionsPage() {
 
         {/* Promotion details panel — in normal flow, no overlay, squeezes the column above */}
         {selected && (
-          <div className="mt-6 w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
+          <div className="w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Promotion details</h3>
               <button onClick={() => setSelected(null)} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
