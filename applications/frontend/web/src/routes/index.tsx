@@ -15,14 +15,11 @@ import {
 } from "recharts";
 import {
   ArrowRight,
-  Briefcase,
   Calendar,
-  CheckCircle2,
   ClipboardList,
   Clock,
   CreditCard,
   Droplets,
-  Gift,
   Hammer,
   PackageCheck,
   Paintbrush,
@@ -338,8 +335,7 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
 
   return (
     <PageShell title={`Welcome back, ${customerName.split(" ")[0]}`} subtitle={today} userName={customerName} onLogout={onLogout}>
-      <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_320px]">
-        <div className="min-w-0 space-y-6">
+      <div className="mt-6 space-y-6">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard
               highlight
@@ -551,37 +547,6 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
               </div>
             )}
           </section>
-        </div>
-
-        <div className="space-y-6">
-          <div className="rounded-3xl bg-primary/5 p-6 text-center">
-            <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-              <Gift className="size-6" />
-            </span>
-            <h3 className="mt-3 font-bold">Refer &amp; Earn Rewards!</h3>
-            <p className="mt-1 text-sm text-muted-foreground">Invite friends and earn real loyalty points when they book their first service.</p>
-            <button
-              onClick={() => navigate({ to: "/loyalty" })}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary-foreground"
-              style={{ backgroundImage: "var(--gradient-primary)" }}
-            >
-              Invite Now
-            </button>
-          </div>
-
-          <div className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
-            <h3 className="flex items-center gap-2 font-bold"><Briefcase className="size-4 text-primary" /> This year at a glance</h3>
-            <div className="mt-4 space-y-3 text-sm">
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">Bookings created</span><span className="font-semibold">{yearData.reduce((s, d) => s + d.requested, 0)}</span></div>
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">Jobs completed</span><span className="font-semibold">{yearData.reduce((s, d) => s + d.completed, 0)}</span></div>
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">Providers worked with</span><span className="font-semibold">{activeProviderCount}</span></div>
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">Total spend</span><span className="font-semibold">{fmtMoney(totalSpend, currency)}</span></div>
-            </div>
-            <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-              <CheckCircle2 className="size-3.5 text-success" /> Every number here comes from your real bookings.
-            </div>
-          </div>
-        </div>
       </div>
     </PageShell>
   );
