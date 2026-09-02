@@ -662,10 +662,45 @@ export const bookingApi = {
 
   sendBookingMessage: (bookingId: string, body: string) =>
     apiClient.post<{ message_id: string }>(`/bookings/${bookingId}/messages`, { body }).then((r) => r.data),
+  listBookingMessages: (bookingId: string, limit = 50, offset = 0) =>
+    apiClient
+      .get<{ conversation_id: string; unread_count: number; messages: BookingMessage[] }>(
+        `/bookings/${bookingId}/messages${qs({ limit, offset })}`,
+      )
+      .then((r) => r.data),
 
   openDispute: (bookingId: string, category: string, description: string) =>
     apiClient
       .post<{ dispute_id: string }>("/disputes", { booking_id: bookingId, category, description })
+      .then((r) => r.data),
+};
+
+export interface BookingMessage {
+  message_id: string;
+  from_provider: boolean;
+  body: string;
+  read_at?: string | null;
+  created_at: string;
+}
+
+export interface FavoriteProvider {
+  favorite_id: string;
+  provider_id: string;
+  display_name: string;
+  headline?: string | null;
+  city?: string | null;
+  rating_avg: number;
+  rating_count: number;
+  jobs_completed: number;
+  created_at: string;
+}
+
+export const favoritesApi = {
+  list: (page = 1, limit = 20) =>
+    apiClient.get<FavoriteProvider[]>(`/favorites${qs({ page, limit })}`).then((r) => r.data),
+  toggle: (providerId: string) =>
+    apiClient
+      .post<{ is_favorite: boolean; favorites_count: number }>(`/favorites/${providerId}/toggle`)
       .then((r) => r.data),
 };
 
