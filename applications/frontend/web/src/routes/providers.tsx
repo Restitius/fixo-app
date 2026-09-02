@@ -220,7 +220,7 @@ function ProvidersPage() {
                     <div
                       key={p.provider_id}
                       style={{ animationDelay: `${i * 50}ms` }}
-                      className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex flex-wrap items-center gap-4 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]"
+                      className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex flex-wrap items-center gap-4 rounded-3xl bg-card p-5 shadow-[var(--shadow-card)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)]"
                     >
                       <span className={`flex size-16 shrink-0 items-center justify-center rounded-2xl text-lg font-bold ${TONES[i % TONES.length]}`}>
                         {initials(p.display_name)}
@@ -253,18 +253,18 @@ function ProvidersPage() {
                         <button
                           onClick={() => toggleFavorite(p.provider_id)}
                           title={favoritedIds.has(p.provider_id) ? "Remove bookmark" : "Save bookmark"}
-                          className={`flex items-center justify-center rounded-xl border px-3 py-2.5 ${
+                          className={`flex items-center justify-center rounded-xl border px-3 py-2.5 transition-colors ${
                             favoritedIds.has(p.provider_id) ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:bg-muted/50"
                           }`}
                         >
                           {favoritedIds.has(p.provider_id) ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
                         </button>
-                        <button onClick={() => setSelected(p)} className="rounded-xl border border-primary px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5">
+                        <button onClick={() => setSelected(p)} className="rounded-xl border border-primary px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/5">
                           View Profile
                         </button>
                         <button
                           onClick={() => bookNow(p)}
-                          className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground"
+                          className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)]"
                           style={{ backgroundImage: "var(--gradient-primary)" }}
                         >
                           Book Now <ArrowRight className="size-4" />
@@ -343,11 +343,17 @@ function ProviderProfileDialog({
   if (!provider) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-background p-6" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-background p-6 shadow-[var(--shadow-lg)] animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-300 ease-[var(--ease-premium)]"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-start justify-between">
           <h2 className="text-xl font-bold">Provider Profile</h2>
-          <button onClick={onClose} className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="size-5" /></button>
+          <button onClick={onClose} className="flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted"><X className="size-5" /></button>
         </div>
 
         <div className="mt-4 flex items-center gap-4">
@@ -372,22 +378,22 @@ function ProviderProfileDialog({
         {profile?.bio && <p className="mt-4 text-sm text-muted-foreground">{profile.bio}</p>}
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-2xl border border-border p-3 text-center">
+          <div className="rounded-2xl bg-muted/40 p-3 text-center shadow-[var(--shadow-xs)]">
             <Calendar className="mx-auto size-5 text-primary" />
             <p className="mt-2 text-xs text-muted-foreground">Active Since</p>
             <p className="text-sm font-bold">{profile ? new Date(profile.created_at).getFullYear() : "—"}</p>
           </div>
-          <div className="rounded-2xl border border-border p-3 text-center">
+          <div className="rounded-2xl bg-muted/40 p-3 text-center shadow-[var(--shadow-xs)]">
             <Briefcase className="mx-auto size-5 text-primary" />
             <p className="mt-2 text-xs text-muted-foreground">Completed Jobs</p>
             <p className="text-sm font-bold">{provider.jobs_completed.toLocaleString()}</p>
           </div>
-          <div className="rounded-2xl border border-border p-3 text-center">
+          <div className="rounded-2xl bg-muted/40 p-3 text-center shadow-[var(--shadow-xs)]">
             <Users className="mx-auto size-5 text-primary" />
             <p className="mt-2 text-xs text-muted-foreground">Services Offered</p>
             <p className="text-sm font-bold">{profile ? profile.services.length : "—"}</p>
           </div>
-          <div className="rounded-2xl border border-border p-3 text-center">
+          <div className="rounded-2xl bg-muted/40 p-3 text-center shadow-[var(--shadow-xs)]">
             <Tag className="mx-auto size-5 text-primary" />
             <p className="mt-2 text-xs text-muted-foreground">Avg. Price</p>
             <p className="text-sm font-bold">
@@ -410,7 +416,10 @@ function ProviderProfileDialog({
           ) : (
             <div className="space-y-2">
               {profile.services.map((s) => (
-                <div key={s.service_id} className="flex items-center gap-3 rounded-2xl border border-border p-3">
+                <div
+                  key={s.service_id}
+                  className="flex items-center gap-3 rounded-2xl bg-muted/40 p-3 shadow-[var(--shadow-xs)] transition-shadow duration-200 hover:shadow-[var(--shadow-sm)]"
+                >
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Wrench className="size-4" /></span>
                   <span className="min-w-0 flex-1 text-sm font-medium">{s.name}</span>
                   <span className="shrink-0 font-semibold text-primary">{fmtMoney(s.base_amount)}</span>
@@ -444,10 +453,10 @@ function ProviderProfileDialog({
         </div>
 
         <div className="mt-5 flex flex-wrap gap-3">
-          <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">Close</button>
+          <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium transition-colors hover:bg-muted">Close</button>
           <button
             onClick={() => onToggleFavorite(provider.provider_id)}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium ${
+            className={`flex flex-1 items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-colors ${
               favorited ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted"
             }`}
           >
@@ -456,13 +465,13 @@ function ProviderProfileDialog({
           </button>
           <button
             onClick={() => toast.info("Direct messaging opens once you have an active booking with this provider.")}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium transition-colors hover:bg-muted"
           >
             <MessageCircle className="size-4" /> Message Provider
           </button>
           <button
             onClick={() => onBookNow(provider)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)]"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
             Book Now <ArrowRight className="size-4" />
