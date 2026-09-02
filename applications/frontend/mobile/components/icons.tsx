@@ -474,6 +474,68 @@ export function ArrowLeftIcon({ size = 24, color = '#0B111F' }: IconProps) {
   )
 }
 
+export function ClockIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={1.8} />
+      <Path d="M12 7v5l3.5 2" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
+export function XCircleIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={1.8} />
+      <Path d="M9.5 9.5l5 5M14.5 9.5l-5 5" stroke={color} strokeWidth={1.8} strokeLinecap="round" />
+    </Svg>
+  )
+}
+
+export function FileTextIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke={color} strokeWidth={1.8} strokeLinejoin="round" />
+      <Path d="M14 3v4h4M8 12h8M8 15.5h8M8 8.5h3" stroke={color} strokeWidth={1.6} strokeLinecap="round" />
+    </Svg>
+  )
+}
+
+export function HistoryIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M3 12a9 9 0 1 0 3-6.7" stroke={color} strokeWidth={1.8} strokeLinecap="round" />
+      <Path d="M3 4v4h4" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M12 8v4.5l3 2" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
+export function AwardIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={8} r={5.5} stroke={color} strokeWidth={1.8} />
+      <Path d="M9 12.5L7.5 21l4.5-2.5 4.5 2.5-1.5-8.5" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
+export function ArrowUpRightIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M7 17L17 7M17 7H9M17 7V15" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
+export function ArrowDownLeftIcon({ size = 24, color = '#0B111F' }: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M17 7L7 17M7 17H15M7 17V9" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  )
+}
+
 export function MailIcon({ size = 20, color = '#0B111F' }: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">

@@ -15,6 +15,9 @@ import {
   History,
   Activity,
   Bell,
+  Bookmark,
+  Calendar,
+  MessageCircle,
   X,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
@@ -25,8 +28,10 @@ const groups = [
     items: [
       { title: "Dashboard", icon: LayoutDashboard, to: "/" },
       { title: "Bookings", icon: ClipboardList, to: "/bookings" },
+      { title: "Calendar", icon: Calendar, to: "/calendar" },
       { title: "Services", icon: Wrench, to: "/services" },
       { title: "Providers", icon: Users, to: "/providers" },
+      { title: "Bookmarks", icon: Bookmark, to: "/bookmarks" },
     ],
   },
   {
@@ -48,6 +53,7 @@ const groups = [
   {
     label: "Tools",
     items: [
+      { title: "Inbox", icon: MessageCircle, to: "/inbox" },
       { title: "Notifications", icon: Bell, to: "/notifications" },
       { title: "Activity", icon: Activity, to: "/activity" },
       { title: "Settings", icon: Settings, to: "/profile" },
@@ -60,10 +66,10 @@ const groups = [
 function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <>
-      <nav className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1 [scrollbar-gutter:stable]">
+      <nav className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1 [scrollbar-gutter:stable]">
         {groups.map((group) => (
           <div key={group.label}>
-            <p className="mb-1 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <p className="mb-0.5 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
               {group.label}
             </p>
             <ul className="space-y-0.5">
@@ -91,7 +97,7 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
 
-      <Link to="/loyalty" onClick={onNavigate} className="mt-3 flex shrink-0 items-center gap-3 rounded-2xl bg-primary/5 p-3 text-left">
+      <Link to="/loyalty" onClick={onNavigate} className="mt-2 flex shrink-0 items-center gap-3 rounded-2xl bg-primary/5 p-2.5 text-left">
         <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
           <Gift className="size-4" />
         </span>
@@ -125,7 +131,7 @@ export function DashboardSidebar({
   return (
     <>
       <aside className="hidden h-full w-60 shrink-0 flex-col rounded-3xl bg-card p-4 lg:flex">
-        <div className="shrink-0 px-2 pb-4 pt-1">
+        <div className="shrink-0 px-2 pb-3 pt-1">
           <Logo />
         </div>
         <SidebarBody />
