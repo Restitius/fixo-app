@@ -22,17 +22,18 @@ class ApiClient {
     this._onUnauthorized = cb;
   }
 
-  private headers(): HeadersInit {
-    const h: Record<string, string> = { "Content-Type": "application/json" };
+  private headers(sendJsonHeader = true): HeadersInit {
+    const h: Record<string, string> = {};
+    if (sendJsonHeader) h["Content-Type"] = "application/json";
     if (this.token) h["Authorization"] = `Bearer ${this.token}`;
     return h;
   }
 
-  private async request<T>(path: string, init: RequestInit): Promise<ApiResponse<T>> {
-    let res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers() });
+  private async request<T>(path: string, init: RequestInit, sendJsonHeader = true): Promise<ApiResponse<T>> {
+    let res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers(sendJsonHeader) });
 
     if (res.status === 401 && this._onUnauthorized && (await this._onUnauthorized())) {
-      res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers() });
+      res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers(sendJsonHeader) });
     }
 
     const json = await res.json().catch(() => null);
@@ -59,6 +60,10 @@ class ApiClient {
 
   put<T = any>(path: string, body: unknown = {}) {
     return this.request<T>(path, { method: "PUT", body: JSON.stringify(body) });
+  }
+
+  postForm<T = any>(path: string, formData: FormData) {
+    return this.request<T>(path, { method: "POST", body: formData }, false);
   }
 
   delete<T = any>(path: string) {
@@ -620,6 +625,16 @@ export const bookingApi = {
   }) => apiClient.post<ServiceRequestRow>("/service-requests", payload).then((r) => r.data),
   submitServiceRequest: (id: string) =>
     apiClient.post<ServiceRequestRow>(`/service-requests/${id}/submit`).then((r) => r.data),
+  uploadEvidence: (requestId: string, file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return apiClient
+      .postForm<{ evidence_id: string; file_name: string; mime_type: string; size_bytes: number }>(
+        `/service-requests/${requestId}/evidence`,
+        form,
+      )
+      .then((r) => r.data);
+  },
 
   runMatching: (id: string) =>
     apiClient
