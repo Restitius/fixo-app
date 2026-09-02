@@ -13,6 +13,7 @@ from app.platform.query.sql_query_manager import SQLQueryManager
 class ProviderQueryIds:
     PROFILE = "CUS.PROVIDER.PROFILE"
     LIST_BY_SERVICE = "CUS.PROVIDER.LIST_BY_SERVICE"
+    LIST_BY_CATEGORY = "CUS.PROVIDER.LIST_BY_CATEGORY"
 
 
 class ProviderReadAdapter:
@@ -33,6 +34,14 @@ class ProviderReadAdapter:
         rows = await self._sql.execute(
             ProviderQueryIds.LIST_BY_SERVICE,
             {"slug": slug},
+            fetch="all",
+        )
+        return list(rows or [])
+
+    async def list_by_category(self, category_id: str) -> list[dict[str, Any]]:
+        rows = await self._sql.execute(
+            ProviderQueryIds.LIST_BY_CATEGORY,
+            {"category_id": category_id},
             fetch="all",
         )
         return list(rows or [])

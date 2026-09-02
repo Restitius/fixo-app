@@ -467,6 +467,28 @@ export interface CatalogCategory {
   description: string;
   icon: string;
   service_count: number;
+  min_price?: number | null;
+  avg_rating?: number | null;
+  total_jobs?: number | null;
+  provider_count?: number | null;
+}
+
+export interface ProviderListing {
+  provider_id: string;
+  display_name: string;
+  headline?: string | null;
+  city?: string | null;
+  region?: string | null;
+  rating_avg: number;
+  rating_count: number;
+  jobs_completed: number;
+  base_amount: number;
+}
+
+export interface ProviderProfile extends Omit<ProviderListing, "base_amount"> {
+  bio?: string | null;
+  created_at: string;
+  services: { service_id: string; slug: string; name: string; base_amount: number }[];
 }
 
 export interface CatalogServiceResult {
@@ -574,6 +596,14 @@ export const bookingApi = {
         `/catalog/search${qs({ q })}`,
       )
       .then((r) => r.data),
+
+  // ---- Provider directory (Module 14) ---------------------------------------
+  listProvidersByCategory: (categoryId: string) =>
+    apiClient.get<ProviderListing[]>(`/providers${qs({ category_id: categoryId })}`).then((r) => r.data),
+  listProvidersByService: (slug: string) =>
+    apiClient.get<ProviderListing[]>(`/providers${qs({ service: slug })}`).then((r) => r.data),
+  getProviderProfile: (providerId: string) =>
+    apiClient.get<ProviderProfile>(`/providers/${providerId}`).then((r) => r.data),
 
   listAddresses: () => apiClient.get<Address[]>("/locations/addresses").then((r) => r.data),
   createAddress: (payload: Omit<Address, "address_id" | "created_at">) =>
