@@ -243,7 +243,7 @@ function BookingsPage() {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
         <TableScroll minWidth={860}>
           <TableHead columns={["Service", "Booking ID", "Schedule", "Provider", "Status", "Amount"]} />
           <tbody>

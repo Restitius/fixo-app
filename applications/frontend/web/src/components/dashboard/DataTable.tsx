@@ -67,8 +67,12 @@ export function TableFilterBar({
   );
 }
 
-export function TableCard({ children }: { children: ReactNode }) {
-  return <div className="mt-6 overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)]">{children}</div>;
+export function TableCard({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={`mt-6 flex shrink-0 flex-col overflow-hidden rounded-3xl bg-card shadow-[var(--shadow-card)] ${className}`}>
+      {children}
+    </div>
+  );
 }
 
 export function TableScroll({ children, minWidth = 720 }: { children: ReactNode; minWidth?: number }) {
@@ -83,7 +87,7 @@ export function TableScroll({ children, minWidth = 720 }: { children: ReactNode;
 
 export function TableHead({ columns }: { columns: string[] }) {
   return (
-    <thead>
+    <thead className="sticky top-0 z-10 bg-card">
       <tr className="border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
         {columns.map((c, i) => (
           <th key={c} className={i === 0 ? "px-6 py-4 font-semibold" : "px-4 py-4 font-semibold"}>
@@ -107,7 +111,7 @@ interface TablePaginationProps {
 
 export function TablePagination({ page, pageCount, onPageChange, from, to, total, itemLabel }: TablePaginationProps) {
   return (
-    <div className="flex items-center justify-between px-6 py-4">
+    <div className="mt-auto flex shrink-0 items-center justify-between border-t border-border px-6 py-4">
       <p className="text-sm text-muted-foreground">
         Showing {from} to {to} of {total} {itemLabel}
       </p>
