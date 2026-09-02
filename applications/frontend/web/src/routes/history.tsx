@@ -235,7 +235,7 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
           <TableScroll minWidth={760}>
             <TableHead columns={["Service", "Booking ID", "Date", "Provider", "Status", "Amount"]} />
             <tbody>
@@ -326,7 +326,7 @@ function WalletSection() {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
           <TableScroll minWidth={640}>
             <TableHead columns={["Type", "Date", "Amount", "Balance After"]} />
             <tbody>
@@ -413,7 +413,7 @@ function LoyaltySection() {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
           <TableScroll minWidth={640}>
             <TableHead columns={["Activity", "Date", "Points", "Balance After"]} />
             <tbody>
@@ -500,7 +500,7 @@ function InvoicesSection() {
           )}
         </div>
       ) : (
-        <TableCard>
+        <TableCard className="grow">
           <TableScroll minWidth={700}>
             <TableHead columns={["Invoice #", "Booking", "Date", "Status", "Amount"]} />
             <tbody>

@@ -192,7 +192,7 @@ function HelpPage() {
         <MetricCard icon={Mail} label="Unread Replies" hint="View replies" value={dataLoaded ? String(unreadCount) : "—"} tone="amber" tintValue />
       </div>
 
-      <div className="mt-6 flex items-stretch gap-6">
+      <div className="mt-6 flex min-h-0 flex-1 items-stretch gap-6">
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex h-full flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap items-center gap-3">
