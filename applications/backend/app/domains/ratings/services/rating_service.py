@@ -12,8 +12,9 @@ from app.ports.persistence.phase16_ports import RatingRepositoryPort
 
 
 class RatingService:
-    def __init__(self, repo: RatingRepositoryPort) -> None:
+    def __init__(self, repo: RatingRepositoryPort, bookings: Any | None = None) -> None:
         self._repo = repo
+        self._bookings = bookings
 
     async def submit(self, booking_id: str, customer_id: str, rating: int, comment: str | None = None) -> dict[str, Any]:
         if not (1 <= rating <= 5):
@@ -23,6 +24,10 @@ class RatingService:
         result = await self._repo.submit(booking_id, customer_id, rating, comment)
         if result is None:
             raise ValueError("Cannot rate this booking (must be CLOSED and owned by you)")
+        if self._bookings is not None:
+            await self._bookings.add_timeline(
+                customer_id, booking_id, "REVIEW_SUBMITTED", f"You rated the service {rating}/5",
+            )
         return result
 
     async def get_for_booking(self, booking_id: str, customer_id: str) -> dict[str, Any]:

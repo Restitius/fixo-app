@@ -2,7 +2,7 @@
 SELECT i.invoice_id, i.invoice_number, i.subtotal, i.tax_amount,
        i.total_amount, i.currency, i.status, i.issued_at, i.paid_at,
        i.created_at,
-       b.booking_number, b.scheduled_date,
+       b.booking_id, b.booking_number, b.scheduled_date,
        p.display_name AS provider_name,
        s.name AS service_name,
        c.name AS category_name,

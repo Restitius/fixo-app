@@ -47,6 +47,11 @@ class InvoiceService:
         row = await self._invoices.issue(customer_id, invoice_id)
         if not row:
             raise ValidationError("Could not issue the invoice")
+        if invoice.get("booking_id"):
+            await self._bookings.add_timeline(
+                customer_id, str(invoice["booking_id"]),
+                "INVOICE_READY", f"Invoice {invoice['invoice_number']} generated",
+            )
         if self._notifications is not None:
             await self._notifications.notify(
                 customer_id, ntype="INVOICE.ISSUED",
