@@ -1,24 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { ArrowLeftIcon, ImageIcon, MicIcon, MoreHorizontalIcon, PhoneIcon, SendIcon } from '../../../components/icons'
-import { chatById, providerById, type ChatMessage } from '../../../data/mock'
+import { ArrowLeftIcon, ImageIcon, SendIcon } from '../../../components/icons'
+import { bookingApi, type BookingMessage, type BookingRow } from '../../../lib/api-client'
+import { fmtDateTime } from '../../../lib/format'
 
 export default function ChatDetail() {
-  const { chatId = '' } = useLocalSearchParams<{ chatId: string }>()
-  const chat = chatById(chatId)
-  const provider = chat ? providerById(chat.providerId) : undefined
-  const [messages, setMessages] = useState<ChatMessage[]>(chat?.messages ?? [])
+  const { chatId: bookingId = '' } = useLocalSearchParams<{ chatId: string }>()
+  const [booking, setBooking] = useState<BookingRow | null>(null)
+  const [messages, setMessages] = useState<BookingMessage[] | null>(null)
   const [text, setText] = useState('')
+  const [sending, setSending] = useState(false)
 
-  if (!chat || !provider) return null
+  useEffect(() => {
+    bookingApi.getBooking(bookingId).then(setBooking).catch(() => setBooking(null))
+    bookingApi.listBookingMessages(bookingId).then((r) => setMessages(r.messages)).catch(() => setMessages([]))
+  }, [bookingId])
 
-  function send() {
-    if (!text.trim()) return
-    setMessages((m) => [...m, { id: `local-${m.length}`, fromMe: true, text: text.trim(), time: 'Now' }])
+  async function send() {
+    if (!text.trim() || sending) return
+    setSending(true)
+    const body = text.trim()
     setText('')
+    try {
+      const sent = await bookingApi.sendBookingMessage(bookingId, body)
+      setMessages((prev) => [...(prev ?? []), { message_id: sent.message_id, from_provider: false, body, created_at: new Date().toISOString() }])
+    } catch {
+      // leave the composer's text cleared; the message just won't appear
+    } finally {
+      setSending(false)
+    }
   }
+
+  if (!booking) return null
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'bottom']}>
@@ -27,31 +42,28 @@ export default function ChatDetail() {
           <ArrowLeftIcon color="#0B111F" />
         </Pressable>
         <Text numberOfLines={1} className="font-bold text-ink text-[18px] flex-1">
-          {provider.name}
+          {booking.provider_name ?? 'Provider'}
         </Text>
-        <Pressable onPress={() => router.push(`/inbox/call/${provider.id}` as any)} className="items-center justify-center size-9 shrink-0">
-          <PhoneIcon size={20} color="#0B111F" />
-        </Pressable>
-        <Pressable className="items-center justify-center size-9 shrink-0">
-          <MoreHorizontalIcon size={20} color="#0B111F" />
-        </Pressable>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 16, gap: 12 }}>
-        <View className="items-center">
-          <Text className="text-[12px] text-muted bg-[#f5f5f5] rounded-full px-3 py-1">Today</Text>
-        </View>
-        {messages.map((m) => (
-          <View key={m.id} className={`flex-row ${m.fromMe ? 'justify-end' : 'justify-start'}`}>
-            <View
-              className={`rounded-2xl px-4 py-2.5 ${m.fromMe ? 'bg-primary rounded-br-md' : 'bg-[#f5f5f5] rounded-bl-md'}`}
-              style={{ maxWidth: '75%' }}
-            >
-              <Text className={`text-[14px] ${m.fromMe ? 'text-white' : 'text-ink'}`}>{m.text}</Text>
-              <Text className={`text-[10px] mt-1 ${m.fromMe ? 'text-white/70' : 'text-muted'}`}>{m.time}</Text>
+        {messages === null ? (
+          <Text className="text-center text-muted text-[13px]">Loading…</Text>
+        ) : messages.length === 0 ? (
+          <Text className="text-center text-muted text-[13px] py-8">No messages yet — say hello!</Text>
+        ) : (
+          messages.map((m) => (
+            <View key={m.message_id} className={`flex-row ${!m.from_provider ? 'justify-end' : 'justify-start'}`}>
+              <View
+                className={`rounded-2xl px-4 py-2.5 ${!m.from_provider ? 'bg-primary rounded-br-md' : 'bg-[#f5f5f5] rounded-bl-md'}`}
+                style={{ maxWidth: '75%' }}
+              >
+                <Text className={`text-[14px] ${!m.from_provider ? 'text-white' : 'text-ink'}`}>{m.body}</Text>
+                <Text className={`text-[10px] mt-1 ${!m.from_provider ? 'text-white/70' : 'text-muted'}`}>{fmtDateTime(m.created_at)}</Text>
+              </View>
             </View>
-          </View>
-        ))}
+          ))
+        )}
       </ScrollView>
 
       <View className="flex-row items-center gap-3 px-6 py-3 border-t border-hairline shrink-0">
@@ -61,13 +73,13 @@ export default function ChatDetail() {
         <TextInput
           value={text}
           onChangeText={setText}
-          onSubmitEditing={send}
+          onSubmitEditing={() => void send()}
           placeholder="Message..."
           placeholderTextColor="#9e9e9e"
           className="flex-1 rounded-full bg-[#f5f5f5] px-5 py-3 text-[14px] text-ink"
         />
-        <Pressable onPress={send} className="items-center justify-center size-11 rounded-full bg-primary shrink-0">
-          {text.trim() ? <SendIcon size={16} color="#fff" /> : <MicIcon size={20} color="#fff" />}
+        <Pressable onPress={() => void send()} disabled={!text.trim() || sending} className="items-center justify-center size-11 rounded-full bg-primary shrink-0">
+          <SendIcon size={16} color="#fff" />
         </Pressable>
       </View>
     </SafeAreaView>

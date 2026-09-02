@@ -13,6 +13,7 @@ import {
   Inter_700Bold,
   Inter_800ExtraBold,
 } from '@expo-google-fonts/inter'
+import { AuthProvider } from '../lib/auth-context'
 
 SplashScreen.preventAutoHideAsync().catch(() => {})
 
@@ -35,7 +36,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <StatusBar style="dark" />
-        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#F3F4FD' } }} />
+        <AuthProvider>
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#F3F4FD' } }} />
+        </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   )
