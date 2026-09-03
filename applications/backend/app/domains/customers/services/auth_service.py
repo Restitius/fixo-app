@@ -78,6 +78,36 @@ class AuthService:
         code = await self._issue_otp(customer["customer_id"], "VERIFY_EMAIL")
         return {"sent": True, **({"otp_code": code} if DEV_MODE else {})}
 
+    async def request_password_reset(self, email: str) -> dict[str, Any]:
+        customer = await self._customers.get_by_email(email.strip().lower())
+        if not customer:
+            # Do not reveal account existence.
+            return {"sent": True}
+        code = await self._issue_otp(customer["customer_id"], "PASSWORD_RESET")
+        return {"sent": True, **({"otp_code": code} if DEV_MODE else {})}
+
+    async def reset_password(self, email: str, code: str, new_password: str) -> dict[str, Any]:
+        if len(new_password) < 8:
+            raise ValidationError("Password must be at least 8 characters")
+        customer = await self._require_customer(email)
+        ok = await self._otps.verify(
+            customer["customer_id"],
+            {"purpose": "PASSWORD_RESET", "code_hash": _hash_code(code)},
+        )
+        if not ok:
+            raise AuthenticationError("Invalid or expired reset code")
+
+        updated = await self._customers.update_password(
+            customer["customer_id"], self._hasher.hash(new_password)
+        )
+        if not updated:
+            raise ValidationError("Could not reset the password")
+        # A forgotten-then-reset password means any existing session may have
+        # been on a compromised device — force re-login everywhere.
+        await self._sessions.revoke_all(str(customer["customer_id"]))
+        await self._publish("EVT.CUSTOMER.PASSWORD_RESET", updated)
+        return {"reset": True}
+
     async def verify_otp(self, email: str, code: str) -> dict[str, Any]:
         customer = await self._require_customer(email)
         ok = await self._otps.verify(
