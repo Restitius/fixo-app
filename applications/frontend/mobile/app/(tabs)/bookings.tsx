@@ -124,7 +124,7 @@ export default function MyBookings() {
                           </View>
                         ) : tab === 'completed' ? (
                           <View className="flex-1">
-                            <Button onPress={() => router.push(`/booking/${detail?.selected_provider_id ?? ''}/receipt` as any)}>
+                            <Button onPress={() => router.push(`/booking/${detail?.selected_provider_id ?? ''}/receipt?bookingId=${b.booking_id}` as any)}>
                               <View className="flex-row items-center gap-1.5">
                                 <Text className="text-white font-bold text-[16px]">E-Receipt</Text>
                                 <ChevronRightIcon size={16} color="#ffffff" />

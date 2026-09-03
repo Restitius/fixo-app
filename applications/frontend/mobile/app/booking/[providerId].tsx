@@ -1,305 +1,540 @@
-import { useState } from 'react'
+// Real booking wizard — service_id -> service request -> submit -> match ->
+// quote -> confirm -> authorize payment. Mirrors web's book.tsx "Find
+// Provider First" path (mobile always arrives via a specific provider), using
+// the real customer booking workflow end-to-end. The old per-category item
+// configurators (room counts, car plates, paint colors, laundry kg, ...) had
+// no backend counterpart at all — pricing here comes from the provider's real
+// service catalog, not fabricated line items.
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Svg, { Path } from 'react-native-svg'
 import ScreenHeader from '../../components/ScreenHeader'
 import Button from '../../components/Button'
-import Select from '../../components/Select'
 import Avatar from '../../components/Avatar'
 import PaymentIcon from '../../components/PaymentIcon'
 import { CenterModal } from '../../components/Sheet'
 import {
-  providerById,
-  USER,
-  PAYMENT_METHODS,
-  CLEANING_ROOMS,
-  PROMOS,
-  CAR_BRANDS,
-  CAR_SERIES,
-  HOUSE_SIZES,
-  PAINT_COLORS,
-  APPLIANCE_SERVICES,
-  SHIFTING_ITEMS,
-  type Promo,
-} from '../../data/mock'
+  bookingApi,
+  fixoSdk,
+  type Address,
+  type MatchCandidate,
+  type PaymentMethod,
+  type ProviderProfile,
+  type Quote,
+  type ServiceRequestRow,
+  type WalletBalance,
+  ApiError,
+} from '../../lib/api-client'
+import { fmtMoney, initialsOf } from '../../lib/format'
 import {
   ArrowLeftIcon,
   BackspaceIcon,
   CheckCircleIcon,
-  ChevronDownIcon,
   LocationIcon,
-  MinusIcon,
-  MoreHorizontalIcon,
   PlusIcon,
   ShieldCheckIcon,
-  TagIcon,
+  StarIcon,
 } from '../../components/icons'
 
-type Step = 'items' | 'bookingDetails' | 'promo' | 'address' | 'payment' | 'review' | 'pin'
-type BookingKind = 'rooms' | 'vehicle' | 'paint' | 'laundry' | 'appliance' | 'plumbing' | 'shifting' | 'generic'
+type Step = 'service' | 'details' | 'address' | 'review' | 'provider' | 'payment' | 'pin'
 
-const STEP_ORDER: Step[] = ['items', 'bookingDetails', 'address', 'payment', 'review', 'pin']
-const TIMES = ['08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM']
-const YES_NO = ['Yes', 'No']
+const STEP_ORDER: Step[] = ['service', 'details', 'address', 'review', 'provider', 'payment', 'pin']
+const TIME_WINDOWS = [
+  { value: 'MORNING', label: 'Morning', hint: '8am – 12pm' },
+  { value: 'AFTERNOON', label: 'Afternoon', hint: '12pm – 5pm' },
+  { value: 'EVENING', label: 'Evening', hint: '5pm – 9pm' },
+] as const
 
-function kindFor(categoryId: string): BookingKind {
-  if (categoryId === 'cleaning') return 'rooms'
-  if (categoryId === 'repairing') return 'vehicle'
-  if (categoryId === 'painting') return 'paint'
-  if (categoryId === 'laundry') return 'laundry'
-  if (categoryId === 'appliance') return 'appliance'
-  if (categoryId === 'plumbing') return 'plumbing'
-  if (categoryId === 'shifting') return 'shifting'
-  return 'generic'
+function formatDate(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 export default function BookingFlow() {
   const { providerId = '' } = useLocalSearchParams<{ providerId: string }>()
-  const provider = providerById(providerId)
-  const kind = provider ? kindFor(provider.categoryId) : 'generic'
+  const [provider, setProvider] = useState<ProviderProfile | null>(null)
+  const [loadError, setLoadError] = useState(false)
 
-  const [step, setStep] = useState<Step>('items')
-  const [prevStep, setPrevStep] = useState<Step>('bookingDetails')
+  const [step, setStep] = useState<Step>('service')
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null)
 
-  const [roomCounts, setRoomCounts] = useState<Record<string, number>>(
-    Object.fromEntries(CLEANING_ROOMS.map((r) => [r, 0])),
-  )
-  const [carBrand, setCarBrand] = useState(CAR_BRANDS[0])
-  const [carSeries, setCarSeries] = useState(CAR_SERIES[0])
-  const [plate, setPlate] = useState('')
-  const [houseSize, setHouseSize] = useState(HOUSE_SIZES[1])
-  const [colors, setColors] = useState(PAINT_COLORS)
-  const [paintColor, setPaintColor] = useState(PAINT_COLORS[6])
-  const [qty, setQty] = useState(1)
-
-  const [laundryWeight, setLaundryWeight] = useState(5)
-  const [ironingService, setIroningService] = useState(YES_NO[0])
-  const [fragranceService, setFragranceService] = useState(YES_NO[0])
-
-  const [applianceSelected, setApplianceSelected] = useState<string[]>([APPLIANCE_SERVICES[0]])
-
-  const [pipeCount, setPipeCount] = useState(1)
-  const [damage, setDamage] = useState('')
-
-  const [shiftingSubStep, setShiftingSubStep] = useState<'list' | 'route'>('list')
-  const [shiftingCounts, setShiftingCounts] = useState<Record<string, number>>(
-    Object.fromEntries(SHIFTING_ITEMS.map((r) => [r, 0])),
-  )
-  const [fromAddress, setFromAddress] = useState('')
-  const [toAddress, setToAddress] = useState('')
-
+  const [description, setDescription] = useState('')
   const today = new Date()
   const [viewMonth, setViewMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1))
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [workingHours, setWorkingHours] = useState(0)
-  const [startTime, setStartTime] = useState(TIMES[2])
-  const [promo, setPromo] = useState<Promo | null>(null)
+  const [preferredDate, setPreferredDate] = useState<Date | null>(null)
+  const [timeWindow, setTimeWindow] = useState<(typeof TIME_WINDOWS)[number]['value'] | null>(null)
 
-  const [address, setAddress] = useState(USER.address)
-  const [payment, setPayment] = useState(PAYMENT_METHODS.find((p) => p.icon === 'mastercard')?.id ?? PAYMENT_METHODS[0]!.id)
+  const [addresses, setAddresses] = useState<Address[] | null>(null)
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
+  const [showAddressForm, setShowAddressForm] = useState(false)
+  const [addrDraft, setAddrDraft] = useState({ label: 'Home', recipient_name: '', phone: '', street_address: '', city: '', region: '' })
+  const [savingAddress, setSavingAddress] = useState(false)
+
+  const [promoCode, setPromoCode] = useState('')
+  const [promoDiscount, setPromoDiscount] = useState<number | null>(null)
+  const [promoId, setPromoId] = useState<string | null>(null)
+  const [promoError, setPromoError] = useState<string | null>(null)
+  const [validatingPromo, setValidatingPromo] = useState(false)
+
+  const [submitting, setSubmitting] = useState(false)
+  const [request, setRequest] = useState<ServiceRequestRow | null>(null)
+  const [reviewIssue, setReviewIssue] = useState<string | null>(null)
+
+  const [matching, setMatching] = useState(false)
+  const [matchOutcome, setMatchOutcome] = useState<string | null>(null)
+  const [matches, setMatches] = useState<MatchCandidate[] | null>(null)
+  const [quotes, setQuotes] = useState<Quote[] | null>(null)
+  const [acceptingQuoteId, setAcceptingQuoteId] = useState<string | null>(null)
+
+  const [booking, setBooking] = useState<Awaited<ReturnType<typeof bookingApi.confirmBooking>> | null>(null)
+  const [authorizing, setAuthorizing] = useState(false)
+  const [wallet, setWallet] = useState<WalletBalance | null>(null)
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[] | null>(null)
+
   const [pin, setPin] = useState<string[]>([])
   const [showSuccess, setShowSuccess] = useState(false)
-  const [detailsExpanded, setDetailsExpanded] = useState(false)
 
+  useEffect(() => {
+    bookingApi.getProviderProfile(providerId).then(setProvider).catch(() => setLoadError(true))
+  }, [providerId])
+
+  useEffect(() => {
+    bookingApi.listAddresses().then((rows) => {
+      setAddresses(rows)
+      const def = rows.find((a) => a.is_default) ?? rows[0]
+      if (def) setSelectedAddressId(def.address_id)
+      else setShowAddressForm(true)
+    }).catch(() => setAddresses([]))
+  }, [])
+
+  useEffect(() => {
+    if (step !== 'provider' || !request || matchOutcome !== null) return
+    setMatching(true)
+    bookingApi
+      .runMatching(request.request_id)
+      .then(async (res) => {
+        setMatchOutcome(res.outcome)
+        setMatches(res.matches)
+        if (res.outcome === 'MATCHING') setQuotes(await bookingApi.listQuotes(request.request_id))
+      })
+      .catch(() => setMatchOutcome('ERROR'))
+      .finally(() => setMatching(false))
+  }, [step, request, matchOutcome])
+
+  useEffect(() => {
+    if (step !== 'payment') return
+    fixoSdk.walletBalance().then(setWallet).catch(() => setWallet(null))
+    fixoSdk.listPaymentMethods().then(setPaymentMethods).catch(() => setPaymentMethods([]))
+  }, [step])
+
+  if (loadError) return null
   if (!provider) return null
 
-  const shiftingItemsCount = Object.values(shiftingCounts).reduce((a, b) => a + b, 0)
-  const shiftingRouteFee = fromAddress.trim() && toAddress.trim() ? 30 : 0
-
-  const itemsTotal =
-    kind === 'rooms'
-      ? Object.values(roomCounts).reduce((a, b) => a + b, 0) * provider.price
-      : kind === 'laundry'
-        ? laundryWeight * 5 + (ironingService === 'Yes' ? 15 : 0) + (fragranceService === 'Yes' ? 10 : 0)
-        : kind === 'appliance'
-          ? provider.price + Math.max(0, applianceSelected.length - 1) * 30
-          : kind === 'plumbing'
-            ? provider.price + pipeCount * 8
-            : kind === 'shifting'
-              ? provider.price + shiftingItemsCount * 7 + shiftingRouteFee
-              : provider.price * (kind === 'generic' ? qty : 1)
-  const hoursSurcharge = Math.max(0, workingHours - 2) * 10
-  const subtotal = itemsTotal + hoursSurcharge
-  const discount = promo ? Math.round((subtotal * promo.discountPercent) / 100) : 0
-  const total = subtotal - discount
-
-  const itemsSummary =
-    kind === 'rooms'
-      ? CLEANING_ROOMS.filter((r) => roomCounts[r]! > 0).map((r) => `${r} x${roomCounts[r]}`).join(', ') || 'No items selected'
-      : kind === 'vehicle'
-        ? `${carBrand} ${carSeries} • Plate ${plate || '—'}`
-        : kind === 'paint'
-          ? `${houseSize} house • Color ${paintColor}`
-          : kind === 'laundry'
-            ? `${laundryWeight}kg • Ironing: ${ironingService} • Fragrance: ${fragranceService}`
-            : kind === 'appliance'
-              ? applianceSelected.join(', ') || 'No services selected'
-              : kind === 'plumbing'
-                ? `${pipeCount} water pipes • ${damage || 'No damage details'}`
-                : kind === 'shifting'
-                  ? `${SHIFTING_ITEMS.filter((r) => shiftingCounts[r]! > 0).map((r) => `${r} x${shiftingCounts[r]}`).join(', ') || 'No items selected'} — From ${fromAddress || '—'} to ${toAddress || '—'}`
-                  : `Quantity: ${qty}`
-
+  const selectedService = provider.services.find((s) => s.service_id === selectedServiceId) ?? null
+  const subtotal = selectedService?.base_amount ?? 0
+  const total = subtotal - (promoDiscount ?? 0)
+  const selectedAddress = addresses?.find((a) => a.address_id === selectedAddressId) ?? null
   const stepIndex = STEP_ORDER.indexOf(step)
 
+  const sortedQuotes = quotes
+    ? [...quotes].sort((a, b) => (a.provider_id === providerId ? -1 : b.provider_id === providerId ? 1 : b.rating_avg - a.rating_avg))
+    : []
+
   function goNext() {
-    if (step === 'items' && kind === 'shifting' && shiftingSubStep === 'list') {
-      setShiftingSubStep('route')
-      return
-    }
     const next = STEP_ORDER[stepIndex + 1]
     if (next) setStep(next)
   }
   function goBack() {
-    if (step === 'promo') {
-      setStep(prevStep)
-      return
-    }
-    if (step === 'items' && kind === 'shifting' && shiftingSubStep === 'route') {
-      setShiftingSubStep('list')
-      return
-    }
     const prev = STEP_ORDER[stepIndex - 1]
     if (prev) setStep(prev)
     else router.replace(`/service/${providerId}` as any)
   }
-  function openPromo() {
-    setPrevStep('bookingDetails')
-    setStep('promo')
+
+  async function saveNewAddress() {
+    if (!addrDraft.recipient_name.trim() || !addrDraft.phone.trim() || !addrDraft.street_address.trim() || !addrDraft.city.trim()) return
+    setSavingAddress(true)
+    try {
+      const created = await bookingApi.createAddress({
+        label: addrDraft.label || 'Home',
+        recipient_name: addrDraft.recipient_name,
+        phone: addrDraft.phone,
+        street_address: addrDraft.street_address,
+        city: addrDraft.city,
+        region: addrDraft.region || null,
+        is_default: (addresses ?? []).length === 0,
+      })
+      setAddresses((prev) => [...(prev ?? []), created])
+      setSelectedAddressId(created.address_id)
+      setShowAddressForm(false)
+    } finally {
+      setSavingAddress(false)
+    }
   }
 
-  const headerTitle =
-    step === 'items'
-      ? provider.title
-      : step === 'bookingDetails'
-        ? 'Booking Details'
-        : step === 'promo'
-          ? 'Add Promo'
-          : step === 'address'
-            ? 'Your Address/Location'
-            : step === 'payment'
-              ? 'Payment Methods'
-              : step === 'review'
-                ? 'Review Summary'
-                : 'Enter Your PIN'
+  async function applyPromo() {
+    setPromoError(null)
+    if (!promoCode.trim() || !subtotal) return
+    setValidatingPromo(true)
+    try {
+      const res = await fixoSdk.validatePromotion(promoCode.trim(), subtotal)
+      setPromoDiscount(res.discount_amount)
+      setPromoId(res.promo_id)
+    } catch {
+      setPromoError('This code is not valid or has expired')
+      setPromoDiscount(null)
+      setPromoId(null)
+    } finally {
+      setValidatingPromo(false)
+    }
+  }
 
-  const showMoreMenu = step === 'items' || step === 'bookingDetails' || step === 'address'
+  async function submitRequest() {
+    if (!selectedService || !selectedAddressId) return
+    setSubmitting(true)
+    setReviewIssue(null)
+    try {
+      const created = await bookingApi.createServiceRequest({
+        service_id: selectedService.service_id,
+        description: description.trim(),
+        address_id: selectedAddressId,
+        ...(preferredDate ? { preferred_date: formatDate(preferredDate) } : {}),
+        ...(timeWindow ? { time_window: timeWindow } : {}),
+      })
+      const submitted = await bookingApi.submitServiceRequest(created.request_id)
+      setRequest(submitted)
+      if (submitted.status === 'VALID') setStep('provider')
+      else setReviewIssue(submitted.validation_notes ?? `Request status: ${submitted.status}`)
+    } catch (err) {
+      setReviewIssue(err instanceof ApiError ? err.message : 'Could not submit this request')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function chooseQuote(quote: Quote) {
+    if (!request) return
+    setAcceptingQuoteId(quote.quote_id)
+    try {
+      await bookingApi.selectProvider(request.request_id, quote.provider_id)
+      await bookingApi.acceptQuote(quote.quote_id)
+      const confirmed = await bookingApi.confirmBooking(quote.quote_id)
+      if (promoId) await fixoSdk.usePromotion(promoId).catch(() => {})
+      setBooking(confirmed)
+      setStep('payment')
+    } catch {
+      // leave the quote list up so the user can try another provider
+    } finally {
+      setAcceptingQuoteId(null)
+    }
+  }
+
+  async function authorizePayment() {
+    if (!booking) return
+    setAuthorizing(true)
+    try {
+      const updated = await bookingApi.authorizeBookingPayment(booking.booking_id)
+      setBooking(updated)
+      setStep('pin')
+    } catch {
+      // stay on Payment; the button remains available to retry
+    } finally {
+      setAuthorizing(false)
+    }
+  }
+
+  const canLeaveService = !!selectedService
+  const canLeaveDetails = description.trim().length >= 10
+  const canLeaveAddress = !!selectedAddressId && !showAddressForm
+
+  const headerTitle =
+    step === 'service' ? 'Choose a Service'
+    : step === 'details' ? 'Booking Details'
+    : step === 'address' ? 'Your Address'
+    : step === 'review' ? 'Review Summary'
+    : step === 'provider' ? 'Choose a Provider'
+    : step === 'payment' ? 'Payment'
+    : 'Confirm Payment'
 
   return (
     <View className="flex-1 bg-white">
       <SafeAreaView edges={['top']} className="flex-1">
-        <ScreenHeader
-          title={headerTitle}
-          onBack={goBack}
-          right={
-            showMoreMenu ? (
-              <View className="items-center justify-center size-9 rounded-full bg-[#f5f5f5]">
-                <MoreHorizontalIcon size={16} color="#0B111F" />
+        <ScreenHeader title={headerTitle} onBack={goBack} />
+
+        {step === 'service' && (
+          <View className="flex-1">
+            <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+              <View className="px-6 pt-2">
+                <Text className="text-[14px] text-muted mb-4">Real services offered by {provider.display_name}.</Text>
+                <View className="flex-col gap-3">
+                  {provider.services.length === 0 ? (
+                    <Text className="text-[13px] text-muted">This provider has no services listed yet.</Text>
+                  ) : (
+                    provider.services.map((s) => {
+                      const active = selectedServiceId === s.service_id
+                      return (
+                        <Pressable
+                          key={s.service_id}
+                          onPress={() => setSelectedServiceId(s.service_id)}
+                          className={`flex-row items-center justify-between rounded-2xl p-4 ${active ? 'border-2 border-primary bg-primary/5' : 'border border-hairline'}`}
+                        >
+                          <Text className="text-[14px] font-medium text-ink flex-1 pr-3">{s.name}</Text>
+                          <Text className="font-bold text-primary">{fmtMoney(s.base_amount)}</Text>
+                        </Pressable>
+                      )
+                    })
+                  )}
+                </View>
               </View>
-            ) : undefined
-          }
-        />
-
-        {step === 'items' && kind === 'rooms' && (
-          <RoomsStep roomCounts={roomCounts} setRoomCounts={setRoomCounts} price={provider.price} onNext={goNext} />
-        )}
-        {step === 'items' && kind === 'vehicle' && (
-          <VehicleStep
-            brand={carBrand}
-            setBrand={setCarBrand}
-            series={carSeries}
-            setSeries={setCarSeries}
-            plate={plate}
-            setPlate={setPlate}
-            price={itemsTotal}
-            onNext={goNext}
-          />
-        )}
-        {step === 'items' && kind === 'paint' && (
-          <PaintStep
-            colors={colors}
-            setColors={setColors}
-            size={houseSize}
-            setSize={setHouseSize}
-            color={paintColor}
-            setColor={setPaintColor}
-            price={itemsTotal}
-            onNext={goNext}
-          />
-        )}
-        {step === 'items' && kind === 'laundry' && (
-          <LaundryStep
-            weight={laundryWeight}
-            setWeight={setLaundryWeight}
-            ironing={ironingService}
-            setIroning={setIroningService}
-            fragrance={fragranceService}
-            setFragrance={setFragranceService}
-            price={itemsTotal}
-            onNext={goNext}
-          />
-        )}
-        {step === 'items' && kind === 'appliance' && (
-          <ApplianceStep selected={applianceSelected} setSelected={setApplianceSelected} price={itemsTotal} onNext={goNext} />
-        )}
-        {step === 'items' && kind === 'plumbing' && (
-          <PlumbingStep pipeCount={pipeCount} setPipeCount={setPipeCount} damage={damage} setDamage={setDamage} price={itemsTotal} onNext={goNext} />
-        )}
-        {step === 'items' && kind === 'shifting' && shiftingSubStep === 'list' && (
-          <ShiftingListStep shiftingCounts={shiftingCounts} setShiftingCounts={setShiftingCounts} price={itemsTotal} onNext={goNext} />
-        )}
-        {step === 'items' && kind === 'shifting' && shiftingSubStep === 'route' && (
-          <ShiftingRouteStep from={fromAddress} setFrom={setFromAddress} to={toAddress} setTo={setToAddress} price={itemsTotal} onNext={goNext} />
-        )}
-        {step === 'items' && kind === 'generic' && <GenericItemsStep qty={qty} setQty={setQty} price={itemsTotal} onNext={goNext} />}
-
-        {step === 'bookingDetails' && (
-          <BookingDetailsStep
-            viewMonth={viewMonth}
-            setViewMonth={setViewMonth}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            workingHours={workingHours}
-            setWorkingHours={setWorkingHours}
-            startTime={startTime}
-            setStartTime={setStartTime}
-            promo={promo}
-            onOpenPromo={openPromo}
-            onNext={goNext}
-          />
+            </ScrollView>
+            <StepFooter label="Continue" onNext={goNext} disabled={!canLeaveService} />
+          </View>
         )}
 
-        {step === 'promo' && (
-          <PromoStep
-            selected={promo}
-            onSelect={(p) => {
-              setPromo(p)
-              setStep('bookingDetails')
-            }}
-          />
+        {step === 'details' && (
+          <View className="flex-1">
+            <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+              <View className="px-6 pt-2">
+                <Text className="text-[14px] font-semibold text-ink mb-2">Describe the job</Text>
+                <TextInput
+                  value={description}
+                  onChangeText={setDescription}
+                  placeholder="What do you need done? (min. 10 characters)"
+                  placeholderTextColor="#9e9e9e"
+                  multiline
+                  numberOfLines={4}
+                  textAlignVertical="top"
+                  className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[14px] text-ink min-h-[110px]"
+                />
+                <Text className="text-[11px] text-muted mt-1 text-right">{description.trim().length}/10 min characters</Text>
+
+                <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">Preferred Date</Text>
+                <CalendarMonth viewMonth={viewMonth} setViewMonth={setViewMonth} selectedDate={preferredDate} setSelectedDate={setPreferredDate} />
+
+                <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">Preferred Time</Text>
+                <View className="flex-row flex-wrap gap-2">
+                  {TIME_WINDOWS.map((t) => (
+                    <Pressable
+                      key={t.value}
+                      onPress={() => setTimeWindow(t.value)}
+                      className={`rounded-full px-4 py-2.5 border ${timeWindow === t.value ? 'bg-primary border-primary' : 'border-primary/40'}`}
+                    >
+                      <Text className={`text-[13px] font-medium ${timeWindow === t.value ? 'text-white' : 'text-primary'}`}>{t.label} · {t.hint}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              </View>
+            </ScrollView>
+            <StepFooter label="Continue" onNext={goNext} disabled={!canLeaveDetails} />
+          </View>
         )}
 
-        {step === 'address' && <AddressStep address={address} setAddress={setAddress} onNext={goNext} />}
+        {step === 'address' && (
+          <View className="flex-1">
+            <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+              <View className="px-6 pt-2">
+                {addresses === null ? (
+                  <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
+                ) : (
+                  <View className="flex-col gap-3">
+                    {addresses.map((a) => (
+                      <Pressable
+                        key={a.address_id}
+                        onPress={() => {
+                          setSelectedAddressId(a.address_id)
+                          setShowAddressForm(false)
+                        }}
+                        className={`flex-row items-start gap-3 rounded-2xl p-4 ${selectedAddressId === a.address_id && !showAddressForm ? 'border-2 border-primary bg-primary/5' : 'border border-hairline'}`}
+                      >
+                        <LocationIcon size={18} color="#7210FF" />
+                        <View className="flex-1">
+                          <Text className="font-bold text-ink text-[14px]">{a.label}</Text>
+                          <Text className="text-[13px] text-muted mt-0.5">{a.street_address}, {a.city}{a.region ? `, ${a.region}` : ''}</Text>
+                          <Text className="text-[12px] text-muted mt-0.5">{a.recipient_name} · {a.phone}</Text>
+                        </View>
+                      </Pressable>
+                    ))}
 
-        {step === 'payment' && <PaymentStep payment={payment} setPayment={setPayment} onNext={goNext} />}
+                    {!showAddressForm ? (
+                      <Pressable onPress={() => setShowAddressForm(true)} className="flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-hairline py-4">
+                        <PlusIcon size={16} color="#6C7585" />
+                        <Text className="text-[14px] font-medium text-muted">Add a new address</Text>
+                      </Pressable>
+                    ) : (
+                      <View className="rounded-2xl border border-hairline p-4 gap-3">
+                        <TextInput value={addrDraft.label} onChangeText={(v) => setAddrDraft((d) => ({ ...d, label: v }))} placeholder="Label (e.g. Home)" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.recipient_name} onChangeText={(v) => setAddrDraft((d) => ({ ...d, recipient_name: v }))} placeholder="Recipient name" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.phone} onChangeText={(v) => setAddrDraft((d) => ({ ...d, phone: v }))} placeholder="Phone" keyboardType="phone-pad" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.street_address} onChangeText={(v) => setAddrDraft((d) => ({ ...d, street_address: v }))} placeholder="Street address" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <View className="flex-row gap-3">
+                          <TextInput value={addrDraft.city} onChangeText={(v) => setAddrDraft((d) => ({ ...d, city: v }))} placeholder="City" placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                          <TextInput value={addrDraft.region} onChangeText={(v) => setAddrDraft((d) => ({ ...d, region: v }))} placeholder="Region (optional)" placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        </View>
+                        <Button onPress={saveNewAddress} loading={savingAddress}>Save address</Button>
+                        {(addresses ?? []).length > 0 && (
+                          <Pressable onPress={() => setShowAddressForm(false)}><Text className="text-center text-[13px] text-muted">Cancel</Text></Pressable>
+                        )}
+                      </View>
+                    )}
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+            <StepFooter label="Continue" onNext={goNext} disabled={!canLeaveAddress} />
+          </View>
+        )}
 
-        {step === 'review' && (
-          <ReviewStep
-            provider={provider}
-            selectedDate={selectedDate}
-            startTime={startTime}
-            workingHours={workingHours}
-            itemsSummary={itemsSummary}
-            detailsExpanded={detailsExpanded}
-            setDetailsExpanded={setDetailsExpanded}
-            payment={payment}
-            onChangePayment={() => setStep('payment')}
-            subtotal={itemsTotal + hoursSurcharge}
-            discount={discount}
-            total={total}
-            onNext={goNext}
-          />
+        {step === 'review' && selectedService && (
+          <View className="flex-1">
+            <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+              <View className="px-6 pt-2">
+                <View className="rounded-2xl border border-hairline p-4 flex-col gap-3">
+                  <Row label="Service" value={selectedService.name} />
+                  <Row label="Provider" value={provider.display_name} />
+                  <Row label="Date" value={preferredDate ? preferredDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not set'} />
+                  <Row label="Time" value={timeWindow ? TIME_WINDOWS.find((t) => t.value === timeWindow)!.label : 'Not set'} />
+                  <Row label="Address" value={selectedAddress ? `${selectedAddress.street_address}, ${selectedAddress.city}` : '—'} />
+                </View>
+
+                <Text className="text-[13px] text-muted mt-4 px-1 leading-relaxed">{description}</Text>
+
+                <Text className="text-[14px] font-semibold text-ink mt-6 mb-2">Promo Code</Text>
+                <View className="flex-row items-center gap-3">
+                  <TextInput
+                    value={promoCode}
+                    onChangeText={setPromoCode}
+                    autoCapitalize="characters"
+                    placeholder="Enter code"
+                    placeholderTextColor="#9e9e9e"
+                    className="flex-1 rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
+                  />
+                  <Pressable onPress={applyPromo} disabled={validatingPromo} className="items-center justify-center rounded-2xl bg-primary px-5 py-4">
+                    <Text className="text-[14px] font-bold text-white">Apply</Text>
+                  </Pressable>
+                </View>
+                {promoError && <Text className="text-[12px] text-red-500 mt-2">{promoError}</Text>}
+
+                <View className="rounded-2xl border border-hairline p-4 mt-4 flex-col gap-2">
+                  <View className="flex-row justify-between">
+                    <Text className="text-ink text-[14px]">{selectedService.name}</Text>
+                    <Text className="text-ink text-[14px]">{fmtMoney(subtotal)}</Text>
+                  </View>
+                  {promoDiscount != null && promoDiscount > 0 && (
+                    <View className="flex-row justify-between">
+                      <Text className="text-primary font-medium text-[14px]">Promo</Text>
+                      <Text className="text-primary font-medium text-[14px]">- {fmtMoney(promoDiscount)}</Text>
+                    </View>
+                  )}
+                  <View className="flex-row justify-between pt-2 border-t border-hairline">
+                    <Text className="font-bold text-ink text-[16px]">Total</Text>
+                    <Text className="font-bold text-ink text-[16px]">{fmtMoney(total)}</Text>
+                  </View>
+                </View>
+
+                {reviewIssue && <Text className="text-[13px] text-red-500 mt-4">{reviewIssue}</Text>}
+              </View>
+            </ScrollView>
+            <StepFooter label="Submit Request" onNext={submitRequest} loading={submitting} />
+          </View>
+        )}
+
+        {step === 'provider' && (
+          <View className="flex-1">
+            <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+              <View className="px-6 pt-2">
+                {matching ? (
+                  <View className="items-center py-16">
+                    <Text className="text-[15px] font-semibold text-ink">Finding the best-rated pros near you…</Text>
+                  </View>
+                ) : matchOutcome === 'NO_PROVIDER_AVAILABLE' ? (
+                  <View className="items-center py-16">
+                    <Text className="text-[15px] font-semibold text-ink">No providers available right now</Text>
+                    <Text className="text-[13px] text-muted mt-1 text-center">Try again shortly, or check My Bookings later.</Text>
+                  </View>
+                ) : matchOutcome === 'ERROR' ? (
+                  <View className="items-center py-16">
+                    <Text className="text-[15px] font-semibold text-ink">Something went wrong</Text>
+                    <Pressable onPress={() => setMatchOutcome(null)}><Text className="text-primary text-[13px] font-semibold mt-2">Retry</Text></Pressable>
+                  </View>
+                ) : quotes === null ? (
+                  <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
+                ) : quotes.length === 0 ? (
+                  <View className="items-center py-16">
+                    <Text className="text-[15px] font-semibold text-ink">No instant quotes yet</Text>
+                    <Text className="text-[13px] text-muted mt-1 text-center">Matched providers haven't sent an estimate yet. Check My Bookings shortly.</Text>
+                  </View>
+                ) : (
+                  <View className="flex-col gap-3">
+                    {matches && matches.length > 0 && !matches.some((m) => m.provider_id === providerId) && (
+                      <View className="rounded-2xl bg-amber-500/10 p-3">
+                        <Text className="text-[12px] text-ink">{provider.display_name} wasn't matched for this request — here are your matched providers instead.</Text>
+                      </View>
+                    )}
+                    {sortedQuotes.map((q) => (
+                      <View key={q.quote_id} className={`rounded-2xl p-4 ${q.provider_id === providerId ? 'border-2 border-primary bg-primary/5' : 'border border-hairline'}`}>
+                        <View className="flex-row items-center gap-3">
+                          <Avatar label={initialsOf(q.display_name)} size={44} />
+                          <View className="flex-1">
+                            <Text numberOfLines={1} className="font-bold text-ink">{q.display_name}</Text>
+                            <View className="flex-row items-center gap-1">
+                              <StarIcon size={12} />
+                              <Text className="text-[12px] text-muted">{q.rating_avg.toFixed(1)} · {q.lead_time_days}d lead time</Text>
+                            </View>
+                          </View>
+                          <Text className="font-bold text-primary text-[15px]">{fmtMoney(q.amount, q.currency)}</Text>
+                        </View>
+                        <Pressable
+                          onPress={() => chooseQuote(q)}
+                          disabled={acceptingQuoteId !== null}
+                          className="mt-3 items-center rounded-xl bg-primary py-3"
+                        >
+                          <Text className="text-white font-bold text-[14px]">{acceptingQuoteId === q.quote_id ? 'Confirming…' : 'Accept & Continue'}</Text>
+                        </Pressable>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          </View>
+        )}
+
+        {step === 'payment' && booking && (
+          <View className="flex-1">
+            <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+              <View className="px-6 pt-2">
+                <View className="rounded-2xl border border-hairline p-4 flex-col gap-2 mb-5">
+                  <View className="flex-row justify-between">
+                    <Text className="text-muted text-[14px]">Booking</Text>
+                    <Text className="text-ink font-medium text-[14px]">{booking.booking_number}</Text>
+                  </View>
+                  <View className="flex-row justify-between pt-2 border-t border-hairline">
+                    <Text className="font-bold text-ink text-[16px]">Amount Due</Text>
+                    <Text className="font-bold text-ink text-[16px]">{fmtMoney(booking.agreed_amount, booking.currency)}</Text>
+                  </View>
+                </View>
+
+                <Text className="text-[14px] font-semibold text-ink mb-3">Your payment methods</Text>
+                <View className="flex-col gap-3">
+                  {wallet && (
+                    <View className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
+                      <PaymentIcon icon="cash" size={24} />
+                      <Text className="text-[14px] text-ink flex-1">FIXO Wallet</Text>
+                      <Text className="text-[13px] text-muted">{fmtMoney(wallet.balance, wallet.currency)}</Text>
+                    </View>
+                  )}
+                  {(paymentMethods ?? []).map((pm) => (
+                    <View key={pm.method_id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
+                      <PaymentIcon icon={(pm.provider ?? pm.type).toLowerCase()} size={24} />
+                      <Text className="text-[14px] text-ink flex-1">{pm.provider ?? pm.type}</Text>
+                      {pm.is_default && <Text className="text-[11px] font-semibold text-primary">Default</Text>}
+                    </View>
+                  ))}
+                </View>
+                <Text className="text-[12px] text-muted mt-3">Authorizing runs the real payment-authorization workflow against this booking.</Text>
+              </View>
+            </ScrollView>
+            <StepFooter label="Authorize Payment" onNext={authorizePayment} loading={authorizing} />
+          </View>
         )}
 
         {step === 'pin' && <PinStep pin={pin} setPin={setPin} onComplete={() => setShowSuccess(true)} />}
@@ -310,29 +545,13 @@ export default function BookingFlow() {
           <ShieldCheckIcon size={44} color="#fff" />
         </View>
         <Text className="text-primary text-[22px] font-bold">Booking Successful!</Text>
-        <Text className="text-[15px] text-ink mt-3 text-center">You have successfully made payment and book the services.</Text>
+        <Text className="text-[15px] text-ink mt-3 text-center">Your payment was authorized and the booking is confirmed.</Text>
         <View className="flex-col gap-3 w-full mt-8">
-          <Button
-            onPress={() =>
-              router.replace({
-                pathname: `/booking/${providerId}/receipt` as any,
-                params: {
-                  date: selectedDate ? selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
-                  time: startTime,
-                  workingHours: String(workingHours),
-                  itemsSummary,
-                  payment,
-                  subtotal: String(itemsTotal + hoursSurcharge),
-                  discount: String(discount),
-                  total: String(total),
-                },
-              })
-            }
-          >
+          <Button onPress={() => router.replace(`/booking/${providerId}/receipt?bookingId=${booking?.booking_id ?? ''}` as any)}>
             View E-Receipt
           </Button>
-          <Button variant="outline" onPress={() => router.push('/inbox/chat/c1' as any)}>
-            Message Workers
+          <Button variant="outline" onPress={() => router.replace('/(tabs)/bookings')}>
+            Back to Bookings
           </Button>
         </View>
       </CenterModal>
@@ -340,423 +559,21 @@ export default function BookingFlow() {
   )
 }
 
-function StepFooter({ label, onNext, disabled }: { label: string; onNext: () => void; disabled?: boolean }) {
+function StepFooter({ label, onNext, disabled, loading }: { label: string; onNext: () => void; disabled?: boolean; loading?: boolean }) {
   return (
     <View className="px-6 pb-6 pt-4 border-t border-hairline">
-      <Button onPress={onNext} disabled={disabled}>
+      <Button onPress={onNext} disabled={disabled} loading={loading}>
         {label}
       </Button>
     </View>
   )
 }
 
-function Counter({ value, onChange }: { value: number; onChange: (delta: number) => void }) {
+function Row({ label, value }: { label: string; value: string }) {
   return (
-    <View className="flex-row items-center gap-4">
-      <Pressable onPress={() => onChange(-1)} className="items-center justify-center size-8 rounded-full bg-primary/8">
-        <MinusIcon size={16} color="#7210FF" />
-      </Pressable>
-      <Text className="font-bold text-ink w-4 text-center">{value}</Text>
-      <Pressable onPress={() => onChange(1)} className="items-center justify-center size-8 rounded-full bg-primary/8">
-        <PlusIcon size={16} color="#7210FF" />
-      </Pressable>
-    </View>
-  )
-}
-
-function RoomsStep({
-  roomCounts,
-  setRoomCounts,
-  price,
-  onNext,
-}: {
-  roomCounts: Record<string, number>
-  setRoomCounts: (updater: (prev: Record<string, number>) => Record<string, number>) => void
-  price: number
-  onNext: () => void
-}) {
-  const total = Object.values(roomCounts).reduce((a, b) => a + b, 0) * price
-
-  function change(room: string, delta: number) {
-    setRoomCounts((prev) => ({ ...prev, [room]: Math.max(0, prev[room]! + delta) }))
-  }
-
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-4">Enter the number of items to be cleaned.</Text>
-          <View className="flex-col gap-3">
-            {CLEANING_ROOMS.map((room) => (
-              <View key={room} className="flex-row items-center justify-between rounded-2xl border border-hairline px-5 py-4">
-                <Text className="text-[14px] font-medium text-ink">{room}</Text>
-                <Counter value={roomCounts[room]!} onChange={(d) => change(room, d)} />
-              </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${total}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function VehicleStep({
-  brand,
-  setBrand,
-  series,
-  setSeries,
-  plate,
-  setPlate,
-  price,
-  onNext,
-}: {
-  brand: string
-  setBrand: (v: string) => void
-  series: string
-  setSeries: (v: string) => void
-  plate: string
-  setPlate: (v: string) => void
-  price: number
-  onNext: () => void
-}) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-5">Enter the type and series of the car to be repaired.</Text>
-
-          <Text className="text-[14px] font-semibold text-ink mb-2">Car Brand</Text>
-          <Select value={brand} onChange={setBrand} options={CAR_BRANDS as unknown as string[]} />
-
-          <Text className="text-[14px] font-semibold text-ink mb-2 mt-5">Series/Model</Text>
-          <Select value={series} onChange={setSeries} options={CAR_SERIES as unknown as string[]} />
-
-          <Text className="text-[14px] font-semibold text-ink mb-2 mt-5">Plate Number</Text>
-          <TextInput
-            value={plate}
-            onChangeText={setPlate}
-            placeholder="e.g. BB 2638 GHA"
-            placeholderTextColor="#9e9e9e"
-            className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
-          />
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function PaintStep({
-  size,
-  setSize,
-  colors,
-  setColors,
-  color,
-  setColor,
-  price,
-  onNext,
-}: {
-  size: string
-  setSize: (v: string) => void
-  colors: string[]
-  setColors: (updater: (prev: string[]) => string[]) => void
-  color: string
-  setColor: (v: string) => void
-  price: number
-  onNext: () => void
-}) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-5">Choose the size of the house & the color you want.</Text>
-
-          <Text className="text-[14px] font-semibold text-ink mb-2">Size of House</Text>
-          <Select value={size} onChange={setSize} options={HOUSE_SIZES as unknown as string[]} />
-
-          <Text className="text-[14px] font-semibold text-ink mb-3 mt-6">Select Paint Color</Text>
-          <View className="flex-row flex-wrap gap-4">
-            {colors.map((c) => (
-              <Pressable
-                key={c}
-                onPress={() => setColor(c)}
-                className="items-center justify-center size-12 rounded-full"
-                style={{ backgroundColor: c, borderWidth: c === '#FFFFFF' ? 1 : 0, borderColor: '#eee' }}
-              >
-                {color === c && <CheckCircleIcon size={20} color={c === '#FFFFFF' ? '#0B111F' : '#fff'} />}
-              </Pressable>
-            ))}
-            <Pressable
-              onPress={() => {
-                const random = `#${Math.floor(Math.random() * 0xffffff)
-                  .toString(16)
-                  .padStart(6, '0')}`
-                setColors((prev) => [...prev, random])
-                setColor(random)
-              }}
-              className="items-center justify-center size-12 rounded-full bg-primary/8"
-            >
-              <PlusIcon size={20} color="#7210FF" />
-            </Pressable>
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function GenericItemsStep({
-  qty,
-  setQty,
-  price,
-  onNext,
-}: {
-  qty: number
-  setQty: (updater: (q: number) => number) => void
-  price: number
-  onNext: () => void
-}) {
-  return (
-    <View className="flex-1">
-      <View className="flex-1 px-6 pt-2">
-        <View className="flex-row items-center justify-between rounded-2xl border border-hairline px-5 py-4">
-          <Text className="text-[14px] font-medium text-ink">Quantity / Hours</Text>
-          <Counter value={qty} onChange={(d) => setQty((q) => Math.max(1, q + d))} />
-        </View>
-      </View>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function LaundryStep({
-  weight,
-  setWeight,
-  ironing,
-  setIroning,
-  fragrance,
-  setFragrance,
-  price,
-  onNext,
-}: {
-  weight: number
-  setWeight: (n: number) => void
-  ironing: string
-  setIroning: (v: string) => void
-  fragrance: string
-  setFragrance: (v: string) => void
-  price: number
-  onNext: () => void
-}) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-5">Enter the weight and the service you need.</Text>
-
-          <Text className="text-[14px] font-semibold text-ink mb-2">Weight Total Clothing</Text>
-          <View className="flex-row items-center gap-3 rounded-2xl bg-[#f5f5f5] px-5 py-4">
-            <TextInput
-              keyboardType="number-pad"
-              value={String(weight)}
-              onChangeText={(v) => setWeight(Math.max(1, Number(v) || 1))}
-              className="flex-1 text-[15px] text-ink"
-            />
-            <Text className="text-[14px] text-muted">kg</Text>
-          </View>
-
-          <Text className="text-[14px] font-semibold text-ink mb-2 mt-5">Ironing Service</Text>
-          <Select value={ironing} onChange={setIroning} options={YES_NO} />
-
-          <Text className="text-[14px] font-semibold text-ink mb-2 mt-5">Fragrance Service</Text>
-          <Select value={fragrance} onChange={setFragrance} options={YES_NO} />
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function ApplianceStep({
-  selected,
-  setSelected,
-  price,
-  onNext,
-}: {
-  selected: string[]
-  setSelected: (updater: (prev: string[]) => string[]) => void
-  price: number
-  onNext: () => void
-}) {
-  function toggle(service: string) {
-    setSelected((prev) => (prev.includes(service) ? prev.filter((s) => s !== service) : [...prev, service]))
-  }
-
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-4">Choose the appliance service you need</Text>
-          <View className="flex-col gap-3">
-            {APPLIANCE_SERVICES.map((service) => {
-              const checked = selected.includes(service)
-              return (
-                <Pressable
-                  key={service}
-                  onPress={() => toggle(service)}
-                  className="flex-row items-center justify-between rounded-2xl border border-hairline px-5 py-4"
-                >
-                  <Text className="text-[14px] font-medium text-ink">{service}</Text>
-                  <View
-                    className={`items-center justify-center size-6 rounded-full ${checked ? 'bg-primary' : 'border-2 border-primary'}`}
-                  >
-                    {checked && (
-                      <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                        <Path d="M4 12.5l5 5L20 6" stroke="white" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-                      </Svg>
-                    )}
-                  </View>
-                </Pressable>
-              )
-            })}
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function PlumbingStep({
-  pipeCount,
-  setPipeCount,
-  damage,
-  setDamage,
-  price,
-  onNext,
-}: {
-  pipeCount: number
-  setPipeCount: (n: number) => void
-  damage: string
-  setDamage: (v: string) => void
-  price: number
-  onNext: () => void
-}) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-5">Enter the number of pipes and the damage.</Text>
-
-          <Text className="text-[14px] font-semibold text-ink mb-2">Number of Water Pipes</Text>
-          <TextInput
-            keyboardType="number-pad"
-            value={String(pipeCount)}
-            onChangeText={(v) => setPipeCount(Math.max(1, Number(v) || 1))}
-            className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
-          />
-
-          <Text className="text-[14px] font-semibold text-ink mb-2 mt-5">Damage Occurred</Text>
-          <TextInput
-            value={damage}
-            onChangeText={setDamage}
-            placeholder="Describe the damage..."
-            placeholderTextColor="#9e9e9e"
-            multiline
-            numberOfLines={3}
-            textAlignVertical="top"
-            className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[14px] text-ink min-h-[88px]"
-          />
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function ShiftingListStep({
-  shiftingCounts,
-  setShiftingCounts,
-  price,
-  onNext,
-}: {
-  shiftingCounts: Record<string, number>
-  setShiftingCounts: (updater: (prev: Record<string, number>) => Record<string, number>) => void
-  price: number
-  onNext: () => void
-}) {
-  function change(item: string, delta: number) {
-    setShiftingCounts((prev) => ({ ...prev, [item]: Math.max(0, prev[item]! + delta) }))
-  }
-
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-4">Enter the number of items you want to shift.</Text>
-          <View className="flex-col gap-3">
-            {SHIFTING_ITEMS.map((item) => (
-              <View key={item} className="flex-row items-center justify-between rounded-2xl border border-hairline px-5 py-4">
-                <Text className="text-[14px] font-medium text-ink">{item}</Text>
-                <Counter value={shiftingCounts[item]!} onChange={(d) => change(item, d)} />
-              </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
-    </View>
-  )
-}
-
-function ShiftingRouteStep({
-  from,
-  setFrom,
-  to,
-  setTo,
-  price,
-  onNext,
-}: {
-  from: string
-  setFrom: (v: string) => void
-  to: string
-  setTo: (v: string) => void
-  price: number
-  onNext: () => void
-}) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-5">Select the origin & destination of the shifting.</Text>
-          <View className="flex-row gap-4">
-            <View className="items-center pt-4">
-              <View className="size-4 rounded-full border-[3px] border-primary" />
-              <View className="w-px flex-1 border-l border-dashed border-hairline my-1" />
-              <LocationIcon size={16} color="#7210FF" />
-            </View>
-            <View className="flex-1 flex-col gap-4">
-              <TextInput
-                value={from}
-                onChangeText={setFrom}
-                placeholder="From"
-                placeholderTextColor="#9e9e9e"
-                className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
-              />
-              <TextInput
-                value={to}
-                onChangeText={setTo}
-                placeholder="Destination"
-                placeholderTextColor="#9e9e9e"
-                className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
-              />
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label={`Continue - $${price}`} onNext={onNext} />
+    <View className="flex-row items-start justify-between gap-4">
+      <Text className="text-muted shrink-0 text-[14px]">{label}</Text>
+      <Text className="text-ink font-medium text-right text-[14px]">{value}</Text>
     </View>
   )
 }
@@ -793,24 +610,14 @@ function CalendarMonth({
       </View>
       <View className="flex-row flex-wrap">
         {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((w) => (
-          <Text key={w} className="text-[11px] text-muted font-medium text-center" style={{ width: '14.28%' }}>
-            {w}
-          </Text>
+          <Text key={w} className="text-[11px] text-muted font-medium text-center" style={{ width: '14.28%' }}>{w}</Text>
         ))}
-        {Array.from({ length: firstDayOffset }).map((_, i) => (
-          <View key={`b${i}`} style={{ width: '14.28%' }} />
-        ))}
+        {Array.from({ length: firstDayOffset }).map((_, i) => <View key={`b${i}`} style={{ width: '14.28%' }} />)}
         {Array.from({ length: daysInMonth }).map((_, i) => {
           const day = i + 1
-          const isSelected =
-            !!selectedDate && selectedDate.getFullYear() === year && selectedDate.getMonth() === month && selectedDate.getDate() === day
+          const isSelected = !!selectedDate && selectedDate.getFullYear() === year && selectedDate.getMonth() === month && selectedDate.getDate() === day
           return (
-            <Pressable
-              key={day}
-              onPress={() => setSelectedDate(new Date(year, month, day))}
-              className="items-center py-1"
-              style={{ width: '14.28%' }}
-            >
+            <Pressable key={day} onPress={() => setSelectedDate(new Date(year, month, day))} className="items-center py-1" style={{ width: '14.28%' }}>
               <View className={`items-center justify-center size-8 rounded-full ${isSelected ? 'bg-primary' : ''}`}>
                 <Text className={`text-[13px] font-medium ${isSelected ? 'text-white' : 'text-ink'}`}>{day}</Text>
               </View>
@@ -818,237 +625,6 @@ function CalendarMonth({
           )
         })}
       </View>
-    </View>
-  )
-}
-
-function BookingDetailsStep({
-  viewMonth,
-  setViewMonth,
-  selectedDate,
-  setSelectedDate,
-  workingHours,
-  setWorkingHours,
-  startTime,
-  setStartTime,
-  promo,
-  onOpenPromo,
-  onNext,
-}: any) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] font-semibold text-ink mb-3">Select Date</Text>
-          <CalendarMonth viewMonth={viewMonth} setViewMonth={setViewMonth} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-
-          <View className="flex-row items-center justify-between rounded-2xl border border-hairline px-5 py-4 mt-5">
-            <View className="flex-1 pr-3">
-              <Text className="text-[14px] font-semibold text-ink">Working Hours</Text>
-              <Text className="text-[12px] text-muted mt-0.5">Cost increase after 2 hrs of work.</Text>
-            </View>
-            <Counter value={workingHours} onChange={(d) => setWorkingHours((h: number) => Math.max(0, h + d))} />
-          </View>
-
-          <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">Choose Start Time</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
-            {TIMES.map((t) => (
-              <Pressable
-                key={t}
-                onPress={() => setStartTime(t)}
-                className={`rounded-full px-4 py-2.5 border ${t === startTime ? 'bg-primary border-primary' : 'border-primary/40'}`}
-              >
-                <Text className={`text-[13px] font-medium ${t === startTime ? 'text-white' : 'text-primary'}`}>{t}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-
-          <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">Promo Code</Text>
-          <View className="flex-row items-center gap-3">
-            <View className="flex-1 rounded-2xl bg-[#f5f5f5] px-5 py-3 min-h-[52px] items-start justify-center">
-              {promo ? (
-                <View className="bg-primary rounded-full px-3 py-1.5">
-                  <Text className="text-white text-[13px] font-semibold">{promo.title}</Text>
-                </View>
-              ) : (
-                <Text className="text-[15px] text-[#9e9e9e]">Enter Promo Code</Text>
-              )}
-            </View>
-            <Pressable onPress={onOpenPromo} className="items-center justify-center size-11 rounded-full bg-primary/8 shrink-0">
-              <PlusIcon size={16} color="#7210FF" />
-            </Pressable>
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label="Continue" onNext={onNext} />
-    </View>
-  )
-}
-
-function PromoStep({ selected, onSelect }: { selected: Promo | null; onSelect: (p: Promo) => void }) {
-  const [choice, setChoice] = useState<Promo | null>(selected)
-
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <View className="flex-col gap-3">
-            {PROMOS.map((p) => (
-              <Pressable
-                key={p.id}
-                onPress={() => setChoice(p)}
-                className={`flex-row items-center gap-4 rounded-2xl p-4 ${
-                  choice?.id === p.id ? 'border-2 border-primary bg-primary/5' : 'border border-hairline'
-                }`}
-              >
-                <View className="items-center justify-center size-12 rounded-full shrink-0" style={{ backgroundColor: p.color }}>
-                  <TagIcon size={20} color="#fff" />
-                </View>
-                <View className="flex-1 min-w-0">
-                  <Text className="font-bold text-ink">{p.title}</Text>
-                  <Text className="text-[13px] text-muted">{p.subtitle}</Text>
-                </View>
-                <View className={`size-5 rounded-full border-2 shrink-0 ${choice?.id === p.id ? 'border-primary bg-primary' : 'border-hairline'}`} />
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label="Apply Promo" onNext={() => choice && onSelect(choice)} disabled={!choice} />
-    </View>
-  )
-}
-
-function AddressStep({ address, setAddress, onNext }: { address: string; setAddress: (a: string) => void; onNext: () => void }) {
-  return (
-    <View className="flex-1">
-      <View className="flex-1 items-center justify-center" style={{ backgroundColor: '#f3ecff' }}>
-        <View className="items-center justify-center size-16 rounded-full bg-white border-4 border-primary overflow-hidden">
-          <Avatar label={USER.avatar} size={56} />
-        </View>
-      </View>
-
-      <View className="rounded-t-[28px] bg-white px-6 pt-6 pb-6">
-        <View className="w-10 h-1 bg-hairline rounded-full self-center mb-5" />
-        <Text className="text-[18px] font-bold text-ink mb-4">Location Details</Text>
-        <Text className="text-[14px] font-semibold text-ink mb-2">Address</Text>
-        <View className="flex-row items-center gap-3 rounded-2xl bg-[#f5f5f5] px-5 py-4 mb-6">
-          <TextInput value={address} onChangeText={setAddress} className="flex-1 text-[14px] text-ink" />
-          <LocationIcon size={16} color="#6C7585" />
-        </View>
-        <Button onPress={onNext}>Continue</Button>
-      </View>
-    </View>
-  )
-}
-
-function PaymentStep({ payment, setPayment, onNext }: { payment: string; setPayment: (p: string) => void; onNext: () => void }) {
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <Text className="text-[14px] text-muted mb-4">Select the payment method you want to use</Text>
-          <View className="flex-col gap-3">
-            {PAYMENT_METHODS.map((pm) => (
-              <Pressable
-                key={pm.id}
-                onPress={() => setPayment(pm.id)}
-                className={`flex-row items-center gap-4 rounded-2xl p-4 ${
-                  payment === pm.id ? 'border-2 border-primary bg-primary/5' : 'border border-hairline'
-                }`}
-              >
-                <View className="items-center justify-center size-9 shrink-0">
-                  <PaymentIcon icon={pm.icon} size={24} />
-                </View>
-                <Text className="text-[14px] text-ink flex-1">{pm.label}</Text>
-                <View className={`size-5 rounded-full border-2 shrink-0 ${payment === pm.id ? 'border-primary bg-primary' : 'border-hairline'}`} />
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-      <StepFooter label="Continue" onNext={onNext} />
-    </View>
-  )
-}
-
-function ReviewStep({
-  provider,
-  selectedDate,
-  startTime,
-  workingHours,
-  itemsSummary,
-  detailsExpanded,
-  setDetailsExpanded,
-  payment,
-  onChangePayment,
-  subtotal,
-  discount,
-  total,
-  onNext,
-}: any) {
-  const pm = PAYMENT_METHODS.find((p) => p.id === payment)
-  const dateLabel = selectedDate
-    ? selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-    : '—'
-
-  return (
-    <View className="flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
-        <View className="px-6 pt-2">
-          <View className="rounded-2xl border border-hairline p-4 flex-col gap-3">
-            <Row label="Services" value={provider.title} />
-            <Row label="Category" value={provider.categoryId} capitalize />
-            <Row label="Workers" value={provider.name} />
-            <Row label="Date & Time" value={`${dateLabel} | ${startTime}`} />
-            <Row label="Working Hours" value={`${workingHours} hours`} />
-          </View>
-
-          <Pressable
-            onPress={() => setDetailsExpanded((v: boolean) => !v)}
-            className="w-full flex-row items-center justify-between rounded-2xl border border-hairline p-4 mt-4"
-          >
-            <Text className="text-[14px] font-medium text-ink">{provider.title} Details</Text>
-            <View style={{ transform: [{ rotate: detailsExpanded ? '180deg' : '0deg' }] }}>
-              <ChevronDownIcon size={16} color="#6C7585" />
-            </View>
-          </Pressable>
-          {detailsExpanded && <Text className="text-[13px] text-muted px-4 pt-2 leading-relaxed">{itemsSummary}</Text>}
-
-          <View className="rounded-2xl border border-hairline p-4 mt-4 flex-col gap-2">
-            <View className="flex-row justify-between">
-              <Text className="text-ink text-[14px]">{provider.title}</Text>
-              <Text className="text-ink text-[14px]">${subtotal.toFixed(2)}</Text>
-            </View>
-            {discount > 0 && (
-              <View className="flex-row justify-between">
-                <Text className="text-primary font-medium text-[14px]">Promo</Text>
-                <Text className="text-primary font-medium text-[14px]">- ${discount.toFixed(2)}</Text>
-              </View>
-            )}
-            <View className="flex-row justify-between pt-2 border-t border-hairline">
-              <Text className="font-bold text-ink text-[16px]">Total</Text>
-              <Text className="font-bold text-ink text-[16px]">${total.toFixed(2)}</Text>
-            </View>
-          </View>
-
-          <Pressable onPress={onChangePayment} className="w-full flex-row items-center gap-4 rounded-2xl border border-hairline p-4 mt-4">
-            <PaymentIcon icon={pm?.icon ?? ''} size={24} />
-            <Text className="flex-1 text-left text-[14px] text-ink">{pm?.label}</Text>
-            <Text className="text-primary text-[13px] font-semibold">Change</Text>
-          </Pressable>
-        </View>
-      </ScrollView>
-      <StepFooter label="Confirm Payment" onNext={onNext} />
-    </View>
-  )
-}
-
-function Row({ label, value, capitalize }: { label: string; value: string; capitalize?: boolean }) {
-  return (
-    <View className="flex-row items-start justify-between gap-4">
-      <Text className="text-muted shrink-0 text-[14px]">{label}</Text>
-      <Text className={`text-ink font-medium text-right text-[14px] ${capitalize ? 'capitalize' : ''}`}>{value}</Text>
     </View>
   )
 }
@@ -1061,36 +637,33 @@ function PinStep({ pin, setPin, onComplete }: { pin: string[]; setPin: (p: strin
   function press(key: string) {
     if (key === 'back') return setPin(pin.slice(0, -1))
     if (key === '*') return
-    if (pin.length < LENGTH) setPin([...pin, key])
+    if (pin.length < LENGTH) {
+      const next = [...pin, key]
+      setPin(next)
+      if (next.length === LENGTH) setTimeout(onComplete, 300)
+    }
   }
 
   return (
     <View className="flex-1">
       <View className="flex-1 px-6 pt-10">
-        <Text className="text-center text-[16px] text-ink">Enter your PIN to confirm payment</Text>
+        <Text className="text-center text-[16px] text-ink">Enter your PIN to confirm</Text>
         <View className="flex-row justify-center gap-4 mt-8">
           {Array.from({ length: LENGTH }).map((_, i) => {
             const isLast = i === pin.length - 1
             const hasDigit = pin[i] !== undefined
             return (
-              <View
-                key={i}
-                className={`size-16 rounded-2xl items-center justify-center ${
-                  isLast ? 'border-2 border-primary bg-primary/5' : 'bg-[#f5f5f5]'
-                }`}
-              >
-                <Text className={`text-[22px] font-bold ${isLast ? 'text-primary' : 'text-ink'}`}>
-                  {hasDigit ? (isLast ? pin[i] : '●') : ''}
-                </Text>
+              <View key={i} className={`size-16 rounded-2xl items-center justify-center ${isLast ? 'border-2 border-primary bg-primary/5' : 'bg-[#f5f5f5]'}`}>
+                <Text className={`text-[22px] font-bold ${isLast ? 'text-primary' : 'text-ink'}`}>{hasDigit ? (isLast ? pin[i] : '●') : ''}</Text>
               </View>
             )
           })}
         </View>
-        <View className="mt-8">
-          <Button disabled={!complete} onPress={onComplete}>
-            Continue
-          </Button>
-        </View>
+        {complete && (
+          <View className="mt-8">
+            <Button onPress={onComplete}>Continue</Button>
+          </View>
+        )}
       </View>
       <View className="bg-[#f7f7f7] rounded-t-[32px] px-6 pt-6 pb-8">
         <View className="flex-row flex-wrap">

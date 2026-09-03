@@ -1,50 +1,48 @@
-import { useState } from 'react'
-import { View } from 'react-native'
-import { router } from 'expo-router'
+import { View, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../components/ScreenHeader'
-import TextField from '../../components/TextField'
-import Button from '../../components/Button'
 import Avatar from '../../components/Avatar'
-import { EditIcon, LocationIcon, MailIcon } from '../../components/icons'
-import { USER } from '../../data/mock'
+import { useAuth } from '../../lib/auth-context'
+import { initialsOf } from '../../lib/format'
+import { MailIcon, EditIcon, PhoneIcon } from '../../components/icons'
+
+// The backend has no endpoint to update a customer's own profile fields
+// (full_name/phone/email are set at registration only), so — matching web's
+// Personal Info tab exactly — this is a real, read-only display rather than
+// an editable form that would silently do nothing on save.
+function Field({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <View className="flex-row items-center gap-3 w-full rounded-2xl bg-[#f5f5f5] px-5 py-4">
+      <View className="shrink-0">{icon}</View>
+      <View className="flex-1">
+        <Text className="text-[11px] text-muted">{label}</Text>
+        <Text className="text-[15px] text-ink font-medium mt-0.5">{value}</Text>
+      </View>
+    </View>
+  )
+}
 
 export default function EditProfile() {
-  const [name, setName] = useState(USER.name)
-  const [email, setEmail] = useState(USER.email)
-  const [phone, setPhone] = useState(USER.phone)
-  const [address, setAddress] = useState(USER.address)
-  const [saved, setSaved] = useState(false)
-
-  function handleSubmit() {
-    setSaved(true)
-    setTimeout(() => router.replace('/(tabs)/profile'), 900)
-  }
+  const { customer } = useAuth()
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Edit Profile" back="/(tabs)/profile" />
+      <ScreenHeader title="Personal Info" back="/(tabs)/profile" />
 
       <View className="flex-1 px-6 pt-2">
-        <View className="relative self-center">
-          <Avatar label={name} size={100} />
-          <View className="absolute bottom-0 right-0 items-center justify-center size-8 rounded-full bg-primary">
-            <EditIcon size={16} color="#fff" />
-          </View>
+        <View className="self-center">
+          <Avatar label={initialsOf(customer?.full_name ?? '?')} size={100} />
         </View>
 
         <View className="flex-col gap-4 mt-7">
-          <TextField icon={<EditIcon size={20} color="#6C7585" />} placeholder="Full Name" value={name} onChangeText={setName} />
-          <TextField icon={<MailIcon size={20} color="#6C7585" />} keyboardType="email-address" placeholder="Email" value={email} onChangeText={setEmail} />
-          <TextField icon={<EditIcon size={20} color="#6C7585" />} placeholder="Phone Number" value={phone} onChangeText={setPhone} />
-          <TextField icon={<LocationIcon size={20} color="#6C7585" />} placeholder="Address" value={address} onChangeText={setAddress} />
+          <Field icon={<EditIcon size={20} color="#6C7585" />} label="Full Name" value={customer?.full_name ?? '—'} />
+          <Field icon={<MailIcon size={20} color="#6C7585" />} label="Email" value={customer?.email ?? '—'} />
+          <Field icon={<PhoneIcon size={20} color="#6C7585" />} label="Phone Number" value={customer?.phone ?? '—'} />
         </View>
 
-        <View className="flex-1" />
-
-        <View className="pb-6 pt-6">
-          <Button onPress={handleSubmit}>{saved ? 'Saved!' : 'Save Changes'}</Button>
-        </View>
+        <Text className="text-[12px] text-muted text-center mt-6">
+          Profile details are set when you register and can't be changed from the app yet.
+        </Text>
       </View>
     </SafeAreaView>
   )

@@ -5,16 +5,43 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../../components/ScreenHeader'
 import TextField from '../../../components/TextField'
 import Button from '../../../components/Button'
+import { fixoSdk, ApiError } from '../../../lib/api-client'
 import { CreditCardIcon, LockIcon } from '../../../components/icons'
+
+function brandFromCardNumber(num: string) {
+  return num.startsWith('4') ? 'Visa' : num.startsWith('5') ? 'Mastercard' : 'Card'
+}
 
 export default function AddCard() {
   const [number, setNumber] = useState('')
   const [name, setName] = useState('')
   const [expiry, setExpiry] = useState('')
   const [cvv, setCvv] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handleSubmit() {
-    router.replace('/profile/payment')
+  async function handleSubmit() {
+    setError(null)
+    const digits = number.replace(/\s/g, '')
+    if (digits.length < 12) {
+      setError('Enter a valid card number')
+      return
+    }
+    if (!name.trim() || !expiry.trim() || cvv.trim().length < 3) {
+      setError('Fill in the cardholder name, expiry and CVV')
+      return
+    }
+    setSaving(true)
+    try {
+      // Only the last 4 digits are ever sent/stored — never the full card
+      // number or CVV, matching web's add-payment-method flow.
+      await fixoSdk.addPaymentMethod('card', brandFromCardNumber(digits), { last4: digits.slice(-4), expiry: expiry.trim(), cardholder: name.trim() }, true)
+      router.replace('/profile/payment')
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not save this card')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -51,10 +78,12 @@ export default function AddCard() {
           </View>
         </View>
 
+        {error && <Text className="text-[13px] text-red-500 mt-4 text-center">{error}</Text>}
+
         <View className="flex-1" />
 
         <View className="pb-6 pt-6">
-          <Button onPress={handleSubmit}>Save Card</Button>
+          <Button onPress={handleSubmit} loading={saving}>Save Card</Button>
         </View>
       </View>
     </SafeAreaView>

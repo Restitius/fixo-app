@@ -155,6 +155,29 @@ export interface BookingHistoryRow {
   provider_name?: string | null
 }
 
+export interface SupportTicket {
+  ticket_id: string
+  ticket_number: string
+  subject: string
+  category: string
+  priority: string
+  status: string
+  resolution?: string | null
+  created_at: string
+  updated_at: string
+  message_count?: number
+  first_response_at?: string | null
+  last_support_message_at?: string | null
+}
+
+export interface TicketMessage {
+  message_id: string
+  ticket_id?: string
+  sender: string
+  body: string
+  created_at: string
+}
+
 export interface BookingRating {
   rating_id: string
   booking_id: string
@@ -195,6 +218,12 @@ export interface NotificationRow {
   ref_id?: string | null
   read_at?: string | null
   created_at: string
+}
+
+export interface AccountPreference {
+  key: string
+  value: string
+  updated_at?: string
 }
 
 export interface PaymentMethod {
@@ -281,6 +310,10 @@ export const fixoSdk = {
   markNotificationRead: (id: string) => apiClient.post<{ marked: number }>(`/notifications/${id}/read`).then((r) => r.data),
   markAllNotificationsRead: () => apiClient.post<{ marked: number }>('/notifications/read-all').then((r) => r.data),
 
+  // ---- Account / Preferences ----------------------------------------------
+  listPreferences: () => apiClient.get<AccountPreference[]>('/account/preferences').then((r) => r.data),
+  setPreference: (key: string, value: string) => apiClient.post<AccountPreference>('/account/preferences', { key, value }).then((r) => r.data),
+
   // ---- Payment methods -----------------------------------------------------
   listPaymentMethods: () => apiClient.get<PaymentMethod[]>('/account/payment-methods').then((r) => r.data),
   addPaymentMethod: (type: string, provider: string | null, details_masked: Record<string, unknown>, make_default: boolean) =>
@@ -292,6 +325,19 @@ export const fixoSdk = {
   // ---- Invoices -------------------------------------------------------------
   listInvoices: (limit = 20, offset = 0) => apiClient.get<InvoiceRow[]>(`/invoices${qs({ limit, offset })}`).then((r) => r.data),
   getInvoice: (invoiceId: string) => apiClient.get<InvoiceDetail>(`/invoices/${invoiceId}`).then((r) => r.data),
+
+  // ---- Security ------------------------------------------------------------
+  changePassword: (current_password: string, new_password: string) =>
+    apiClient.post<null>('/account/security/change-password', { current_password, new_password }).then((r) => r.data),
+
+  // ---- Support --------------------------------------------------------------
+  listTickets: (limit = 20, offset = 0) => apiClient.get<SupportTicket[]>(`/support/tickets${qs({ limit, offset })}`).then((r) => r.data),
+  createTicket: (subject: string, category: string, priority: string) =>
+    apiClient.post<SupportTicket>('/support/tickets', { subject, category, priority }).then((r) => r.data),
+  listTicketMessages: (ticketId: string, limit = 100, offset = 0) =>
+    apiClient.get<TicketMessage[]>(`/support/tickets/${ticketId}/messages${qs({ limit, offset })}`).then((r) => r.data),
+  addTicketMessage: (ticketId: string, body: string) =>
+    apiClient.post<TicketMessage>(`/support/tickets/${ticketId}/messages`, { body }).then((r) => r.data),
 }
 
 // ---------------------------------------------------------------------------
