@@ -40,6 +40,8 @@ interface AuthContextValue extends AuthState {
   register: (data: RegisterData) => Promise<void>
   requestOtp: (email: string) => Promise<string | null>
   verifyOtp: (email: string, code: string) => Promise<void>
+  forgotPassword: (email: string) => Promise<string | null>
+  resetPassword: (email: string, code: string, newPassword: string) => Promise<void>
   logout: () => Promise<void>
   refreshAccessToken: () => Promise<boolean>
 }
@@ -157,6 +159,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await apiClient.post('/auth/otp/verify', { email, code })
   }
 
+  const forgotPassword = async (email: string): Promise<string | null> => {
+    const resp = await apiClient.post('/auth/password/forgot', { email })
+    return resp.data.otp_code ?? null
+  }
+
+  const resetPassword = async (email: string, code: string, newPassword: string) => {
+    await apiClient.post('/auth/password/reset', { email, code, new_password: newPassword })
+  }
+
   const logout = async () => {
     try {
       await apiClient.post('/auth/logout')
@@ -168,7 +179,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const value = useMemo(
-    () => ({ ...state, login, register, requestOtp, verifyOtp, logout, refreshAccessToken }),
+    () => ({ ...state, login, register, requestOtp, verifyOtp, forgotPassword, resetPassword, logout, refreshAccessToken }),
     [state],
   )
 
