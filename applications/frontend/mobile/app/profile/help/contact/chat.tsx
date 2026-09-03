@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import Avatar from '../../../../components/Avatar'
 import { ArrowLeftIcon, SendIcon } from '../../../../components/icons'
 import { fixoSdk, type SupportTicket, type TicketMessage } from '../../../../lib/api-client'
@@ -10,6 +11,7 @@ import { fixoSdk, type SupportTicket, type TicketMessage } from '../../../../lib
 // (GENERAL/MEDIUM, matching web's contact-support default), subsequent
 // messages append to it via the real ticket-messages endpoint.
 export default function SupportChat() {
+  const { t } = useTranslation('profile')
   const [ticket, setTicket] = useState<SupportTicket | null>(null)
   const [messages, setMessages] = useState<TicketMessage[]>([])
   const [text, setText] = useState('')
@@ -53,15 +55,15 @@ export default function SupportChat() {
         </Pressable>
         <Avatar label="CS" size={40} />
         <View className="flex-1 min-w-0">
-          <Text numberOfLines={1} className="font-bold text-ink text-[15px]">FIXO Support</Text>
-          <Text className="text-[12px] text-muted">{ticket ? `Ticket ${ticket.ticket_number}` : 'Send a message to open a ticket'}</Text>
+          <Text numberOfLines={1} className="font-bold text-ink text-[15px]">{t('help.supportName')}</Text>
+          <Text className="text-[12px] text-muted">{ticket ? t('help.ticketNumber', { number: ticket.ticket_number }) : t('help.sendMessageToOpen')}</Text>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 16, gap: 12 }}>
         {messages.length === 0 && (
           <View className="items-center py-8">
-            <Text className="text-[13px] text-muted text-center">Describe your issue below and our support team will reply here.</Text>
+            <Text className="text-[13px] text-muted text-center">{t('help.describeIssue')}</Text>
           </View>
         )}
         {messages.map((m) => (
@@ -78,7 +80,7 @@ export default function SupportChat() {
           value={text}
           onChangeText={setText}
           onSubmitEditing={() => void send()}
-          placeholder="Describe your issue..."
+          placeholder={t('help.describeIssuePlaceholder')}
           placeholderTextColor="#9e9e9e"
           className="flex-1 rounded-full bg-[#f5f5f5] px-5 py-3 text-[14px] text-ink"
         />

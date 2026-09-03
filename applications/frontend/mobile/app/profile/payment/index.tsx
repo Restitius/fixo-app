@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../../components/ScreenHeader'
 import Button from '../../../components/Button'
 import { CheckCircleIcon, PlusIcon } from '../../../components/icons'
@@ -10,6 +11,7 @@ import { fixoSdk, type PaymentMethod } from '../../../lib/api-client'
 import { humanize } from '../../../lib/format'
 
 export default function PaymentSettings() {
+  const { t } = useTranslation('profile')
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null)
 
   function refresh() {
@@ -29,13 +31,13 @@ export default function PaymentSettings() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Payment Methods" back="/(tabs)/profile" />
+      <ScreenHeader title={t('payment.title')} back="/(tabs)/profile" />
       <ScrollView>
         <View className="flex-col gap-3 px-6 mt-3">
           {methods === null ? (
             <View className="h-20 rounded-2xl bg-[#f5f5f5]" />
           ) : methods.length === 0 ? (
-            <Text className="text-center text-muted py-8 text-[14px]">No payment methods yet.</Text>
+            <Text className="text-center text-muted py-8 text-[14px]">{t('payment.noMethods')}</Text>
           ) : (
             methods.map((pm) => {
               const last4 = (pm.details_masked?.['last4'] as string | undefined) ?? '••••'
@@ -60,7 +62,7 @@ export default function PaymentSettings() {
           <Button variant="outline" onPress={() => router.push('/profile/payment/add-card')}>
             <View className="flex-row items-center justify-center gap-2 w-full">
               <PlusIcon size={16} color="#0B111F" />
-              <Text className="text-[16px] font-bold text-ink">Add New Card</Text>
+              <Text className="text-[16px] font-bold text-ink">{t('payment.addNewCard')}</Text>
             </View>
           </Button>
         </View>

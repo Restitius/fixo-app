@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import { FileTextIcon } from '../../components/icons'
 import { fixoSdk, type InvoiceRow } from '../../lib/api-client'
@@ -13,6 +14,7 @@ const STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 }
 
 export default function Invoices() {
+  const { t } = useTranslation('profile')
   const [invoices, setInvoices] = useState<InvoiceRow[] | null>(null)
 
   useEffect(() => {
@@ -21,13 +23,13 @@ export default function Invoices() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Invoices" back="/(tabs)/profile" />
+      <ScreenHeader title={t('invoices.title')} back="/(tabs)/profile" />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View className="flex-col gap-3 px-6 mt-2">
           {invoices === null ? (
             <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
           ) : invoices.length === 0 ? (
-            <Text className="text-center text-muted py-8 text-[14px]">No invoices yet.</Text>
+            <Text className="text-center text-muted py-8 text-[14px]">{t('invoices.empty')}</Text>
           ) : (
             invoices.map((inv) => {
               const style = STATUS_STYLE[inv.status.toUpperCase()] ?? STATUS_STYLE.PENDING!
@@ -40,7 +42,7 @@ export default function Invoices() {
                       </View>
                       <View className="flex-1 min-w-0">
                         <Text numberOfLines={1} className="font-bold text-ink text-[14px]">
-                          {inv.service_name ?? 'Service'}
+                          {inv.service_name ?? t('invoices.serviceFallback')}
                         </Text>
                         <Text className="text-[12px] text-primary font-semibold mt-0.5">{inv.invoice_number}</Text>
                       </View>
@@ -55,7 +57,7 @@ export default function Invoices() {
                     </View>
                   </View>
                   <Text className="text-[12px] text-muted mt-2">
-                    Issued {fmtDate(inv.issued_at ?? inv.created_at)} · {inv.provider_name}
+                    {t('invoices.issuedLine', { date: fmtDate(inv.issued_at ?? inv.created_at), provider: inv.provider_name })}
                   </Text>
                 </View>
               )

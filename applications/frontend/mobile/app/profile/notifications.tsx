@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import Toggle from '../../components/Toggle'
 import { fixoSdk } from '../../lib/api-client'
 
-// Same real preference keys as web's Notifications tab
-// (NOTIFY_<ROW>_<CHANNEL>), using the PUSH channel since mobile shows one
-// toggle per category rather than web's full push/email/sms matrix.
-const OPTIONS = [
-  { key: 'NOTIFY_BOOKING_UPDATES_PUSH', label: 'Booking Updates', desc: 'New bookings, changes, cancellations', default: true },
-  { key: 'NOTIFY_PROVIDER_MESSAGES_PUSH', label: 'Provider Messages', desc: 'New messages from your providers', default: true },
-  { key: 'NOTIFY_PAYMENT_RECEIPTS_PUSH', label: 'Payment Receipts', desc: 'Receipts, confirmations, and refunds', default: false },
-  { key: 'NOTIFY_PROMOTIONS_PUSH', label: 'Promotions & Offers', desc: 'Special deals and discounts', default: false },
-  { key: 'NOTIFY_QUIET_HOURS_PUSH', label: 'Quiet Hours', desc: 'Pause non-urgent notifications', default: true },
-]
-
 export default function NotificationSettings() {
+  const { t } = useTranslation('profile')
+  // Same real preference keys as web's Notifications tab
+  // (NOTIFY_<ROW>_<CHANNEL>), using the PUSH channel since mobile shows one
+  // toggle per category rather than web's full push/email/sms matrix.
+  const OPTIONS = [
+    { key: 'NOTIFY_BOOKING_UPDATES_PUSH', label: t('notifications.bookingUpdates'), desc: t('notifications.bookingUpdatesDesc'), default: true },
+    { key: 'NOTIFY_PROVIDER_MESSAGES_PUSH', label: t('notifications.providerMessages'), desc: t('notifications.providerMessagesDesc'), default: true },
+    { key: 'NOTIFY_PAYMENT_RECEIPTS_PUSH', label: t('notifications.paymentReceipts'), desc: t('notifications.paymentReceiptsDesc'), default: false },
+    { key: 'NOTIFY_PROMOTIONS_PUSH', label: t('notifications.promotions'), desc: t('notifications.promotionsDesc'), default: false },
+    { key: 'NOTIFY_QUIET_HOURS_PUSH', label: t('notifications.quietHours'), desc: t('notifications.quietHoursDesc'), default: true },
+  ]
   const [values, setValues] = useState<Record<string, boolean> | null>(null)
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function NotificationSettings() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Notification Settings" back="/(tabs)/profile" />
+      <ScreenHeader title={t('notifications.title')} back="/(tabs)/profile" />
       <ScrollView>
         <View className="flex-col px-6 mt-2">
           {OPTIONS.map((o, i) => (
