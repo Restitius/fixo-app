@@ -47,6 +47,8 @@ import {
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { MetricCard } from "@/components/dashboard/MetricCard";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { LANGUAGE_NAMES } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -344,7 +346,12 @@ function PersonalTab() {
                 )
               }
             />
-            <Field icon={Globe} label="Preferred Language" value={customer?.preferred_language ? humanize(customer.preferred_language === "en" ? "English" : customer.preferred_language) : "English"} />
+            <Field
+              icon={Globe}
+              label="Preferred Language"
+              value={LANGUAGE_NAMES[customer?.preferred_language as keyof typeof LANGUAGE_NAMES] ?? "English"}
+              action={<LanguageSwitcher />}
+            />
             <Field icon={Cake} label="Date of Birth" value="Not set" action={<button onClick={editUnavailable} className="text-sm font-semibold text-primary hover:underline">Add</button>} />
             <Field icon={Clock} label="Timezone" value="(UTC+03:00) East Africa Time" />
           </div>

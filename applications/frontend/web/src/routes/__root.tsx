@@ -10,10 +10,46 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Construction, HelpCircle, Home, RefreshCw, Sparkles, TrafficCone, Wrench } from "lucide-react";
+import { I18nextProvider } from "react-i18next";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider, useAuth } from "@/lib/auth-context";
+import i18n from "@/lib/i18n";
+import { resolveInitialLanguage, adoptAccountLanguage, isRtl } from "@/lib/language";
+
+// Adopts the authenticated customer's preferred_language once it loads,
+// unless the user already made an explicit in-app choice (see lib/language.ts).
+function LanguageAccountSync() {
+  const { customer } = useAuth();
+  useEffect(() => {
+    adoptAccountLanguage(i18n, customer?.preferred_language);
+  }, [customer?.preferred_language]);
+  return null;
+}
+
+// Resolves the initial client-side language and keeps <html lang/dir> in
+// sync with every subsequent switch. The server always renders the static
+// "en"/"ltr" default from RootShell below — this only patches the DOM after
+// hydration, the same way this app's AuthProvider restores state from
+// localStorage in a useEffect rather than during the server render.
+function DocumentLanguageSync() {
+  useEffect(() => {
+    const initial = resolveInitialLanguage();
+    if (initial !== i18n.language) void i18n.changeLanguage(initial);
+
+    const applyDocumentAttrs = (lng: string) => {
+      document.documentElement.lang = lng;
+      document.documentElement.dir = isRtl(lng) ? "rtl" : "ltr";
+    };
+    applyDocumentAttrs(i18n.language);
+    i18n.on("languageChanged", applyDocumentAttrs);
+    return () => {
+      i18n.off("languageChanged", applyDocumentAttrs);
+    };
+  }, []);
+  return null;
+}
 
 // Deliberately does not read auth state: this renders exactly when something
 // upstream (including auth) may have broken, so it must never depend on the
@@ -204,10 +240,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-      </AuthProvider>
+      <I18nextProvider i18n={i18n}>
+        <AuthProvider>
+          <DocumentLanguageSync />
+          <LanguageAccountSync />
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </AuthProvider>
+      </I18nextProvider>
     </QueryClientProvider>
   );
 }
