@@ -29,22 +29,21 @@ export function isRtl(code: string): boolean {
   return (RTL_LANGUAGES as readonly string[]).includes(code);
 }
 
-function detectBrowserLanguage(): LanguageCode {
-  const tag = typeof navigator !== "undefined" ? navigator.language.split("-")[0] : null;
-  return isSupported(tag) ? tag : "en";
-}
-
-// Resolution order: explicit local choice -> browser language -> 'en'. The
+// Resolution order: explicit local choice -> 'en'. English is the hard
+// default for anyone who hasn't made a choice — deliberately NOT auto-detected
+// from the browser's Accept-Language, so a fresh visit always reads in
+// English rather than guessing (often wrongly) from browser settings. The
 // account's preferred_language is adopted separately once auth loads (see
-// adoptAccountLanguage), since it isn't known this early.
+// adoptAccountLanguage), since it isn't known this early, and itself defaults
+// to 'en' server-side unless the user explicitly changed it.
 export function resolveInitialLanguage(): LanguageCode {
   try {
     const explicit = localStorage.getItem(EXPLICIT_KEY);
     if (isSupported(explicit)) return explicit;
   } catch {
-    // ignore — falls through to browser detection
+    // ignore — falls through to the English default
   }
-  return detectBrowserLanguage();
+  return "en";
 }
 
 export function adoptAccountLanguage(
