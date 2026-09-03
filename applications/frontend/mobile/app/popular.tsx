@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../components/ScreenHeader'
 import ProviderCard from '../components/ProviderCard'
 import { bookingApi, type ProviderListing } from '../lib/api-client'
 import { emojiForCategory } from '../lib/category-visuals'
 
 export default function PopularServices() {
+  const { t } = useTranslation('misc')
   const [popular, setPopular] = useState<{ provider: ProviderListing; categoryIcon: string }[] | null>(null)
 
   useEffect(() => {
@@ -41,13 +43,13 @@ export default function PopularServices() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Most Popular" back="/(tabs)/home" />
+      <ScreenHeader title={t('popular.title')} back="/(tabs)/home" />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View className="flex-col gap-3 px-6 mt-2">
           {popular === null ? (
             <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
           ) : popular.length === 0 ? (
-            <Text className="text-center text-muted mt-10">No providers available yet.</Text>
+            <Text className="text-center text-muted mt-10">{t('popular.empty')}</Text>
           ) : (
             popular.map(({ provider, categoryIcon }) => (
               <ProviderCard key={provider.provider_id} provider={provider} emoji={emojiForCategory(categoryIcon)} />

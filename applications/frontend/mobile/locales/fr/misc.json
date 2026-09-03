@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "Nous offrons un service professionnel à un prix abordable",
+    "slide2": "Les meilleurs résultats et votre satisfaction sont notre priorité",
+    "slide3": "Apportons de superbes changements à votre maison",
+    "next": "Suivant",
+    "getStarted": "Commencer"
+  },
+  "bookmarks": {
+    "title": "Mes Favoris",
+    "emptyTitle": "Aucun favori pour le moment",
+    "emptySubtitle": "Les prestataires que vous enregistrez apparaîtront ici.",
+    "removeConfirmTitle": "Retirer ce favori ?",
+    "removeConfirmBody": "{{name}} sera retiré de vos favoris.",
+    "cancel": "Annuler",
+    "remove": "Retirer"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification pour le moment."
+  },
+  "offers": {
+    "title": "Offres Spéciales",
+    "empty": "Aucune promotion active pour le moment.",
+    "discountOff": "{{amount}} DE RÉDUCTION",
+    "codeValidUntil": "Code {{code}} · Valable jusqu'au {{date}}"
+  },
+  "popular": {
+    "title": "Les Plus Populaires",
+    "empty": "Aucun prestataire disponible pour le moment."
+  },
+  "search": {
+    "placeholder": "Rechercher des services...",
+    "hint": "Recherchez dans notre catalogue de services réel.",
+    "noResultsTitle": "Aucun résultat trouvé",
+    "noResultsSubtitle": "Essayez un autre mot-clé ou ajustez vos filtres.",
+    "resultsFor": "{{count}} résultats pour « {{query}} »",
+    "filtersTitle": "Filtres",
+    "category": "Catégorie",
+    "all": "Tout",
+    "applyFilters": "Appliquer les Filtres"
+  }
+}

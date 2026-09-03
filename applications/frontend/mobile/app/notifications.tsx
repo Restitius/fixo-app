@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, View, Text } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../components/ScreenHeader'
 import { BellIcon } from '../components/icons'
 import { fixoSdk, type NotificationRow } from '../lib/api-client'
 import { humanize, timeAgo } from '../lib/format'
 
 export default function Notifications() {
+  const { t } = useTranslation('misc')
   const [notifications, setNotifications] = useState<NotificationRow[] | null>(null)
 
   useEffect(() => {
@@ -25,13 +27,13 @@ export default function Notifications() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Notifications" back="/(tabs)/home" />
+      <ScreenHeader title={t('notifications.title')} back="/(tabs)/home" />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View className="flex-col px-6 mt-2">
           {notifications === null ? (
             <View className="h-24 rounded-2xl bg-[#f5f5f5] mt-2" />
           ) : notifications.length === 0 ? (
-            <Text className="text-center text-muted py-8 text-[14px]">No notifications yet.</Text>
+            <Text className="text-center text-muted py-8 text-[14px]">{t('notifications.empty')}</Text>
           ) : (
             notifications.map((n, i) => (
               <Pressable
