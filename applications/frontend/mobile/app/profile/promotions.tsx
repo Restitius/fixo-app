@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import { CheckCircleIcon, HistoryIcon, TagIcon } from '../../components/icons'
 import { fixoSdk, type Promotion } from '../../lib/api-client'
@@ -44,12 +45,12 @@ async function appendLedger(customerId: string | undefined, entry: RedemptionEnt
   return next
 }
 
-function discountLabel(p: Promotion): string {
-  if (p.description) return p.description
-  return p.discount_type === 'PERCENT' ? `${p.discount_value}% off` : `${fmtMoney(p.discount_value)} off`
-}
-
 export default function Promotions() {
+  const { t } = useTranslation('profile')
+  function discountLabel(p: Promotion): string {
+    if (p.description) return p.description
+    return t('promotions.discountOff', { amount: p.discount_type === 'PERCENT' ? `${p.discount_value}%` : fmtMoney(p.discount_value) })
+  }
   const { customer } = useAuth()
   const [promos, setPromos] = useState<Promotion[]>([])
   const [ledger, setLedger] = useState<RedemptionEntry[]>([])
@@ -70,11 +71,11 @@ export default function Promotions() {
     const useCode = (p?.code ?? code).trim()
     const amt = Number(amount)
     if (!useCode) {
-      setError('Enter a promo code')
+      setError(t('promotions.enterCodeError'))
       return
     }
     if (!amt || amt <= 0) {
-      setError('Enter your order amount so we can calculate real savings')
+      setError(t('promotions.enterAmountError'))
       return
     }
     setApplying(true)
@@ -83,10 +84,10 @@ export default function Promotions() {
       await fixoSdk.usePromotion(validated.promo_id)
       const entry: RedemptionEntry = { promo_id: validated.promo_id, code: validated.code, savings: validated.discount_amount, currency: 'TZS', at: new Date().toISOString() }
       setLedger(await appendLedger(customer?.customer_id, entry))
-      setApplied(`${validated.code} applied — saved ${fmtMoney(validated.discount_amount)}`)
+      setApplied(t('promotions.appliedMessage', { code: validated.code, amount: fmtMoney(validated.discount_amount) }))
       setCode('')
     } catch {
-      setError('This code is not valid, expired, or below its minimum order amount')
+      setError(t('promotions.invalidError'))
     } finally {
       setApplying(false)
     }
@@ -94,16 +95,16 @@ export default function Promotions() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Promotions" back="/(tabs)/profile" />
+      <ScreenHeader title={t('promotions.title')} back="/(tabs)/profile" />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View className="px-6 pt-2">
-          <Text className="text-[14px] font-semibold text-ink mb-2">Have a promo code?</Text>
+          <Text className="text-[14px] font-semibold text-ink mb-2">{t('promotions.havePromoCode')}</Text>
           <View className="gap-2">
             <TextInput
               value={code}
               onChangeText={setCode}
               autoCapitalize="characters"
-              placeholder="Enter code"
+              placeholder={t('promotions.codePlaceholder')}
               placeholderTextColor="#9e9e9e"
               className="rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
             />
@@ -112,12 +113,12 @@ export default function Promotions() {
                 value={amount}
                 onChangeText={setAmount}
                 keyboardType="decimal-pad"
-                placeholder="Order amount (TZS)"
+                placeholder={t('promotions.amountPlaceholder')}
                 placeholderTextColor="#9e9e9e"
                 className="flex-1 rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
               />
               <Pressable onPress={() => apply()} disabled={applying} className="items-center justify-center rounded-2xl bg-primary px-5 py-4">
-                <Text className="text-[14px] font-bold text-white">Apply</Text>
+                <Text className="text-[14px] font-bold text-white">{t('promotions.apply')}</Text>
               </Pressable>
             </View>
           </View>
@@ -133,10 +134,10 @@ export default function Promotions() {
             </View>
           )}
 
-          <Text className="text-[16px] font-bold text-ink mt-7 mb-3">Available Promotions</Text>
+          <Text className="text-[16px] font-bold text-ink mt-7 mb-3">{t('promotions.availablePromotions')}</Text>
           <View className="flex-col gap-3">
             {promos.length === 0 ? (
-              <Text className="text-[13px] text-muted">No active promotions right now.</Text>
+              <Text className="text-[13px] text-muted">{t('promotions.noActive')}</Text>
             ) : (
               promos.map((p) => (
                 <Pressable key={p.promo_id} onPress={() => setCode(p.code)} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
@@ -153,11 +154,11 @@ export default function Promotions() {
             )}
           </View>
 
-          <Text className="text-[16px] font-bold text-ink mt-7 mb-3">Redemption History</Text>
+          <Text className="text-[16px] font-bold text-ink mt-7 mb-3">{t('promotions.redemptionHistory')}</Text>
           {ledger.length === 0 ? (
             <View className="items-center py-8">
               <HistoryIcon size={40} color="#e0e0e0" />
-              <Text className="text-[13px] text-muted mt-2">Promotions you apply will show up here.</Text>
+              <Text className="text-[13px] text-muted mt-2">{t('promotions.redemptionEmpty')}</Text>
             </View>
           ) : (
             <View className="flex-col gap-3">
