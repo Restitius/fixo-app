@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../../components/ScreenHeader'
 import TextField from '../../../components/TextField'
 import Button from '../../../components/Button'
@@ -10,6 +11,7 @@ import { useAuth, ApiError } from '../../../lib/auth-context'
 import { LockIcon, ShieldCheckIcon } from '../../../components/icons'
 
 export default function CreatePassword() {
+  const { t } = useTranslation('auth')
   const { email = '', code = '' } = useLocalSearchParams<{ email: string; code: string }>()
   const { resetPassword } = useAuth()
   const [password, setPassword] = useState('')
@@ -20,18 +22,18 @@ export default function CreatePassword() {
 
   useEffect(() => {
     if (!success) return
-    const t = setTimeout(() => router.replace('/auth/sign-in'), 2200)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => router.replace('/auth/sign-in'), 2200)
+    return () => clearTimeout(timer)
   }, [success])
 
   async function submit() {
     setError(null)
     if (password.length < 8) {
-      setError('Password must be at least 8 characters')
+      setError(t('newPassword.tooShort'))
       return
     }
     if (password !== confirm) {
-      setError('Passwords do not match')
+      setError(t('newPassword.mismatch'))
       return
     }
     setLoading(true)
@@ -42,7 +44,7 @@ export default function CreatePassword() {
       await resetPassword(email, code, password)
       setSuccess(true)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Could not reset your password — the code may have expired')
+      setError(err instanceof ApiError ? err.message : t('newPassword.genericError'))
     } finally {
       setLoading(false)
     }
@@ -50,18 +52,18 @@ export default function CreatePassword() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScreenHeader title="Create New Password" back="/auth/forgot-password/otp" />
+      <ScreenHeader title={t('newPassword.title')} back="/auth/forgot-password/otp" />
 
       <View className="flex-1 px-6 pt-4">
         <View className="size-32 rounded-full bg-primary/8 items-center justify-center self-center">
           <Text style={{ fontSize: 56 }}>🔑</Text>
         </View>
 
-        <Text className="text-[18px] font-bold text-ink mt-6">Create Your New Password</Text>
+        <Text className="text-[18px] font-bold text-ink mt-6">{t('newPassword.heading')}</Text>
 
         <View className="gap-4 mt-4">
-          <TextField icon={<LockIcon color="#6C7585" />} placeholder="Password" isPassword value={password} onChangeText={setPassword} />
-          <TextField icon={<LockIcon color="#6C7585" />} placeholder="Confirm password" isPassword value={confirm} onChangeText={setConfirm} />
+          <TextField icon={<LockIcon color="#6C7585" />} placeholder={t('newPassword.passwordPlaceholder')} isPassword value={password} onChangeText={setPassword} />
+          <TextField icon={<LockIcon color="#6C7585" />} placeholder={t('newPassword.confirmPlaceholder')} isPassword value={confirm} onChangeText={setConfirm} />
         </View>
 
         {error && <Text className="text-center text-[13px] text-red-500 mt-4">{error}</Text>}
@@ -69,7 +71,7 @@ export default function CreatePassword() {
         <View className="flex-1" />
 
         <View className="pb-10 pt-6">
-          <Button onPress={submit} loading={loading}>Continue</Button>
+          <Button onPress={submit} loading={loading}>{t('newPassword.continue')}</Button>
         </View>
       </View>
 
@@ -77,9 +79,9 @@ export default function CreatePassword() {
         <View className="size-24 rounded-full bg-primary items-center justify-center mb-6">
           <ShieldCheckIcon size={44} color="#ffffff" />
         </View>
-        <Text className="text-primary text-[22px] font-bold">Password Reset!</Text>
+        <Text className="text-primary text-[22px] font-bold">{t('newPassword.successTitle')}</Text>
         <Text className="text-[15px] text-ink mt-3 text-center">
-          Your password has been changed and you've been signed out everywhere for security. Sign in with your new password.
+          {t('newPassword.successBody')}
         </Text>
       </CenterModal>
     </SafeAreaView>
