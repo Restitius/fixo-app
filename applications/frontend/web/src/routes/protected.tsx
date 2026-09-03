@@ -1,5 +1,6 @@
 // Protected route wrapper — redirects unauthenticated users to login.
 import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 
@@ -8,12 +9,13 @@ export const Route = createFileRoute("/protected")({
 });
 
 function ProtectedLayout() {
+  const { t } = useTranslation("auth");
   const { access_token, loading, logout, customer } = useAuth();
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{t("protected.loading")}</div>
       </div>
     );
   }
@@ -27,10 +29,10 @@ function ProtectedLayout() {
       <header className="border-b px-4 py-3">
         <div className="container mx-auto flex items-center justify-between">
           <span className="font-medium">
-            {customer?.full_name ?? "Authenticated"}
+            {customer?.full_name ?? t("protected.authenticatedFallback")}
           </span>
           <Button variant="ghost" size="sm" onClick={logout}>
-            Logout
+            {t("protected.logout")}
           </Button>
         </div>
       </header>
