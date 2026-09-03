@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { router, usePathname } from 'expo-router'
 import { BookingsIcon, CalendarIcon, ChatBubbleIcon, HomeIcon, UserIcon } from './icons'
-import { CHATS } from '../data/mock'
+import { bookingApi, fixoSdk } from '../lib/api-client'
 
 const TABS = [
   { to: '/(tabs)/home', match: '/home', icon: HomeIcon, label: 'Home' },
@@ -11,10 +12,27 @@ const TABS = [
   { to: '/(tabs)/profile', match: '/profile', icon: UserIcon, label: 'Profile' },
 ] as const
 
-const hasUnread = CHATS.some((c) => c.unread > 0)
-
 export default function BottomNav() {
   const pathname = usePathname()
+  const [hasUnread, setHasUnread] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    fixoSdk
+      .bookingHistory(undefined, 20, 0)
+      .then((bookings) =>
+        Promise.all(
+          bookings.filter((b) => b.provider_name).map((b) => bookingApi.listBookingMessages(b.booking_id, 1, 0).then((r) => r.unread_count).catch(() => 0)),
+        ),
+      )
+      .then((counts) => {
+        if (!cancelled) setHasUnread(counts.some((c) => c > 0))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [pathname])
 
   return (
     <View className="absolute bottom-4 left-4 right-4 z-30">
