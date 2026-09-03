@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../../components/ScreenHeader'
 import Button from '../../../components/Button'
+import { useAuth } from '../../../lib/auth-context'
 import { BackspaceIcon } from '../../../components/icons'
 
-const LENGTH = 4
+// Real codes are 6 digits (matches the backend's f"{secrets.randbelow(1_000_000):06d}"),
+// not the mock's 4-digit PIN-style code. The code itself isn't verified here —
+// the backend verifies it atomically together with setting the new password
+// on the next screen, so there's nothing real to "check" until then.
+const LENGTH = 6
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'back']
 
 export default function OtpVerify() {
+  const { email = '', otp_dev } = useLocalSearchParams<{ email: string; otp_dev?: string }>()
+  const { forgotPassword } = useAuth()
   const [digits, setDigits] = useState<string[]>([])
   const [seconds, setSeconds] = useState(55)
+  const [resending, setResending] = useState(false)
 
   useEffect(() => {
     if (seconds <= 0) return
@@ -25,6 +33,18 @@ export default function OtpVerify() {
     setDigits((d) => (d.length < LENGTH ? [...d, key] : d))
   }
 
+  async function resend() {
+    if (seconds > 0 || resending) return
+    setResending(true)
+    try {
+      await forgotPassword(email)
+      setSeconds(55)
+      setDigits([])
+    } finally {
+      setResending(false)
+    }
+  }
+
   const complete = digits.length === LENGTH
 
   return (
@@ -32,33 +52,37 @@ export default function OtpVerify() {
       <ScreenHeader title="Forgot Password" back="/auth/forgot-password" />
 
       <View className="flex-1 px-6 pt-10">
-        <Text className="text-center text-[16px] text-ink">Code has been send to +1 111 ******99</Text>
+        <Text className="text-center text-[16px] text-ink">Code has been sent to {email}</Text>
+        {otp_dev && <Text className="text-center text-[12px] text-muted mt-1">Dev mode code: {otp_dev}</Text>}
 
-        <View className="flex-row justify-center gap-4 mt-8">
+        <View className="flex-row justify-center flex-wrap gap-3 mt-8">
           {Array.from({ length: LENGTH }).map((_, i) => {
             const filled = digits[i] !== undefined
             const active = i === digits.length
             return (
               <View
                 key={i}
-                className={`size-16 rounded-2xl items-center justify-center ${active ? 'border-2 border-primary bg-primary/5' : 'bg-[#f5f5f5]'}`}
+                className={`size-12 rounded-2xl items-center justify-center ${active ? 'border-2 border-primary bg-primary/5' : 'bg-[#f5f5f5]'}`}
               >
-                <Text className={`text-[22px] font-bold ${active ? 'text-primary' : 'text-ink'}`}>{digits[i] ?? ''}</Text>
+                <Text className={`text-[20px] font-bold ${active ? 'text-primary' : 'text-ink'}`}>{filled ? digits[i] : ''}</Text>
               </View>
             )
           })}
         </View>
 
         <Text className="text-center text-[14px] text-muted mt-6">
-          Resend code in{' '}
-          <Text onPress={() => seconds === 0 && setSeconds(55)} className="text-primary font-semibold">
-            {seconds}
-          </Text>{' '}
-          s
+          {seconds > 0 ? (
+            <>Resend code in <Text className="text-primary font-semibold">{seconds}</Text>s</>
+          ) : (
+            <Text onPress={resend} className="text-primary font-semibold">{resending ? 'Resending…' : 'Resend code'}</Text>
+          )}
         </Text>
 
         <View className="mt-8">
-          <Button disabled={!complete} onPress={() => router.push('/auth/forgot-password/new-password')}>
+          <Button
+            disabled={!complete}
+            onPress={() => router.push({ pathname: '/auth/forgot-password/new-password', params: { email, code: digits.join('') } })}
+          >
             Verify
           </Button>
         </View>
