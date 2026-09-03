@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import Button from '../../components/Button'
 import { BackspaceIcon } from '../../components/icons'
@@ -10,6 +11,7 @@ const LENGTH = 4
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'back']
 
 export default function CreatePin() {
+  const { t } = useTranslation('auth')
   const [digits, setDigits] = useState<string[]>([])
 
   function press(key: string) {
@@ -22,10 +24,10 @@ export default function CreatePin() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScreenHeader title="Create New PIN" back="/auth/fill-profile" />
+      <ScreenHeader title={t('createPin.title')} back="/auth/fill-profile" />
 
       <View className="flex-1 px-6 pt-10">
-        <Text className="text-center text-[16px] text-ink">Add a PIN number to make your account more secure.</Text>
+        <Text className="text-center text-[16px] text-ink">{t('createPin.subtitle')}</Text>
 
         <View className="flex-row justify-center gap-4 mt-10">
           {Array.from({ length: LENGTH }).map((_, i) => {
@@ -41,7 +43,7 @@ export default function CreatePin() {
 
         <View className="mt-10">
           <Button disabled={!complete} onPress={() => router.push('/auth/set-fingerprint')}>
-            Continue
+            {t('createPin.continue')}
           </Button>
         </View>
       </View>

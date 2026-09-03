@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../../components/ScreenHeader'
 import Button from '../../../components/Button'
 import { useAuth } from '../../../lib/auth-context'
@@ -15,6 +16,7 @@ const LENGTH = 6
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'back']
 
 export default function OtpVerify() {
+  const { t } = useTranslation('auth')
   const { email = '', otp_dev } = useLocalSearchParams<{ email: string; otp_dev?: string }>()
   const { forgotPassword } = useAuth()
   const [digits, setDigits] = useState<string[]>([])
@@ -49,11 +51,11 @@ export default function OtpVerify() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScreenHeader title="Forgot Password" back="/auth/forgot-password" />
+      <ScreenHeader title={t('forgotPassword.title')} back="/auth/forgot-password" />
 
       <View className="flex-1 px-6 pt-10">
-        <Text className="text-center text-[16px] text-ink">Code has been sent to {email}</Text>
-        {otp_dev && <Text className="text-center text-[12px] text-muted mt-1">Dev mode code: {otp_dev}</Text>}
+        <Text className="text-center text-[16px] text-ink">{t('forgotPassword.codeSentTo', { email })}</Text>
+        {otp_dev && <Text className="text-center text-[12px] text-muted mt-1">{t('forgotPassword.devModeCode', { code: otp_dev })}</Text>}
 
         <View className="flex-row justify-center flex-wrap gap-3 mt-8">
           {Array.from({ length: LENGTH }).map((_, i) => {
@@ -72,9 +74,9 @@ export default function OtpVerify() {
 
         <Text className="text-center text-[14px] text-muted mt-6">
           {seconds > 0 ? (
-            <>Resend code in <Text className="text-primary font-semibold">{seconds}</Text>s</>
+            t('forgotPassword.resendIn', { seconds })
           ) : (
-            <Text onPress={resend} className="text-primary font-semibold">{resending ? 'Resending…' : 'Resend code'}</Text>
+            <Text onPress={resend} className="text-primary font-semibold">{resending ? t('forgotPassword.resending') : t('forgotPassword.resendCta')}</Text>
           )}
         </Text>
 
@@ -83,7 +85,7 @@ export default function OtpVerify() {
             disabled={!complete}
             onPress={() => router.push({ pathname: '/auth/forgot-password/new-password', params: { email, code: digits.join('') } })}
           >
-            Verify
+            {t('forgotPassword.verifyCta')}
           </Button>
         </View>
       </View>

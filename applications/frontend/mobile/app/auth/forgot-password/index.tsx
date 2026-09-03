@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../../components/ScreenHeader'
 import TextField from '../../../components/TextField'
 import Button from '../../../components/Button'
@@ -13,6 +14,7 @@ import { MailIcon } from '../../../components/icons'
 // real path rather than the original mock's fake "SMS or Email" choice with
 // pre-filled fake masked contact info.
 export default function ForgotPassword() {
+  const { t } = useTranslation('auth')
   const { forgotPassword } = useAuth()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,7 +23,7 @@ export default function ForgotPassword() {
   async function submit() {
     setError(null)
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError('Enter a valid email')
+      setError(t('forgotPassword.invalidEmail'))
       return
     }
     setLoading(true)
@@ -32,7 +34,7 @@ export default function ForgotPassword() {
         params: { email: email.trim(), ...(otp ? { otp_dev: otp } : {}) },
       })
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Could not send a reset code')
+      setError(err instanceof ApiError ? err.message : t('forgotPassword.genericError'))
     } finally {
       setLoading(false)
     }
@@ -40,7 +42,7 @@ export default function ForgotPassword() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScreenHeader title="Forgot Password" back="/auth/sign-in" />
+      <ScreenHeader title={t('forgotPassword.title')} back="/auth/sign-in" />
 
       <View className="flex-1 px-6 pt-6">
         <View className="size-32 rounded-full bg-primary/8 items-center justify-center self-center">
@@ -48,7 +50,7 @@ export default function ForgotPassword() {
         </View>
 
         <Text className="text-[18px] font-medium text-ink mt-6 text-center">
-          Enter your account email — we'll send a real 6-digit code to reset your password.
+          {t('forgotPassword.instructions')}
         </Text>
 
         <View className="mt-6">
@@ -67,7 +69,7 @@ export default function ForgotPassword() {
         <View className="flex-1" />
 
         <View className="pb-10 pt-6">
-          <Button onPress={submit} loading={loading}>Send Reset Code</Button>
+          <Button onPress={submit} loading={loading}>{t('forgotPassword.submitCta')}</Button>
         </View>
       </View>
     </SafeAreaView>
