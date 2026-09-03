@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "我们以亲民的价格提供专业服务",
+    "slide2": "最佳效果与您的满意度是我们的首要任务",
+    "slide3": "让我们为您的家带来精彩的改变",
+    "next": "下一步",
+    "getStarted": "开始使用"
+  },
+  "bookmarks": {
+    "title": "我的收藏",
+    "emptyTitle": "暂无收藏",
+    "emptySubtitle": "您收藏的服务商将显示在这里。",
+    "removeConfirmTitle": "移除收藏？",
+    "removeConfirmBody": "{{name}} 将从您的收藏中移除。",
+    "cancel": "取消",
+    "remove": "移除"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "暂无通知。"
+  },
+  "offers": {
+    "title": "特别优惠",
+    "empty": "目前没有正在进行的促销活动。",
+    "discountOff": "优惠 {{amount}}",
+    "codeValidUntil": "代码 {{code}} · 有效期至 {{date}}"
+  },
+  "popular": {
+    "title": "最受欢迎",
+    "empty": "暂无可用服务商。"
+  },
+  "search": {
+    "placeholder": "搜索服务...",
+    "hint": "在我们真实的服务目录中搜索。",
+    "noResultsTitle": "未找到结果",
+    "noResultsSubtitle": "请尝试其他关键词或调整筛选条件。",
+    "resultsFor": "找到 {{count}} 条“{{query}}”的结果",
+    "filtersTitle": "筛选",
+    "category": "分类",
+    "all": "全部",
+    "applyFilters": "应用筛选"
+  }
+}

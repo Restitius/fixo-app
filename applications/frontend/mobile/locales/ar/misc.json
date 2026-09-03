@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "نقدم خدمة احترافية بسعر مناسب",
+    "slide2": "أفضل النتائج ورضاك هما أولويتنا القصوى",
+    "slide3": "لنقم بتغييرات رائعة في منزلك",
+    "next": "التالي",
+    "getStarted": "ابدأ الآن"
+  },
+  "bookmarks": {
+    "title": "المفضلة",
+    "emptyTitle": "لا توجد عناصر مفضلة بعد",
+    "emptySubtitle": "سيظهر هنا مزودو الخدمة الذين تحفظهم.",
+    "removeConfirmTitle": "إزالة من المفضلة؟",
+    "removeConfirmBody": "سيتم إزالة {{name}} من المفضلة لديك.",
+    "cancel": "إلغاء",
+    "remove": "إزالة"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "لا توجد إشعارات بعد."
+  },
+  "offers": {
+    "title": "عروض خاصة",
+    "empty": "لا توجد عروض ترويجية نشطة حاليًا.",
+    "discountOff": "خصم {{amount}}",
+    "codeValidUntil": "الرمز {{code}} · صالح حتى {{date}}"
+  },
+  "popular": {
+    "title": "الأكثر شيوعًا",
+    "empty": "لا يوجد مزودو خدمة متاحون بعد."
+  },
+  "search": {
+    "placeholder": "ابحث عن خدمات...",
+    "hint": "ابحث في كتالوج خدماتنا الحقيقي.",
+    "noResultsTitle": "لم يتم العثور على نتائج",
+    "noResultsSubtitle": "جرّب كلمة مختلفة أو عدّل عوامل التصفية.",
+    "resultsFor": "{{count}} نتيجة لـ \"{{query}}\"",
+    "filtersTitle": "عوامل التصفية",
+    "category": "الفئة",
+    "all": "الكل",
+    "applyFilters": "تطبيق عوامل التصفية"
+  }
+}

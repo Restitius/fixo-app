@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "Tunatoa huduma bora kwa bei nzuri",
+    "slide2": "Matokeo bora na kuridhika kwako ndio kipaumbele chetu",
+    "slide3": "Hebu tufanye mabadiliko mazuri nyumbani kwako",
+    "next": "Endelea",
+    "getStarted": "Anza"
+  },
+  "bookmarks": {
+    "title": "Alama Zangu",
+    "emptyTitle": "Hakuna alama bado",
+    "emptySubtitle": "Watoa huduma unaowahifadhi wataonekana hapa.",
+    "removeConfirmTitle": "Ondoa alama?",
+    "removeConfirmBody": "{{name}} ataondolewa kwenye alama zako.",
+    "cancel": "Ghairi",
+    "remove": "Ondoa"
+  },
+  "notifications": {
+    "title": "Arifa",
+    "empty": "Hakuna arifa bado."
+  },
+  "offers": {
+    "title": "Ofa Maalum",
+    "empty": "Hakuna matangazo yanayoendelea kwa sasa.",
+    "discountOff": "Punguzo la {{amount}}",
+    "codeValidUntil": "Msimbo {{code}} · Inatumika hadi {{date}}"
+  },
+  "popular": {
+    "title": "Maarufu Zaidi",
+    "empty": "Hakuna watoa huduma bado."
+  },
+  "search": {
+    "placeholder": "Tafuta huduma...",
+    "hint": "Tafuta katika orodha yetu halisi ya huduma.",
+    "noResultsTitle": "Hakuna matokeo",
+    "noResultsSubtitle": "Jaribu neno lingine au badilisha vichujio vyako.",
+    "resultsFor": "Matokeo {{count}} ya \"{{query}}\"",
+    "filtersTitle": "Vichujio",
+    "category": "Kategoria",
+    "all": "Zote",
+    "applyFilters": "Tumia Vichujio"
+  }
+}
