@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "选择服务",
+    "details": "预订详情",
+    "address": "您的地址",
+    "review": "查看摘要",
+    "provider": "选择服务商",
+    "payment": "付款",
+    "pin": "确认付款"
+  },
+  "service": {
+    "realServicesBy": "{{name}} 提供的真实服务。",
+    "noServices": "该服务商尚未列出服务。",
+    "continue": "继续"
+  },
+  "details": {
+    "describeJob": "描述工作内容",
+    "placeholder": "您需要什么服务？（至少10个字符）",
+    "minChars": "{{count}}/10 最少字符",
+    "preferredDate": "首选日期",
+    "preferredTime": "首选时间",
+    "continue": "继续",
+    "weekdayMo": "一",
+    "weekdayTu": "二",
+    "weekdayWe": "三",
+    "weekdayTh": "四",
+    "weekdayFr": "五",
+    "weekdaySa": "六",
+    "weekdaySu": "日",
+    "morning": "上午",
+    "morningHint": "8:00 – 12:00",
+    "afternoon": "下午",
+    "afternoonHint": "12:00 – 17:00",
+    "evening": "晚上",
+    "eveningHint": "17:00 – 21:00",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "添加新地址",
+    "labelPlaceholder": "标签（例如：家）",
+    "recipientPlaceholder": "收件人姓名",
+    "phonePlaceholder": "电话",
+    "streetPlaceholder": "街道地址",
+    "cityPlaceholder": "城市",
+    "regionPlaceholder": "地区（可选）",
+    "saveAddress": "保存地址",
+    "cancel": "取消",
+    "continue": "继续"
+  },
+  "review": {
+    "labelService": "服务",
+    "labelProvider": "服务商",
+    "labelDate": "日期",
+    "labelTime": "时间",
+    "labelAddress": "地址",
+    "notSet": "未设置",
+    "promoCode": "优惠码",
+    "promoPlaceholder": "输入代码",
+    "apply": "应用",
+    "promoInvalid": "此代码无效或已过期",
+    "promo": "优惠",
+    "total": "总计",
+    "submitRequest": "提交请求",
+    "genericError": "无法提交此请求"
+  },
+  "provider": {
+    "finding": "正在为您寻找评分最高的专业人士…",
+    "noneAvailableTitle": "目前没有可用的服务商",
+    "noneAvailableSubtitle": "请稍后重试，或稍后查看我的预订。",
+    "errorTitle": "出了点问题",
+    "retry": "重试",
+    "noQuotesTitle": "暂无即时报价",
+    "noQuotesSubtitle": "匹配的服务商尚未发送报价。请稍后查看我的预订。",
+    "notMatchedNotice": "{{name}} 未与此请求匹配——以下是为您匹配的服务商。",
+    "leadTime": "{{rating}} · {{days}}天交付周期",
+    "confirming": "确认中…",
+    "acceptAndContinue": "接受并继续"
+  },
+  "payment": {
+    "booking": "预订",
+    "amountDue": "应付金额",
+    "yourMethods": "您的支付方式",
+    "wallet": "FIXO 钱包",
+    "default": "默认",
+    "authorizeNotice": "授权将对此预订执行真实的付款授权流程。",
+    "authorizePayment": "授权付款"
+  },
+  "pin": {
+    "enterToConfirm": "输入您的PIN码以确认",
+    "continue": "继续"
+  },
+  "success": {
+    "title": "预订成功！",
+    "body": "您的付款已授权，预订已确认。",
+    "viewReceipt": "查看电子收据",
+    "backToBookings": "返回预订"
+  },
+  "receipt": {
+    "title": "电子收据",
+    "share": "分享收据",
+    "download": "下载收据",
+    "print": "打印",
+    "labelService": "服务",
+    "labelProvider": "服务商",
+    "labelDate": "日期",
+    "labelTime": "时间",
+    "labelAddress": "地址",
+    "amount": "金额",
+    "arrivalCode": "到达代码",
+    "paymentId": "支付编号",
+    "status": "状态",
+    "serviceFallback": "服务"
+  },
+  "cancel": {
+    "title": "取消预订",
+    "confirmTitle": "确认取消",
+    "whyCancelling": "您为什么要取消？",
+    "reasonChangeOfPlans": "计划变更",
+    "reasonBetterPrice": "找到了更好的价格",
+    "reasonMistake": "误操作预订",
+    "reasonUnavailable": "服务商不可用",
+    "reasonOther": "其他",
+    "continue": "继续",
+    "cancelling": "正在取消您的预订…",
+    "enterPinToConfirm": "输入您的PIN码以确认取消",
+    "genericError": "无法取消此预订——可能已超过可取消时限。",
+    "cancelledTitle": "预订已取消",
+    "cancelledBody": "您与 {{provider}} 的预订已取消。",
+    "cancelledBodyRelease": " 您的 {{amount}} 授权将被释放。",
+    "providerFallback": "该服务商",
+    "backToBookings": "返回预订"
+  }
+}
