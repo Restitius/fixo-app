@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import Sheet from '../components/Sheet'
 import Button from '../components/Button'
 import { ArrowLeftIcon, FilterIcon, SearchIcon } from '../components/icons'
@@ -9,6 +10,7 @@ import { bookingApi, type CatalogCategory, type CatalogServiceResult } from '../
 import { colorForSeed, emojiForCategory } from '../lib/category-visuals'
 
 export default function Search() {
+  const { t } = useTranslation('misc')
   const [query, setQuery] = useState('')
   const [filterOpen, setFilterOpen] = useState(false)
   const [category, setCategory] = useState<string | null>(null)
@@ -51,7 +53,7 @@ export default function Search() {
             autoFocus
             value={query}
             onChangeText={setQuery}
-            placeholder="Search services..."
+            placeholder={t('search.placeholder')}
             placeholderTextColor="#9e9e9e"
             className="flex-1 text-[15px] text-ink"
           />
@@ -63,19 +65,19 @@ export default function Search() {
 
       {filtered === null ? (
         <View className="px-6 mt-4">
-          <Text className="text-[13px] text-muted">Search across our real service catalog.</Text>
+          <Text className="text-[13px] text-muted">{t('search.hint')}</Text>
         </View>
       ) : filtered.length === 0 ? (
         <View className="flex-1 items-center justify-center px-10">
           <SearchIcon size={64} color="#e0e0e0" />
-          <Text className="text-[16px] font-semibold text-ink mt-4">No results found</Text>
-          <Text className="text-[14px] text-muted mt-1 text-center">Try a different keyword or adjust your filters.</Text>
+          <Text className="text-[16px] font-semibold text-ink mt-4">{t('search.noResultsTitle')}</Text>
+          <Text className="text-[14px] text-muted mt-1 text-center">{t('search.noResultsSubtitle')}</Text>
         </View>
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
           <View className="flex-col gap-3 px-6 mt-4">
             <Text className="text-[13px] text-muted">
-              {filtered.length} results for "{query}"
+              {t('search.resultsFor', { count: filtered.length, query })}
             </Text>
             {filtered.map((r) => (
               <Pressable
@@ -99,12 +101,12 @@ export default function Search() {
 
       <Sheet open={filterOpen} onClose={() => setFilterOpen(false)}>
         <View className="w-10 h-1 bg-hairline rounded-full self-center mb-6" />
-        <Text className="text-[18px] font-bold text-ink mb-4">Filters</Text>
+        <Text className="text-[18px] font-bold text-ink mb-4">{t('search.filtersTitle')}</Text>
 
-        <Text className="text-[14px] font-semibold text-ink mb-2">Category</Text>
+        <Text className="text-[14px] font-semibold text-ink mb-2">{t('search.category')}</Text>
         <View className="flex-row flex-wrap gap-2 mb-6">
           <Pressable onPress={() => setCategory(null)} className={`px-4 py-2 rounded-full ${!category ? 'bg-primary' : 'bg-[#f5f5f5]'}`}>
-            <Text className={`text-[13px] ${!category ? 'text-white' : 'text-ink'}`}>All</Text>
+            <Text className={`text-[13px] ${!category ? 'text-white' : 'text-ink'}`}>{t('search.all')}</Text>
           </Pressable>
           {categories.map((c) => (
             <Pressable
@@ -119,7 +121,7 @@ export default function Search() {
           ))}
         </View>
 
-        <Button onPress={() => setFilterOpen(false)}>Apply Filters</Button>
+        <Button onPress={() => setFilterOpen(false)}>{t('search.applyFilters')}</Button>
       </Sheet>
     </SafeAreaView>
   )

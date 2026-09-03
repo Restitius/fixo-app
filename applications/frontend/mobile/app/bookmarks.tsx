@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../components/ScreenHeader'
 import ProviderCard from '../components/ProviderCard'
 import Button from '../components/Button'
@@ -9,6 +10,7 @@ import { BookmarkIcon } from '../components/icons'
 import { favoritesApi, type FavoriteProvider } from '../lib/api-client'
 
 export default function Bookmarks() {
+  const { t } = useTranslation('misc')
   const [bookmarked, setBookmarked] = useState<FavoriteProvider[] | null>(null)
   const [toRemove, setToRemove] = useState<FavoriteProvider | null>(null)
   const [removing, setRemoving] = useState(false)
@@ -31,7 +33,7 @@ export default function Bookmarks() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="My Bookmark" back="/(tabs)/home" />
+      <ScreenHeader title={t('bookmarks.title')} back="/(tabs)/home" />
 
       {bookmarked === null ? (
         <View className="px-6 mt-4">
@@ -40,8 +42,8 @@ export default function Bookmarks() {
       ) : bookmarked.length === 0 ? (
         <View className="flex-1 items-center justify-center px-10">
           <BookmarkIcon size={64} color="#e0e0e0" />
-          <Text className="text-[16px] font-semibold text-ink mt-4">No bookmarks yet</Text>
-          <Text className="text-[14px] text-muted mt-1 text-center">Providers you save will show up here.</Text>
+          <Text className="text-[16px] font-semibold text-ink mt-4">{t('bookmarks.emptyTitle')}</Text>
+          <Text className="text-[14px] text-muted mt-1 text-center">{t('bookmarks.emptySubtitle')}</Text>
         </View>
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
@@ -55,19 +57,19 @@ export default function Bookmarks() {
 
       <Sheet open={!!toRemove} onClose={() => setToRemove(null)}>
         <View className="w-10 h-1 bg-hairline rounded-full self-center mb-6" />
-        <Text className="text-[18px] font-bold text-ink text-center">Remove bookmark?</Text>
+        <Text className="text-[18px] font-bold text-ink text-center">{t('bookmarks.removeConfirmTitle')}</Text>
         <Text className="text-[14px] text-muted text-center mt-2">
-          {toRemove?.display_name} will be removed from your bookmarks.
+          {t('bookmarks.removeConfirmBody', { name: toRemove?.display_name })}
         </Text>
         <View className="flex-row gap-3 mt-6">
           <View className="flex-1">
             <Button variant="outline" onPress={() => setToRemove(null)}>
-              Cancel
+              {t('bookmarks.cancel')}
             </Button>
           </View>
           <View className="flex-1">
             <Button loading={removing} onPress={confirmRemove}>
-              Remove
+              {t('bookmarks.remove')}
             </Button>
           </View>
         </View>
