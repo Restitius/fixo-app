@@ -9,6 +9,7 @@ from app.ports.persistence.account_ports import (
     PrivacyRepositoryPort,
     AccountClosureRepositoryPort,
 )
+from app.shared.exceptions.hierarchy import AuthenticationError
 
 
 class PaymentMethodService:
@@ -67,15 +68,24 @@ class SecurityService:
         repo: SecurityRepositoryPort,
         hasher: Any | None = None,
         sessions_repo: Any | None = None,
+        customers: Any | None = None,
     ) -> None:
         self._repo = repo
         self._hasher = hasher
         self._sessions = sessions_repo
+        self._customers = customers
 
     async def change_password(self, customer_id: str, current_password: str, new_password: str) -> bool:
         if len(new_password) < 8:
             raise ValueError("Password must be at least 8 characters")
-        result = await self._repo.change_password(customer_id, new_password)
+        # Previously this verified nothing and wrote new_password straight into
+        # password_hash unhashed — anyone holding a valid session could rewrite
+        # the account's password to whatever they liked, in plaintext. Fixed to
+        # actually verify the current password and hash the new one.
+        customer = await self._customers.get_by_id_with_hash(customer_id)
+        if not customer or not self._hasher.verify(current_password, customer["password_hash"]):
+            raise AuthenticationError("Current password is incorrect")
+        result = await self._repo.change_password(customer_id, self._hasher.hash(new_password))
         if not result:
             raise ValueError("Password update failed")
         return True

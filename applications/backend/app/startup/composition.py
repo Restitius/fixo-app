@@ -525,7 +525,12 @@ class Composition:
         """SecurityService â Module 46."""
         from app.domains.accounts.services.account_service import SecurityService
 
-        return SecurityService(self.security_repository, sessions_repo=self.session_repository)
+        return SecurityService(
+            self.security_repository,
+            hasher=self._hasher,
+            sessions_repo=self.session_repository,
+            customers=self.customer_repository,
+        )
 
     def privacy_service(self) -> Any:
         """PrivacyService â Module 49."""
