@@ -155,6 +155,21 @@ class AuthService:
             raise NotFoundError("Customer not found")
         return customer
 
+    async def update_profile(self, user_id: str, data: dict[str, Any]) -> dict[str, Any]:
+        params = {
+            "full_name": data["full_name"].strip() if data.get("full_name") else None,
+            "phone": data["phone"].strip() if data.get("phone") else None,
+            "preferred_language": data.get("preferred_language") or None,
+        }
+        updated = await self._customers.update_profile(user_id, params)
+        if not updated:
+            raise NotFoundError("Customer not found")
+        await self._publish("EVT.CUSTOMER.PROFILE_UPDATED", updated)
+        # update_profile.sql only RETURNINGs the columns it touches — re-fetch
+        # the full row so the response matches /auth/me's shape (email_verified,
+        # phone_verified, created_at, etc. that the client keeps in state).
+        return await self._customers.get_by_id(user_id)
+
     async def logout(self, user_id: str) -> dict[str, Any]:
         # Revoke all active sessions for the customer.
         await self._sessions.revoke_all(user_id)
