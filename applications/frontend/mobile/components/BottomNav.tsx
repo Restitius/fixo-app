@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { router, usePathname } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { BookingsIcon, CalendarIcon, ChatBubbleIcon, HomeIcon, UserIcon } from './icons'
 import { bookingApi, fixoSdk } from '../lib/api-client'
 
 const TABS = [
-  { to: '/(tabs)/home', match: '/home', icon: HomeIcon, label: 'Home' },
-  { to: '/(tabs)/bookings', match: '/bookings', icon: BookingsIcon, label: 'Bookings' },
-  { to: '/(tabs)/calendar', match: '/calendar', icon: CalendarIcon, label: 'Calendar' },
-  { to: '/(tabs)/inbox', match: '/inbox', icon: ChatBubbleIcon, label: 'Inbox' },
-  { to: '/(tabs)/profile', match: '/profile', icon: UserIcon, label: 'Profile' },
+  { to: '/(tabs)/home', match: '/home', icon: HomeIcon, labelKey: 'nav.home' },
+  { to: '/(tabs)/bookings', match: '/bookings', icon: BookingsIcon, labelKey: 'nav.bookings' },
+  { to: '/(tabs)/calendar', match: '/calendar', icon: CalendarIcon, labelKey: 'nav.calendar' },
+  { to: '/(tabs)/inbox', match: '/inbox', icon: ChatBubbleIcon, labelKey: 'nav.inbox' },
+  { to: '/(tabs)/profile', match: '/profile', icon: UserIcon, labelKey: 'nav.profile' },
 ] as const
 
 export default function BottomNav() {
+  const { t } = useTranslation('tabs')
   const pathname = usePathname()
   const [hasUnread, setHasUnread] = useState(false)
 
@@ -40,14 +42,14 @@ export default function BottomNav() {
         className="flex-row items-center justify-between gap-1 bg-white rounded-full p-1.5"
         style={{ shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 20, shadowOffset: { width: 0, height: 10 }, elevation: 8 }}
       >
-        {TABS.map(({ to, match, icon: Icon, label }) => {
+        {TABS.map(({ to, match, icon: Icon, labelKey }) => {
           const isActive = pathname.endsWith(match)
           return (
             <Pressable key={to} onPress={() => router.replace(to as any)}>
               {isActive ? (
                 <View className="flex-row items-center gap-2 rounded-full bg-primary pl-3 pr-4 py-2.5">
                   <Icon size={20} color="#ffffff" filled />
-                  <Text className="text-white text-[13px] font-semibold">{label}</Text>
+                  <Text className="text-white text-[13px] font-semibold">{t(labelKey)}</Text>
                 </View>
               ) : (
                 <View className="relative items-center justify-center size-11 rounded-full">
