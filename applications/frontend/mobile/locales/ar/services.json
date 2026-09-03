@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "جميع الخدمات"
+  },
+  "category": {
+    "titleFallback": "الخدمات",
+    "noProviders": "لا يوجد مزودو خدمة متاحون بعد."
+  },
+  "detail": {
+    "reviewsCount": "({{count}} تقييم)",
+    "activeSince": "نشط منذ",
+    "jobsDone": "الأعمال المنجزة",
+    "services": "الخدمات",
+    "about": "نبذة",
+    "readMore": "اقرأ المزيد...",
+    "servicesPricing": "الخدمات والأسعار",
+    "noServices": "لا توجد خدمات مدرجة بعد.",
+    "bookNow": "احجز الآن"
+  },
+  "chat": {
+    "providerFallback": "مزود الخدمة",
+    "loading": "جارٍ التحميل…",
+    "noMessages": "لا توجد رسائل بعد — قل مرحبًا!",
+    "placeholder": "رسالة..."
+  }
+}
