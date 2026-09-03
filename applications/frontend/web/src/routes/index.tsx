@@ -1,5 +1,6 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Area,
   AreaChart,
@@ -57,12 +58,13 @@ export const Route = createFileRoute("/")({
 
 // Entry point: landing for guests, dashboard for signed-in customers.
 function Home() {
+  const { t } = useTranslation("home");
   const { customer, loading, logout } = useAuth();
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-muted-foreground">Loading…</div>
+        <div className="text-muted-foreground">{t("loading")}</div>
       </div>
     );
   }
@@ -75,6 +77,7 @@ function Home() {
 }
 
 function Landing() {
+  const { t } = useTranslation("home");
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
       <div
@@ -95,10 +98,10 @@ function Landing() {
           </div>
           <nav className="flex items-center gap-2">
             <Button asChild variant="ghost">
-              <Link to="/login">Sign in</Link>
+              <Link to="/login">{t("landing.signIn")}</Link>
             </Button>
             <Button asChild>
-              <Link to="/register">Create account</Link>
+              <Link to="/register">{t("landing.createAccount")}</Link>
             </Button>
           </nav>
         </div>
@@ -106,41 +109,40 @@ function Landing() {
 
       <main className="container mx-auto flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-primary">
-          <Sparkles className="size-3.5" /> Trusted by homeowners across Tanzania
+          <Sparkles className="size-3.5" /> {t("landing.badge")}
         </span>
         <h1 className="mt-6 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
-          Home repairs,{" "}
+          {t("landing.headingPrefix")}{" "}
           <span className="bg-[image:var(--gradient-primary)] bg-clip-text text-transparent">
-            handled by pros you can trust
+            {t("landing.headingHighlight")}
           </span>
         </h1>
         <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-          Book verified handyman providers, follow every job live and keep your
-          whole home in one place.
+          {t("landing.subtitle")}
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg" className="h-12 px-8 text-base">
-            <Link to="/register">Get started free</Link>
+            <Link to="/register">{t("landing.getStarted")}</Link>
           </Button>
           <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base">
-            <Link to="/login">I already have an account</Link>
+            <Link to="/login">{t("landing.haveAccount")}</Link>
           </Button>
         </div>
 
         <div className="mt-20 grid w-full max-w-3xl gap-6 sm:grid-cols-3">
           {[
-            { icon: Wrench, t: "Book a pro", d: "Pick a service and get matched in minutes." },
-            { icon: ClipboardList, t: "Track live", d: "Follow arrival, work and completion." },
-            { icon: PackageCheck, t: "Pay safely", d: "Funds released only when you confirm." },
-          ].map(({ icon: Icon, t, d }) => (
+            { icon: Wrench, title: t("landing.feature1Title"), d: t("landing.feature1Desc") },
+            { icon: ClipboardList, title: t("landing.feature2Title"), d: t("landing.feature2Desc") },
+            { icon: PackageCheck, title: t("landing.feature3Title"), d: t("landing.feature3Desc") },
+          ].map(({ icon: Icon, title, d }) => (
             <div
-              key={t}
+              key={title}
               className="rounded-2xl bg-card p-6 text-left shadow-[var(--shadow-card)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]"
             >
               <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Icon className="size-5" />
               </span>
-              <h3 className="mt-4 font-semibold">{t}</h3>
+              <h3 className="mt-4 font-semibold">{title}</h3>
               <p className="mt-1 text-sm text-muted-foreground">{d}</p>
             </div>
           ))}
@@ -148,7 +150,7 @@ function Landing() {
       </main>
 
       <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} FIXO. All rights reserved.
+        {t("landing.footer", { year: new Date().getFullYear() })}
       </footer>
     </div>
   );
@@ -208,6 +210,7 @@ function StatCard({
   series: { v: number }[];
   highlight?: boolean;
 }) {
+  const { t } = useTranslation("home");
   const positive = pct >= 0;
   return (
     <div
@@ -243,12 +246,13 @@ function StatCard({
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <p className={`text-xs ${highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>vs last month</p>
+      <p className={`text-xs ${highlight ? "text-primary-foreground/70" : "text-muted-foreground"}`}>{t("dashboard.vsLastMonth")}</p>
     </div>
   );
 }
 
 function Dashboard({ customerName, onLogout }: { customerName: string; onLogout: () => void }) {
+  const { t, i18n } = useTranslation("home");
   const navigate = useNavigate();
   const [bookings, setBookings] = useState<BookingHistoryRow[] | null>(null);
   const [wallet, setWallet] = useState<WalletBalance | null>(null);
@@ -300,9 +304,9 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
   const yearMonths = useMemo(() => {
     const out: { month: string; year: number; idx: number }[] = [];
     const year = new Date().getFullYear();
-    for (let m = 0; m < 12; m++) out.push({ month: new Date(year, m, 1).toLocaleString("en-US", { month: "short" }), year, idx: m });
+    for (let m = 0; m < 12; m++) out.push({ month: new Date(year, m, 1).toLocaleString(i18n.language, { month: "short" }), year, idx: m });
     return out;
-  }, []);
+  }, [i18n.language]);
   const yearData = useMemo(() => {
     const buckets = yearMonths.map((m) => ({ month: m.month, requested: 0, completed: 0 }));
     for (const b of bookings ?? []) {
@@ -349,37 +353,37 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
     return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]).slice(0, 4).map(([name, count]) => ({ name, count }));
   }, [bookings]);
 
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const today = new Date().toLocaleDateString(i18n.language, { weekday: "long", month: "long", day: "numeric" });
 
   return (
-    <PageShell title={`Welcome back, ${customerName.split(" ")[0]}`} subtitle={today} userName={customerName} onLogout={onLogout}>
+    <PageShell title={t("dashboard.welcomeBack", { name: customerName.split(" ")[0] })} subtitle={today} userName={customerName} onLogout={onLogout}>
       <div className="mt-6 space-y-6">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard
               highlight
               icon={WalletIcon}
-              label="Total Spend"
+              label={t("dashboard.statTotalSpend")}
               value={dataLoaded ? fmtMoney(totalSpend, currency) : "—"}
               pct={dataLoaded ? pctChange(last.spend, prev.spend) : 0}
               series={monthly.map((m) => ({ v: m.spend }))}
             />
             <StatCard
               icon={ClipboardList}
-              label="Total Bookings"
+              label={t("dashboard.statTotalBookings")}
               value={dataLoaded ? String(totalBookings) : "—"}
               pct={dataLoaded ? pctChange(last.bookings, prev.bookings) : 0}
               series={monthly.map((m) => ({ v: m.bookings }))}
             />
             <StatCard
               icon={Users}
-              label="Active Providers"
+              label={t("dashboard.statActiveProviders")}
               value={dataLoaded ? String(activeProviderCount) : "—"}
               pct={dataLoaded ? pctChange(last.providerCount, prev.providerCount) : 0}
               series={monthly.map((m) => ({ v: m.providerCount }))}
             />
             <StatCard
               icon={PackageCheck}
-              label="Completed Jobs"
+              label={t("dashboard.statCompletedJobs")}
               value={dataLoaded ? String(completedJobs) : "—"}
               pct={dataLoaded ? pctChange(last.completed, prev.completed) : 0}
               series={monthly.map((m) => ({ v: m.completed }))}
@@ -390,16 +394,16 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
             <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-lg font-bold tracking-tight">Bookings Overview</h2>
-                  <p className="mt-1 text-sm text-muted-foreground">Track your booking activity</p>
+                  <h2 className="text-lg font-bold tracking-tight">{t("dashboard.bookingsOverview")}</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">{t("dashboard.trackBookingActivity")}</p>
                 </div>
                 <span className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm font-medium">
-                  This Year <span className="text-muted-foreground">▾</span>
+                  {t("dashboard.thisYear")} <span className="text-muted-foreground">▾</span>
                 </span>
               </div>
               <div className="mt-4 flex items-center gap-6 text-sm">
-                <span className="flex items-center gap-2 text-muted-foreground"><span className="size-2.5 rounded-full bg-primary" /> Completed</span>
-                <span className="flex items-center gap-2 text-muted-foreground"><span className="size-2.5 rounded-full bg-[var(--chart-4)]" /> Requested</span>
+                <span className="flex items-center gap-2 text-muted-foreground"><span className="size-2.5 rounded-full bg-primary" /> {t("dashboard.completed")}</span>
+                <span className="flex items-center gap-2 text-muted-foreground"><span className="size-2.5 rounded-full bg-[var(--chart-4)]" /> {t("dashboard.requested")}</span>
               </div>
               <div className="mt-4 h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -415,12 +419,12 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
             </section>
 
             <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
-              <h2 className="text-lg font-bold tracking-tight">Service Distribution</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Breakdown of your booked services</p>
+              <h2 className="text-lg font-bold tracking-tight">{t("dashboard.serviceDistribution")}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{t("dashboard.breakdownOfServices")}</p>
               {!dataLoaded ? (
                 <div className="mt-6 h-40 animate-pulse rounded-2xl bg-muted/60" />
               ) : distribution.length === 0 ? (
-                <p className="mt-8 text-center text-sm text-muted-foreground">No bookings yet.</p>
+                <p className="mt-8 text-center text-sm text-muted-foreground">{t("dashboard.noBookingsYet")}</p>
               ) : (
                 <>
                   <div className="relative mx-auto mt-2 h-44 w-44">
@@ -433,7 +437,7 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
                     </ResponsiveContainer>
                     <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                       <p className="text-2xl font-bold">{totalBookings}</p>
-                      <p className="text-xs text-muted-foreground">Total Jobs</p>
+                      <p className="text-xs text-muted-foreground">{t("dashboard.totalJobs")}</p>
                     </div>
                   </div>
                   <ul className="mt-4 space-y-2">
@@ -447,7 +451,7 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
                     ))}
                   </ul>
                   <button onClick={() => navigate({ to: "/history" })} className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-primary/10 py-2.5 text-sm font-semibold text-primary hover:bg-primary/15">
-                    View all services <ArrowRight className="size-4" />
+                    {t("dashboard.viewAllServices")} <ArrowRight className="size-4" />
                   </button>
                 </>
               )}
@@ -458,15 +462,15 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
             <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold">Upcoming Bookings</h3>
-                  <p className="text-sm text-muted-foreground">Your schedule at a glance</p>
+                  <h3 className="font-bold">{t("dashboard.upcomingBookings")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.yourScheduleAtGlance")}</p>
                 </div>
-                <button onClick={() => navigate({ to: "/bookings" })} className="text-sm font-semibold text-primary hover:underline">View all</button>
+                <button onClick={() => navigate({ to: "/bookings" })} className="text-sm font-semibold text-primary hover:underline">{t("dashboard.viewAll")}</button>
               </div>
               {!dataLoaded ? (
                 <div className="mt-4 h-32 animate-pulse rounded-2xl bg-muted/60" />
               ) : upcoming.length === 0 ? (
-                <EmptyState compact icon={Calendar} title="Nothing scheduled" description="Book a service to see it here." actionLabel="Browse Services" actionTo="/services" />
+                <EmptyState compact icon={Calendar} title={t("dashboard.nothingScheduled")} description={t("dashboard.bookServiceToSeeHere")} actionLabel={t("dashboard.browseServices")} actionTo="/services" />
               ) : (
                 <div className="mt-4 space-y-3">
                   {upcoming.map((b) => {
@@ -475,7 +479,7 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
                       <div key={b.booking_id} className="flex items-center gap-3">
                         <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon className="size-4" /></span>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-semibold">{b.service_name ?? "Service"}</p>
+                          <p className="truncate text-sm font-semibold">{b.service_name ?? t("dashboard.serviceFallback")}</p>
                           <p className="text-xs text-muted-foreground">{fmtDate(b.scheduled_date)}{b.time_window ? ` · ${humanize(b.time_window)}` : ""}</p>
                         </div>
                         <span className="shrink-0 rounded-full bg-amber-500/15 px-2.5 py-1 text-xs font-semibold text-amber-600">{humanize(b.status)}</span>
@@ -489,15 +493,15 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
             <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold">Recent Activity</h3>
-                  <p className="text-sm text-muted-foreground">Your latest updates</p>
+                  <h3 className="font-bold">{t("dashboard.recentActivity")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.yourLatestUpdates")}</p>
                 </div>
-                <button onClick={() => navigate({ to: "/activity" })} className="text-sm font-semibold text-primary hover:underline">View all</button>
+                <button onClick={() => navigate({ to: "/activity" })} className="text-sm font-semibold text-primary hover:underline">{t("dashboard.viewAll")}</button>
               </div>
               {activity === null ? (
                 <div className="mt-4 h-32 animate-pulse rounded-2xl bg-muted/60" />
               ) : activity.length === 0 ? (
-                <EmptyState compact icon={Clock} title="No activity yet" description="Your booking events will show up here." />
+                <EmptyState compact icon={Clock} title={t("dashboard.noActivityYet")} description={t("dashboard.bookingEventsShowHere")} />
               ) : (
                 <div className="mt-4 space-y-3">
                   {activity.slice(0, 3).map((ev, i) => (
@@ -517,21 +521,21 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
             <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold">Wallet Snapshot</h3>
-                  <p className="text-sm text-muted-foreground">Manage your balance and transactions</p>
+                  <h3 className="font-bold">{t("dashboard.walletSnapshot")}</h3>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.manageBalance")}</p>
                 </div>
-                <button onClick={() => navigate({ to: "/wallet" })} className="text-sm font-semibold text-primary hover:underline">Top up</button>
+                <button onClick={() => navigate({ to: "/wallet" })} className="text-sm font-semibold text-primary hover:underline">{t("dashboard.topUp")}</button>
               </div>
               <div className="mt-4 flex items-center gap-3 rounded-2xl bg-primary/5 p-4">
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
                   <CreditCard className="size-5" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-muted-foreground">Current Balance</p>
+                  <p className="text-xs text-muted-foreground">{t("dashboard.currentBalance")}</p>
                   <p className="text-lg font-bold">{wallet ? fmtMoney(wallet.balance, wallet.currency) : "—"}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground">This month</p>
+                  <p className="text-xs text-muted-foreground">{t("dashboard.thisMonth")}</p>
                   <p className="text-sm font-semibold text-success">▲ {fmtMoney(walletCreditedThisMonth, wallet?.currency ?? currency)}</p>
                 </div>
               </div>
@@ -541,15 +545,15 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
           <section className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-bold">Favorite Services</h3>
-                <p className="text-sm text-muted-foreground">Quick access to your most used services</p>
+                <h3 className="font-bold">{t("dashboard.favoriteServices")}</h3>
+                <p className="text-sm text-muted-foreground">{t("dashboard.quickAccess")}</p>
               </div>
-              <button onClick={() => navigate({ to: "/services" })} className="text-sm font-semibold text-primary hover:underline">Manage</button>
+              <button onClick={() => navigate({ to: "/services" })} className="text-sm font-semibold text-primary hover:underline">{t("dashboard.manage")}</button>
             </div>
             {!dataLoaded ? (
               <div className="mt-4 h-24 animate-pulse rounded-2xl bg-muted/60" />
             ) : favoriteServices.length === 0 ? (
-              <p className="mt-4 text-sm text-muted-foreground">Book a service to see your favorites here.</p>
+              <p className="mt-4 text-sm text-muted-foreground">{t("dashboard.bookToSeeFavorites")}</p>
             ) : (
               <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
                 {favoriteServices.map((s) => {
@@ -558,7 +562,7 @@ function Dashboard({ customerName, onLogout }: { customerName: string; onLogout:
                     <button key={s.name} onClick={() => navigate({ to: "/services" })} className="flex flex-col items-center gap-2 rounded-2xl border border-border p-4 text-center hover:bg-muted/40">
                       <span className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Icon className="size-5" /></span>
                       <p className="text-sm font-semibold">{s.name}</p>
-                      <p className="text-xs text-muted-foreground">{s.count} booking{s.count === 1 ? "" : "s"}</p>
+                      <p className="text-xs text-muted-foreground">{t("dashboard.bookingCount", { count: s.count })}</p>
                     </button>
                   );
                 })}
