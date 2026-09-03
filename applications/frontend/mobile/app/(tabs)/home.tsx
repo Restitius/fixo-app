@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import Avatar from '../../components/Avatar'
 import ProviderCard from '../../components/ProviderCard'
 import { BellIcon, BookmarkIcon, SearchIcon, SlidersIcon } from '../../components/icons'
@@ -14,14 +15,15 @@ function discountLabel(p: Promotion) {
   return p.discount_type === 'PERCENT' ? `${p.discount_value}%` : fmtMoney(p.discount_value)
 }
 
-function greeting() {
+function greetingKey() {
   const h = new Date().getHours()
-  if (h < 12) return 'Good Morning'
-  if (h < 18) return 'Good Afternoon'
-  return 'Good Evening'
+  if (h < 12) return 'home.greetingMorning'
+  if (h < 18) return 'home.greetingAfternoon'
+  return 'home.greetingEvening'
 }
 
 export default function Home() {
+  const { t } = useTranslation('tabs')
   const { customer } = useAuth()
   const [categories, setCategories] = useState<CatalogCategory[] | null>(null)
   const [popular, setPopular] = useState<{ provider: ProviderListing; categoryIcon: string }[] | null>(null)
@@ -74,7 +76,7 @@ export default function Home() {
         <View className="flex-row items-center gap-3 px-6 pt-2">
           <Avatar label={initialsOf(customer?.full_name ?? '?')} size={48} />
           <View className="flex-1">
-            <Text className="text-[13px] text-muted">{greeting()} 👋</Text>
+            <Text className="text-[13px] text-muted">{t(greetingKey())} 👋</Text>
             <Text numberOfLines={1} className="text-[16px] font-bold text-ink">
               {customer?.full_name ?? ''}
             </Text>
@@ -91,7 +93,7 @@ export default function Home() {
         <View className="flex-row items-center gap-3 mx-6 mt-5">
           <Pressable onPress={() => router.push('/search')} className="flex-1 flex-row items-center gap-3 rounded-2xl bg-[#f5f5f5] px-5 py-4">
             <SearchIcon size={20} color="#6C7585" />
-            <Text className="text-[15px] text-[#9e9e9e]">Search services...</Text>
+            <Text className="text-[15px] text-[#9e9e9e]">{t('home.searchPlaceholder')}</Text>
           </Pressable>
           <Pressable onPress={() => router.push('/search')} className="items-center justify-center size-[52px] rounded-2xl bg-[#f5f5f5]">
             <SlidersIcon size={20} color="#7210FF" />
@@ -101,9 +103,9 @@ export default function Home() {
         {offers === null ? null : offers.length === 0 ? null : (
           <>
             <View className="flex-row items-center justify-between px-6 mt-7">
-              <Text className="text-[17px] font-bold text-ink">Special Offers</Text>
+              <Text className="text-[17px] font-bold text-ink">{t('home.specialOffers')}</Text>
               <Pressable onPress={() => router.push('/offers')}>
-                <Text className="text-[13px] font-semibold text-primary">See All</Text>
+                <Text className="text-[13px] font-semibold text-primary">{t('home.seeAll')}</Text>
               </Pressable>
             </View>
             {offers[offerIndex] && (
@@ -113,7 +115,7 @@ export default function Home() {
                 style={{ backgroundColor: COLOR_PALETTE[offerIndex % COLOR_PALETTE.length] }}
               >
                 <View className="flex-1 pr-3">
-                  <Text className="text-[34px] font-extrabold text-white leading-none">{discountLabel(offers[offerIndex])} OFF</Text>
+                  <Text className="text-[34px] font-extrabold text-white leading-none">{t('home.offAmount', { amount: discountLabel(offers[offerIndex]) })}</Text>
                   <Text className="text-[18px] font-bold text-white mt-2">{offers[offerIndex].name}</Text>
                   <Text numberOfLines={2} className="text-[12px] text-white/90 mt-1">
                     {offers[offerIndex].description || offers[offerIndex].code}
@@ -133,9 +135,9 @@ export default function Home() {
         )}
 
         <View className="flex-row items-center justify-between px-6 mt-7">
-          <Text className="text-[17px] font-bold text-ink">Services</Text>
+          <Text className="text-[17px] font-bold text-ink">{t('home.services')}</Text>
           <Pressable onPress={() => router.push('/services')}>
-            <Text className="text-[13px] font-semibold text-primary">See All</Text>
+            <Text className="text-[13px] font-semibold text-primary">{t('home.seeAll')}</Text>
           </Pressable>
         </View>
         {categories === null ? (
@@ -156,22 +158,22 @@ export default function Home() {
               <View className="items-center justify-center size-14 rounded-2xl bg-primary/8">
                 <SlidersIcon size={20} color="#7210FF" />
               </View>
-              <Text className="text-[11px] font-medium text-ink">More</Text>
+              <Text className="text-[11px] font-medium text-ink">{t('home.more')}</Text>
             </Pressable>
           </View>
         )}
 
         <View className="flex-row items-center justify-between px-6 mt-7">
-          <Text className="text-[17px] font-bold text-ink">Most Popular Services</Text>
+          <Text className="text-[17px] font-bold text-ink">{t('home.mostPopular')}</Text>
           <Pressable onPress={() => router.push('/popular')}>
-            <Text className="text-[13px] font-semibold text-primary">See All</Text>
+            <Text className="text-[13px] font-semibold text-primary">{t('home.seeAll')}</Text>
           </Pressable>
         </View>
         <View className="gap-3 px-6 mt-3">
           {popular === null ? (
             <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
           ) : popular.length === 0 ? (
-            <Text className="text-[13px] text-muted">No providers listed yet.</Text>
+            <Text className="text-[13px] text-muted">{t('home.noProviders')}</Text>
           ) : (
             popular.map(({ provider, categoryIcon }) => (
               <ProviderCard key={provider.provider_id} provider={provider} emoji={emojiForCategory(categoryIcon)} />

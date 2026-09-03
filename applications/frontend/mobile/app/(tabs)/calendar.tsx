@@ -2,18 +2,23 @@ import { useEffect, useMemo, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import Avatar from '../../components/Avatar'
 import { CalendarEmptyIllustration, ChevronRightIcon } from '../../components/icons'
 import { fixoSdk, type BookingHistoryRow } from '../../lib/api-client'
 import { humanize, initialsOf } from '../../lib/format'
 
-const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-
 function dateKey(d: Date) {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
 }
 
+// A Monday-start reference week, used only to derive each weekday's narrow
+// label (e.g. "M", "T"...) in the active language via Intl, instead of
+// hardcoding English initials.
+const WEEKDAY_REFERENCE = new Date(2024, 0, 1)
+
 export default function MyCalendar() {
+  const { t, i18n } = useTranslation('tabs')
   const [bookings, setBookings] = useState<BookingHistoryRow[] | null>(null)
   const today = useMemo(() => new Date(), [])
   const [viewMonth, setViewMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1))
@@ -37,15 +42,24 @@ export default function MyCalendar() {
   const month = viewMonth.getMonth()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7
-  const monthLabel = viewMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const monthLabel = viewMonth.toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' })
   const dayBookings = byDay.get(dateKey(selected)) ?? []
+  const weekdayLabels = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(WEEKDAY_REFERENCE)
+        d.setDate(WEEKDAY_REFERENCE.getDate() + i)
+        return new Intl.DateTimeFormat(i18n.language, { weekday: 'narrow' }).format(d)
+      }),
+    [i18n.language],
+  )
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       <ScrollView contentContainerStyle={{ paddingBottom: 110 }}>
         <View className="flex-row items-center justify-between px-6 pt-2">
           <View>
-            <Text className="text-[22px] font-extrabold text-ink">My Calendar</Text>
+            <Text className="text-[22px] font-extrabold text-ink">{t('calendar.title')}</Text>
             <Text className="text-[14px] text-muted mt-1">{monthLabel}</Text>
           </View>
           <View className="flex-row items-center gap-3">
@@ -60,7 +74,7 @@ export default function MyCalendar() {
 
         <View className="px-6 mt-5">
           <View className="flex-row flex-wrap">
-            {WEEKDAYS.map((w, i) => (
+            {weekdayLabels.map((w, i) => (
               <Text key={i} style={{ width: `${100 / 7}%` }} className="text-[12px] text-muted font-medium text-center mb-2">
                 {w}
               </Text>
@@ -89,13 +103,17 @@ export default function MyCalendar() {
 
         <View className="px-6 mt-8">
           <Text className="text-[14px] font-semibold text-ink mb-3">
-            {bookings === null ? 'Loading…' : dayBookings.length > 0 ? `Bookings on ${selected.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : 'No bookings this day'}
+            {bookings === null
+              ? t('calendar.loading')
+              : dayBookings.length > 0
+                ? t('calendar.bookingsOn', { date: selected.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric' }) })
+                : t('calendar.noBookingsThisDay')}
           </Text>
 
           {bookings !== null && dayBookings.length === 0 ? (
             <View className="items-center py-10">
               <CalendarEmptyIllustration size={110} />
-              <Text className="text-[13px] text-muted mt-3">Dates with a dot below them have a real booking.</Text>
+              <Text className="text-[13px] text-muted mt-3">{t('calendar.dotHint')}</Text>
             </View>
           ) : (
             <View className="gap-3">
@@ -108,7 +126,7 @@ export default function MyCalendar() {
                   <Avatar label={initialsOf(b.provider_name ?? '?')} size={44} />
                   <View className="flex-1">
                     <Text numberOfLines={1} className="font-bold text-ink">
-                      {b.provider_name ?? b.service_name ?? 'Service'}
+                      {b.provider_name ?? b.service_name ?? t('calendar.serviceFallback')}
                     </Text>
                     <Text className="text-[13px] text-muted">{b.time_window ? humanize(b.time_window) : humanize(b.status)}</Text>
                   </View>
