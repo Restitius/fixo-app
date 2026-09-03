@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Text, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native'
 import { Link, router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import TextField from '../../components/TextField'
 import Checkbox from '../../components/Checkbox'
@@ -10,6 +11,7 @@ import { MailIcon, LockIcon } from '../../components/icons'
 import { useAuth, ApiError } from '../../lib/auth-context'
 
 export default function SignIn() {
+  const { t } = useTranslation('auth')
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -20,7 +22,7 @@ export default function SignIn() {
   async function submit() {
     setError(null)
     if (!email.trim() || !password) {
-      setError('Enter your email and password')
+      setError(t('signIn.validationError'))
       return
     }
     setLoading(true)
@@ -28,7 +30,7 @@ export default function SignIn() {
       await login(email.trim(), password)
       router.replace('/(tabs)/home')
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Login failed')
+      setError(err instanceof ApiError ? err.message : t('signIn.genericError'))
     } finally {
       setLoading(false)
     }
@@ -39,29 +41,29 @@ export default function SignIn() {
       <ScreenHeader back="/auth" />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
         <ScrollView className="flex-1 px-6 pt-2" contentContainerStyle={{ paddingBottom: 24 }}>
-          <Text className="text-[32px] leading-[38px] font-extrabold text-ink">Login to your Account</Text>
+          <Text className="text-[32px] leading-[38px] font-extrabold text-ink">{t('signIn.title')}</Text>
 
           <View className="gap-4 mt-8">
-            <TextField icon={<MailIcon color="#6C7585" />} placeholder="Email" keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
-            <TextField icon={<LockIcon color="#6C7585" />} placeholder="Password" isPassword value={password} onChangeText={setPassword} />
+            <TextField icon={<MailIcon color="#6C7585" />} placeholder={t('signIn.emailPlaceholder')} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
+            <TextField icon={<LockIcon color="#6C7585" />} placeholder={t('signIn.passwordPlaceholder')} isPassword value={password} onChangeText={setPassword} />
           </View>
 
           <View className="items-center mt-5">
-            <Checkbox checked={remember} onChange={setRemember} label="Remember me" />
+            <Checkbox checked={remember} onChange={setRemember} label={t('signIn.rememberMe')} />
           </View>
 
           {error && <Text className="text-center text-[13px] text-red-500 mt-4">{error}</Text>}
 
           <View className="mt-6">
-            <Button onPress={submit} loading={loading}>Sign in</Button>
+            <Button onPress={submit} loading={loading}>{t('signIn.submitCta')}</Button>
           </View>
 
           <Link href="/auth/forgot-password" className="text-center text-primary font-semibold text-[14px] mt-4">
-            Forgot the password?
+            {t('signIn.forgotPasswordCta')}
           </Link>
 
           <Text className="text-center text-[14px] text-muted pt-8">
-            Don't have an account? <Link href="/auth/sign-up" className="text-primary font-semibold">Sign up</Link>
+            {t('signIn.noAccount')} <Link href="/auth/sign-up" className="text-primary font-semibold">{t('signIn.signUpCta')}</Link>
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
