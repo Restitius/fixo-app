@@ -52,6 +52,12 @@ class ResetPasswordRequest(BaseModel):
     new_password: str = Field(min_length=8)
 
 
+class UpdateProfileRequest(BaseModel):
+    full_name: str | None = Field(default=None, min_length=2, max_length=120)
+    phone: str | None = Field(default=None, min_length=7, max_length=20)
+    preferred_language: str | None = None
+
+
 @router.post("/register", status_code=201)
 async def register(payload: RegisterRequest) -> dict:
     svc = get_composition().auth_service()
@@ -103,6 +109,13 @@ async def refresh_token(payload: RefreshRequest) -> dict:
 @router.get("/me")
 async def me(customer: CurrentCustomer) -> dict:
     return ok(customer)
+
+
+@router.patch("/me")
+async def update_me(payload: UpdateProfileRequest, customer: CurrentCustomer) -> dict:
+    svc = get_composition().auth_service()
+    updated = await svc.update_profile(str(customer["customer_id"]), payload.model_dump(exclude_unset=True))
+    return ok(updated, title="Profile updated")
 
 
 @router.post("/logout")
