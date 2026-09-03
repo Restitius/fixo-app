@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const { t } = useTranslation("auth");
   const { login, requestOtp } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -57,13 +59,13 @@ function LoginPage() {
       } else {
         const password = getValues("password");
         if (!password || password.length < 6) {
-          setPasswordError("Password must be at least 6 characters");
+          setPasswordError(t("login.passwordTooShort"));
           return;
         }
         await login(values.email, password, navigator.userAgent);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Login failed");
+      toast.error(err instanceof Error ? err.message : t("login.genericError"));
     }
   };
 
@@ -71,21 +73,21 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Welcome back</h1>
+          <h1 className="text-3xl font-bold">{t("login.title")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Log in to your Fixo account
+            {t("login.subtitle")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("login.emailLabel")}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t("login.emailPlaceholder")}
                 className="pl-10"
                 {...register("email")}
               />
@@ -97,7 +99,7 @@ function LoginPage() {
 
           {!isOtpMode && (
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("login.passwordLabel")}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -124,10 +126,10 @@ function LoginPage() {
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting
-              ? "Processing..."
+              ? t("login.submittingCta")
               : isOtpMode
-                ? "Send OTP Code"
-                : "Log In"}
+                ? t("login.submitCtaOtp")
+                : t("login.submitCta")}
           </Button>
         </form>
 
@@ -137,15 +139,15 @@ function LoginPage() {
             className="text-primary hover:underline"
           >
             {isOtpMode
-              ? "Use password instead"
-              : "Use OTP instead (no password)"}
+              ? t("login.usePasswordInstead")
+              : t("login.useOtpInstead")}
           </button>
         </div>
 
         <div className="text-center text-sm">
-          Don't have an account?{" "}
+          {t("login.noAccount")}{" "}
           <Link to="/register" className="text-primary font-medium hover:underline">
-            Create one
+            {t("login.createOneCta")}
           </Link>
         </div>
       </div>

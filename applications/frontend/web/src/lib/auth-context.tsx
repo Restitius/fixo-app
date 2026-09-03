@@ -35,6 +35,7 @@ interface AuthContextValue extends AuthState {
   register: (data: RegisterData) => Promise<void>;
   requestOtp: (email: string) => Promise<string | null>;
   verifyOtp: (email: string, code: string) => Promise<void>;
+  updateProfile: (data: { full_name?: string; phone?: string; preferred_language?: string }) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<boolean>;
 }
@@ -214,6 +215,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     navigate({ to: "/login" });
   };
 
+  const updateProfile = async (data: { full_name?: string; phone?: string; preferred_language?: string }) => {
+    const resp = await apiClient.patch("/auth/me", data);
+    setState((prev) => ({ ...prev, customer: resp.data }));
+  };
+
   const logout = async () => {
     try {
       await apiClient.post("/auth/logout");
@@ -237,6 +243,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       requestOtp,
       verifyOtp,
+      updateProfile,
       logout,
       refreshAccessToken,
     }),
