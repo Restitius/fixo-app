@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import Button from '../../components/Button'
 import { bookingApi, favoritesApi, type ProviderProfile } from '../../lib/api-client'
 import { fmtMoney } from '../../lib/format'
@@ -9,6 +10,7 @@ import { colorForSeed } from '../../lib/category-visuals'
 import { ArrowLeftIcon, BookmarkIcon, LocationIcon, StarIcon } from '../../components/icons'
 
 export default function ServiceDetails() {
+  const { t } = useTranslation('services')
   const { providerId = '' } = useLocalSearchParams<{ providerId: string }>()
   const [provider, setProvider] = useState<ProviderProfile | null>(null)
   const [saved, setSaved] = useState(false)
@@ -55,7 +57,7 @@ export default function ServiceDetails() {
             <View className="flex-row items-center gap-1">
               <StarIcon size={14} />
               <Text className="text-[13px] text-ink font-semibold">{provider.rating_avg.toFixed(1)}</Text>
-              <Text className="text-[13px] text-muted">({provider.rating_count.toLocaleString()} reviews)</Text>
+              <Text className="text-[13px] text-muted">{t('detail.reviewsCount', { count: provider.rating_count.toLocaleString() })}</Text>
             </View>
           </View>
 
@@ -68,37 +70,37 @@ export default function ServiceDetails() {
 
           <View className="flex-row gap-3 mt-5">
             <View className="flex-1 items-center rounded-2xl bg-[#f5f5f5] py-3">
-              <Text className="text-[11px] text-muted">Active Since</Text>
+              <Text className="text-[11px] text-muted">{t('detail.activeSince')}</Text>
               <Text className="text-[15px] font-bold text-ink mt-0.5">{new Date(provider.created_at).getFullYear()}</Text>
             </View>
             <View className="flex-1 items-center rounded-2xl bg-[#f5f5f5] py-3">
-              <Text className="text-[11px] text-muted">Jobs Done</Text>
+              <Text className="text-[11px] text-muted">{t('detail.jobsDone')}</Text>
               <Text className="text-[15px] font-bold text-ink mt-0.5">{provider.jobs_completed.toLocaleString()}</Text>
             </View>
             <View className="flex-1 items-center rounded-2xl bg-[#f5f5f5] py-3">
-              <Text className="text-[11px] text-muted">Services</Text>
+              <Text className="text-[11px] text-muted">{t('detail.services')}</Text>
               <Text className="text-[15px] font-bold text-ink mt-0.5">{provider.services.length}</Text>
             </View>
           </View>
 
           {provider.bio && (
             <>
-              <Text className="text-[16px] font-bold text-ink mt-6">About</Text>
+              <Text className="text-[16px] font-bold text-ink mt-6">{t('detail.about')}</Text>
               <Text numberOfLines={bioExpanded ? undefined : 2} className="text-[14px] text-muted mt-2 leading-relaxed">
                 {provider.bio}
               </Text>
               {!bioExpanded && (
                 <Pressable onPress={() => setBioExpanded(true)}>
-                  <Text className="text-primary text-[13px] font-semibold mt-1">Read more...</Text>
+                  <Text className="text-primary text-[13px] font-semibold mt-1">{t('detail.readMore')}</Text>
                 </Pressable>
               )}
             </>
           )}
 
-          <Text className="text-[16px] font-bold text-ink mt-6">Services & Pricing</Text>
+          <Text className="text-[16px] font-bold text-ink mt-6">{t('detail.servicesPricing')}</Text>
           <View className="flex-col gap-2 mt-3">
             {provider.services.length === 0 ? (
-              <Text className="text-[13px] text-muted">No services listed yet.</Text>
+              <Text className="text-[13px] text-muted">{t('detail.noServices')}</Text>
             ) : (
               provider.services.map((s) => (
                 <View key={s.service_id} className="flex-row items-center gap-3 rounded-2xl bg-[#f5f5f5] p-3">
@@ -116,7 +118,7 @@ export default function ServiceDetails() {
 
       <SafeAreaView edges={['bottom']} className="absolute bottom-0 inset-x-0 bg-white border-t border-hairline">
         <View className="px-6 py-4">
-          <Button onPress={() => router.push(`/booking/${provider.provider_id}` as any)}>Book Now</Button>
+          <Button onPress={() => router.push(`/booking/${provider.provider_id}` as any)}>{t('detail.bookNow')}</Button>
         </View>
       </SafeAreaView>
     </View>

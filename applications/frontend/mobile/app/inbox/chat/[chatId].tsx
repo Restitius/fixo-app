@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import { ArrowLeftIcon, ImageIcon, SendIcon } from '../../../components/icons'
 import { bookingApi, type BookingMessage, type BookingRow } from '../../../lib/api-client'
 import { fmtDateTime } from '../../../lib/format'
 
 export default function ChatDetail() {
+  const { t } = useTranslation('services')
   const { chatId: bookingId = '' } = useLocalSearchParams<{ chatId: string }>()
   const [booking, setBooking] = useState<BookingRow | null>(null)
   const [messages, setMessages] = useState<BookingMessage[] | null>(null)
@@ -42,15 +44,15 @@ export default function ChatDetail() {
           <ArrowLeftIcon color="#0B111F" />
         </Pressable>
         <Text numberOfLines={1} className="font-bold text-ink text-[18px] flex-1">
-          {booking.provider_name ?? 'Provider'}
+          {booking.provider_name ?? t('chat.providerFallback')}
         </Text>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingVertical: 16, gap: 12 }}>
         {messages === null ? (
-          <Text className="text-center text-muted text-[13px]">Loading…</Text>
+          <Text className="text-center text-muted text-[13px]">{t('chat.loading')}</Text>
         ) : messages.length === 0 ? (
-          <Text className="text-center text-muted text-[13px] py-8">No messages yet — say hello!</Text>
+          <Text className="text-center text-muted text-[13px] py-8">{t('chat.noMessages')}</Text>
         ) : (
           messages.map((m) => (
             <View key={m.message_id} className={`flex-row ${!m.from_provider ? 'justify-end' : 'justify-start'}`}>
@@ -74,7 +76,7 @@ export default function ChatDetail() {
           value={text}
           onChangeText={setText}
           onSubmitEditing={() => void send()}
-          placeholder="Message..."
+          placeholder={t('chat.placeholder')}
           placeholderTextColor="#9e9e9e"
           className="flex-1 rounded-full bg-[#f5f5f5] px-5 py-3 text-[14px] text-ink"
         />
