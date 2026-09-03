@@ -42,6 +42,7 @@ interface AuthContextValue extends AuthState {
   verifyOtp: (email: string, code: string) => Promise<void>
   forgotPassword: (email: string) => Promise<string | null>
   resetPassword: (email: string, code: string, newPassword: string) => Promise<void>
+  updateProfile: (data: { full_name?: string; phone?: string; preferred_language?: string }) => Promise<void>
   logout: () => Promise<void>
   refreshAccessToken: () => Promise<boolean>
 }
@@ -168,6 +169,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await apiClient.post('/auth/password/reset', { email, code, new_password: newPassword })
   }
 
+  const updateProfile = async (data: { full_name?: string; phone?: string; preferred_language?: string }) => {
+    const resp = await apiClient.patch('/auth/me', data)
+    setState((prev) => ({ ...prev, customer: resp.data }))
+  }
+
   const logout = async () => {
     try {
       await apiClient.post('/auth/logout')
@@ -179,7 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const value = useMemo(
-    () => ({ ...state, login, register, requestOtp, verifyOtp, forgotPassword, resetPassword, logout, refreshAccessToken }),
+    () => ({ ...state, login, register, requestOtp, verifyOtp, forgotPassword, resetPassword, updateProfile, logout, refreshAccessToken }),
     [state],
   )
 
