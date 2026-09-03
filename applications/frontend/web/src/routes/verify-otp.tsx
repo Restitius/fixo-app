@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Mail, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ export const Route = createFileRoute("/verify-otp")({
 });
 
 function VerifyOtpPage() {
+  const { t } = useTranslation("auth");
   const { email: initialEmail, otp_from_register } = Route.useSearch();
   const { verifyOtp, requestOtp } = useAuth();
   const navigate = useNavigate();
@@ -60,41 +62,41 @@ function VerifyOtpPage() {
     try {
       await verifyOtp(values.email, values.code);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Verification failed");
+      toast.error(err instanceof Error ? err.message : t("verifyOtp.genericError"));
     }
   };
 
   const handleResend = async () => {
     const currentEmail = initialEmail || "you@example.com";
     const code = await requestOtp(currentEmail);
-    if (code) toast.success(`OTP resent: ${code}`);
-    else toast.success("OTP code sent to your email");
+    if (code) toast.success(t("verifyOtp.resentToast", { code }));
+    else toast.success(t("verifyOtp.sentToast"));
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Check your email</h1>
+          <h1 className="text-3xl font-bold">{t("verifyOtp.title")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            We sent a 6-digit verification code to <strong>{initialEmail}</strong>
+            {t("verifyOtp.subtitlePrefix")} <strong>{initialEmail}</strong>
           </p>
           {otp_from_register && (
             <p className="mt-2 text-xs text-muted-foreground">
-              Dev mode code: <strong>{otp_from_register}</strong>
+              {t("verifyOtp.devModeCode")} <strong>{otp_from_register}</strong>
             </p>
           )}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="code">Verification Code</Label>
+            <Label htmlFor="code">{t("verifyOtp.codeLabel")}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="code"
                 type="text"
-                placeholder="Enter 6-digit code"
+                placeholder={t("verifyOtp.codePlaceholder")}
                 className="pl-10 text-center text-lg tracking-widest"
                 maxLength={6}
                 {...register("code")}
@@ -104,7 +106,7 @@ function VerifyOtpPage() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Verifying..." : "Verify & Continue"}
+            {isSubmitting ? t("verifyOtp.submittingCta") : t("verifyOtp.submitCta")}
           </Button>
         </form>
 
@@ -113,7 +115,7 @@ function VerifyOtpPage() {
             onClick={handleResend}
             className="text-sm font-medium text-primary hover:underline"
           >
-            Didn't get it? Resend code
+            {t("verifyOtp.resendPrompt")}
           </button>
         </div>
       </div>

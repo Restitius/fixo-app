@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { User, Mail, Phone, Lock, Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ export const Route = createFileRoute("/register")({
 });
 
 function RegisterPage() {
+  const { t } = useTranslation("auth");
   const { register: registerCustomer } = useAuth();
   const { register, handleSubmit, formState: { isSubmitting, errors }, watch } =
     useForm<RegisterValues>({
@@ -57,7 +59,7 @@ function RegisterPage() {
     try {
       await registerCustomer(values);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Registration failed");
+      toast.error(err instanceof Error ? err.message : t("register.genericError"));
     }
   };
 
@@ -65,24 +67,24 @@ function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Create your account</h1>
+          <h1 className="text-3xl font-bold">{t("register.title")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Join Fixo and get access to verified handypersons
+            {t("register.subtitle")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="full_name">Full Name</Label>
+            <Label htmlFor="full_name">{t("register.fullNameLabel")}</Label>
             <div className="relative">
               <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="full_name" placeholder="Jane Doe" className="pl-10" {...register("full_name")} />
+              <Input id="full_name" placeholder={t("register.fullNamePlaceholder")} className="pl-10" {...register("full_name")} />
             </div>
             {errors.full_name && <p className="text-xs text-destructive">{errors.full_name.message}</p>}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone">{t("register.phoneLabel")}</Label>
             <div className="relative">
               <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input id="phone" type="tel" placeholder="+254 700 000 000" className="pl-10" {...register("phone")} />
@@ -91,17 +93,17 @@ function RegisterPage() {
           </div>
 
                     <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{t("register.passwordLabel")}</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="password" type="password" placeholder="At least 8 characters" className="pl-10" {...register("password")} />
+              <Input id="password" type="password" placeholder={t("register.passwordPlaceholder")} className="pl-10" {...register("password")} />
             </div>
             {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
             {passwordValue && (
               <div className="text-xs">
                 <div className="flex items-center gap-2">
                   <Check className={passwordValue.length >= 8 ? "h-3 w-3 text-success" : "h-3 w-3 text-muted-foreground"} />
-                  At least 8 characters
+                  {t("register.passwordHint")}
                 </div>
               </div>
             )}
@@ -111,7 +113,7 @@ function RegisterPage() {
             <div className="flex items-start space-x-3 space-y-0">
               <Checkbox id="terms_accepted" {...register("terms_accepted")} className="mt-1" />
               <Label htmlFor="terms_accepted" className="font-normal">
-                I agree to the <a href="#" className="text-primary">Terms and Conditions</a>
+                {t("register.agreeTermsPrefix")} <a href="#" className="text-primary">{t("register.termsLink")}</a>
               </Label>
             </div>
             {errors.terms_accepted && <p className="text-xs text-destructive">{errors.terms_accepted.message}</p>}
@@ -119,21 +121,21 @@ function RegisterPage() {
             <div className="flex items-start space-x-3 space-y-0">
               <Checkbox id="privacy_accepted" {...register("privacy_accepted")} className="mt-1" />
               <Label htmlFor="privacy_accepted" className="font-normal">
-                I agree to the <a href="#" className="text-primary">Privacy Policy</a>
+                {t("register.agreePrivacyPrefix")} <a href="#" className="text-primary">{t("register.privacyLink")}</a>
               </Label>
             </div>
             {errors.privacy_accepted && <p className="text-xs text-destructive">{errors.privacy_accepted.message}</p>}
           </div>
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account..." : "Create Account"}
+            {isSubmitting ? t("register.submittingCta") : t("register.submitCta")}
           </Button>
         </form>
 
         <div className="text-center text-sm">
-          Already have an account?{" "}
+          {t("register.alreadyHaveAccount")}{" "}
           <Link to="/login" className="text-primary font-medium hover:underline">
-            Log in
+            {t("register.logIn")}
           </Link>
         </div>
       </div>
