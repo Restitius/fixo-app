@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import { fixoSdk, type BookingHistoryRow, type InvoiceRow, type LoyaltyTxn, type WalletTxn } from '../../lib/api-client'
 import { fmtDate, fmtDateTime, fmtMoney, humanize } from '../../lib/format'
 
-const TABS = ['Bookings', 'Wallet', 'Loyalty', 'Invoices'] as const
-type Tab = (typeof TABS)[number]
+const TAB_IDS = ['Bookings', 'Wallet', 'Loyalty', 'Invoices'] as const
+type Tab = (typeof TAB_IDS)[number]
 
 const BOOKING_STATUS_STYLE: Record<string, { bg: string; color: string }> = {
   CLOSED: { bg: '#00B894' + '1A', color: '#00B894' },
@@ -15,6 +16,13 @@ const BOOKING_STATUS_STYLE: Record<string, { bg: string; color: string }> = {
 const DEFAULT_STATUS_STYLE = { bg: '#0984E3' + '1A', color: '#0984E3' }
 
 export default function History() {
+  const { t } = useTranslation('profile')
+  const TABS: { id: Tab; label: string }[] = [
+    { id: 'Bookings', label: t('history.tabBookings') },
+    { id: 'Wallet', label: t('history.tabWallet') },
+    { id: 'Loyalty', label: t('history.tabLoyalty') },
+    { id: 'Invoices', label: t('history.tabInvoices') },
+  ]
   const [tab, setTab] = useState<Tab>('Bookings')
   const [bookings, setBookings] = useState<BookingHistoryRow[] | null>(null)
   const [wallet, setWallet] = useState<WalletTxn[] | null>(null)
@@ -30,12 +38,12 @@ export default function History() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="History" back="/(tabs)/profile" />
+      <ScreenHeader title={t('history.title')} back="/(tabs)/profile" />
       <View className="px-6">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-          {TABS.map((t) => (
-            <Pressable key={t} onPress={() => setTab(t)} className={`rounded-full px-4 py-2 ${tab === t ? 'bg-primary' : 'bg-[#f5f5f5]'}`}>
-              <Text className={`text-[13px] font-semibold ${tab === t ? 'text-white' : 'text-ink'}`}>{t}</Text>
+          {TABS.map((tb) => (
+            <Pressable key={tb.id} onPress={() => setTab(tb.id)} className={`rounded-full px-4 py-2 ${tab === tb.id ? 'bg-primary' : 'bg-[#f5f5f5]'}`}>
+              <Text className={`text-[13px] font-semibold ${tab === tb.id ? 'text-white' : 'text-ink'}`}>{tb.label}</Text>
             </Pressable>
           ))}
         </ScrollView>
@@ -47,7 +55,7 @@ export default function History() {
             (bookings === null ? (
               <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
             ) : bookings.length === 0 ? (
-              <Text className="text-center text-muted py-8 text-[14px]">No bookings yet.</Text>
+              <Text className="text-center text-muted py-8 text-[14px]">{t('history.noBookings')}</Text>
             ) : (
               bookings.map((b) => {
                 const style = BOOKING_STATUS_STYLE[b.status.toUpperCase()] ?? DEFAULT_STATUS_STYLE
@@ -56,7 +64,7 @@ export default function History() {
                     <View className="flex-row items-start justify-between gap-3">
                       <View className="flex-1 min-w-0">
                         <Text numberOfLines={1} className="font-bold text-ink text-[14px]">
-                          {b.service_name ?? 'Service'}
+                          {b.service_name ?? t('history.serviceFallback')}
                         </Text>
                         <Text className="text-[12px] text-muted mt-0.5">{b.provider_name ?? '—'} · {fmtDate(b.created_at)}</Text>
                       </View>
@@ -76,7 +84,7 @@ export default function History() {
             (wallet === null ? (
               <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
             ) : wallet.length === 0 ? (
-              <Text className="text-center text-muted py-8 text-[14px]">No wallet activity yet.</Text>
+              <Text className="text-center text-muted py-8 text-[14px]">{t('history.noWallet')}</Text>
             ) : (
               wallet.map((t, i) => (
                 <View key={t.entry_id ?? i} className="flex-row items-center justify-between rounded-2xl border border-hairline p-4">
@@ -95,16 +103,16 @@ export default function History() {
             (loyalty === null ? (
               <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
             ) : loyalty.length === 0 ? (
-              <Text className="text-center text-muted py-8 text-[14px]">No points activity yet.</Text>
+              <Text className="text-center text-muted py-8 text-[14px]">{t('history.noLoyalty')}</Text>
             ) : (
-              loyalty.map((t, i) => (
-                <View key={t.txn_id ?? i} className="flex-row items-center justify-between rounded-2xl border border-hairline p-4">
+              loyalty.map((lt, i) => (
+                <View key={lt.txn_id ?? i} className="flex-row items-center justify-between rounded-2xl border border-hairline p-4">
                   <View className="flex-1 min-w-0">
-                    <Text numberOfLines={1} className="font-semibold text-ink text-[14px]">{humanize(t.activity)}</Text>
-                    <Text className="text-[12px] text-muted mt-0.5">{fmtDateTime(t.created_at)}</Text>
+                    <Text numberOfLines={1} className="font-semibold text-ink text-[14px]">{humanize(lt.activity)}</Text>
+                    <Text className="text-[12px] text-muted mt-0.5">{fmtDateTime(lt.created_at)}</Text>
                   </View>
-                  <Text className={`font-bold text-[14px] shrink-0 ${t.points > 0 ? 'text-[#00B894]' : 'text-ink'}`}>
-                    {t.points > 0 ? '+' : ''}{t.points} pts
+                  <Text className={`font-bold text-[14px] shrink-0 ${lt.points > 0 ? 'text-[#00B894]' : 'text-ink'}`}>
+                    {lt.points > 0 ? '+' : ''}{lt.points} {t('history.pts')}
                   </Text>
                 </View>
               ))
@@ -114,12 +122,12 @@ export default function History() {
             (invoices === null ? (
               <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
             ) : invoices.length === 0 ? (
-              <Text className="text-center text-muted py-8 text-[14px]">No invoices yet.</Text>
+              <Text className="text-center text-muted py-8 text-[14px]">{t('history.noInvoices')}</Text>
             ) : (
               invoices.map((inv) => (
                 <View key={inv.invoice_id} className="flex-row items-center justify-between rounded-2xl border border-hairline p-4">
                   <View className="flex-1 min-w-0">
-                    <Text numberOfLines={1} className="font-semibold text-ink text-[14px]">{inv.service_name ?? 'Service'}</Text>
+                    <Text numberOfLines={1} className="font-semibold text-ink text-[14px]">{inv.service_name ?? t('history.serviceFallback')}</Text>
                     <Text className="text-[12px] text-primary font-medium mt-0.5">{inv.invoice_number}</Text>
                   </View>
                   <Text className="font-bold text-ink text-[14px] shrink-0">{fmtMoney(inv.total_amount, inv.currency)}</Text>
