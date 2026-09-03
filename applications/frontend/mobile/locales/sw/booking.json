@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "Chagua Huduma",
+    "details": "Maelezo ya Uhifadhi",
+    "address": "Anwani Yako",
+    "review": "Muhtasari wa Ukaguzi",
+    "provider": "Chagua Mtoa Huduma",
+    "payment": "Malipo",
+    "pin": "Thibitisha Malipo"
+  },
+  "service": {
+    "realServicesBy": "Huduma halisi zinazotolewa na {{name}}.",
+    "noServices": "Mtoa huduma huyu hajaorodhesha huduma bado.",
+    "continue": "Endelea"
+  },
+  "details": {
+    "describeJob": "Eleza kazi",
+    "placeholder": "Unahitaji nini kifanyike? (herufi 10 chini zaidi)",
+    "minChars": "{{count}}/10 herufi za chini",
+    "preferredDate": "Tarehe Unayopendelea",
+    "preferredTime": "Muda Unaopendelea",
+    "continue": "Endelea",
+    "weekdayMo": "Jtt",
+    "weekdayTu": "Jnn",
+    "weekdayWe": "Jtn",
+    "weekdayTh": "Alh",
+    "weekdayFr": "Ijm",
+    "weekdaySa": "Jmo",
+    "weekdaySu": "Jpi",
+    "morning": "Asubuhi",
+    "morningHint": "8am – 12pm",
+    "afternoon": "Mchana",
+    "afternoonHint": "12pm – 5pm",
+    "evening": "Jioni",
+    "eveningHint": "5pm – 9pm",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "Ongeza anwani mpya",
+    "labelPlaceholder": "Lebo (mfano Nyumbani)",
+    "recipientPlaceholder": "Jina la mpokeaji",
+    "phonePlaceholder": "Simu",
+    "streetPlaceholder": "Anwani ya mtaa",
+    "cityPlaceholder": "Jiji",
+    "regionPlaceholder": "Mkoa (si lazima)",
+    "saveAddress": "Hifadhi anwani",
+    "cancel": "Ghairi",
+    "continue": "Endelea"
+  },
+  "review": {
+    "labelService": "Huduma",
+    "labelProvider": "Mtoa Huduma",
+    "labelDate": "Tarehe",
+    "labelTime": "Muda",
+    "labelAddress": "Anwani",
+    "notSet": "Haijawekwa",
+    "promoCode": "Msimbo wa Punguzo",
+    "promoPlaceholder": "Weka msimbo",
+    "apply": "Tumia",
+    "promoInvalid": "Msimbo huu si sahihi au umeisha muda",
+    "promo": "Punguzo",
+    "total": "Jumla",
+    "submitRequest": "Wasilisha Ombi",
+    "genericError": "Imeshindwa kuwasilisha ombi hili"
+  },
+  "provider": {
+    "finding": "Inatafuta wataalamu bora karibu nawe…",
+    "noneAvailableTitle": "Hakuna watoa huduma wanaopatikana sasa",
+    "noneAvailableSubtitle": "Jaribu tena baadaye, au angalia Uhifadhi Wangu baadaye.",
+    "errorTitle": "Hitilafu imetokea",
+    "retry": "Jaribu Tena",
+    "noQuotesTitle": "Hakuna makadirio ya haraka bado",
+    "noQuotesSubtitle": "Watoa huduma waliolinganishwa hawajatuma makadirio bado. Angalia Uhifadhi Wangu hivi karibuni.",
+    "notMatchedNotice": "{{name}} hakulinganishwa na ombi hili — hawa ndio watoa huduma waliolinganishwa nawe.",
+    "leadTime": "{{rating}} · siku {{days}} za kuanza",
+    "confirming": "Inathibitisha…",
+    "acceptAndContinue": "Kubali na Uendelee"
+  },
+  "payment": {
+    "booking": "Uhifadhi",
+    "amountDue": "Kiasi Kinachodaiwa",
+    "yourMethods": "Njia zako za malipo",
+    "wallet": "Pochi ya FIXO",
+    "default": "Chaguo-msingi",
+    "authorizeNotice": "Kuidhinisha kunaendesha mchakato halisi wa kuidhinisha malipo kwa uhifadhi huu.",
+    "authorizePayment": "Idhinisha Malipo"
+  },
+  "pin": {
+    "enterToConfirm": "Weka PIN yako kuthibitisha",
+    "continue": "Endelea"
+  },
+  "success": {
+    "title": "Uhifadhi Umefanikiwa!",
+    "body": "Malipo yako yameidhinishwa na uhifadhi umethibitishwa.",
+    "viewReceipt": "Ona Risiti ya Kielektroniki",
+    "backToBookings": "Rudi kwenye Uhifadhi"
+  },
+  "receipt": {
+    "title": "Risiti ya Kielektroniki",
+    "share": "Shiriki Risiti",
+    "download": "Pakua Risiti",
+    "print": "Chapisha",
+    "labelService": "Huduma",
+    "labelProvider": "Mtoa Huduma",
+    "labelDate": "Tarehe",
+    "labelTime": "Muda",
+    "labelAddress": "Anwani",
+    "amount": "Kiasi",
+    "arrivalCode": "Msimbo wa Kuwasili",
+    "paymentId": "Kitambulisho cha Malipo",
+    "status": "Hali",
+    "serviceFallback": "Huduma"
+  },
+  "cancel": {
+    "title": "Ghairi Uhifadhi",
+    "confirmTitle": "Thibitisha Kughairi",
+    "whyCancelling": "Kwa nini unaghairi?",
+    "reasonChangeOfPlans": "Mabadiliko ya mipango",
+    "reasonBetterPrice": "Nimepata bei bora",
+    "reasonMistake": "Nimehifadhi kwa makosa",
+    "reasonUnavailable": "Mtoa huduma hapatikani",
+    "reasonOther": "Nyingine",
+    "continue": "Endelea",
+    "cancelling": "Inaghairi uhifadhi wako…",
+    "enterPinToConfirm": "Weka PIN yako kuthibitisha kughairi",
+    "genericError": "Imeshindwa kughairi uhifadhi huu — huenda muda wa kughairi umepita.",
+    "cancelledTitle": "Uhifadhi Umeghairiwa",
+    "cancelledBody": "Uhifadhi wako na {{provider}} umeghairiwa.",
+    "cancelledBodyRelease": " Idhini yako ya {{amount}} itaachiliwa.",
+    "providerFallback": "mtoa huduma",
+    "backToBookings": "Rudi kwenye Uhifadhi"
+  }
+}

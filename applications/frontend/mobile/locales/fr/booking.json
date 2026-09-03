@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "Choisir un Service",
+    "details": "Détails de la Réservation",
+    "address": "Votre Adresse",
+    "review": "Résumé",
+    "provider": "Choisir un Prestataire",
+    "payment": "Paiement",
+    "pin": "Confirmer le Paiement"
+  },
+  "service": {
+    "realServicesBy": "Services réels proposés par {{name}}.",
+    "noServices": "Ce prestataire n'a pas encore de services répertoriés.",
+    "continue": "Continuer"
+  },
+  "details": {
+    "describeJob": "Décrivez le travail",
+    "placeholder": "De quoi avez-vous besoin ? (10 caractères min.)",
+    "minChars": "{{count}}/10 caractères min.",
+    "preferredDate": "Date Préférée",
+    "preferredTime": "Heure Préférée",
+    "continue": "Continuer",
+    "weekdayMo": "Lu",
+    "weekdayTu": "Ma",
+    "weekdayWe": "Me",
+    "weekdayTh": "Je",
+    "weekdayFr": "Ve",
+    "weekdaySa": "Sa",
+    "weekdaySu": "Di",
+    "morning": "Matin",
+    "morningHint": "8h – 12h",
+    "afternoon": "Après-midi",
+    "afternoonHint": "12h – 17h",
+    "evening": "Soir",
+    "eveningHint": "17h – 21h",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "Ajouter une nouvelle adresse",
+    "labelPlaceholder": "Libellé (ex. Domicile)",
+    "recipientPlaceholder": "Nom du destinataire",
+    "phonePlaceholder": "Téléphone",
+    "streetPlaceholder": "Adresse",
+    "cityPlaceholder": "Ville",
+    "regionPlaceholder": "Région (facultatif)",
+    "saveAddress": "Enregistrer l'adresse",
+    "cancel": "Annuler",
+    "continue": "Continuer"
+  },
+  "review": {
+    "labelService": "Service",
+    "labelProvider": "Prestataire",
+    "labelDate": "Date",
+    "labelTime": "Heure",
+    "labelAddress": "Adresse",
+    "notSet": "Non défini",
+    "promoCode": "Code Promo",
+    "promoPlaceholder": "Saisir le code",
+    "apply": "Appliquer",
+    "promoInvalid": "Ce code n'est pas valide ou a expiré",
+    "promo": "Promo",
+    "total": "Total",
+    "submitRequest": "Envoyer la Demande",
+    "genericError": "Impossible d'envoyer cette demande"
+  },
+  "provider": {
+    "finding": "Recherche des meilleurs professionnels près de vous…",
+    "noneAvailableTitle": "Aucun prestataire disponible pour le moment",
+    "noneAvailableSubtitle": "Réessayez bientôt ou consultez Mes Réservations plus tard.",
+    "errorTitle": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "noQuotesTitle": "Aucun devis instantané pour le moment",
+    "noQuotesSubtitle": "Les prestataires associés n'ont pas encore envoyé de devis. Consultez Mes Réservations bientôt.",
+    "notMatchedNotice": "{{name}} n'a pas été associé à cette demande — voici vos prestataires associés à la place.",
+    "leadTime": "{{rating}} · délai de {{days}}j",
+    "confirming": "Confirmation…",
+    "acceptAndContinue": "Accepter et Continuer"
+  },
+  "payment": {
+    "booking": "Réservation",
+    "amountDue": "Montant Dû",
+    "yourMethods": "Vos moyens de paiement",
+    "wallet": "Portefeuille FIXO",
+    "default": "Par défaut",
+    "authorizeNotice": "L'autorisation exécute le vrai processus d'autorisation de paiement pour cette réservation.",
+    "authorizePayment": "Autoriser le Paiement"
+  },
+  "pin": {
+    "enterToConfirm": "Entrez votre code PIN pour confirmer",
+    "continue": "Continuer"
+  },
+  "success": {
+    "title": "Réservation Réussie !",
+    "body": "Votre paiement a été autorisé et la réservation est confirmée.",
+    "viewReceipt": "Voir le Reçu Électronique",
+    "backToBookings": "Retour aux Réservations"
+  },
+  "receipt": {
+    "title": "Reçu Électronique",
+    "share": "Partager le Reçu",
+    "download": "Télécharger le Reçu",
+    "print": "Imprimer",
+    "labelService": "Service",
+    "labelProvider": "Prestataire",
+    "labelDate": "Date",
+    "labelTime": "Heure",
+    "labelAddress": "Adresse",
+    "amount": "Montant",
+    "arrivalCode": "Code d'Arrivée",
+    "paymentId": "ID de Paiement",
+    "status": "Statut",
+    "serviceFallback": "Service"
+  },
+  "cancel": {
+    "title": "Annuler la Réservation",
+    "confirmTitle": "Confirmer l'Annulation",
+    "whyCancelling": "Pourquoi annulez-vous ?",
+    "reasonChangeOfPlans": "Changement de plans",
+    "reasonBetterPrice": "Meilleur prix trouvé",
+    "reasonMistake": "Réservé par erreur",
+    "reasonUnavailable": "Prestataire indisponible",
+    "reasonOther": "Autre",
+    "continue": "Continuer",
+    "cancelling": "Annulation de votre réservation…",
+    "enterPinToConfirm": "Entrez votre code PIN pour confirmer l'annulation",
+    "genericError": "Impossible d'annuler cette réservation — le délai d'annulation est peut-être dépassé.",
+    "cancelledTitle": "Réservation Annulée",
+    "cancelledBody": "Votre réservation avec {{provider}} a été annulée.",
+    "cancelledBodyRelease": " Votre autorisation de {{amount}} sera libérée.",
+    "providerFallback": "le prestataire",
+    "backToBookings": "Retour aux Réservations"
+  }
+}

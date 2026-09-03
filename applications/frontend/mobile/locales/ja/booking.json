@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "サービスを選択",
+    "details": "予約の詳細",
+    "address": "ご住所",
+    "review": "内容確認",
+    "provider": "業者を選択",
+    "payment": "お支払い",
+    "pin": "支払いを確認"
+  },
+  "service": {
+    "realServicesBy": "{{name}}が提供する実際のサービス。",
+    "noServices": "この業者はまだサービスを登録していません。",
+    "continue": "続ける"
+  },
+  "details": {
+    "describeJob": "作業内容を説明してください",
+    "placeholder": "何が必要ですか？（10文字以上）",
+    "minChars": "{{count}}/10文字以上",
+    "preferredDate": "希望日",
+    "preferredTime": "希望時間",
+    "continue": "続ける",
+    "weekdayMo": "月",
+    "weekdayTu": "火",
+    "weekdayWe": "水",
+    "weekdayTh": "木",
+    "weekdayFr": "金",
+    "weekdaySa": "土",
+    "weekdaySu": "日",
+    "morning": "午前",
+    "morningHint": "8時 – 12時",
+    "afternoon": "午後",
+    "afternoonHint": "12時 – 17時",
+    "evening": "夕方",
+    "eveningHint": "17時 – 21時",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "新しい住所を追加",
+    "labelPlaceholder": "ラベル（例：自宅）",
+    "recipientPlaceholder": "受取人名",
+    "phonePlaceholder": "電話番号",
+    "streetPlaceholder": "住所",
+    "cityPlaceholder": "市区町村",
+    "regionPlaceholder": "地域（任意）",
+    "saveAddress": "住所を保存",
+    "cancel": "キャンセル",
+    "continue": "続ける"
+  },
+  "review": {
+    "labelService": "サービス",
+    "labelProvider": "業者",
+    "labelDate": "日付",
+    "labelTime": "時間",
+    "labelAddress": "住所",
+    "notSet": "未設定",
+    "promoCode": "プロモコード",
+    "promoPlaceholder": "コードを入力",
+    "apply": "適用",
+    "promoInvalid": "このコードは無効か期限切れです",
+    "promo": "割引",
+    "total": "合計",
+    "submitRequest": "リクエストを送信",
+    "genericError": "このリクエストを送信できませんでした"
+  },
+  "provider": {
+    "finding": "近くの評価の高いプロを探しています…",
+    "noneAvailableTitle": "現在利用可能な業者がいません",
+    "noneAvailableSubtitle": "しばらくしてから再試行するか、後でマイ予約をご確認ください。",
+    "errorTitle": "問題が発生しました",
+    "retry": "再試行",
+    "noQuotesTitle": "まだ即時見積もりがありません",
+    "noQuotesSubtitle": "マッチした業者はまだ見積もりを送信していません。まもなくマイ予約をご確認ください。",
+    "notMatchedNotice": "{{name}}はこのリクエストにマッチしませんでした——代わりにマッチした業者をご紹介します。",
+    "leadTime": "{{rating}} · 対応まで{{days}}日",
+    "confirming": "確認中…",
+    "acceptAndContinue": "承諾して続ける"
+  },
+  "payment": {
+    "booking": "予約",
+    "amountDue": "お支払い金額",
+    "yourMethods": "お支払い方法",
+    "wallet": "FIXOウォレット",
+    "default": "デフォルト",
+    "authorizeNotice": "承認すると、この予約に対して実際の支払い承認処理が実行されます。",
+    "authorizePayment": "支払いを承認"
+  },
+  "pin": {
+    "enterToConfirm": "確認のためPINを入力してください",
+    "continue": "続ける"
+  },
+  "success": {
+    "title": "予約完了！",
+    "body": "お支払いが承認され、予約が確定しました。",
+    "viewReceipt": "電子領収書を見る",
+    "backToBookings": "予約一覧に戻る"
+  },
+  "receipt": {
+    "title": "電子領収書",
+    "share": "領収書を共有",
+    "download": "領収書をダウンロード",
+    "print": "印刷",
+    "labelService": "サービス",
+    "labelProvider": "業者",
+    "labelDate": "日付",
+    "labelTime": "時間",
+    "labelAddress": "住所",
+    "amount": "金額",
+    "arrivalCode": "到着コード",
+    "paymentId": "支払いID",
+    "status": "ステータス",
+    "serviceFallback": "サービス"
+  },
+  "cancel": {
+    "title": "予約をキャンセル",
+    "confirmTitle": "キャンセルの確認",
+    "whyCancelling": "キャンセルの理由は？",
+    "reasonChangeOfPlans": "予定の変更",
+    "reasonBetterPrice": "より良い価格が見つかった",
+    "reasonMistake": "誤って予約した",
+    "reasonUnavailable": "業者が対応不可",
+    "reasonOther": "その他",
+    "continue": "続ける",
+    "cancelling": "予約をキャンセルしています…",
+    "enterPinToConfirm": "キャンセルを確認するためPINを入力してください",
+    "genericError": "この予約をキャンセルできませんでした——キャンセル可能期限を過ぎている可能性があります。",
+    "cancelledTitle": "予約がキャンセルされました",
+    "cancelledBody": "{{provider}}との予約がキャンセルされました。",
+    "cancelledBodyRelease": " {{amount}}の承認は解放されます。",
+    "providerFallback": "業者",
+    "backToBookings": "予約一覧に戻る"
+  }
+}
