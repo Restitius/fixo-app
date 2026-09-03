@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import Button from '../../components/Button'
 import Sheet from '../../components/Sheet'
@@ -9,6 +10,7 @@ import { fixoSdk, type BookingHistoryRow, type BookingRating } from '../../lib/a
 import { fmtDate } from '../../lib/format'
 
 export default function Feedback() {
+  const { t } = useTranslation('profile')
   const [completed, setCompleted] = useState<BookingHistoryRow[] | null>(null)
   const [ratings, setRatings] = useState<BookingRating[]>([])
   const [target, setTarget] = useState<BookingHistoryRow | null>(null)
@@ -46,10 +48,10 @@ export default function Feedback() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Feedback" back="/(tabs)/profile" />
+      <ScreenHeader title={t('feedback.title')} back="/(tabs)/profile" />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View className="px-6 pt-2">
-          <Text className="text-[16px] font-bold text-ink mb-3">Rate a completed job</Text>
+          <Text className="text-[16px] font-bold text-ink mb-3">{t('feedback.rateCompletedJob')}</Text>
           <View className="flex-col gap-3">
             {completed === null ? (
               <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
@@ -61,7 +63,7 @@ export default function Feedback() {
                     <View key={b.booking_id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
                       <View className="flex-1 min-w-0">
                         <Text numberOfLines={1} className="font-bold text-ink text-[14px]">
-                          {b.service_name ?? 'Service'}
+                          {b.service_name ?? t('feedback.serviceFallback')}
                         </Text>
                         <Text className="text-[12px] text-muted mt-0.5">{b.provider_name ?? '—'} · {fmtDate(b.completed_at ?? b.created_at)}</Text>
                         {existing && (
@@ -73,12 +75,12 @@ export default function Feedback() {
                         )}
                       </View>
                       <Pressable onPress={() => openRate(b)} className="shrink-0 rounded-full border border-primary px-4 py-2">
-                        <Text className="text-[12px] font-semibold text-primary">{existing ? 'Edit' : 'Rate'}</Text>
+                        <Text className="text-[12px] font-semibold text-primary">{existing ? t('feedback.edit') : t('feedback.rate')}</Text>
                       </Pressable>
                     </View>
                   )
                 })}
-                {completed.length === 0 && <Text className="text-center text-muted py-8 text-[14px]">No completed bookings yet.</Text>}
+                {completed.length === 0 && <Text className="text-center text-muted py-8 text-[14px]">{t('feedback.noCompleted')}</Text>}
               </>
             )}
           </View>
@@ -87,7 +89,7 @@ export default function Feedback() {
 
       <Sheet open={!!target} onClose={() => setTarget(null)}>
         <View className="w-10 h-1 bg-hairline rounded-full self-center mb-6" />
-        <Text className="text-[18px] font-bold text-ink text-center">Rate your experience</Text>
+        <Text className="text-[18px] font-bold text-ink text-center">{t('feedback.rateExperience')}</Text>
         <View className="flex-row items-center justify-center gap-2 mt-5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Pressable key={i} onPress={() => setStars(i + 1)} hitSlop={6}>
@@ -98,7 +100,7 @@ export default function Feedback() {
         <TextInput
           value={comment}
           onChangeText={setComment}
-          placeholder="Share more about your experience..."
+          placeholder={t('feedback.commentPlaceholder')}
           placeholderTextColor="#9e9e9e"
           multiline
           numberOfLines={3}
@@ -106,7 +108,7 @@ export default function Feedback() {
           className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[14px] text-ink mt-6 min-h-[88px]"
         />
         <View className="mt-6">
-          <Button onPress={submit} loading={submitting}>Submit Feedback</Button>
+          <Button onPress={submit} loading={submitting}>{t('feedback.submit')}</Button>
         </View>
       </Sheet>
     </SafeAreaView>

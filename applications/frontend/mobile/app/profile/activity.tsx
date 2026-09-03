@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import { CheckCircleIcon, ClockIcon, CreditCardIcon, StarIcon, XCircleIcon } from '../../components/icons'
 import { fixoSdk, type ActivityEvent } from '../../lib/api-client'
@@ -17,6 +18,7 @@ function eventMeta(event: string): { icon: (p: { size?: number; color?: string }
 }
 
 export default function Activity() {
+  const { t } = useTranslation('profile')
   const [events, setEvents] = useState<ActivityEvent[] | null>(null)
 
   useEffect(() => {
@@ -25,13 +27,13 @@ export default function Activity() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Activity" back="/(tabs)/profile" />
+      <ScreenHeader title={t('activity.title')} back="/(tabs)/profile" />
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
         <View className="px-6 pt-2">
           {events === null ? (
             <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
           ) : events.length === 0 ? (
-            <Text className="text-center text-muted py-8 text-[14px]">No activity yet.</Text>
+            <Text className="text-center text-muted py-8 text-[14px]">{t('activity.empty')}</Text>
           ) : (
             events.map((a, i) => {
               const meta = eventMeta(a.event)
