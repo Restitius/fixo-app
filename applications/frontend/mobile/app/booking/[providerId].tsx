@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import Button from '../../components/Button'
 import Avatar from '../../components/Avatar'
@@ -40,17 +41,18 @@ import {
 type Step = 'service' | 'details' | 'address' | 'review' | 'provider' | 'payment' | 'pin'
 
 const STEP_ORDER: Step[] = ['service', 'details', 'address', 'review', 'provider', 'payment', 'pin']
-const TIME_WINDOWS = [
-  { value: 'MORNING', label: 'Morning', hint: '8am – 12pm' },
-  { value: 'AFTERNOON', label: 'Afternoon', hint: '12pm – 5pm' },
-  { value: 'EVENING', label: 'Evening', hint: '5pm – 9pm' },
-] as const
 
 function formatDate(d: Date) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 export default function BookingFlow() {
+  const { t, i18n } = useTranslation('booking')
+  const TIME_WINDOWS = [
+    { value: 'MORNING', label: t('details.morning'), hint: t('details.morningHint') },
+    { value: 'AFTERNOON', label: t('details.afternoon'), hint: t('details.afternoonHint') },
+    { value: 'EVENING', label: t('details.evening'), hint: t('details.eveningHint') },
+  ] as const
   const { providerId = '' } = useLocalSearchParams<{ providerId: string }>()
   const [provider, setProvider] = useState<ProviderProfile | null>(null)
   const [loadError, setLoadError] = useState(false)
@@ -180,7 +182,7 @@ export default function BookingFlow() {
       setPromoDiscount(res.discount_amount)
       setPromoId(res.promo_id)
     } catch {
-      setPromoError('This code is not valid or has expired')
+      setPromoError(t('review.promoInvalid'))
       setPromoDiscount(null)
       setPromoId(null)
     } finally {
@@ -205,7 +207,7 @@ export default function BookingFlow() {
       if (submitted.status === 'VALID') setStep('provider')
       else setReviewIssue(submitted.validation_notes ?? `Request status: ${submitted.status}`)
     } catch (err) {
-      setReviewIssue(err instanceof ApiError ? err.message : 'Could not submit this request')
+      setReviewIssue(err instanceof ApiError ? err.message : t('review.genericError'))
     } finally {
       setSubmitting(false)
     }
@@ -247,13 +249,13 @@ export default function BookingFlow() {
   const canLeaveAddress = !!selectedAddressId && !showAddressForm
 
   const headerTitle =
-    step === 'service' ? 'Choose a Service'
-    : step === 'details' ? 'Booking Details'
-    : step === 'address' ? 'Your Address'
-    : step === 'review' ? 'Review Summary'
-    : step === 'provider' ? 'Choose a Provider'
-    : step === 'payment' ? 'Payment'
-    : 'Confirm Payment'
+    step === 'service' ? t('header.service')
+    : step === 'details' ? t('header.details')
+    : step === 'address' ? t('header.address')
+    : step === 'review' ? t('header.review')
+    : step === 'provider' ? t('header.provider')
+    : step === 'payment' ? t('header.payment')
+    : t('header.pin')
 
   return (
     <View className="flex-1 bg-white">
@@ -264,10 +266,10 @@ export default function BookingFlow() {
           <View className="flex-1">
             <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
               <View className="px-6 pt-2">
-                <Text className="text-[14px] text-muted mb-4">Real services offered by {provider.display_name}.</Text>
+                <Text className="text-[14px] text-muted mb-4">{t('service.realServicesBy', { name: provider.display_name })}</Text>
                 <View className="flex-col gap-3">
                   {provider.services.length === 0 ? (
-                    <Text className="text-[13px] text-muted">This provider has no services listed yet.</Text>
+                    <Text className="text-[13px] text-muted">{t('service.noServices')}</Text>
                   ) : (
                     provider.services.map((s) => {
                       const active = selectedServiceId === s.service_id
@@ -286,7 +288,7 @@ export default function BookingFlow() {
                 </View>
               </View>
             </ScrollView>
-            <StepFooter label="Continue" onNext={goNext} disabled={!canLeaveService} />
+            <StepFooter label={t('service.continue')} onNext={goNext} disabled={!canLeaveService} />
           </View>
         )}
 
@@ -294,37 +296,37 @@ export default function BookingFlow() {
           <View className="flex-1">
             <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
               <View className="px-6 pt-2">
-                <Text className="text-[14px] font-semibold text-ink mb-2">Describe the job</Text>
+                <Text className="text-[14px] font-semibold text-ink mb-2">{t('details.describeJob')}</Text>
                 <TextInput
                   value={description}
                   onChangeText={setDescription}
-                  placeholder="What do you need done? (min. 10 characters)"
+                  placeholder={t('details.placeholder')}
                   placeholderTextColor="#9e9e9e"
                   multiline
                   numberOfLines={4}
                   textAlignVertical="top"
                   className="w-full rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[14px] text-ink min-h-[110px]"
                 />
-                <Text className="text-[11px] text-muted mt-1 text-right">{description.trim().length}/10 min characters</Text>
+                <Text className="text-[11px] text-muted mt-1 text-right">{t('details.minChars', { count: description.trim().length })}</Text>
 
-                <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">Preferred Date</Text>
-                <CalendarMonth viewMonth={viewMonth} setViewMonth={setViewMonth} selectedDate={preferredDate} setSelectedDate={setPreferredDate} />
+                <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">{t('details.preferredDate')}</Text>
+                <CalendarMonth viewMonth={viewMonth} setViewMonth={setViewMonth} selectedDate={preferredDate} setSelectedDate={setPreferredDate} locale={i18n.language} />
 
-                <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">Preferred Time</Text>
+                <Text className="text-[14px] font-semibold text-ink mt-6 mb-3">{t('details.preferredTime')}</Text>
                 <View className="flex-row flex-wrap gap-2">
-                  {TIME_WINDOWS.map((t) => (
+                  {TIME_WINDOWS.map((tw) => (
                     <Pressable
-                      key={t.value}
-                      onPress={() => setTimeWindow(t.value)}
-                      className={`rounded-full px-4 py-2.5 border ${timeWindow === t.value ? 'bg-primary border-primary' : 'border-primary/40'}`}
+                      key={tw.value}
+                      onPress={() => setTimeWindow(tw.value)}
+                      className={`rounded-full px-4 py-2.5 border ${timeWindow === tw.value ? 'bg-primary border-primary' : 'border-primary/40'}`}
                     >
-                      <Text className={`text-[13px] font-medium ${timeWindow === t.value ? 'text-white' : 'text-primary'}`}>{t.label} · {t.hint}</Text>
+                      <Text className={`text-[13px] font-medium ${timeWindow === tw.value ? 'text-white' : 'text-primary'}`}>{t('details.timeWindowLabel', { label: tw.label, hint: tw.hint })}</Text>
                     </Pressable>
                   ))}
                 </View>
               </View>
             </ScrollView>
-            <StepFooter label="Continue" onNext={goNext} disabled={!canLeaveDetails} />
+            <StepFooter label={t('details.continue')} onNext={goNext} disabled={!canLeaveDetails} />
           </View>
         )}
 
@@ -357,21 +359,21 @@ export default function BookingFlow() {
                     {!showAddressForm ? (
                       <Pressable onPress={() => setShowAddressForm(true)} className="flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-hairline py-4">
                         <PlusIcon size={16} color="#6C7585" />
-                        <Text className="text-[14px] font-medium text-muted">Add a new address</Text>
+                        <Text className="text-[14px] font-medium text-muted">{t('address.addNew')}</Text>
                       </Pressable>
                     ) : (
                       <View className="rounded-2xl border border-hairline p-4 gap-3">
-                        <TextInput value={addrDraft.label} onChangeText={(v) => setAddrDraft((d) => ({ ...d, label: v }))} placeholder="Label (e.g. Home)" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
-                        <TextInput value={addrDraft.recipient_name} onChangeText={(v) => setAddrDraft((d) => ({ ...d, recipient_name: v }))} placeholder="Recipient name" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
-                        <TextInput value={addrDraft.phone} onChangeText={(v) => setAddrDraft((d) => ({ ...d, phone: v }))} placeholder="Phone" keyboardType="phone-pad" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
-                        <TextInput value={addrDraft.street_address} onChangeText={(v) => setAddrDraft((d) => ({ ...d, street_address: v }))} placeholder="Street address" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.label} onChangeText={(v) => setAddrDraft((d) => ({ ...d, label: v }))} placeholder={t('address.labelPlaceholder')} placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.recipient_name} onChangeText={(v) => setAddrDraft((d) => ({ ...d, recipient_name: v }))} placeholder={t('address.recipientPlaceholder')} placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.phone} onChangeText={(v) => setAddrDraft((d) => ({ ...d, phone: v }))} placeholder={t('address.phonePlaceholder')} keyboardType="phone-pad" placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                        <TextInput value={addrDraft.street_address} onChangeText={(v) => setAddrDraft((d) => ({ ...d, street_address: v }))} placeholder={t('address.streetPlaceholder')} placeholderTextColor="#9e9e9e" className="rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
                         <View className="flex-row gap-3">
-                          <TextInput value={addrDraft.city} onChangeText={(v) => setAddrDraft((d) => ({ ...d, city: v }))} placeholder="City" placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
-                          <TextInput value={addrDraft.region} onChangeText={(v) => setAddrDraft((d) => ({ ...d, region: v }))} placeholder="Region (optional)" placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                          <TextInput value={addrDraft.city} onChangeText={(v) => setAddrDraft((d) => ({ ...d, city: v }))} placeholder={t('address.cityPlaceholder')} placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
+                          <TextInput value={addrDraft.region} onChangeText={(v) => setAddrDraft((d) => ({ ...d, region: v }))} placeholder={t('address.regionPlaceholder')} placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
                         </View>
-                        <Button onPress={saveNewAddress} loading={savingAddress}>Save address</Button>
+                        <Button onPress={saveNewAddress} loading={savingAddress}>{t('address.saveAddress')}</Button>
                         {(addresses ?? []).length > 0 && (
-                          <Pressable onPress={() => setShowAddressForm(false)}><Text className="text-center text-[13px] text-muted">Cancel</Text></Pressable>
+                          <Pressable onPress={() => setShowAddressForm(false)}><Text className="text-center text-[13px] text-muted">{t('address.cancel')}</Text></Pressable>
                         )}
                       </View>
                     )}
@@ -379,7 +381,7 @@ export default function BookingFlow() {
                 )}
               </View>
             </ScrollView>
-            <StepFooter label="Continue" onNext={goNext} disabled={!canLeaveAddress} />
+            <StepFooter label={t('address.continue')} onNext={goNext} disabled={!canLeaveAddress} />
           </View>
         )}
 
@@ -388,27 +390,27 @@ export default function BookingFlow() {
             <ScrollView contentContainerStyle={{ paddingBottom: 16 }}>
               <View className="px-6 pt-2">
                 <View className="rounded-2xl border border-hairline p-4 flex-col gap-3">
-                  <Row label="Service" value={selectedService.name} />
-                  <Row label="Provider" value={provider.display_name} />
-                  <Row label="Date" value={preferredDate ? preferredDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not set'} />
-                  <Row label="Time" value={timeWindow ? TIME_WINDOWS.find((t) => t.value === timeWindow)!.label : 'Not set'} />
-                  <Row label="Address" value={selectedAddress ? `${selectedAddress.street_address}, ${selectedAddress.city}` : '—'} />
+                  <Row label={t('review.labelService')} value={selectedService.name} />
+                  <Row label={t('review.labelProvider')} value={provider.display_name} />
+                  <Row label={t('review.labelDate')} value={preferredDate ? preferredDate.toLocaleDateString(i18n.language, { month: 'short', day: 'numeric', year: 'numeric' }) : t('review.notSet')} />
+                  <Row label={t('review.labelTime')} value={timeWindow ? TIME_WINDOWS.find((tw) => tw.value === timeWindow)!.label : t('review.notSet')} />
+                  <Row label={t('review.labelAddress')} value={selectedAddress ? `${selectedAddress.street_address}, ${selectedAddress.city}` : '—'} />
                 </View>
 
                 <Text className="text-[13px] text-muted mt-4 px-1 leading-relaxed">{description}</Text>
 
-                <Text className="text-[14px] font-semibold text-ink mt-6 mb-2">Promo Code</Text>
+                <Text className="text-[14px] font-semibold text-ink mt-6 mb-2">{t('review.promoCode')}</Text>
                 <View className="flex-row items-center gap-3">
                   <TextInput
                     value={promoCode}
                     onChangeText={setPromoCode}
                     autoCapitalize="characters"
-                    placeholder="Enter code"
+                    placeholder={t('review.promoPlaceholder')}
                     placeholderTextColor="#9e9e9e"
                     className="flex-1 rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
                   />
                   <Pressable onPress={applyPromo} disabled={validatingPromo} className="items-center justify-center rounded-2xl bg-primary px-5 py-4">
-                    <Text className="text-[14px] font-bold text-white">Apply</Text>
+                    <Text className="text-[14px] font-bold text-white">{t('review.apply')}</Text>
                   </Pressable>
                 </View>
                 {promoError && <Text className="text-[12px] text-red-500 mt-2">{promoError}</Text>}
@@ -420,12 +422,12 @@ export default function BookingFlow() {
                   </View>
                   {promoDiscount != null && promoDiscount > 0 && (
                     <View className="flex-row justify-between">
-                      <Text className="text-primary font-medium text-[14px]">Promo</Text>
+                      <Text className="text-primary font-medium text-[14px]">{t('review.promo')}</Text>
                       <Text className="text-primary font-medium text-[14px]">- {fmtMoney(promoDiscount)}</Text>
                     </View>
                   )}
                   <View className="flex-row justify-between pt-2 border-t border-hairline">
-                    <Text className="font-bold text-ink text-[16px]">Total</Text>
+                    <Text className="font-bold text-ink text-[16px]">{t('review.total')}</Text>
                     <Text className="font-bold text-ink text-[16px]">{fmtMoney(total)}</Text>
                   </View>
                 </View>
@@ -433,7 +435,7 @@ export default function BookingFlow() {
                 {reviewIssue && <Text className="text-[13px] text-red-500 mt-4">{reviewIssue}</Text>}
               </View>
             </ScrollView>
-            <StepFooter label="Submit Request" onNext={submitRequest} loading={submitting} />
+            <StepFooter label={t('review.submitRequest')} onNext={submitRequest} loading={submitting} />
           </View>
         )}
 
@@ -443,30 +445,30 @@ export default function BookingFlow() {
               <View className="px-6 pt-2">
                 {matching ? (
                   <View className="items-center py-16">
-                    <Text className="text-[15px] font-semibold text-ink">Finding the best-rated pros near you…</Text>
+                    <Text className="text-[15px] font-semibold text-ink">{t('provider.finding')}</Text>
                   </View>
                 ) : matchOutcome === 'NO_PROVIDER_AVAILABLE' ? (
                   <View className="items-center py-16">
-                    <Text className="text-[15px] font-semibold text-ink">No providers available right now</Text>
-                    <Text className="text-[13px] text-muted mt-1 text-center">Try again shortly, or check My Bookings later.</Text>
+                    <Text className="text-[15px] font-semibold text-ink">{t('provider.noneAvailableTitle')}</Text>
+                    <Text className="text-[13px] text-muted mt-1 text-center">{t('provider.noneAvailableSubtitle')}</Text>
                   </View>
                 ) : matchOutcome === 'ERROR' ? (
                   <View className="items-center py-16">
-                    <Text className="text-[15px] font-semibold text-ink">Something went wrong</Text>
-                    <Pressable onPress={() => setMatchOutcome(null)}><Text className="text-primary text-[13px] font-semibold mt-2">Retry</Text></Pressable>
+                    <Text className="text-[15px] font-semibold text-ink">{t('provider.errorTitle')}</Text>
+                    <Pressable onPress={() => setMatchOutcome(null)}><Text className="text-primary text-[13px] font-semibold mt-2">{t('provider.retry')}</Text></Pressable>
                   </View>
                 ) : quotes === null ? (
                   <View className="h-24 rounded-2xl bg-[#f5f5f5]" />
                 ) : quotes.length === 0 ? (
                   <View className="items-center py-16">
-                    <Text className="text-[15px] font-semibold text-ink">No instant quotes yet</Text>
-                    <Text className="text-[13px] text-muted mt-1 text-center">Matched providers haven't sent an estimate yet. Check My Bookings shortly.</Text>
+                    <Text className="text-[15px] font-semibold text-ink">{t('provider.noQuotesTitle')}</Text>
+                    <Text className="text-[13px] text-muted mt-1 text-center">{t('provider.noQuotesSubtitle')}</Text>
                   </View>
                 ) : (
                   <View className="flex-col gap-3">
                     {matches && matches.length > 0 && !matches.some((m) => m.provider_id === providerId) && (
                       <View className="rounded-2xl bg-amber-500/10 p-3">
-                        <Text className="text-[12px] text-ink">{provider.display_name} wasn't matched for this request — here are your matched providers instead.</Text>
+                        <Text className="text-[12px] text-ink">{t('provider.notMatchedNotice', { name: provider.display_name })}</Text>
                       </View>
                     )}
                     {sortedQuotes.map((q) => (
@@ -477,7 +479,7 @@ export default function BookingFlow() {
                             <Text numberOfLines={1} className="font-bold text-ink">{q.display_name}</Text>
                             <View className="flex-row items-center gap-1">
                               <StarIcon size={12} />
-                              <Text className="text-[12px] text-muted">{q.rating_avg.toFixed(1)} · {q.lead_time_days}d lead time</Text>
+                              <Text className="text-[12px] text-muted">{t('provider.leadTime', { rating: q.rating_avg.toFixed(1), days: q.lead_time_days })}</Text>
                             </View>
                           </View>
                           <Text className="font-bold text-primary text-[15px]">{fmtMoney(q.amount, q.currency)}</Text>
@@ -487,7 +489,7 @@ export default function BookingFlow() {
                           disabled={acceptingQuoteId !== null}
                           className="mt-3 items-center rounded-xl bg-primary py-3"
                         >
-                          <Text className="text-white font-bold text-[14px]">{acceptingQuoteId === q.quote_id ? 'Confirming…' : 'Accept & Continue'}</Text>
+                          <Text className="text-white font-bold text-[14px]">{acceptingQuoteId === q.quote_id ? t('provider.confirming') : t('provider.acceptAndContinue')}</Text>
                         </Pressable>
                       </View>
                     ))}
@@ -504,21 +506,21 @@ export default function BookingFlow() {
               <View className="px-6 pt-2">
                 <View className="rounded-2xl border border-hairline p-4 flex-col gap-2 mb-5">
                   <View className="flex-row justify-between">
-                    <Text className="text-muted text-[14px]">Booking</Text>
+                    <Text className="text-muted text-[14px]">{t('payment.booking')}</Text>
                     <Text className="text-ink font-medium text-[14px]">{booking.booking_number}</Text>
                   </View>
                   <View className="flex-row justify-between pt-2 border-t border-hairline">
-                    <Text className="font-bold text-ink text-[16px]">Amount Due</Text>
+                    <Text className="font-bold text-ink text-[16px]">{t('payment.amountDue')}</Text>
                     <Text className="font-bold text-ink text-[16px]">{fmtMoney(booking.agreed_amount, booking.currency)}</Text>
                   </View>
                 </View>
 
-                <Text className="text-[14px] font-semibold text-ink mb-3">Your payment methods</Text>
+                <Text className="text-[14px] font-semibold text-ink mb-3">{t('payment.yourMethods')}</Text>
                 <View className="flex-col gap-3">
                   {wallet && (
                     <View className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
                       <PaymentIcon icon="cash" size={24} />
-                      <Text className="text-[14px] text-ink flex-1">FIXO Wallet</Text>
+                      <Text className="text-[14px] text-ink flex-1">{t('payment.wallet')}</Text>
                       <Text className="text-[13px] text-muted">{fmtMoney(wallet.balance, wallet.currency)}</Text>
                     </View>
                   )}
@@ -526,32 +528,32 @@ export default function BookingFlow() {
                     <View key={pm.method_id} className="flex-row items-center gap-4 rounded-2xl border border-hairline p-4">
                       <PaymentIcon icon={(pm.provider ?? pm.type).toLowerCase()} size={24} />
                       <Text className="text-[14px] text-ink flex-1">{pm.provider ?? pm.type}</Text>
-                      {pm.is_default && <Text className="text-[11px] font-semibold text-primary">Default</Text>}
+                      {pm.is_default && <Text className="text-[11px] font-semibold text-primary">{t('payment.default')}</Text>}
                     </View>
                   ))}
                 </View>
-                <Text className="text-[12px] text-muted mt-3">Authorizing runs the real payment-authorization workflow against this booking.</Text>
+                <Text className="text-[12px] text-muted mt-3">{t('payment.authorizeNotice')}</Text>
               </View>
             </ScrollView>
-            <StepFooter label="Authorize Payment" onNext={authorizePayment} loading={authorizing} />
+            <StepFooter label={t('payment.authorizePayment')} onNext={authorizePayment} loading={authorizing} />
           </View>
         )}
 
-        {step === 'pin' && <PinStep pin={pin} setPin={setPin} onComplete={() => setShowSuccess(true)} />}
+        {step === 'pin' && <PinStep pin={pin} setPin={setPin} onComplete={() => setShowSuccess(true)} t={t} />}
       </SafeAreaView>
 
       <CenterModal open={showSuccess}>
         <View className="items-center justify-center size-24 rounded-full bg-primary mb-6">
           <ShieldCheckIcon size={44} color="#fff" />
         </View>
-        <Text className="text-primary text-[22px] font-bold">Booking Successful!</Text>
-        <Text className="text-[15px] text-ink mt-3 text-center">Your payment was authorized and the booking is confirmed.</Text>
+        <Text className="text-primary text-[22px] font-bold">{t('success.title')}</Text>
+        <Text className="text-[15px] text-ink mt-3 text-center">{t('success.body')}</Text>
         <View className="flex-col gap-3 w-full mt-8">
           <Button onPress={() => router.replace(`/booking/${providerId}/receipt?bookingId=${booking?.booking_id ?? ''}` as any)}>
-            View E-Receipt
+            {t('success.viewReceipt')}
           </Button>
           <Button variant="outline" onPress={() => router.replace('/(tabs)/bookings')}>
-            Back to Bookings
+            {t('success.backToBookings')}
           </Button>
         </View>
       </CenterModal>
@@ -583,17 +585,23 @@ function CalendarMonth({
   setViewMonth,
   selectedDate,
   setSelectedDate,
+  locale,
 }: {
   viewMonth: Date
   setViewMonth: (d: Date) => void
   selectedDate: Date | null
   setSelectedDate: (d: Date) => void
+  locale: string
 }) {
   const year = viewMonth.getFullYear()
   const month = viewMonth.getMonth()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7
-  const monthLabel = viewMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const monthLabel = viewMonth.toLocaleDateString(locale, { month: 'long', year: 'numeric' })
+  const weekdayLabels = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(2024, 0, 1 + i) // 2024-01-01 is a Monday
+    return new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(d)
+  })
 
   return (
     <View className="rounded-3xl bg-primary/5 p-5">
@@ -609,8 +617,8 @@ function CalendarMonth({
         </View>
       </View>
       <View className="flex-row flex-wrap">
-        {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((w) => (
-          <Text key={w} className="text-[11px] text-muted font-medium text-center" style={{ width: '14.28%' }}>{w}</Text>
+        {weekdayLabels.map((w, i) => (
+          <Text key={i} className="text-[11px] text-muted font-medium text-center" style={{ width: '14.28%' }}>{w}</Text>
         ))}
         {Array.from({ length: firstDayOffset }).map((_, i) => <View key={`b${i}`} style={{ width: '14.28%' }} />)}
         {Array.from({ length: daysInMonth }).map((_, i) => {
@@ -629,7 +637,7 @@ function CalendarMonth({
   )
 }
 
-function PinStep({ pin, setPin, onComplete }: { pin: string[]; setPin: (p: string[]) => void; onComplete: () => void }) {
+function PinStep({ pin, setPin, onComplete, t }: { pin: string[]; setPin: (p: string[]) => void; onComplete: () => void; t: (key: string) => string }) {
   const LENGTH = 4
   const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'back']
   const complete = pin.length === LENGTH
@@ -647,7 +655,7 @@ function PinStep({ pin, setPin, onComplete }: { pin: string[]; setPin: (p: strin
   return (
     <View className="flex-1">
       <View className="flex-1 px-6 pt-10">
-        <Text className="text-center text-[16px] text-ink">Enter your PIN to confirm</Text>
+        <Text className="text-center text-[16px] text-ink">{t('pin.enterToConfirm')}</Text>
         <View className="flex-row justify-center gap-4 mt-8">
           {Array.from({ length: LENGTH }).map((_, i) => {
             const isLast = i === pin.length - 1
@@ -661,7 +669,7 @@ function PinStep({ pin, setPin, onComplete }: { pin: string[]; setPin: (p: strin
         </View>
         {complete && (
           <View className="mt-8">
-            <Button onPress={onComplete}>Continue</Button>
+            <Button onPress={onComplete}>{t('pin.continue')}</Button>
           </View>
         )}
       </View>
