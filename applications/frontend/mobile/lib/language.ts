@@ -4,7 +4,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { I18nManager, Platform } from 'react-native'
 import { reloadAppAsync } from 'expo'
-import * as Localization from 'expo-localization'
 import i18n, { SUPPORTED_LANGUAGES, RTL_LANGUAGES, type LanguageCode } from './i18n'
 
 export type { LanguageCode }
@@ -34,22 +33,21 @@ export function isRtl(code: LanguageCode): boolean {
   return RTL_LANGUAGES.includes(code)
 }
 
-function detectDeviceLanguage(): LanguageCode {
-  const tag = Localization.getLocales()[0]?.languageCode
-  return isSupported(tag) ? tag : 'en'
-}
-
-// Resolution order: explicit local override -> device locale -> 'en'.
-// The account's preferred_language is adopted separately once auth loads
-// (see adoptAccountLanguage), since it isn't known until after this runs.
+// Resolution order: explicit local override -> 'en'. English is the hard
+// default for anyone who hasn't made a choice — deliberately NOT auto-detected
+// from the device locale, so a fresh install always reads in English rather
+// than guessing (often wrongly) from OS settings. The account's
+// preferred_language is adopted separately once auth loads (see
+// adoptAccountLanguage), since it isn't known until after this runs, and
+// itself defaults to 'en' server-side unless the user explicitly changed it.
 export async function resolveInitialLanguage(): Promise<LanguageCode> {
   try {
     const explicit = await AsyncStorage.getItem(EXPLICIT_KEY)
     if (isSupported(explicit)) return explicit
   } catch {
-    // fall through to device detection
+    // fall through to the English default
   }
-  return detectDeviceLanguage()
+  return 'en'
 }
 
 export async function adoptAccountLanguage(code: string | null | undefined): Promise<void> {
