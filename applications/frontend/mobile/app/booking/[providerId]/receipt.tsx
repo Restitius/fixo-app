@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../../components/ScreenHeader'
-import PaymentIcon from '../../../components/PaymentIcon'
-import { providerById, CATEGORIES, PAYMENT_METHODS } from '../../../data/mock'
+import { bookingApi, type BookingRow } from '../../../lib/api-client'
+import { fmtDate, fmtMoney, humanize } from '../../../lib/format'
 import { ChevronDownIcon, CopyIcon, DownloadIcon, MoreHorizontalIcon, PrintIcon, ShareIcon } from '../../../components/icons'
 
 function copyToClipboard(text: string) {
@@ -25,46 +25,15 @@ function Barcode() {
 }
 
 export default function EReceipt() {
-  const { providerId = '', date, time, workingHours, itemsSummary, payment, subtotal, discount, total } = useLocalSearchParams<{
-    providerId: string
-    date?: string
-    time?: string
-    workingHours?: string
-    itemsSummary?: string
-    payment?: string
-    subtotal?: string
-    discount?: string
-    total?: string
-  }>()
-  const provider = providerById(providerId)
+  const { bookingId = '' } = useLocalSearchParams<{ bookingId: string }>()
+  const [booking, setBooking] = useState<BookingRow | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [detailsOpen, setDetailsOpen] = useState(false)
 
-  if (!provider) return null
-  const category = CATEGORIES.find((c) => c.id === provider.categoryId)
+  useEffect(() => {
+    if (bookingId) bookingApi.getBooking(bookingId).then(setBooking).catch(() => setBooking(null))
+  }, [bookingId])
 
-  const info = date
-    ? {
-        date,
-        time: time ?? '—',
-        workingHours: Number(workingHours ?? 0),
-        itemsSummary: itemsSummary ?? '',
-        payment: payment ?? PAYMENT_METHODS[0]!.id,
-        subtotal: Number(subtotal ?? provider.price),
-        discount: Number(discount ?? 0),
-        total: Number(total ?? provider.price),
-      }
-    : {
-        date: 'Sep 3, 2026',
-        time: '10:00 AM',
-        workingHours: 2,
-        itemsSummary: 'No details available',
-        payment: PAYMENT_METHODS[0]!.id,
-        subtotal: provider.price,
-        discount: 0,
-        total: provider.price,
-      }
-  const pm = PAYMENT_METHODS.find((p) => p.id === info.payment)
+  if (!booking) return null
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -99,63 +68,45 @@ export default function EReceipt() {
           <View className="px-6 pt-4">
             <View className="items-center py-4">
               <Barcode />
-              <Text className="text-[12px] text-muted tracking-widest mt-2">273628   837279</Text>
+              <Text className="text-[12px] text-muted tracking-widest mt-2">{booking.booking_number}</Text>
             </View>
 
             <View className="rounded-2xl border border-hairline p-4 flex-col gap-3">
-              <Row label="Services" value={provider.title} />
-              <Row label="Category" value={category?.name ?? ''} />
-              <Row label="Workers" value={provider.name} />
-              <Row label="Date & Time" value={`${info.date} | ${info.time}`} />
-              <Row label="Working Hours" value={`${info.workingHours} hours`} />
+              <Row label="Service" value={booking.service_name ?? 'Service'} />
+              <Row label="Provider" value={booking.provider_name ?? '—'} />
+              <Row label="Date" value={fmtDate(booking.scheduled_date)} />
+              {booking.time_window && <Row label="Time" value={humanize(booking.time_window)} />}
+              {booking.address_street && <Row label="Address" value={`${booking.address_street}${booking.address_city ? `, ${booking.address_city}` : ''}`} />}
             </View>
-
-            <Pressable
-              onPress={() => setDetailsOpen((v) => !v)}
-              className="w-full flex-row items-center justify-between rounded-2xl border border-hairline p-4 mt-4"
-            >
-              <Text className="text-[14px] font-medium text-ink">{provider.title} Details</Text>
-              <View style={{ transform: [{ rotate: detailsOpen ? '180deg' : '0deg' }] }}>
-                <ChevronDownIcon size={16} color="#6C7585" />
-              </View>
-            </Pressable>
-            {detailsOpen && <Text className="text-[13px] text-muted px-4 pt-2 leading-relaxed">{info.itemsSummary}</Text>}
 
             <View className="rounded-2xl border border-hairline p-4 mt-4 flex-col gap-2">
               <View className="flex-row justify-between">
                 <Text className="text-ink text-[14px]">Amount</Text>
-                <Text className="text-ink text-[14px]">${info.subtotal.toFixed(2)}</Text>
+                <Text className="text-ink text-[14px]">{fmtMoney(booking.agreed_amount, booking.currency)}</Text>
               </View>
-              {info.discount > 0 && (
-                <View className="flex-row justify-between">
-                  <Text className="text-primary font-medium text-[14px]">Promo</Text>
-                  <Text className="text-primary font-medium text-[14px]">- ${info.discount.toFixed(2)}</Text>
+              {booking.arrival_code && (
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-muted text-[14px]">Arrival Code</Text>
+                  <View className="flex-row items-center gap-1.5">
+                    <Text className="text-ink font-medium text-[14px]">{booking.arrival_code}</Text>
+                    <Pressable onPress={() => copyToClipboard(booking.arrival_code!)}>
+                      <CopyIcon size={14} color="#7210FF" />
+                    </Pressable>
+                  </View>
                 </View>
               )}
-              <View className="flex-row items-center justify-between">
-                <Text className="text-muted text-[14px]">Payment Methods</Text>
-                <View className="flex-row items-center gap-2">
-                  <PaymentIcon icon={pm?.icon ?? ''} size={16} />
-                  <Text className="text-ink font-medium text-[14px]">{pm?.icon === 'cash' ? 'Cash' : 'Credit Card'}</Text>
-                </View>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-muted text-[14px]">Date</Text>
-                <Text className="text-ink font-medium text-[14px]">Dec 14, 2026 | 10:01:16 AM</Text>
-              </View>
-              <View className="flex-row items-center justify-between">
-                <Text className="text-muted text-[14px]">Transaction ID</Text>
-                <View className="flex-row items-center gap-1.5">
-                  <Text className="text-ink font-medium text-[14px]">SK7263727399</Text>
-                  <Pressable onPress={() => copyToClipboard('SK7263727399')}>
-                    <CopyIcon size={14} color="#7210FF" />
-                  </Pressable>
-                </View>
-              </View>
-              <View className="flex-row items-center justify-between">
-                <Text className="text-muted text-[14px]">Status</Text>
-                <Text className="text-[12px] font-semibold bg-primary/8 text-primary rounded-full px-3 py-1">Paid</Text>
-              </View>
+              {booking.payment && (
+                <>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-muted text-[14px]">Payment ID</Text>
+                    <Text className="text-ink font-medium text-[14px]">{booking.payment.payment_id.slice(0, 12)}</Text>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <Text className="text-muted text-[14px]">Status</Text>
+                    <Text className="text-[12px] font-semibold bg-primary/8 text-primary rounded-full px-3 py-1">{humanize(booking.payment.status)}</Text>
+                  </View>
+                </>
+              )}
             </View>
           </View>
         </ScrollView>

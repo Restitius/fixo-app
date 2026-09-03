@@ -1,54 +1,38 @@
-import { useState } from 'react'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { Pressable, Share, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../../components/ScreenHeader'
-import Avatar from '../../components/Avatar'
-import { CONTACTS, INITIALLY_INVITED } from '../../data/mock'
+import { GiftIcon } from '../../components/icons'
+import { useAuth } from '../../lib/auth-context'
 
+// There's no backend referral/contacts system (no invite tracking, no
+// phone-contacts access) — this shares a real message via the device's
+// native share sheet instead of a list of fabricated "friends".
 export default function InviteFriends() {
-  const [invited, setInvited] = useState<Set<string>>(new Set(INITIALLY_INVITED))
+  const { customer } = useAuth()
 
-  function toggle(id: string) {
-    setInvited((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
+  async function share() {
+    try {
+      await Share.share({ message: `${customer?.full_name ?? 'A friend'} is inviting you to try FIXO — book trusted handyman services in a few taps.` })
+    } catch {
+      // user dismissed the share sheet
+    }
   }
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
       <ScreenHeader title="Invite Friends" back="/(tabs)/profile" />
-      <ScrollView contentContainerStyle={{ paddingBottom: 32 }}>
-        <View className="flex-col px-6 mt-2">
-          {CONTACTS.map((c, i) => {
-            const isInvited = invited.has(c.id)
-            return (
-              <View
-                key={c.id}
-                className={`flex-row items-center gap-4 py-3.5 ${i === CONTACTS.length - 1 ? '' : 'border-b border-hairline'}`}
-              >
-                <Avatar label={c.name} size={52} />
-                <View className="flex-1 min-w-0">
-                  <Text numberOfLines={1} className="font-bold text-ink">
-                    {c.name}
-                  </Text>
-                  <Text className="text-[13px] text-muted">{c.phone}</Text>
-                </View>
-                <Pressable
-                  onPress={() => toggle(c.id)}
-                  className={`shrink-0 rounded-full px-5 py-2 ${isInvited ? 'border border-primary' : 'bg-primary'}`}
-                >
-                  <Text className={`text-[13px] font-semibold ${isInvited ? 'text-primary' : 'text-white'}`}>
-                    {isInvited ? 'Invited' : 'Invite'}
-                  </Text>
-                </Pressable>
-              </View>
-            )
-          })}
+      <View className="flex-1 items-center px-8 pt-16">
+        <View className="items-center justify-center size-24 rounded-full bg-primary/8 mb-6">
+          <GiftIcon size={44} color="#7210FF" />
         </View>
-      </ScrollView>
+        <Text className="text-[20px] font-bold text-ink text-center">Share FIXO with your friends</Text>
+        <Text className="text-[14px] text-muted text-center mt-2">
+          Know someone who needs a trusted handyman? Send them a link to get started.
+        </Text>
+        <Pressable onPress={share} className="mt-8 w-full items-center rounded-full bg-primary py-4">
+          <Text className="text-white font-bold text-[15px]">Share FIXO</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   )
 }
