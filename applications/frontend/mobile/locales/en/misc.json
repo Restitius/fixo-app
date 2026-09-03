@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "We provide professional service at a friendly price",
+    "slide2": "The best results and your satisfaction is our top priority",
+    "slide3": "Let's make awesome changes to your home",
+    "next": "Next",
+    "getStarted": "Get Started"
+  },
+  "bookmarks": {
+    "title": "My Bookmark",
+    "emptyTitle": "No bookmarks yet",
+    "emptySubtitle": "Providers you save will show up here.",
+    "removeConfirmTitle": "Remove bookmark?",
+    "removeConfirmBody": "{{name}} will be removed from your bookmarks.",
+    "cancel": "Cancel",
+    "remove": "Remove"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet."
+  },
+  "offers": {
+    "title": "Special Offers",
+    "empty": "No active promotions right now.",
+    "discountOff": "{{amount}} OFF",
+    "codeValidUntil": "Code {{code}} · Valid until {{date}}"
+  },
+  "popular": {
+    "title": "Most Popular",
+    "empty": "No providers available yet."
+  },
+  "search": {
+    "placeholder": "Search services...",
+    "hint": "Search across our real service catalog.",
+    "noResultsTitle": "No results found",
+    "noResultsSubtitle": "Try a different keyword or adjust your filters.",
+    "resultsFor": "{{count}} results for \"{{query}}\"",
+    "filtersTitle": "Filters",
+    "category": "Category",
+    "all": "All",
+    "applyFilters": "Apply Filters"
+  }
+}

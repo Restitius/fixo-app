@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useTranslation } from 'react-i18next'
 import Button from '../components/Button'
 
-const SLIDES = [
-  { emoji: '🧹', color: '#7210FF', title: 'We provide professional service at a friendly price', cta: 'Next' },
-  { emoji: '🔨', color: '#FF6B35', title: 'The best results and your satisfaction is our top priority', cta: 'Next' },
-  { emoji: '🧽', color: '#00B894', title: "Let's make awesome changes to your home", cta: 'Get Started' },
-]
-
 export default function Onboarding() {
+  const { t } = useTranslation('misc')
+  const SLIDES = [
+    { emoji: '🧹', color: '#7210FF', title: t('onboarding.slide1'), cta: t('onboarding.next') },
+    { emoji: '🔨', color: '#FF6B35', title: t('onboarding.slide2'), cta: t('onboarding.next') },
+    { emoji: '🧽', color: '#00B894', title: t('onboarding.slide3'), cta: t('onboarding.getStarted') },
+  ]
   const [index, setIndex] = useState(0)
   const slide = SLIDES[index]
   const isLast = index === SLIDES.length - 1

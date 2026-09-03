@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "手頃な価格でプロフェッショナルなサービスを提供します",
+    "slide2": "最高の結果とお客様の満足が私たちの最優先事項です",
+    "slide3": "あなたの家に素晴らしい変化をもたらしましょう",
+    "next": "次へ",
+    "getStarted": "はじめる"
+  },
+  "bookmarks": {
+    "title": "マイブックマーク",
+    "emptyTitle": "まだブックマークがありません",
+    "emptySubtitle": "保存した業者はここに表示されます。",
+    "removeConfirmTitle": "ブックマークを削除しますか？",
+    "removeConfirmBody": "{{name}}をブックマークから削除します。",
+    "cancel": "キャンセル",
+    "remove": "削除"
+  },
+  "notifications": {
+    "title": "通知",
+    "empty": "まだ通知はありません。"
+  },
+  "offers": {
+    "title": "特別オファー",
+    "empty": "現在有効なプロモーションはありません。",
+    "discountOff": "{{amount}}オフ",
+    "codeValidUntil": "コード{{code}} · {{date}}まで有効"
+  },
+  "popular": {
+    "title": "人気ランキング",
+    "empty": "まだ利用可能な業者がありません。"
+  },
+  "search": {
+    "placeholder": "サービスを検索...",
+    "hint": "実際のサービスカタログから検索します。",
+    "noResultsTitle": "結果が見つかりません",
+    "noResultsSubtitle": "別のキーワードを試すか、フィルターを調整してください。",
+    "resultsFor": "「{{query}}」の検索結果 {{count}}件",
+    "filtersTitle": "フィルター",
+    "category": "カテゴリー",
+    "all": "すべて",
+    "applyFilters": "フィルターを適用"
+  }
+}
