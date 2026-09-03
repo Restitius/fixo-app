@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "bookings": "الحجوزات",
+    "calendar": "التقويم",
+    "inbox": "الرسائل",
+    "profile": "الملف الشخصي"
+  },
+  "home": {
+    "greetingMorning": "صباح الخير",
+    "greetingAfternoon": "مساء الخير",
+    "greetingEvening": "مساء الخير",
+    "searchPlaceholder": "ابحث عن خدمات...",
+    "specialOffers": "عروض خاصة",
+    "seeAll": "عرض الكل",
+    "offAmount": "خصم {{amount}}",
+    "services": "الخدمات",
+    "more": "المزيد",
+    "mostPopular": "الخدمات الأكثر شيوعًا",
+    "noProviders": "لا يوجد مزودو خدمة بعد.",
+    "serviceFallback": "خدمة"
+  },
+  "bookings": {
+    "title": "حجوزاتي",
+    "tabUpcoming": "القادمة",
+    "tabCompleted": "المكتملة",
+    "tabCancelled": "الملغاة",
+    "emptyTitle": "لا توجد حجوزات {{tab}}",
+    "emptySubtitle": "ستظهر حجوزاتك {{tab}} هنا.",
+    "serviceFallback": "خدمة",
+    "loadingDetails": "جارٍ تحميل التفاصيل…",
+    "totalPaid": "المبلغ المدفوع",
+    "viewProvider": "عرض مزود الخدمة",
+    "cancelBooking": "إلغاء الحجز",
+    "eReceipt": "إيصال إلكتروني"
+  },
+  "calendar": {
+    "title": "تقويمي",
+    "loading": "جارٍ التحميل…",
+    "bookingsOn": "حجوزات {{date}}",
+    "noBookingsThisDay": "لا توجد حجوزات في هذا اليوم",
+    "dotHint": "التواريخ التي أسفلها نقطة تحتوي على حجز حقيقي.",
+    "serviceFallback": "خدمة"
+  },
+  "inbox": {
+    "title": "الرسائل",
+    "subtitle": "راسل مزودي الخدمة في حجوزاتك الحقيقية.",
+    "emptyTitle": "لا توجد محادثات بعد",
+    "emptySubtitle": "بمجرد تعيين مزود خدمة لحجز، يمكنك مراسلته هنا.",
+    "serviceFallback": "خدمة"
+  },
+  "profileHub": {
+    "title": "الملف الشخصي والإعدادات",
+    "menu": {
+      "editProfile": "تعديل الملف الشخصي",
+      "notificationSettings": "إعدادات الإشعارات",
+      "wallet": "المحفظة",
+      "paymentMethods": "طرق الدفع",
+      "invoices": "الفواتير",
+      "history": "السجل",
+      "loyaltyRewards": "الولاء والمكافآت",
+      "promotions": "العروض الترويجية",
+      "activity": "النشاط",
+      "feedback": "التقييمات",
+      "security": "الأمان",
+      "language": "اللغة",
+      "privacyPolicy": "سياسة الخصوصية",
+      "inviteFriends": "دعوة الأصدقاء",
+      "helpCenter": "مركز المساعدة"
+    },
+    "logOut": "تسجيل الخروج",
+    "logoutConfirmTitle": "تسجيل الخروج من حسابك؟",
+    "logoutConfirmBody": "ستحتاج لتسجيل الدخول مرة أخرى للوصول إلى حجوزاتك.",
+    "cancel": "إلغاء"
+  }
+}
