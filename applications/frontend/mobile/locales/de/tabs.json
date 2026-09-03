@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Start",
+    "bookings": "Buchungen",
+    "calendar": "Kalender",
+    "inbox": "Nachrichten",
+    "profile": "Profil"
+  },
+  "home": {
+    "greetingMorning": "Guten Morgen",
+    "greetingAfternoon": "Guten Tag",
+    "greetingEvening": "Guten Abend",
+    "searchPlaceholder": "Dienstleistungen suchen...",
+    "specialOffers": "Sonderangebote",
+    "seeAll": "Alle Anzeigen",
+    "offAmount": "{{amount}} RABATT",
+    "services": "Dienstleistungen",
+    "more": "Mehr",
+    "mostPopular": "Beliebteste Dienstleistungen",
+    "noProviders": "Noch keine Anbieter gelistet.",
+    "serviceFallback": "Dienstleistung"
+  },
+  "bookings": {
+    "title": "Meine Buchungen",
+    "tabUpcoming": "Bevorstehend",
+    "tabCompleted": "Abgeschlossen",
+    "tabCancelled": "Storniert",
+    "emptyTitle": "Keine {{tab}} Buchungen",
+    "emptySubtitle": "Deine {{tab}} Buchungen werden hier angezeigt.",
+    "serviceFallback": "Dienstleistung",
+    "loadingDetails": "Details werden geladen…",
+    "totalPaid": "Gesamt bezahlt",
+    "viewProvider": "Anbieter Ansehen",
+    "cancelBooking": "Buchung Stornieren",
+    "eReceipt": "E-Beleg"
+  },
+  "calendar": {
+    "title": "Mein Kalender",
+    "loading": "Wird geladen…",
+    "bookingsOn": "Buchungen am {{date}}",
+    "noBookingsThisDay": "Keine Buchungen an diesem Tag",
+    "dotHint": "Termine mit einem Punkt darunter haben eine echte Buchung.",
+    "serviceFallback": "Dienstleistung"
+  },
+  "inbox": {
+    "title": "Nachrichten",
+    "subtitle": "Schreibe den Anbietern deiner echten Buchungen.",
+    "emptyTitle": "Noch keine Unterhaltungen",
+    "emptySubtitle": "Sobald ein Anbieter einer Buchung zugewiesen ist, kannst du ihm hier schreiben.",
+    "serviceFallback": "Dienstleistung"
+  },
+  "profileHub": {
+    "title": "Profil & Einstellungen",
+    "menu": {
+      "editProfile": "Profil Bearbeiten",
+      "notificationSettings": "Benachrichtigungseinstellungen",
+      "wallet": "Wallet",
+      "paymentMethods": "Zahlungsmethoden",
+      "invoices": "Rechnungen",
+      "history": "Verlauf",
+      "loyaltyRewards": "Treue & Prämien",
+      "promotions": "Aktionen",
+      "activity": "Aktivität",
+      "feedback": "Feedback",
+      "security": "Sicherheit",
+      "language": "Sprache",
+      "privacyPolicy": "Datenschutzrichtlinie",
+      "inviteFriends": "Freunde Einladen",
+      "helpCenter": "Hilfe-Center"
+    },
+    "logOut": "Abmelden",
+    "logoutConfirmTitle": "Von deinem Konto abmelden?",
+    "logoutConfirmBody": "Du musst dich erneut anmelden, um auf deine Buchungen zuzugreifen.",
+    "cancel": "Abbrechen"
+  }
+}
