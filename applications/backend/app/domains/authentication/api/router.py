@@ -42,6 +42,16 @@ class RefreshRequest(BaseModel):
     refresh_token: str
 
 
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+    code: str = Field(min_length=4, max_length=8)
+    new_password: str = Field(min_length=8)
+
+
 @router.post("/register", status_code=201)
 async def register(payload: RegisterRequest) -> dict:
     svc = get_composition().auth_service()
@@ -68,6 +78,20 @@ async def verify_otp(payload: OtpVerifyRequest) -> dict:
     return ok(
         await get_composition().auth_service().verify_otp(payload.email, payload.code),
         title="Verified",
+    )
+
+
+@router.post("/password/forgot")
+async def forgot_password(payload: ForgotPasswordRequest) -> dict:
+    return ok(await get_composition().auth_service().request_password_reset(payload.email))
+
+
+@router.post("/password/reset")
+async def reset_password(payload: ResetPasswordRequest) -> dict:
+    svc = get_composition().auth_service()
+    return ok(
+        await svc.reset_password(payload.email, payload.code, payload.new_password),
+        title="Password reset",
     )
 
 

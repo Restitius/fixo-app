@@ -88,6 +88,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/auth/by_id.sql
+  CUS.AUTH.CUSTOMER.BY_ID_WITH_HASH:
+    description: Internal-only — includes password_hash for change-password verification. Never returned to a client.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/auth/by_id_with_hash.sql
   CUS.AUTH.CUSTOMER.CREATE:
     description: CUS.AUTH.CUSTOMER.CREATE registered query.
     operation: create
@@ -102,6 +109,13 @@ queries:
       ownership_filter_required: false
       requires_auth: false
     sql: customers/auth/mark_verified.sql
+  CUS.AUTH.CUSTOMER.UPDATE_PASSWORD:
+    description: Sets a new password hash — used by both authenticated change-password and OTP-verified forgot-password reset.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/update_password.sql
   CUS.AUTH.OTP.ISSUE:
     description: CUS.AUTH.OTP.ISSUE registered query.
     operation: read
