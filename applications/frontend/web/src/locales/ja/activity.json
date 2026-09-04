@@ -1,0 +1,134 @@
+{
+  "loading": "読み込み中…",
+  "page": {
+    "title": "アクティビティ",
+    "subtitle": "あなたの旅の時系列記録"
+  },
+  "metrics": {
+    "totalEvents": "合計イベント数",
+    "totalEventsHint": "記録されたすべてのアクティビティ",
+    "bookingEvents": "予約イベント",
+    "bookingEventsHint": "作成された予約",
+    "paymentActions": "支払いアクション",
+    "paymentActionsHint": "支払いと承認",
+    "thisWeek": "今週",
+    "thisWeekHint": "今週のイベント"
+  },
+  "filters": {
+    "searchPlaceholder": "アクティビティを検索...",
+    "allEvents": "すべてのイベント",
+    "range": {
+      "7": "過去7日間",
+      "30": "過去30日間",
+      "90": "過去90日間",
+      "all": "すべての期間"
+    }
+  },
+  "actions": {
+    "export": "エクスポート",
+    "viewTimeline": "タイムラインを表示",
+    "clearFilters": "フィルターをクリア",
+    "browseServices": "サービスを見る",
+    "viewBooking": "予約を見る",
+    "viewPayment": "支払いを見る",
+    "viewDetails": "詳細を見る",
+    "openTimeline": "タイムラインを開く",
+    "downloadInvoice": "請求書をダウンロード",
+    "leaveReview": "レビューを投稿",
+    "close": "閉じる"
+  },
+  "empty": {
+    "noMatchTitle": "一致するアクティビティがありません",
+    "noMatchDescription": "検索条件やフィルターを調整してみてください。",
+    "noActivityTitle": "まだアクティビティがありません",
+    "noActivityDescription": "予約イベント — 確認、支払い、更新 — がここに表示されます。"
+  },
+  "table": {
+    "event": "イベント",
+    "booking": "予約",
+    "category": "カテゴリー",
+    "details": "詳細",
+    "date": "日付",
+    "status": "ステータス"
+  },
+  "pagination": {
+    "showing": "{{total}}件中{{from}}〜{{to}}件を表示中"
+  },
+  "toast": {
+    "exported": "アクティビティをエクスポートしました",
+    "openingFeedback": "フィードバックを開いています — この予約を見つけてレビューを投稿してください。"
+  },
+  "categories": {
+    "Booking": "予約",
+    "Payment": "支払い",
+    "Service": "サービス",
+    "Invoice": "請求書",
+    "Feedback": "フィードバック"
+  },
+  "status": {
+    "pending": "保留中",
+    "failed": "失敗",
+    "completed": "完了",
+    "authorized": "承認済み"
+  },
+  "eventTypes": {
+    "bookingCreated": "予約が作成されました",
+    "paymentAuthorized": "支払いが承認されました",
+    "paymentFailed": "支払いが失敗しました",
+    "providerAssigned": "担当者が割り当てられました",
+    "providerOnTheWay": "担当者が向かっています",
+    "providerArrived": "担当者が到着しました",
+    "arrivalVerified": "到着が確認されました",
+    "serviceStarted": "サービスが開始されました",
+    "serviceCompleted": "サービスが完了しました",
+    "bookingCancelled": "予約がキャンセルされました",
+    "changeProposed": "変更が提案されました",
+    "changeApproved": "変更が承認されました",
+    "changeRejected": "変更が却下されました",
+    "invoiceReady": "請求書の準備ができました",
+    "reviewSubmitted": "レビューが投稿されました",
+    "reviewPending": "レビュー待ち"
+  },
+  "pendingReview": {
+    "detail": "ご意見をお聞かせください"
+  },
+  "common": {
+    "service": "サービス"
+  },
+  "insights": {
+    "heading": "アクティビティのインサイト",
+    "mostRecentBooking": "最新の予約",
+    "lastPayment": "最新の支払い",
+    "latestCompletedService": "最近完了したサービス",
+    "withProvider": "{{name}}と",
+    "exploreYourJourney": "あなたの旅を振り返る",
+    "viewFullTimelineHint": "アクティビティの完全なタイムラインを見る。"
+  },
+  "fields": {
+    "dateTime": "日付と時刻",
+    "booking": "予約",
+    "provider": "担当者",
+    "payment": "支払い",
+    "paymentStatus": "支払いステータス",
+    "eventType": "イベントの種類",
+    "bookingReference": "予約番号",
+    "paymentReference": "支払い参照番号",
+    "amount": "金額",
+    "status": "ステータス"
+  },
+  "journey": {
+    "timeline": "旅のタイムライン",
+    "notYetReached": "まだ到達していません",
+    "description": "説明",
+    "noDetails": "このイベントの詳細情報はありません。"
+  },
+  "payment": {
+    "dialogTitle": "アクティビティの詳細",
+    "dialogSubtitle": "このアクティビティに関する詳細情報",
+    "progressTimeline": "進行状況のタイムライン",
+    "nextStep": "次のステップ：",
+    "upcoming": "今後の予定",
+    "failedNote": "この支払い試行は失敗しました — 予約から再試行できます。",
+    "authorizedNote": "お支払いは正常に承認されました。この予約の進行状況を随時お知らせします。"
+  }
+}

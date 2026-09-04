@@ -1,0 +1,134 @@
+{
+  "loading": "Wird geladen…",
+  "page": {
+    "title": "Aktivität",
+    "subtitle": "Ein chronologisches Protokoll deiner Reise"
+  },
+  "metrics": {
+    "totalEvents": "Ereignisse gesamt",
+    "totalEventsHint": "Alle erfassten Aktivitäten",
+    "bookingEvents": "Buchungsereignisse",
+    "bookingEventsHint": "Erstellte Buchungen",
+    "paymentActions": "Zahlungsaktionen",
+    "paymentActionsHint": "Zahlungen & Autorisierungen",
+    "thisWeek": "Diese Woche",
+    "thisWeekHint": "Ereignisse diese Woche"
+  },
+  "filters": {
+    "searchPlaceholder": "Aktivität durchsuchen...",
+    "allEvents": "Alle Ereignisse",
+    "range": {
+      "7": "Letzte 7 Tage",
+      "30": "Letzte 30 Tage",
+      "90": "Letzte 90 Tage",
+      "all": "Gesamter Zeitraum"
+    }
+  },
+  "actions": {
+    "export": "Exportieren",
+    "viewTimeline": "Zeitleiste anzeigen",
+    "clearFilters": "Filter zurücksetzen",
+    "browseServices": "Dienstleistungen durchsuchen",
+    "viewBooking": "Buchung ansehen",
+    "viewPayment": "Zahlung ansehen",
+    "viewDetails": "Details ansehen",
+    "openTimeline": "Zeitleiste öffnen",
+    "downloadInvoice": "Rechnung herunterladen",
+    "leaveReview": "Bewertung abgeben",
+    "close": "Schließen"
+  },
+  "empty": {
+    "noMatchTitle": "Keine passende Aktivität",
+    "noMatchDescription": "Passe deine Suche oder Filter an.",
+    "noActivityTitle": "Noch keine Aktivität",
+    "noActivityDescription": "Buchungsereignisse — Bestätigungen, Zahlungen, Updates — werden hier angezeigt."
+  },
+  "table": {
+    "event": "Ereignis",
+    "booking": "Buchung",
+    "category": "Kategorie",
+    "details": "Details",
+    "date": "Datum",
+    "status": "Status"
+  },
+  "pagination": {
+    "showing": "Zeige {{from}} bis {{to}} von {{total}} Ereignissen"
+  },
+  "toast": {
+    "exported": "Aktivität exportiert",
+    "openingFeedback": "Feedback wird geöffnet — finde diese Buchung, um deine Bewertung abzugeben."
+  },
+  "categories": {
+    "Booking": "Buchung",
+    "Payment": "Zahlung",
+    "Service": "Dienstleistung",
+    "Invoice": "Rechnung",
+    "Feedback": "Feedback"
+  },
+  "status": {
+    "pending": "Ausstehend",
+    "failed": "Fehlgeschlagen",
+    "completed": "Abgeschlossen",
+    "authorized": "Autorisiert"
+  },
+  "eventTypes": {
+    "bookingCreated": "Buchung erstellt",
+    "paymentAuthorized": "Zahlung autorisiert",
+    "paymentFailed": "Zahlung fehlgeschlagen",
+    "providerAssigned": "Anbieter zugewiesen",
+    "providerOnTheWay": "Anbieter ist unterwegs",
+    "providerArrived": "Anbieter angekommen",
+    "arrivalVerified": "Ankunft bestätigt",
+    "serviceStarted": "Dienstleistung gestartet",
+    "serviceCompleted": "Dienstleistung abgeschlossen",
+    "bookingCancelled": "Buchung storniert",
+    "changeProposed": "Änderung vorgeschlagen",
+    "changeApproved": "Änderung genehmigt",
+    "changeRejected": "Änderung abgelehnt",
+    "invoiceReady": "Rechnung bereit",
+    "reviewSubmitted": "Bewertung abgegeben",
+    "reviewPending": "Bewertung ausstehend"
+  },
+  "pendingReview": {
+    "detail": "Bitte teile dein Feedback mit"
+  },
+  "common": {
+    "service": "Dienstleistung"
+  },
+  "insights": {
+    "heading": "Aktivitätseinblicke",
+    "mostRecentBooking": "Letzte Buchung",
+    "lastPayment": "Letzte Zahlung",
+    "latestCompletedService": "Zuletzt abgeschlossene Dienstleistung",
+    "withProvider": "mit {{name}}",
+    "exploreYourJourney": "Entdecke deine Reise",
+    "viewFullTimelineHint": "Zeige die vollständige Zeitleiste deiner Aktivität."
+  },
+  "fields": {
+    "dateTime": "Datum & Uhrzeit",
+    "booking": "Buchung",
+    "provider": "Anbieter",
+    "payment": "Zahlung",
+    "paymentStatus": "Zahlungsstatus",
+    "eventType": "Ereignistyp",
+    "bookingReference": "Buchungsreferenz",
+    "paymentReference": "Zahlungsreferenz",
+    "amount": "Betrag",
+    "status": "Status"
+  },
+  "journey": {
+    "timeline": "Reise-Zeitleiste",
+    "notYetReached": "Noch nicht erreicht",
+    "description": "Beschreibung",
+    "noDetails": "Keine weiteren Details zu diesem Ereignis."
+  },
+  "payment": {
+    "dialogTitle": "Aktivitätsdetails",
+    "dialogSubtitle": "Detaillierte Informationen zu dieser Aktivität",
+    "progressTimeline": "Fortschritts-Zeitleiste",
+    "nextStep": "Nächster Schritt:",
+    "upcoming": "Bevorstehend",
+    "failedNote": "Dieser Zahlungsversuch ist fehlgeschlagen — du kannst ihn über deine Buchung erneut versuchen.",
+    "authorizedNote": "Deine Zahlung wurde erfolgreich autorisiert. Wir halten diese Buchung während ihres Fortschritts auf dem Laufenden."
+  }
+}
