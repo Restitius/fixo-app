@@ -1,0 +1,225 @@
+{
+  "loyalty": {
+    "loading": "Cargando…",
+    "page": {
+      "title": "Fidelidad",
+      "subtitle": "Recompensas para clientes recurrentes"
+    },
+    "ptsValue": "{{points}} pts",
+    "metrics": {
+      "pointsBalance": "Saldo de Puntos",
+      "availableNow": "Disponibles ahora",
+      "tierStatus": "Estado del Nivel",
+      "ptsToTier": "{{points}} pts para {{tier}}",
+      "topTier": "Nivel máximo",
+      "earnedThisMonth": "Ganados Este Mes",
+      "fromActivities_one": "De {{count}} actividad",
+      "fromActivities_other": "De {{count}} actividades",
+      "redeemed": "Canjeados",
+      "rewardsUsed_one": "{{count}} recompensa utilizada",
+      "rewardsUsed_other": "{{count}} recompensas utilizadas"
+    },
+    "tierCard": {
+      "currentTier": "Nivel actual",
+      "tierName": "Nivel {{tier}}",
+      "progressToTier": "Progreso hacia {{tier}}",
+      "reachedTopTier": "Has alcanzado el nivel máximo",
+      "ptsOfPts": "{{balance}} / {{target}} pts",
+      "quickActions": "Acciones rápidas",
+      "earnPoints": "Ganar puntos",
+      "redeemReward": "Canjear recompensa",
+      "viewRules": "Ver reglas",
+      "conversionNote": "100 puntos = TZS 1,000 de crédito de recompensa"
+    },
+    "activity": {
+      "recentActivity": "Actividad reciente de puntos",
+      "viewAll": "Ver todo",
+      "noActivityYet": "Aún no hay actividad de puntos",
+      "noActivityHint": "Reserva un servicio para empezar a ganar puntos de fidelidad.",
+      "columnActivity": "Actividad",
+      "columnDate": "Fecha",
+      "columnPoints": "Puntos",
+      "columnStatus": "Estado",
+      "earned": "Ganados",
+      "redeemed": "Canjeados"
+    },
+    "rewards": {
+      "availableRewards": "Recompensas disponibles",
+      "viewAllRewards": "Ver todas las recompensas",
+      "minPts": "Mín. {{points}} pts"
+    },
+    "earnDialog": {
+      "title": "Ganar puntos",
+      "pointsLabel": "Puntos",
+      "placeholder": "ej. 100",
+      "enterPointsFirst": "Introduce los puntos primero",
+      "adding": "Añadiendo...",
+      "addPoints": "Añadir puntos",
+      "earnedToast": "{{points}} pts ganados — saldo {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "Canjear recompensa",
+      "subtitle": "Usa tus puntos para obtener beneficios disponibles",
+      "currentBalance": "Saldo actual",
+      "notEnoughPoints": "No tienes suficientes puntos para esta recompensa",
+      "confirmDeduction": "Confirma que entiendes que se deducirán los puntos",
+      "notEnoughPointsBadge": "Puntos insuficientes",
+      "selectedReward": "Recompensa seleccionada",
+      "pointsRequired": "Puntos necesarios",
+      "remainingAfter": "Puntos restantes tras el canje",
+      "consentLabel": "Entiendo que los puntos se deducirán de inmediato",
+      "instantNote": "Las recompensas canjeadas se aplican al instante en tu cuenta.",
+      "cancel": "Cancelar",
+      "redeeming": "Canjeando...",
+      "redeemNow": "Canjear ahora",
+      "redeemedToast": "¡{{reward}} canjeada!"
+    },
+    "detailSheet": {
+      "title": "Detalles de fidelidad",
+      "memberSince": "Miembro desde",
+      "tierBenefits": "Beneficios del nivel",
+      "benefitsValue": "Beneficios {{tier}}",
+      "rewardConversion": "Conversión de recompensa",
+      "conversionValue": "100 pts = TZS 1,000",
+      "nextMilestone": "Próximo hito de recompensa",
+      "milestoneValue": "{{points}} pts (nivel {{tier}})",
+      "topTierReached": "Nivel máximo alcanzado",
+      "selectedActivity": "Actividad seleccionada",
+      "referenceCode": "Código de referencia",
+      "pointsEarned": "Puntos ganados",
+      "pointsSpent": "Puntos gastados",
+      "balanceAfter": "Saldo después",
+      "timeline": "Cronología",
+      "recorded": "{{activity}} registrada",
+      "viewRules": "Ver reglas",
+      "share": "Compartir",
+      "copiedToClipboard": "Copiado al portapapeles",
+      "done": "Listo"
+    },
+    "tierBenefits": {
+      "Bronze": ["Gana 1 punto por cada TZS 1,000 gastados", "Prioridad de reserva estándar"],
+      "Silver": ["Gana 1 punto por cada TZS 1,000 gastados", "Atención al cliente prioritaria"],
+      "Gold": ["10 % de puntos extra en cada reserva", "Emparejamiento prioritario con proveedores"],
+      "Platinum": ["20 % de puntos extra en cada reserva", "Línea de soporte dedicada", "Complemento de reserva prioritaria gratis"]
+    },
+    "rewardCatalog": {
+      "discount5000": "TZS {{amount}} de descuento",
+      "priorityBooking": "Reserva prioritaria",
+      "freeInspection": "Inspección gratuita"
+    },
+    "share": {
+      "title": "Fidelidad FIXO",
+      "message": "{{activity}} — {{sign}}{{points}} pts",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} pts (ref. {{ref}})"
+    }
+  },
+  "promotions": {
+    "loading": "Cargando…",
+    "page": {
+      "title": "Promociones",
+      "subtitle": "Ofertas y descuentos en tu próximo servicio"
+    },
+    "metrics": {
+      "activePromotions": "Promociones Activas",
+      "currentlyAvailable": "Disponibles actualmente",
+      "totalSavings": "Ahorro Total",
+      "acrossRedemptions": "En todos los canjes",
+      "usedThisMonth": "Usadas Este Mes",
+      "appliedOnBookings": "Aplicadas en reservas",
+      "expiringSoon": "Por Vencer",
+      "within7Days": "En los próximos 7 días"
+    },
+    "categories": {
+      "plumbing": "Fontanería",
+      "cleaning": "Limpieza",
+      "painting": "Pintura",
+      "acCooling": "Aire Acondicionado y Refrigeración",
+      "electrical": "Electricidad",
+      "moving": "Mudanzas",
+      "general": "Servicios Generales"
+    },
+    "discount": {
+      "percentOff": "{{value}}% de descuento",
+      "amountOff": "{{amount}} de descuento"
+    },
+    "labels": {
+      "noCap": "Sin límite",
+      "noMinimum": "Sin mínimo",
+      "unlimited": "Ilimitado",
+      "usageOfLimit": "{{used}} de {{limit}} usados"
+    },
+    "promoCode": {
+      "title": "Código promocional",
+      "enterCode": "Introduce el código promocional",
+      "placeholder": "ej. WELCOME10",
+      "orderAmount": "Importe del pedido (TZS)",
+      "validateCode": "Validar código",
+      "enterCodeFirst": "Introduce un código promocional",
+      "enterAmountFirst": "Introduce un importe de pedido",
+      "appliesSave": "{{code}} aplica — ahorra {{amount}}",
+      "save": "Ahorra {{amount}}",
+      "savePercent": "Ahorra {{amount}} ({{percent}}%)",
+      "disclaimer": "Los códigos promocionales solo se aplican a servicios elegibles y no se pueden combinar con otras ofertas."
+    },
+    "availablePromotions": {
+      "title": "Promociones disponibles",
+      "subtitle": "Elige una promoción para aplicar a tu reserva.",
+      "noneTitle": "No hay promociones activas",
+      "noneDescription": "Vuelve pronto — aquí aparecerán nuevas ofertas.",
+      "expires": "Vence el {{date}}",
+      "details": "Detalles",
+      "useNow": "Usar ahora",
+      "showLess": "Mostrar menos",
+      "viewAll": "Ver todas las promociones"
+    },
+    "redemptions": {
+      "title": "Canjes recientes",
+      "showLess": "Mostrar menos",
+      "viewAll": "Ver todo",
+      "noneTitle": "Aún no hay canjes",
+      "noneDescription": "Las promociones que realmente apliques aparecerán aquí con el importe real ahorrado.",
+      "columnCode": "Código promocional",
+      "columnDate": "Fecha",
+      "columnSavings": "Ahorro",
+      "columnStatus": "Estado",
+      "applied": "Aplicada"
+    },
+    "details": {
+      "title": "Detalles de la promoción",
+      "active": "Activa",
+      "expired": "Vencida",
+      "maxSavings": "Ahorro máximo: {{amount}}",
+      "promoCode": "Código promocional",
+      "category": "Categoría",
+      "validity": "Validez",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "Pedido mínimo",
+      "usageLimit": "Límite de uso",
+      "eligibleAreas": "Zonas elegibles",
+      "allAreas": "Todas las zonas",
+      "conditionsTitle": "Condiciones",
+      "conditionGeneral": "Válido solo en servicios elegibles.",
+      "conditionCategory": "Válido solo en servicios de {{category}} elegibles.",
+      "conditionNoCombine": "No se puede combinar con otros códigos promocionales.",
+      "conditionAppliedImmediately": "Se aplica de inmediato al usar esta promoción.",
+      "recentUseTitle": "Uso reciente",
+      "noRecentUse": "Aún no hay canjes para este código.",
+      "columnBookingRef": "Referencia de reserva",
+      "columnDate": "Fecha",
+      "columnSavings": "Ahorro",
+      "shareCode": "Compartir código",
+      "viewTerms": "Ver términos",
+      "useThisPromotion": "Usar esta promoción",
+      "termsComingSoon": "Los términos completos se publicarán aquí pronto — mientras tanto, consulta las condiciones anteriores."
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "Introduce un importe de pedido arriba para que podamos calcular el ahorro real.",
+      "appliedSaved": "{{code}} aplicado — {{amount}} ahorrados",
+      "copiedToClipboard": "Código promocional copiado al portapapeles"
+    },
+    "share": {
+      "title": "Promoción FIXO",
+      "message": "Usa el código promocional {{code}} en FIXO — {{discount}}"
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "loyalty": {
+    "loading": "読み込み中…",
+    "page": {
+      "title": "ロイヤルティ",
+      "subtitle": "リピーターのお客様への特典"
+    },
+    "ptsValue": "{{points}} ポイント",
+    "metrics": {
+      "pointsBalance": "ポイント残高",
+      "availableNow": "現在利用可能",
+      "tierStatus": "ランクステータス",
+      "ptsToTier": "{{tier}}まであと{{points}}ポイント",
+      "topTier": "最高ランク",
+      "earnedThisMonth": "今月獲得したポイント",
+      "fromActivities_other": "{{count}}件のアクティビティから",
+      "redeemed": "交換済み",
+      "rewardsUsed_other": "特典{{count}}件を利用済み"
+    },
+    "tierCard": {
+      "currentTier": "現在のランク",
+      "tierName": "{{tier}}ランク",
+      "progressToTier": "{{tier}}までの進捗",
+      "reachedTopTier": "最高ランクに到達しました",
+      "ptsOfPts": "{{balance}} / {{target}} ポイント",
+      "quickActions": "クイックアクション",
+      "earnPoints": "ポイントを獲得",
+      "redeemReward": "特典と交換",
+      "viewRules": "ルールを見る",
+      "conversionNote": "100ポイント = TZS 1,000相当の特典クレジット"
+    },
+    "activity": {
+      "recentActivity": "最近のポイント履歴",
+      "viewAll": "すべて見る",
+      "noActivityYet": "まだポイント履歴がありません",
+      "noActivityHint": "サービスを予約してロイヤルティポイントを貯め始めましょう。",
+      "columnActivity": "アクティビティ",
+      "columnDate": "日付",
+      "columnPoints": "ポイント",
+      "columnStatus": "ステータス",
+      "earned": "獲得",
+      "redeemed": "交換済み"
+    },
+    "rewards": {
+      "availableRewards": "利用可能な特典",
+      "viewAllRewards": "すべての特典を見る",
+      "minPts": "最低{{points}}ポイント"
+    },
+    "earnDialog": {
+      "title": "ポイントを獲得",
+      "pointsLabel": "ポイント",
+      "placeholder": "例：100",
+      "enterPointsFirst": "先にポイントを入力してください",
+      "adding": "追加中...",
+      "addPoints": "ポイントを追加",
+      "earnedToast": "{{points}}ポイント獲得しました — 残高{{balance}}"
+    },
+    "redeemDialog": {
+      "title": "特典と交換",
+      "subtitle": "ポイントを使って利用可能な特典と交換できます",
+      "currentBalance": "現在の残高",
+      "notEnoughPoints": "この特典と交換するにはポイントが不足しています",
+      "confirmDeduction": "ポイントが差し引かれることを理解したことを確認してください",
+      "notEnoughPointsBadge": "ポイント不足",
+      "selectedReward": "選択した特典",
+      "pointsRequired": "必要ポイント",
+      "remainingAfter": "交換後の残りポイント",
+      "consentLabel": "ポイントが即座に差し引かれることを理解しています",
+      "instantNote": "交換した特典はすぐにアカウントに反映されます。",
+      "cancel": "キャンセル",
+      "redeeming": "交換中...",
+      "redeemNow": "今すぐ交換",
+      "redeemedToast": "{{reward}}と交換しました！"
+    },
+    "detailSheet": {
+      "title": "ロイヤルティの詳細",
+      "memberSince": "会員登録日",
+      "tierBenefits": "ランク特典",
+      "benefitsValue": "{{tier}}の特典",
+      "rewardConversion": "特典換算",
+      "conversionValue": "100ポイント = TZS 1,000",
+      "nextMilestone": "次の特典マイルストーン",
+      "milestoneValue": "{{points}}ポイント（{{tier}}ランク）",
+      "topTierReached": "最高ランクに到達済み",
+      "selectedActivity": "選択したアクティビティ",
+      "referenceCode": "参照コード",
+      "pointsEarned": "獲得ポイント",
+      "pointsSpent": "利用ポイント",
+      "balanceAfter": "取引後の残高",
+      "timeline": "タイムライン",
+      "recorded": "{{activity}}を記録しました",
+      "viewRules": "ルールを見る",
+      "share": "共有",
+      "copiedToClipboard": "クリップボードにコピーしました",
+      "done": "完了"
+    },
+    "tierBenefits": {
+      "Bronze": ["TZS 1,000のご利用ごとに1ポイント獲得", "標準の予約優先度"],
+      "Silver": ["TZS 1,000のご利用ごとに1ポイント獲得", "優先カスタマーサポート"],
+      "Gold": ["予約ごとに10%のボーナスポイント", "優先的な事業者マッチング"],
+      "Platinum": ["予約ごとに20%のボーナスポイント", "専用サポート窓口", "無料の優先予約オプション"]
+    },
+    "rewardCatalog": {
+      "discount5000": "TZS {{amount}}割引",
+      "priorityBooking": "優先予約",
+      "freeInspection": "無料点検"
+    },
+    "share": {
+      "title": "FIXOロイヤルティ",
+      "message": "{{activity}} — {{sign}}{{points}}ポイント",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}}ポイント（参照番号 {{ref}}）"
+    }
+  },
+  "promotions": {
+    "loading": "読み込み中…",
+    "page": {
+      "title": "プロモーション",
+      "subtitle": "次回のサービスをお得にする割引・特典"
+    },
+    "metrics": {
+      "activePromotions": "実施中のプロモーション",
+      "currentlyAvailable": "現在利用可能",
+      "totalSavings": "節約額の合計",
+      "acrossRedemptions": "すべての利用実績の合計",
+      "usedThisMonth": "今月の利用件数",
+      "appliedOnBookings": "予約に適用済み",
+      "expiringSoon": "まもなく終了",
+      "within7Days": "7日以内"
+    },
+    "categories": {
+      "plumbing": "配管",
+      "cleaning": "清掃",
+      "painting": "塗装",
+      "acCooling": "エアコン・冷却",
+      "electrical": "電気工事",
+      "moving": "引っ越し",
+      "general": "総合サービス"
+    },
+    "discount": {
+      "percentOff": "{{value}}%オフ",
+      "amountOff": "{{amount}}オフ"
+    },
+    "labels": {
+      "noCap": "上限なし",
+      "noMinimum": "最低金額なし",
+      "unlimited": "無制限",
+      "usageOfLimit": "{{limit}}件中{{used}}件を利用済み"
+    },
+    "promoCode": {
+      "title": "プロモーションコード",
+      "enterCode": "プロモーションコードを入力",
+      "placeholder": "例：WELCOME10",
+      "orderAmount": "注文金額（TZS）",
+      "validateCode": "コードを確認",
+      "enterCodeFirst": "プロモーションコードを入力してください",
+      "enterAmountFirst": "注文金額を入力してください",
+      "appliesSave": "{{code}}が適用されます — {{amount}}お得",
+      "save": "{{amount}}お得",
+      "savePercent": "{{amount}}お得（{{percent}}%）",
+      "disclaimer": "プロモーションコードは対象サービスにのみ適用され、他の特典と併用することはできません。"
+    },
+    "availablePromotions": {
+      "title": "利用可能なプロモーション",
+      "subtitle": "予約に適用するプロモーションを選択してください。",
+      "noneTitle": "実施中のプロモーションはありません",
+      "noneDescription": "また近日中にご確認ください — 新しい特典が表示されます。",
+      "expires": "{{date}}まで有効",
+      "details": "詳細",
+      "useNow": "今すぐ使う",
+      "showLess": "表示を減らす",
+      "viewAll": "すべてのプロモーションを見る"
+    },
+    "redemptions": {
+      "title": "最近の利用履歴",
+      "showLess": "表示を減らす",
+      "viewAll": "すべて見る",
+      "noneTitle": "利用履歴はまだありません",
+      "noneDescription": "実際に適用したプロモーションが、実際の節約額とともにここに表示されます。",
+      "columnCode": "プロモーションコード",
+      "columnDate": "日付",
+      "columnSavings": "節約額",
+      "columnStatus": "ステータス",
+      "applied": "適用済み"
+    },
+    "details": {
+      "title": "プロモーションの詳細",
+      "active": "有効",
+      "expired": "期限切れ",
+      "maxSavings": "最大節約額：{{amount}}",
+      "promoCode": "プロモーションコード",
+      "category": "カテゴリー",
+      "validity": "有効期間",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "最低注文金額",
+      "usageLimit": "利用回数の上限",
+      "eligibleAreas": "対象エリア",
+      "allAreas": "すべてのエリア",
+      "conditionsTitle": "利用条件",
+      "conditionGeneral": "対象サービスにのみ有効です。",
+      "conditionCategory": "対象の{{category}}サービスにのみ有効です。",
+      "conditionNoCombine": "他のプロモーションコードとの併用はできません。",
+      "conditionAppliedImmediately": "このプロモーションを利用すると即座に適用されます。",
+      "recentUseTitle": "最近の利用",
+      "noRecentUse": "このコードの利用履歴はまだありません。",
+      "columnBookingRef": "予約番号",
+      "columnDate": "日付",
+      "columnSavings": "節約額",
+      "shareCode": "コードを共有",
+      "viewTerms": "利用規約を見る",
+      "useThisPromotion": "このプロモーションを使う",
+      "termsComingSoon": "詳しい規約は近日中にこちらに掲載予定です — それまでは上記の条件をご確認ください。"
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "実際の節約額を計算できるよう、上記に注文金額を入力してください。",
+      "appliedSaved": "{{code}}を適用しました — {{amount}}お得になりました",
+      "copiedToClipboard": "プロモーションコードをクリップボードにコピーしました"
+    },
+    "share": {
+      "title": "FIXOプロモーション",
+      "message": "FIXOでプロモーションコード{{code}}を使う — {{discount}}"
+    }
+  }
+}
