@@ -1291,4 +1291,81 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/warranties/list.sql
+  PROV.AUTH.PROVIDER.REGISTER:
+    description: Creates a provider principal with credentials (Provider Phase 1).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/register.sql
+  PROV.AUTH.PROVIDER.BY_EMAIL:
+    description: Resolves a provider by email for login / OTP (Provider Phase 1).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/by_email.sql
+  PROV.AUTH.PROVIDER.BY_ID:
+    description: Provider principal by id for authenticated /me (Provider Phase 1).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/by_id.sql
+  PROV.AUTH.PROVIDER.MARK_VERIFIED:
+    description: Confirms email/phone verification flags (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/mark_verified.sql
+  PROV.AUTH.PROVIDER.UPDATE_PASSWORD:
+    description: Sets a new password hash for a provider (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/update_password.sql
+  PROV.AUTH.OTP.ISSUE:
+    description: Issues an OTP for a provider via SP_PROVIDER_ISSUE_OTP (Provider Phase 1).
+    operation: execute
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/otp_issue.sql
+  PROV.AUTH.OTP.VERIFY:
+    description: Verifies a provider OTP via SP_PROVIDER_VERIFY_OTP (Provider Phase 1).
+    operation: execute
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/otp_verify.sql
+  PROV.AUTH.SESSION.CREATE:
+    description: Opens a provider refresh session after login (Provider Phase 1).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/session_create.sql
+  PROV.AUTH.SESSION.GET_VALID:
+    description: Returns a live provider session by refresh token hash (Provider Phase 1).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/session_get_valid.sql
+  PROV.AUTH.SESSION.REVOKE:
+    description: Revokes a single provider refresh session (rotation) (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/auth/session_revoke.sql
+  PROV.AUTH.SESSION.REVOKE_ALL:
+    description: Ends all of a provider's sessions (logout/reset) (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/session_revoke_all.sql
 version: 1
