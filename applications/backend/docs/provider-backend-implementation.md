@@ -1,0 +1,84 @@
+# FIXO Provider Backend — Implementation Roadmap
+
+> Implements the **Provider Business Requirements** (54 phases) as backend
+> modules on top of the existing FIXO core (marketplace, bookings, matching,
+> quotations, payments, wallets, messaging, disputes, reviews, notifications,
+> recurring, support, cancellations — which the customer flow already laid down).
+>
+> The provider side is a **field-service management system** connected to the
+> marketplace: registration & identity, onboarding, profile/business/verification,
+> services/pricing/service-areas/availability, the job lifecycle (requests →
+> quotes → bookings → dispatch → arrival → execution → completion → billing),
+> finances (earnings/wallet/payouts/commission/statements), reputation, team &
+> assignment, documents, promotions, analytics, settings, restrictions & closure.
+>
+> **Conventions (same golden rules as the core):**
+> - No SQL outside `app/queries/**/`; IDs `PROV.*`; ownership enforced in SQL.
+> - Services depend only on ports; adapters own query IDs; side-effects via events.
+> - Provider auth is provider-scoped (`PROVIDER_AUTH_SESSIONS`, `PROVIDER_OTP_CODES`,
+>   `get_current_provider`), mirroring the customer auth without touching it.
+> - One implementation commit per phase; tags `provider-phaseN-v1`.
+
+## Requirement phases → implementation phases
+
+| Impl | Req phases | Scope | Status |
+|------|-----------|-------|--------|
+| PRV-0 | — | Roadmap + provider domain foundation (this doc) | ✅ |
+| PRV-1 | 1 | **Provider Public Entry & Registration** — auth: register, OTP verify, login, refresh, me | ✅ |
+| PRV-2 | 2 | **Provider Onboarding** — 7-step guided onboarding + auto-saved progress | ⏳ next |
+| PRV-3 | 3 | **Provider Profile** — public profile fields + preview | ⏳ next |
+| PRV-4 | 4 | **Business Profile** — company/logo/registration, business info | ⏳ |
+| PRV-5 | 5 | Identity & Provider Verification — documents + verification workflow | ⏳ |
+| PRV-6 | 6 | Service Category Setup — provider services + configuration | ⏳ |
+| PRV-7 | 7 | Provider Pricing — fixed/starting/hourly/inspection/custom + per-service | ⏳ |
+| PRV-8 | 8 | Service Area Management — areas/radius/travel fee | ⏳ |
+| PRV-9 | 9 | Availability & Working Hours — schedule, online toggle | ⏳ |
+| PRV-10 | 10 | Provider Dashboard — attention items, stats, quick actions | ⏳ |
+| PRV-11 | 11 | Incoming Job Requests — feed + accept/decline/quote/ask | ⏳ |
+| PRV-12 | 12 | Matching Engine interaction — provider eligibility/ranking read | ⏳ |
+| PRV-13 | 13 | Quotations / Offers — provider quote submit + statuses | ⏳ |
+| PRV-14 | 14 | Booking Confirmation — provider acknowledgement + handoff | ⏳ |
+| PRV-15 | 15 | Provider Calendar — schedule views + overlap prevention | ⏳ |
+| PRV-16 | 16 | Booking Details lifecycle — confirm→…→paid + ops screen | ⏳ |
+| PRV-17 | 17 | Customer Communication — booking-linked messaging | ⏳ |
+| PRV-18 | 18 | Navigation & Provider Tracking — trip + ETA | ⏳ |
+| PRV-19 | 19 | Arrival Verification — arrived + PIN/QR/OTP | ⏳ |
+| PRV-20 | 20 | Start Service — start job + timer | ⏳ |
+| PRV-21 | 21 | Job Checklist — templated task lists | ⏳ |
+| PRV-22 | 22 | Evidence & Job Documentation | ⏳ |
+| PRV-23 | 23 | Change Request — scope change + approval | ⏳ |
+| PRV-24 | 24 | Materials & Expenses | ⏳ |
+| PRV-25 | 25 | Job Completion — completion notes + evidence | ⏳ |
+| PRV-26 | 26 | Customer Sign-Off | ⏳ |
+| PRV-27 | 27 | Final Billing | ⏳ |
+| PRV-28 | 28 | Provider Earnings | ⏳ |
+| PRV-29 | 29 | Provider Wallet | ⏳ |
+| PRV-30 | 30 | Payout Management — methods + withdrawals | ⏳ |
+| PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
+| PRV-32 | 32 | Invoices & Statements | ⏳ |
+| PRV-33 | 33 | Ratings & Reviews | ⏳ |
+| PRV-34 | 34 | Provider Performance KPIs | ⏳ |
+| PRV-35 | 35 | Provider Ranking & Reputation | ⏳ |
+| PRV-36 | 36 | Portfolio | ⏳ |
+| PRV-37 | 37 | Provider Notifications | ⏳ |
+| PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
+| PRV-39 | 39 | Disputes | ⏳ |
+| PRV-40 | 40 | Provider Support | ⏳ |
+| PRV-41 | 41 | Safety & Incident Reporting | ⏳ |
+| PRV-42 | 42 | Recurring Customers | ⏳ |
+| PRV-43 | 43 | Business Customers + negotiated rates | ⏳ |
+| PRV-44 | 44 | Team Management — workers/roles | ⏳ |
+| PRV-45 | 45 | Job Assignment — dispatch/technician | ⏳ |
+| PRV-46 | 46 | Equipment & Tools registry | ⏳ |
+| PRV-47 | 47 | Documents & Compliance + expiry | ⏳ |
+| PRV-48 | 48 | Promotions | ⏳ |
+| PRV-49 | 49 | Provider Analytics | ⏳ |
+| PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ⏳ |
+| PRV-51 | 51 | Provider Activity & Audit History | ⏳ |
+| PRV-52 | 52 | Subscription / Provider Plans | ⏳ |
+| PRV-53 | 53 | Account Restrictions & Status | ⏳ |
+| PRV-54 | 54 | Account Closure | ⏳ |
+
+Verification: `cd applications/backend && python -m pytest` stays green (new unit
+tests included per phase); each phase ships migration + queries + port/adapter +
+service + router + wiring + tests + its own commit/tag.
