@@ -1,5 +1,5 @@
 // Auth context — manages access/refresh tokens, customer profile, and auth
-// state. Mirrors applications/frontend/web-user/src/lib/auth-context.tsx, adapted
+// state. Mirrors applications/frontend/web/web-user/src/lib/auth-context.tsx, adapted
 // for React Native (AsyncStorage instead of localStorage, expo-router
 // instead of TanStack Router).
 import AsyncStorage from '@react-native-async-storage/async-storage'
