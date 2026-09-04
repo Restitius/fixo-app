@@ -1,7 +1,19 @@
 // Lightweight API client — JSON, bearer header, one silent refresh on 401.
 // Mirrors applications/frontend/web/web-user/src/lib/api-client.ts field-for-field so
 // screens ported from web can reuse the same shapes.
+import Constants from "expo-constants";
+
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'
+
+// Client shell attribution — the backend tags logs/events/jobs with the shell
+// that performed the request (mobile customer app, platform split by OS).
+const CLIENT_ID =
+  Constants.platform?.android
+    ? 'CLT-MOBILE-ANDROID'
+    : Constants.platform?.ios
+      ? 'CLT-MOBILE-IOS'
+      : 'CLT-MOBILE'
+const CLIENT_VERSION = Constants.expoConfig?.version ?? 'dev'
 
 interface ApiResponse<T = any> {
   success: boolean
@@ -28,6 +40,8 @@ class ApiClient {
     const h: Record<string, string> = {}
     if (sendJsonHeader) h['Content-Type'] = 'application/json'
     if (this.token) h['Authorization'] = `Bearer ${this.token}`
+    h['X-Client-ID'] = CLIENT_ID
+    h['X-Client-Version'] = CLIENT_VERSION
     return h
   }
 

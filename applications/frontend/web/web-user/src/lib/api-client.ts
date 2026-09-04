@@ -3,6 +3,11 @@ import { toast } from "sonner";
 
 const BASE_URL = import.meta.env["VITE_API_URL"] ?? "http://localhost:8000/api/v1";
 
+// Client shell attribution — the backend uses X-Client-ID / X-Client-Version
+// to answer "which frontend shell did this?" in logs, events, audit and jobs.
+const CLIENT_ID = "CLT-WEB-USER";
+const CLIENT_VERSION = import.meta.env["VITE_CLIENT_VERSION"] ?? "dev";
+
 interface ApiResponse<T = any> {
   success: boolean;
   data: T;
@@ -26,6 +31,8 @@ class ApiClient {
     const h: Record<string, string> = {};
     if (sendJsonHeader) h["Content-Type"] = "application/json";
     if (this.token) h["Authorization"] = `Bearer ${this.token}`;
+    h["X-Client-ID"] = CLIENT_ID;
+    h["X-Client-Version"] = CLIENT_VERSION;
     return h;
   }
 
