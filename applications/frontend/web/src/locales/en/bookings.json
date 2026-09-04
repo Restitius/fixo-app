@@ -1,0 +1,208 @@
+{
+  "loading": "Loading…",
+  "bookings": {
+    "pageTitle": "My Bookings",
+    "pageSubtitle": "Track your appointments and service history",
+    "tabs": {
+      "upcoming": "Upcoming",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "stats": {
+      "upcomingBookings": "Upcoming Bookings",
+      "upcomingBookingsHint": "Scheduled ahead",
+      "completedThisMonth": "Completed This Month",
+      "completedThisMonthHint": "This calendar month",
+      "pendingPayments": "Pending Payments",
+      "pendingPaymentsHint": "Awaiting authorization",
+      "totalSpent": "Total Spent",
+      "totalSpentHint": "All time"
+    },
+    "searchPlaceholder": "Search bookings...",
+    "statusPlaceholder": "Status",
+    "allStatuses": "All Statuses",
+    "servicePlaceholder": "Service",
+    "allServices": "All Services",
+    "emptyUpcoming": {
+      "title": "No upcoming bookings",
+      "description": "You don't have any appointments scheduled yet. Book a service to see it here.",
+      "actionLabel": "Book a Service"
+    },
+    "emptyCompleted": {
+      "title": "No completed bookings yet",
+      "description": "Jobs marked as finished will show up here.",
+      "actionLabel": "Browse Services"
+    },
+    "emptyCancelled": {
+      "title": "No cancelled bookings",
+      "description": "Bookings you cancel will appear here for your records.",
+      "actionLabel": "View Upcoming"
+    },
+    "emptyFiltered": {
+      "title": "No matching bookings",
+      "description": "Try adjusting your search or filters to find what you're looking for.",
+      "actionLabel": "Clear Filters"
+    },
+    "columns": {
+      "service": "Service",
+      "bookingId": "Booking ID",
+      "schedule": "Schedule",
+      "provider": "Provider",
+      "status": "Status",
+      "amount": "Amount"
+    },
+    "serviceFallback": "Service",
+    "itemLabel": "bookings"
+  },
+  "calendar": {
+    "pageTitle": "Calendar",
+    "pageSubtitle": "Your bookings, laid out by date",
+    "myBookings": "My Bookings",
+    "noBookingsThisDay": "No bookings on this day.",
+    "serviceFallback": "Service",
+    "footerHint": "Dates with a purple dot have at least one real booking scheduled."
+  },
+  "inbox": {
+    "pageTitle": "Inbox",
+    "pageSubtitle": "Message the providers on your bookings",
+    "emptyTitle": "No conversations yet",
+    "emptyDescription": "Once a provider is assigned to one of your bookings, you can message them here.",
+    "browseServices": "Browse Services",
+    "serviceFallback": "Service",
+    "noMessagesYet": "No messages yet — say hello!",
+    "messagePlaceholder": "Message..."
+  },
+  "history": {
+    "pageTitle": "History",
+    "pageSubtitle": "Everything that's happened on your account, in one place",
+    "viewing": "Viewing",
+    "detailSheetTitle": "History details",
+    "categories": {
+      "bookings": "Bookings",
+      "payments": "Payments",
+      "wallet": "Wallet",
+      "loyalty": "Loyalty",
+      "invoices": "Invoices"
+    },
+    "bookingsSection": {
+      "totalBookings": "Total Bookings",
+      "totalBookingsHint": "All time",
+      "paidJobs": "Paid Jobs",
+      "paidJobsHint": "Completed",
+      "cancelled": "Cancelled",
+      "cancelledHint": "All time",
+      "totalCharged": "Total Charged",
+      "totalChargedHint": "All time",
+      "pendingAuthorizations": "Pending Authorizations",
+      "pendingAuthorizationsHint": "Awaiting capture",
+      "fullyPaid": "Fully Paid",
+      "fullyPaidHint": "Completed",
+      "searchBookings": "Search bookings...",
+      "searchCharges": "Search charges...",
+      "statusPlaceholder": "Status",
+      "allStatuses": "All Statuses",
+      "statusPaid": "Paid",
+      "statusClosed": "Closed",
+      "statusCancelled": "Cancelled",
+      "statusAuthorized": "Authorized",
+      "emptyMatchingTitle": "No matching results",
+      "emptyMatchingDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "noBookingsTitle": "No bookings yet",
+      "noBookingsDescription": "Completed and paid jobs will appear here.",
+      "noChargesTitle": "No charges yet",
+      "noChargesDescription": "Charges from your bookings will show up here.",
+      "browseServices": "Browse Services",
+      "columns": {
+        "service": "Service",
+        "bookingId": "Booking ID",
+        "date": "Date",
+        "provider": "Provider",
+        "status": "Status",
+        "amount": "Amount"
+      },
+      "serviceFallback": "Service",
+      "itemLabelBookings": "bookings",
+      "itemLabelCharges": "charges"
+    },
+    "walletSection": {
+      "totalCredited": "Total Credited",
+      "totalCreditedHint": "All time",
+      "totalDebited": "Total Debited",
+      "totalDebitedHint": "All time",
+      "currentBalance": "Current Balance",
+      "currentBalanceHint": "Right now",
+      "searchPlaceholder": "Search transactions...",
+      "typePlaceholder": "Type",
+      "allTypes": "All Types",
+      "credit": "Credit",
+      "debit": "Debit",
+      "emptyMatchingTitle": "No matching transactions",
+      "emptyMatchingDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "emptyTitle": "No wallet activity yet",
+      "emptyDescription": "Credits, debits and holds will appear here.",
+      "goToWallet": "Go to Wallet",
+      "columns": {
+        "type": "Type",
+        "date": "Date",
+        "amount": "Amount",
+        "balanceAfter": "Balance After"
+      },
+      "itemLabel": "transactions"
+    },
+    "loyaltySection": {
+      "pointsEarned": "Points Earned",
+      "pointsEarnedHint": "All time",
+      "pointsSpent": "Points Spent",
+      "pointsSpentHint": "All time",
+      "currentBalance": "Current Balance",
+      "currentBalanceHint": "Right now",
+      "searchPlaceholder": "Search activity...",
+      "typePlaceholder": "Type",
+      "all": "All",
+      "earned": "Earned",
+      "spent": "Spent",
+      "emptyMatchingTitle": "No matching activity",
+      "emptyMatchingDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "emptyTitle": "No loyalty activity yet",
+      "emptyDescription": "Book a service to start earning loyalty points.",
+      "goToLoyalty": "Go to Loyalty",
+      "columns": {
+        "activity": "Activity",
+        "date": "Date",
+        "points": "Points",
+        "balanceAfter": "Balance After"
+      },
+      "itemLabel": "entries"
+    },
+    "invoicesSection": {
+      "totalInvoices": "Total Invoices",
+      "totalInvoicesHint": "All time",
+      "paid": "Paid",
+      "paidHint": "Completed",
+      "outstanding": "Outstanding",
+      "outstandingHint": "Awaiting payment",
+      "searchPlaceholder": "Search invoices...",
+      "statusPlaceholder": "Status",
+      "allStatuses": "All Statuses",
+      "issued": "Issued",
+      "paidStatus": "Paid",
+      "emptyMatchingTitle": "No matching invoices",
+      "emptyMatchingDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "emptyTitle": "No invoices yet",
+      "emptyDescription": "An invoice is issued once a booking is completed and confirmed.",
+      "goToInvoices": "Go to Invoices",
+      "columns": {
+        "invoiceNumber": "Invoice #",
+        "booking": "Booking",
+        "date": "Date",
+        "status": "Status",
+        "amount": "Amount"
+      },
+      "itemLabel": "invoices"
+    }
+  }
+}
