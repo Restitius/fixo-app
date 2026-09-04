@@ -1,0 +1,223 @@
+{
+  "loading": "Cargando…",
+  "help": {
+    "page": {
+      "title": "Ayuda",
+      "subtitle": "Tickets de soporte y centro de ayuda"
+    },
+    "metrics": {
+      "openTickets": "Tickets Abiertos",
+      "viewAllOpen": "Ver todos los abiertos",
+      "resolved": "Resueltos",
+      "viewResolved": "Ver resueltos",
+      "avgResponse": "Respuesta Promedio",
+      "thisMonth": "Este mes",
+      "unreadReplies": "Respuestas Sin Leer",
+      "viewReplies": "Ver respuestas",
+      "durationMinutes": "{{count}} min",
+      "durationHours": "{{count}} h",
+      "durationHoursMinutes": "{{hours}} h {{minutes}} min"
+    },
+    "search": {
+      "placeholder": "Buscar tickets..."
+    },
+    "filters": {
+      "allStatuses": "Todos los Estados",
+      "open": "Abierto",
+      "resolved": "Resuelto",
+      "closed": "Cerrado",
+      "allCategories": "Todas las Categorías"
+    },
+    "newTicket": "Nuevo Ticket",
+    "empty": {
+      "noMatchingTitle": "No hay tickets coincidentes",
+      "noMatchingDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "noTicketsTitle": "No hay tickets de soporte",
+      "noTicketsDescription": "¿Necesitas ayuda con una reserva, un pago o tu cuenta? Abre un ticket y te responderemos."
+    },
+    "table": {
+      "ticketNumber": "N.° de Ticket",
+      "subject": "Asunto",
+      "category": "Categoría",
+      "priority": "Prioridad",
+      "status": "Estado",
+      "updated": "Actualizado",
+      "messages": "Mensajes",
+      "showing": "Mostrando {{from}} a {{to}} de {{total}} tickets"
+    },
+    "sidebar": {
+      "needHelpTitle": "¿Necesitas ayuda?",
+      "needHelpDescription": "Encuentra respuestas rápidas o ponte en contacto con nuestro equipo de soporte.",
+      "faqShortcuts": "Accesos directos de preguntas frecuentes",
+      "faqs": {
+        "createTicket": "Cómo crear un ticket",
+        "ticketStatus": "Entender el estado de los tickets",
+        "refunds": "Reembolsos y cancelaciones",
+        "paymentBilling": "Ayuda con pagos y facturación"
+      },
+      "faqToasts": {
+        "createTicket": "Haz clic en \"Nuevo Ticket\" arriba, completa el asunto y el mensaje, y envía.",
+        "ticketStatus": "Abierto = esperando una respuesta. Resuelto = el equipo lo considera solucionado. Cerrado = la conversación está archivada."
+      },
+      "stillNeedHelpTitle": "¿Aún necesitas ayuda?",
+      "stillNeedHelpDescription": "Nuestro equipo de soporte está aquí para ti.",
+      "contactSupport": "Contactar Soporte"
+    },
+    "detail": {
+      "category": "Categoría",
+      "priority": "Prioridad",
+      "status": "Estado",
+      "lastUpdated": "Última actualización",
+      "relatedTo": "Relacionado con",
+      "bookingFallback": "Reserva",
+      "provider": "Proveedor",
+      "conversation": "Conversación",
+      "loadingMessages": "Cargando…",
+      "noMessages": "Aún no hay mensajes.",
+      "timeline": {
+        "title": "Cronología del Ticket",
+        "ticketCreated": "Ticket creado",
+        "supportReplied": "Soporte respondió",
+        "youReplied": "Tú respondiste",
+        "awaitingCustomer": "Esperando al cliente",
+        "respondToContinue": "Responde para continuar",
+        "resolved": "Resuelto",
+        "pending": "Pendiente"
+      },
+      "replyToCustomer": "Responder al cliente",
+      "attachmentsNotAvailable": "Los archivos adjuntos aún no están disponibles en las respuestas de tickets.",
+      "replyPlaceholder": "Escribe tu mensaje...",
+      "closedNotice": "Este ticket está cerrado. Abre un nuevo ticket si necesitas más ayuda."
+    },
+    "dialog": {
+      "title": "Nuevo Ticket de Soporte",
+      "subtitle": "Cuéntanos qué salió mal y nuestro equipo te ayudará.",
+      "subjectLabel": "Asunto *",
+      "subjectPlaceholder": "Describe brevemente tu problema",
+      "bookingReferenceLabel": "Referencia de reserva",
+      "bookingReferencePlaceholder": "ej. BK-123456",
+      "optional": "Opcional",
+      "categoryLabel": "Categoría *",
+      "priorityLabel": "Prioridad *",
+      "messageLabel": "Mensaje *",
+      "messagePlaceholder": "Proporciona la mayor cantidad de detalles posible...",
+      "attachmentLabel": "Archivo adjunto (opcional)",
+      "filesSelected_one": "{{count}} archivo seleccionado",
+      "filesSelected_other": "{{count}} archivos seleccionados",
+      "dragDropPrefix": "Arrastra y suelta archivos aquí o",
+      "browse": "explora",
+      "maxFileSize": "Máx. 5 MB por archivo (PDF, JPG, PNG)",
+      "contactMethodLabel": "¿Cómo te gustaría que te contactemos? *",
+      "contactEmailTitle": "Correo",
+      "contactEmailHint": "Responderemos a tu correo",
+      "contactInAppTitle": "En la app",
+      "contactInAppHint": "Responderemos en tu bandeja de entrada",
+      "responseTimeNote": "Nuestro equipo normalmente responde en 1-2 horas hábiles.",
+      "cancel": "Cancelar",
+      "submit": "Enviar Ticket",
+      "submitting": "Enviando...",
+      "subjectTooShort": "El asunto debe tener al menos 3 caracteres",
+      "describeIssue": "Describe el problema antes de enviar",
+      "attachmentsNotAvailable": "Los archivos adjuntos aún no están disponibles — tu ticket y mensaje fueron guardados.",
+      "ticketOpened": "Ticket de soporte abierto"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "Comentarios",
+      "subtitle": "Califica a los proveedores de tus reservas completadas"
+    },
+    "metrics": {
+      "totalReviews": "Total de Reseñas",
+      "allTimeReviews": "Reseñas de todo el tiempo",
+      "pendingReviews": "Reseñas Pendientes",
+      "bookingsToRate": "Reservas por calificar",
+      "averageRating": "Calificación Promedio",
+      "acrossAllProviders": "En todos los proveedores",
+      "providersRated": "Proveedores Calificados",
+      "distinctProviders": "Proveedores distintos"
+    },
+    "tabs": {
+      "all": "Todas",
+      "pending": "Pendientes",
+      "submitted": "Enviadas"
+    },
+    "search": {
+      "placeholder": "Buscar reservas, servicios o proveedores..."
+    },
+    "sort": {
+      "oldestFirst": "Más antiguas primero",
+      "newestFirst": "Más recientes primero"
+    },
+    "empty": {
+      "pendingTitle": "Nada pendiente",
+      "submittedTitle": "Aún no hay reseñas",
+      "allTitle": "Nada para calificar todavía",
+      "description": "Una vez que una reserva se complete y cierre, podrás calificar a tu proveedor aquí.",
+      "viewMyBookings": "Ver Mis Reservas"
+    },
+    "serviceFallback": "Servicio",
+    "providerFallback": "Proveedor",
+    "row": {
+      "submitted": "Enviada",
+      "rateNow": "Calificar ahora"
+    },
+    "recent": {
+      "title": "Comentarios recientes",
+      "viewAll": "Ver todo",
+      "emptyDescription": "Tus reseñas enviadas aparecerán aquí."
+    },
+    "starAriaLabel_one": "{{count}} estrella",
+    "starAriaLabel_other": "{{count}} estrellas",
+    "detail": {
+      "title": "Detalles de la reseña",
+      "yourReview": "Tu reseña",
+      "noWrittenFeedback": "No hay comentarios escritos para esta reserva.",
+      "bookingInformation": "Información de la reserva",
+      "bookingId": "ID de Reserva",
+      "service": "Servicio",
+      "dateTime": "Fecha y Hora",
+      "amountPaid": "Monto Pagado",
+      "editReview": "Editar reseña",
+      "viewBooking": "Ver reserva"
+    },
+    "aspects": {
+      "quality": "Calidad",
+      "punctuality": "Puntualidad",
+      "communication": "Comunicación",
+      "value": "Relación calidad-precio"
+    },
+    "highlightTags": {
+      "professional": "Profesional",
+      "onTime": "Puntual",
+      "cleanWork": "Trabajo limpio",
+      "friendly": "Amable"
+    },
+    "dialog": {
+      "title": "Califica a tu proveedor",
+      "subtitle": "Comparte tu experiencia para esta reserva completada.",
+      "bookingCode": "Código de reserva",
+      "serviceDate": "Fecha del servicio",
+      "totalAmount": "Monto total",
+      "overallQuestion": "¿Cómo calificarías tu experiencia general?",
+      "tapToRate": "Toca una estrella para calificar",
+      "rateAspects": "Califica aspectos específicos",
+      "shareFeedback": "Comparte tu opinión",
+      "feedbackPlaceholder": "Cuéntanos sobre tu experiencia...",
+      "whatStoodOut": "¿Qué te llamó la atención?",
+      "optional": "Opcional",
+      "addPhotos": "Agregar fotos",
+      "uploadUpTo5": "Sube hasta 5 fotos del trabajo",
+      "photosSelected_one": "{{count}} seleccionada",
+      "photosSelected_other": "{{count}} seleccionadas",
+      "chooseFiles": "Elegir archivos",
+      "cancel": "Cancelar",
+      "submit": "Enviar reseña",
+      "submitting": "Enviando...",
+      "pickStarRating": "Elige primero una calificación de estrellas",
+      "photoAttachmentsNotAvailable": "Las fotos adjuntas aún no están disponibles — tu calificación y comentarios fueron guardados.",
+      "thanksForFeedback": "¡Gracias por tu opinión!"
+    }
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "loading": "加载中…",
+  "help": {
+    "page": {
+      "title": "帮助",
+      "subtitle": "支持工单与帮助中心"
+    },
+    "metrics": {
+      "openTickets": "待处理工单",
+      "viewAllOpen": "查看全部待处理",
+      "resolved": "已解决",
+      "viewResolved": "查看已解决",
+      "avgResponse": "平均响应时间",
+      "thisMonth": "本月",
+      "unreadReplies": "未读回复",
+      "viewReplies": "查看回复",
+      "durationMinutes": "{{count}}分钟",
+      "durationHours": "{{count}}小时",
+      "durationHoursMinutes": "{{hours}}小时{{minutes}}分钟"
+    },
+    "search": {
+      "placeholder": "搜索工单..."
+    },
+    "filters": {
+      "allStatuses": "所有状态",
+      "open": "待处理",
+      "resolved": "已解决",
+      "closed": "已关闭",
+      "allCategories": "所有类别"
+    },
+    "newTicket": "新建工单",
+    "empty": {
+      "noMatchingTitle": "没有匹配的工单",
+      "noMatchingDescription": "请尝试调整搜索条件或筛选器。",
+      "clearFilters": "清除筛选器",
+      "noTicketsTitle": "暂无支持工单",
+      "noTicketsDescription": "预订、付款或账户方面需要帮助？提交一个工单，我们会尽快回复您。"
+    },
+    "table": {
+      "ticketNumber": "工单编号",
+      "subject": "主题",
+      "category": "类别",
+      "priority": "优先级",
+      "status": "状态",
+      "updated": "更新时间",
+      "messages": "消息",
+      "showing": "显示第 {{from}} 到 {{to}} 条，共 {{total}} 个工单"
+    },
+    "sidebar": {
+      "needHelpTitle": "需要帮助吗？",
+      "needHelpDescription": "快速找到答案，或联系我们的客服团队。",
+      "faqShortcuts": "常见问题快捷方式",
+      "faqs": {
+        "createTicket": "如何创建工单",
+        "ticketStatus": "了解工单状态",
+        "refunds": "退款与取消",
+        "paymentBilling": "支付与账单帮助"
+      },
+      "faqToasts": {
+        "createTicket": "点击上方的“新建工单”，填写主题和消息，然后提交。",
+        "ticketStatus": "待处理 = 等待回复。已解决 = 团队认为问题已解决。已关闭 = 对话已归档。"
+      },
+      "stillNeedHelpTitle": "还需要帮助吗？",
+      "stillNeedHelpDescription": "我们的客服团队随时为您服务。",
+      "contactSupport": "联系客服"
+    },
+    "detail": {
+      "category": "类别",
+      "priority": "优先级",
+      "status": "状态",
+      "lastUpdated": "最后更新",
+      "relatedTo": "相关预订",
+      "bookingFallback": "预订",
+      "provider": "服务商",
+      "conversation": "对话",
+      "loadingMessages": "加载中…",
+      "noMessages": "暂无消息。",
+      "timeline": {
+        "title": "工单时间线",
+        "ticketCreated": "工单已创建",
+        "supportReplied": "客服已回复",
+        "youReplied": "您已回复",
+        "awaitingCustomer": "等待客户回复",
+        "respondToContinue": "回复以继续",
+        "resolved": "已解决",
+        "pending": "待处理"
+      },
+      "replyToCustomer": "回复客户",
+      "attachmentsNotAvailable": "工单回复暂不支持附件。",
+      "replyPlaceholder": "输入您的消息...",
+      "closedNotice": "此工单已关闭。如需更多帮助，请提交新工单。"
+    },
+    "dialog": {
+      "title": "新建支持工单",
+      "subtitle": "告诉我们出了什么问题，我们的团队会为您提供帮助。",
+      "subjectLabel": "主题 *",
+      "subjectPlaceholder": "简要描述您的问题",
+      "bookingReferenceLabel": "预订编号",
+      "bookingReferencePlaceholder": "例如 BK-123456",
+      "optional": "可选",
+      "categoryLabel": "类别 *",
+      "priorityLabel": "优先级 *",
+      "messageLabel": "消息 *",
+      "messagePlaceholder": "请提供尽可能详细的信息...",
+      "attachmentLabel": "附件（可选）",
+      "filesSelected_other": "已选择 {{count}} 个文件",
+      "dragDropPrefix": "将文件拖放到此处，或",
+      "browse": "浏览",
+      "maxFileSize": "每个文件最大5MB（PDF、JPG、PNG）",
+      "contactMethodLabel": "您希望我们如何联系您？ *",
+      "contactEmailTitle": "邮箱",
+      "contactEmailHint": "我们将回复您的邮箱",
+      "contactInAppTitle": "应用内",
+      "contactInAppHint": "我们将在您的收件箱中回复",
+      "responseTimeNote": "我们的团队通常会在1-2个工作小时内回复。",
+      "cancel": "取消",
+      "submit": "提交工单",
+      "submitting": "提交中...",
+      "subjectTooShort": "主题至少需要3个字符",
+      "describeIssue": "请先描述问题再提交",
+      "attachmentsNotAvailable": "附件功能暂不可用 — 您的工单和消息已保存。",
+      "ticketOpened": "支持工单已创建"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "反馈",
+      "subtitle": "为您已完成的服务评价服务商"
+    },
+    "metrics": {
+      "totalReviews": "评价总数",
+      "allTimeReviews": "全部历史评价",
+      "pendingReviews": "待评价",
+      "bookingsToRate": "待评价的预订",
+      "averageRating": "平均评分",
+      "acrossAllProviders": "所有服务商平均",
+      "providersRated": "已评价服务商",
+      "distinctProviders": "不同服务商数量"
+    },
+    "tabs": {
+      "all": "全部",
+      "pending": "待评价",
+      "submitted": "已提交"
+    },
+    "search": {
+      "placeholder": "搜索预订、服务或服务商..."
+    },
+    "sort": {
+      "oldestFirst": "最早优先",
+      "newestFirst": "最新优先"
+    },
+    "empty": {
+      "pendingTitle": "暂无待评价项",
+      "submittedTitle": "暂无评价",
+      "allTitle": "暂无可评价项",
+      "description": "预订完成并关闭后，您就可以在此处评价您的服务商。",
+      "viewMyBookings": "查看我的预订"
+    },
+    "serviceFallback": "服务",
+    "providerFallback": "服务商",
+    "row": {
+      "submitted": "已提交",
+      "rateNow": "立即评价"
+    },
+    "recent": {
+      "title": "最新反馈",
+      "viewAll": "查看全部",
+      "emptyDescription": "您提交的评价将显示在这里。"
+    },
+    "starAriaLabel_other": "{{count}} 星",
+    "detail": {
+      "title": "评价详情",
+      "yourReview": "您的评价",
+      "noWrittenFeedback": "此预订暂无文字评价。",
+      "bookingInformation": "预订信息",
+      "bookingId": "预订编号",
+      "service": "服务",
+      "dateTime": "日期和时间",
+      "amountPaid": "已付金额",
+      "editReview": "编辑评价",
+      "viewBooking": "查看预订"
+    },
+    "aspects": {
+      "quality": "质量",
+      "punctuality": "准时性",
+      "communication": "沟通",
+      "value": "性价比"
+    },
+    "highlightTags": {
+      "professional": "专业",
+      "onTime": "准时",
+      "cleanWork": "工作整洁",
+      "friendly": "友好"
+    },
+    "dialog": {
+      "title": "评价您的服务商",
+      "subtitle": "分享您对这次已完成预订的体验。",
+      "bookingCode": "预订编号",
+      "serviceDate": "服务日期",
+      "totalAmount": "总金额",
+      "overallQuestion": "您如何评价整体体验？",
+      "tapToRate": "点击星星进行评分",
+      "rateAspects": "对具体方面评分",
+      "shareFeedback": "分享您的反馈",
+      "feedbackPlaceholder": "告诉我们您的体验...",
+      "whatStoodOut": "有什么让您印象深刻？",
+      "optional": "可选",
+      "addPhotos": "添加照片",
+      "uploadUpTo5": "最多上传5张工作照片",
+      "photosSelected_other": "已选择{{count}}张",
+      "chooseFiles": "选择文件",
+      "cancel": "取消",
+      "submit": "提交评价",
+      "submitting": "提交中...",
+      "pickStarRating": "请先选择星级评分",
+      "photoAttachmentsNotAvailable": "照片附件功能暂不可用 — 您的评分和评论已保存。",
+      "thanksForFeedback": "感谢您的反馈！"
+    }
+  }
+}

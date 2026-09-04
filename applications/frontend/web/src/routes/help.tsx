@@ -37,6 +37,8 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type SupportTicket, type TicketMessage } from "@/lib/api-client";
 import { fmtDate, fmtDateTime, humanize } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 const title = "Help — FIXO";
 const description = "Open support tickets and get help from the FIXO team.";
@@ -81,12 +83,12 @@ function priorityStyle(priority: string) {
   return "bg-amber-500/15 text-amber-600";
 }
 
-function fmtDuration(ms: number): string {
+function fmtDuration(ms: number, t: TFunction): string {
   const mins = Math.round(ms / 60000);
-  if (mins < 60) return `${mins}m`;
+  if (mins < 60) return t("help.metrics.durationMinutes", { count: mins });
   const hours = Math.floor(mins / 60);
   const rem = mins % 60;
-  return rem ? `${hours}h ${rem}m` : `${hours}h`;
+  return rem ? t("help.metrics.durationHoursMinutes", { hours, minutes: rem }) : t("help.metrics.durationHours", { count: hours });
 }
 
 // Per-viewer "have I seen the latest support reply" state — nothing on the
@@ -122,6 +124,7 @@ function isUnread(t: SupportTicket, viewed: Record<string, string>): boolean {
 }
 
 function HelpPage() {
+  const { t } = useTranslation("support");
   const { access_token, loading, logout, customer } = useAuth();
   const [tickets, setTickets] = useState<SupportTicket[] | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -160,7 +163,7 @@ function HelpPage() {
   );
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -184,12 +187,12 @@ function HelpPage() {
   const hasActiveFilters = search.trim() !== "" || statusFilter !== "all" || categoryFilter !== "all";
 
   return (
-    <PageShell title="Help" subtitle="Support tickets and helpdesk" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("help.page.title")} subtitle={t("help.page.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Ticket} label="Open Tickets" hint="View all open" value={dataLoaded ? String(openCount) : "—"} />
-        <MetricCard icon={CheckCircle2} label="Resolved" hint="View resolved" value={dataLoaded ? String(resolvedCount) : "—"} tone="success" tintValue />
-        <MetricCard icon={Clock} label="Avg Response" hint="This month" value={dataLoaded ? (responded.length ? fmtDuration(avgResponseMs) : "—") : "—"} />
-        <MetricCard icon={Mail} label="Unread Replies" hint="View replies" value={dataLoaded ? String(unreadCount) : "—"} tone="amber" tintValue />
+        <MetricCard icon={Ticket} label={t("help.metrics.openTickets")} hint={t("help.metrics.viewAllOpen")} value={dataLoaded ? String(openCount) : "—"} />
+        <MetricCard icon={CheckCircle2} label={t("help.metrics.resolved")} hint={t("help.metrics.viewResolved")} value={dataLoaded ? String(resolvedCount) : "—"} tone="success" tintValue />
+        <MetricCard icon={Clock} label={t("help.metrics.avgResponse")} hint={t("help.metrics.thisMonth")} value={dataLoaded ? (responded.length ? fmtDuration(avgResponseMs, t) : "—") : "—"} />
+        <MetricCard icon={Mail} label={t("help.metrics.unreadReplies")} hint={t("help.metrics.viewReplies")} value={dataLoaded ? String(unreadCount) : "—"} tone="amber" tintValue />
       </div>
 
       <div className="mt-6 flex min-h-0 flex-1 items-stretch gap-6">
@@ -201,23 +204,23 @@ function HelpPage() {
                 <input
                   value={search}
                   onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                  placeholder="Search tickets..."
+                  placeholder={t("help.search.placeholder")}
                   className="h-10 w-full rounded-xl border border-border bg-background pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground"
                 />
               </div>
               <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-                <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Statuses" /></SelectTrigger>
+                <SelectTrigger className="w-[160px]"><SelectValue placeholder={t("help.filters.allStatuses")} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="OPEN">Open</SelectItem>
-                  <SelectItem value="RESOLVED">Resolved</SelectItem>
-                  <SelectItem value="CLOSED">Closed</SelectItem>
+                  <SelectItem value="all">{t("help.filters.allStatuses")}</SelectItem>
+                  <SelectItem value="OPEN">{t("help.filters.open")}</SelectItem>
+                  <SelectItem value="RESOLVED">{t("help.filters.resolved")}</SelectItem>
+                  <SelectItem value="CLOSED">{t("help.filters.closed")}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={categoryFilter} onValueChange={(v) => { setCategoryFilter(v); setPage(1); }}>
-                <SelectTrigger className="w-[170px]"><SelectValue placeholder="All Categories" /></SelectTrigger>
+                <SelectTrigger className="w-[170px]"><SelectValue placeholder={t("help.filters.allCategories")} /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="all">{t("help.filters.allCategories")}</SelectItem>
                   {CATEGORIES.map((c) => (
                     <SelectItem key={c} value={c}>{humanize(c)}</SelectItem>
                   ))}
@@ -228,7 +231,7 @@ function HelpPage() {
                 className="ml-auto flex h-10 items-center gap-2 rounded-xl px-4 text-sm font-semibold text-primary-foreground"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                <Plus className="size-4" /> New Ticket
+                <Plus className="size-4" /> {t("help.newTicket")}
               </button>
             </div>
 
@@ -237,14 +240,14 @@ function HelpPage() {
                 <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
               ) : filtered.length === 0 ? (
                 hasActiveFilters ? (
-                  <EmptyState compact icon={FileQuestion} title="No matching tickets" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); setCategoryFilter("all"); }} />
+                  <EmptyState compact icon={FileQuestion} title={t("help.empty.noMatchingTitle")} description={t("help.empty.noMatchingDescription")} actionLabel={t("help.empty.clearFilters")} onAction={() => { setSearch(""); setStatusFilter("all"); setCategoryFilter("all"); }} />
                 ) : (
                   <EmptyState
                     compact
                     icon={HelpCircle}
-                    title="No support tickets"
-                    description="Need help with a booking, payment or your account? Open a ticket and we'll get back to you."
-                    actionLabel="New Ticket"
+                    title={t("help.empty.noTicketsTitle")}
+                    description={t("help.empty.noTicketsDescription")}
+                    actionLabel={t("help.newTicket")}
                     onAction={() => setShowForm(true)}
                   />
                 )
@@ -254,38 +257,38 @@ function HelpPage() {
                     <table className="w-full min-w-[820px] text-left text-sm">
                       <thead>
                         <tr className="border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                          <th className="py-3 font-semibold">Ticket #</th>
-                          <th className="px-4 py-3 font-semibold">Subject</th>
-                          <th className="px-4 py-3 font-semibold">Category</th>
-                          <th className="px-4 py-3 font-semibold">Priority</th>
-                          <th className="px-4 py-3 font-semibold">Status</th>
-                          <th className="px-4 py-3 font-semibold">Updated</th>
-                          <th className="px-4 py-3 font-semibold">Messages</th>
+                          <th className="py-3 font-semibold">{t("help.table.ticketNumber")}</th>
+                          <th className="px-4 py-3 font-semibold">{t("help.table.subject")}</th>
+                          <th className="px-4 py-3 font-semibold">{t("help.table.category")}</th>
+                          <th className="px-4 py-3 font-semibold">{t("help.table.priority")}</th>
+                          <th className="px-4 py-3 font-semibold">{t("help.table.status")}</th>
+                          <th className="px-4 py-3 font-semibold">{t("help.table.updated")}</th>
+                          <th className="px-4 py-3 font-semibold">{t("help.table.messages")}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {paged.map((t) => {
-                          const unread = isUnread(t, viewed);
+                        {paged.map((t2) => {
+                          const unread = isUnread(t2, viewed);
                           return (
-                            <tr key={t.ticket_id} onClick={() => openAndMarkViewed(t)} className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40">
+                            <tr key={t2.ticket_id} onClick={() => openAndMarkViewed(t2)} className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40">
                               <td className="py-3 font-semibold text-primary">
                                 <span className="flex items-center gap-2">
                                   {unread && <span className="size-2 rounded-full bg-primary" />}
-                                  {t.ticket_number}
+                                  {t2.ticket_number}
                                 </span>
                               </td>
-                              <td className="px-4 py-3">{t.subject}</td>
-                              <td className="px-4 py-3 text-muted-foreground">{humanize(t.category)}</td>
+                              <td className="px-4 py-3">{t2.subject}</td>
+                              <td className="px-4 py-3 text-muted-foreground">{humanize(t2.category)}</td>
                               <td className="px-4 py-3">
-                                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${priorityStyle(t.priority)}`}>{humanize(t.priority)}</span>
+                                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${priorityStyle(t2.priority)}`}>{humanize(t2.priority)}</span>
                               </td>
                               <td className="px-4 py-3">
-                                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(t.status)}`}>{humanize(t.status)}</span>
+                                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(t2.status)}`}>{humanize(t2.status)}</span>
                               </td>
-                              <td className="px-4 py-3 text-muted-foreground">{fmtDate(t.updated_at)}</td>
+                              <td className="px-4 py-3 text-muted-foreground">{fmtDate(t2.updated_at)}</td>
                               <td className="px-4 py-3">
                                 <span className="inline-flex items-center gap-1 text-muted-foreground">
-                                  <MessagesSquare className="size-3.5" /> {t.message_count ?? 0}
+                                  <MessagesSquare className="size-3.5" /> {t2.message_count ?? 0}
                                   {unread && <span className="size-1.5 rounded-full bg-primary" />}
                                 </span>
                               </td>
@@ -297,7 +300,7 @@ function HelpPage() {
                   </div>
                   <div className="mt-auto flex items-center justify-between pt-4">
                     <p className="text-sm text-muted-foreground">
-                      Showing {(page - 1) * PAGE_SIZE + 1} to {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} tickets
+                      {t("help.table.showing", { from: (page - 1) * PAGE_SIZE + 1, to: Math.min(page * PAGE_SIZE, filtered.length), total: filtered.length })}
                     </p>
                     <div className="flex items-center gap-2">
                       <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted disabled:opacity-40">‹</button>
@@ -331,12 +334,13 @@ function HelpPage() {
 }
 
 function HelpSidebar({ onNewTicket }: { onNewTicket: () => void }) {
+  const { t } = useTranslation("support");
   const navigate = useNavigate();
   const faqs = [
-    { label: "How to create a ticket", onClick: () => toast.info("Click \"New Ticket\" above, fill in the subject and message, and submit.") },
-    { label: "Understanding ticket status", onClick: () => toast.info("Open = awaiting a reply. Resolved = the team considers it solved. Closed = the thread is archived.") },
-    { label: "Refund and cancellations", onClick: () => navigate({ to: "/payments" }) },
-    { label: "Payment & billing help", onClick: () => navigate({ to: "/payments" }) },
+    { label: t("help.sidebar.faqs.createTicket"), onClick: () => toast.info(t("help.sidebar.faqToasts.createTicket")) },
+    { label: t("help.sidebar.faqs.ticketStatus"), onClick: () => toast.info(t("help.sidebar.faqToasts.ticketStatus")) },
+    { label: t("help.sidebar.faqs.refunds"), onClick: () => navigate({ to: "/payments" }) },
+    { label: t("help.sidebar.faqs.paymentBilling"), onClick: () => navigate({ to: "/payments" }) },
   ];
 
   return (
@@ -347,14 +351,14 @@ function HelpSidebar({ onNewTicket }: { onNewTicket: () => void }) {
             <MessageCircle className="size-5" />
           </span>
           <div>
-            <p className="font-semibold">Need help?</p>
-            <p className="text-sm text-muted-foreground">Find quick answers or get in touch with our support team.</p>
+            <p className="font-semibold">{t("help.sidebar.needHelpTitle")}</p>
+            <p className="text-sm text-muted-foreground">{t("help.sidebar.needHelpDescription")}</p>
           </div>
         </div>
       </div>
 
       <div className="mt-6">
-        <p className="mb-2 font-semibold">FAQ shortcuts</p>
+        <p className="mb-2 font-semibold">{t("help.sidebar.faqShortcuts")}</p>
         <div className="divide-y divide-border">
           {faqs.map((f) => (
             <button key={f.label} onClick={f.onClick} className="flex w-full items-center justify-between py-2.5 text-left text-sm hover:text-primary">
@@ -365,10 +369,10 @@ function HelpSidebar({ onNewTicket }: { onNewTicket: () => void }) {
       </div>
 
       <div className="mt-auto border-t border-border pt-5">
-        <p className="font-semibold">Still need help?</p>
-        <p className="mb-3 text-sm text-muted-foreground">Our support team is here for you.</p>
+        <p className="font-semibold">{t("help.sidebar.stillNeedHelpTitle")}</p>
+        <p className="mb-3 text-sm text-muted-foreground">{t("help.sidebar.stillNeedHelpDescription")}</p>
         <button onClick={onNewTicket} className="flex w-full items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-semibold hover:bg-muted">
-          <HelpCircle className="size-4" /> Contact Support
+          <HelpCircle className="size-4" /> {t("help.sidebar.contactSupport")}
         </button>
       </div>
     </div>
@@ -388,6 +392,7 @@ function Field({ icon: Icon, label, value }: { icon: typeof Calendar; label: str
 }
 
 function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTicket; onClose: () => void; onReplySent: () => void }) {
+  const { t } = useTranslation("support");
   const navigate = useNavigate();
   const [messages, setMessages] = useState<TicketMessage[] | null>(null);
   const [reply, setReply] = useState("");
@@ -444,11 +449,11 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
 
   const timeline = useMemo(() => {
     const steps: { label: string; sub: string; done: boolean; current?: boolean }[] = [
-      { label: "Ticket created", sub: fmtDateTime(ticket.created_at), done: true },
+      { label: t("help.detail.timeline.ticketCreated"), sub: fmtDateTime(ticket.created_at), done: true },
     ];
     for (const m of messages ?? []) {
       steps.push({
-        label: m.sender === "SUPPORT" ? "Support replied" : "You replied",
+        label: m.sender === "SUPPORT" ? t("help.detail.timeline.supportReplied") : t("help.detail.timeline.youReplied"),
         sub: fmtDateTime(m.created_at),
         done: true,
       });
@@ -457,12 +462,12 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
     if (ticket.status === "RESOLVED" || ticket.status === "CLOSED") {
       steps.push({ label: humanize(ticket.status), sub: fmtDateTime(ticket.updated_at), done: true });
     } else if (lastSender === "SUPPORT") {
-      steps.push({ label: "Awaiting customer", sub: "Respond to continue", done: false, current: true });
+      steps.push({ label: t("help.detail.timeline.awaitingCustomer"), sub: t("help.detail.timeline.respondToContinue"), done: false, current: true });
     } else {
-      steps.push({ label: "Resolved", sub: "Pending", done: false });
+      steps.push({ label: t("help.detail.timeline.resolved"), sub: t("help.detail.timeline.pending"), done: false });
     }
     return steps;
-  }, [ticket, messages]);
+  }, [ticket, messages, t]);
 
   return (
     <div className="flex h-full w-[420px] shrink-0 flex-col animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
@@ -479,26 +484,26 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-muted/40 p-3">
-        <Field icon={FileText} label="Category" value={humanize(ticket.category)} />
-        <Field icon={Info} label="Priority" value={humanize(ticket.priority)} />
-        <Field icon={CheckCircle2} label="Status" value={humanize(ticket.status)} />
-        <Field icon={Clock} label="Last updated" value={fmtDateTime(ticket.updated_at)} />
+        <Field icon={FileText} label={t("help.detail.category")} value={humanize(ticket.category)} />
+        <Field icon={Info} label={t("help.detail.priority")} value={humanize(ticket.priority)} />
+        <Field icon={CheckCircle2} label={t("help.detail.status")} value={humanize(ticket.status)} />
+        <Field icon={Clock} label={t("help.detail.lastUpdated")} value={fmtDateTime(ticket.updated_at)} />
       </div>
 
       {relatedBooking && (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <Field icon={Calendar} label="Related to" value={`${relatedBooking.service_name ?? "Booking"} · ${fmtDate(relatedBooking.scheduled_date)}`} />
-          <Field icon={CheckCircle2} label="Provider" value={relatedBooking.provider_name ?? "—"} />
+          <Field icon={Calendar} label={t("help.detail.relatedTo")} value={`${relatedBooking.service_name ?? t("help.detail.bookingFallback")} · ${fmtDate(relatedBooking.scheduled_date)}`} />
+          <Field icon={CheckCircle2} label={t("help.detail.provider")} value={relatedBooking.provider_name ?? "—"} />
         </div>
       )}
 
       <div className="mt-5">
-        <h4 className="mb-2 text-sm font-semibold">Conversation</h4>
+        <h4 className="mb-2 text-sm font-semibold">{t("help.detail.conversation")}</h4>
         <div className="max-h-64 space-y-3 overflow-y-auto pr-1">
           {messages === null ? (
-            <p className="text-sm text-muted-foreground">Loading…</p>
+            <p className="text-sm text-muted-foreground">{t("help.detail.loadingMessages")}</p>
           ) : messages.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No messages yet.</p>
+            <p className="text-sm text-muted-foreground">{t("help.detail.noMessages")}</p>
           ) : (
             messages.map((m) => {
               const body = m.body.startsWith(REF_PREFIX) ? m.body.split("\n").slice(1).join("\n").trim() || m.body : m.body;
@@ -514,7 +519,7 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
       </div>
 
       <div className="mt-5">
-        <h4 className="mb-3 text-sm font-semibold">Ticket Timeline</h4>
+        <h4 className="mb-3 text-sm font-semibold">{t("help.detail.timeline.title")}</h4>
         <ol className="space-y-3">
           {timeline.map((s, i) => (
             <li key={i} className="flex items-start gap-3">
@@ -532,12 +537,12 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
 
       {ticket.status !== "CLOSED" ? (
         <div className="mt-auto border-t border-border pt-4">
-          <p className="mb-2 text-sm font-semibold">Reply to customer</p>
+          <p className="mb-2 text-sm font-semibold">{t("help.detail.replyToCustomer")}</p>
           <div className="flex items-end gap-2">
-            <button onClick={() => toast.info("Attachments aren't available on ticket replies yet.")} className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted">
+            <button onClick={() => toast.info(t("help.detail.attachmentsNotAvailable"))} className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-muted">
               <Paperclip className="size-4" />
             </button>
-            <Textarea value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Type your message..." className="min-h-10 flex-1" />
+            <Textarea value={reply} onChange={(e) => setReply(e.target.value)} placeholder={t("help.detail.replyPlaceholder")} className="min-h-10 flex-1" />
             <button onClick={() => void sendReply()} disabled={sending || !reply.trim()} className="flex size-10 shrink-0 items-center justify-center rounded-xl text-primary-foreground disabled:opacity-50" style={{ backgroundImage: "var(--gradient-primary)" }}>
               <Send className="size-4" />
             </button>
@@ -545,8 +550,8 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
         </div>
       ) : (
         <div className="mt-auto flex items-center gap-2 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
-          <RotateCcw className="size-3.5" /> This ticket is closed. Open a new ticket if you need further help.
-          <button onClick={() => navigate({ to: "/help" })} className="ml-auto font-semibold text-primary hover:underline">New Ticket</button>
+          <RotateCcw className="size-3.5" /> {t("help.detail.closedNotice")}
+          <button onClick={() => navigate({ to: "/help" })} className="ml-auto font-semibold text-primary hover:underline">{t("help.newTicket")}</button>
         </div>
       )}
     </div>
@@ -554,6 +559,7 @@ function TicketDetailPanel({ ticket, onClose, onReplySent }: { ticket: SupportTi
 }
 
 function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onOpenChange: (o: boolean) => void; onCreated: (t: SupportTicket) => void }) {
+  const { t } = useTranslation("support");
   const [subject, setSubject] = useState("");
   const [bookingRef, setBookingRef] = useState("");
   const [category, setCategory] = useState<string>("GENERAL");
@@ -574,11 +580,11 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
 
   async function submit() {
     if (subject.trim().length < 3) {
-      toast.error("Subject must be at least 3 characters");
+      toast.error(t("help.dialog.subjectTooShort"));
       return;
     }
     if (message.trim().length < 1) {
-      toast.error("Describe the issue before submitting");
+      toast.error(t("help.dialog.describeIssue"));
       return;
     }
     setCreating(true);
@@ -588,9 +594,9 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
       await fixoSdk.addTicketMessage(ticket.ticket_id, body.slice(0, 4000));
       void fixoSdk.setPreference("SUPPORT_CONTACT_PREFERENCE", contactPref).catch(() => {});
       if (photoNames.length > 0) {
-        toast.info("Attachments aren't available yet — your ticket and message were saved.");
+        toast.info(t("help.dialog.attachmentsNotAvailable"));
       }
-      toast.success("Support ticket opened");
+      toast.success(t("help.dialog.ticketOpened"));
       reset();
       onOpenChange(false);
       onCreated(ticket);
@@ -605,26 +611,26 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl overflow-y-auto max-h-[90vh]">
         <DialogHeader>
-          <DialogTitle>New Support Ticket</DialogTitle>
-          <p className="text-sm text-muted-foreground">Tell us what went wrong and our team will help.</p>
+          <DialogTitle>{t("help.dialog.title")}</DialogTitle>
+          <p className="text-sm text-muted-foreground">{t("help.dialog.subtitle")}</p>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label>Subject *</Label>
-              <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Briefly describe your issue" />
+              <Label>{t("help.dialog.subjectLabel")}</Label>
+              <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder={t("help.dialog.subjectPlaceholder")} />
             </div>
             <div className="space-y-1.5">
-              <Label>Booking reference</Label>
-              <Input value={bookingRef} onChange={(e) => setBookingRef(e.target.value)} placeholder="e.g. BK-123456" />
-              <p className="text-xs text-muted-foreground">Optional</p>
+              <Label>{t("help.dialog.bookingReferenceLabel")}</Label>
+              <Input value={bookingRef} onChange={(e) => setBookingRef(e.target.value)} placeholder={t("help.dialog.bookingReferencePlaceholder")} />
+              <p className="text-xs text-muted-foreground">{t("help.dialog.optional")}</p>
             </div>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label>Category *</Label>
+              <Label>{t("help.dialog.categoryLabel")}</Label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -633,7 +639,7 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
               </Select>
             </div>
             <div className="space-y-1.5">
-              <Label>Priority *</Label>
+              <Label>{t("help.dialog.priorityLabel")}</Label>
               <Select value={priority} onValueChange={setPriority}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -644,25 +650,25 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
           </div>
 
           <div className="space-y-1.5">
-            <Label>Message *</Label>
-            <Textarea value={message} onChange={(e) => setMessage(e.target.value.slice(0, 2000))} placeholder="Provide as much detail as possible..." className="min-h-28" />
+            <Label>{t("help.dialog.messageLabel")}</Label>
+            <Textarea value={message} onChange={(e) => setMessage(e.target.value.slice(0, 2000))} placeholder={t("help.dialog.messagePlaceholder")} className="min-h-28" />
             <p className="text-right text-xs text-muted-foreground">{message.length}/2000</p>
           </div>
 
           <label className="block cursor-pointer space-y-1.5">
-            <Label>Attachment (optional)</Label>
+            <Label>{t("help.dialog.attachmentLabel")}</Label>
             <div className="flex flex-col items-center gap-1 rounded-xl border border-dashed border-border py-6 text-center">
               <Paperclip className="size-5 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                {photoNames.length > 0 ? `${photoNames.length} file(s) selected` : (<>Drag and drop files here or <span className="font-semibold text-primary">browse</span></>)}
+                {photoNames.length > 0 ? t("help.dialog.filesSelected", { count: photoNames.length }) : (<>{t("help.dialog.dragDropPrefix")} <span className="font-semibold text-primary">{t("help.dialog.browse")}</span></>)}
               </p>
-              <p className="text-xs text-muted-foreground">Max 5MB per file (PDF, JPG, PNG)</p>
+              <p className="text-xs text-muted-foreground">{t("help.dialog.maxFileSize")}</p>
             </div>
             <input type="file" accept="image/*,.pdf" multiple className="hidden" onChange={(e) => setPhotoNames(Array.from(e.target.files ?? []).map((f) => f.name))} />
           </label>
 
           <div className="space-y-1.5">
-            <Label>How would you like us to contact you? *</Label>
+            <Label>{t("help.dialog.contactMethodLabel")}</Label>
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => setContactPref("EMAIL")}
@@ -670,8 +676,8 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
               >
                 <Mail className="mt-0.5 size-4 text-primary" />
                 <div>
-                  <p className="text-sm font-semibold">Email</p>
-                  <p className="text-xs text-muted-foreground">We'll reply to your email</p>
+                  <p className="text-sm font-semibold">{t("help.dialog.contactEmailTitle")}</p>
+                  <p className="text-xs text-muted-foreground">{t("help.dialog.contactEmailHint")}</p>
                 </div>
               </button>
               <button
@@ -680,8 +686,8 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
               >
                 <MessageCircle className="mt-0.5 size-4 text-primary" />
                 <div>
-                  <p className="text-sm font-semibold">In-app</p>
-                  <p className="text-xs text-muted-foreground">We'll reply in your inbox</p>
+                  <p className="text-sm font-semibold">{t("help.dialog.contactInAppTitle")}</p>
+                  <p className="text-xs text-muted-foreground">{t("help.dialog.contactInAppHint")}</p>
                 </div>
               </button>
             </div>
@@ -689,18 +695,18 @@ function NewTicketDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
 
           <div className="flex items-start gap-2 rounded-xl bg-primary/5 p-3 text-xs text-muted-foreground">
             <Info className="mt-0.5 size-3.5 shrink-0 text-primary" />
-            Our team typically responds within 1-2 business hours.
+            {t("help.dialog.responseTimeNote")}
           </div>
 
           <div className="flex gap-2">
-            <button onClick={() => onOpenChange(false)} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">Cancel</button>
+            <button onClick={() => onOpenChange(false)} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">{t("help.dialog.cancel")}</button>
             <button
               onClick={() => void submit()}
               disabled={creating}
               className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
-              <Send className="size-4" /> {creating ? "Submitting..." : "Submit Ticket"}
+              <Send className="size-4" /> {creating ? t("help.dialog.submitting") : t("help.dialog.submit")}
             </button>
           </div>
         </div>
