@@ -25,3 +25,4 @@ class ScreenDefinition:
     route: str        # frontend route, e.g. /assets
     permission: str   # required permission, e.g. assets.view
     description: str = ""
+    clients: tuple[str, ...] = ()  # CLT-* shells; empty = shared across ALL shells
