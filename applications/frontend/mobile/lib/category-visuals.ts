@@ -1,6 +1,6 @@
 // Real service categories carry a plain lowercase icon code seeded in the DB
 // (wrench/zap/sparkles/...) — same codes web maps to lucide icons
-// (see applications/frontend/web/src/routes/services.tsx). Mobile's design
+// (see applications/frontend/web-user/src/routes/services.tsx). Mobile's design
 // uses emoji tiles instead, so this maps the same real codes to emoji rather
 // than inventing a parallel category taxonomy.
 const CATEGORY_EMOJI: Record<string, string> = {
