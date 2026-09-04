@@ -22,6 +22,10 @@ class RequestContext:
     client_ip: str
     method: str
     path: str
+    client_id: str = ""
+    client_kind: str = ""
+    client_family: str = ""
+    client_version: str = ""
 
 
 def _state_get(request: Request, key: str, default: str = "") -> str:
@@ -32,6 +36,7 @@ def _state_get(request: Request, key: str, default: str = "") -> str:
 async def get_request_context(request: Request) -> RequestContext:
     """Assemble the context from middleware-populated state (+fallbacks)."""
     screen_ctx = getattr(request.state, "screen_context", None)
+    client_ctx = getattr(request.state, "client_context", None)
     return RequestContext(
         request_id=_state_get(request, "request_id"),
         correlation_id=_state_get(request, "correlation_id"),
@@ -42,6 +47,10 @@ async def get_request_context(request: Request) -> RequestContext:
         client_ip=request.client.host if request.client else "",
         method=request.method,
         path=request.url.path,
+        client_id=client_ctx.client_id if client_ctx else "",
+        client_kind=client_ctx.kind if client_ctx else "",
+        client_family=client_ctx.family if client_ctx else "",
+        client_version=client_ctx.version if client_ctx else "",
     )
 
 
