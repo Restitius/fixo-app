@@ -1,0 +1,220 @@
+{
+  "loading": "読み込み中…",
+  "help": {
+    "page": {
+      "title": "ヘルプ",
+      "subtitle": "サポートチケットとヘルプデスク"
+    },
+    "metrics": {
+      "openTickets": "対応中のチケット",
+      "viewAllOpen": "対応中をすべて表示",
+      "resolved": "解決済み",
+      "viewResolved": "解決済みを表示",
+      "avgResponse": "平均応答時間",
+      "thisMonth": "今月",
+      "unreadReplies": "未読の返信",
+      "viewReplies": "返信を表示",
+      "durationMinutes": "{{count}}分",
+      "durationHours": "{{count}}時間",
+      "durationHoursMinutes": "{{hours}}時間{{minutes}}分"
+    },
+    "search": {
+      "placeholder": "チケットを検索..."
+    },
+    "filters": {
+      "allStatuses": "すべてのステータス",
+      "open": "対応中",
+      "resolved": "解決済み",
+      "closed": "クローズ",
+      "allCategories": "すべてのカテゴリー"
+    },
+    "newTicket": "新規チケット",
+    "empty": {
+      "noMatchingTitle": "該当するチケットがありません",
+      "noMatchingDescription": "検索条件やフィルターを調整してみてください。",
+      "clearFilters": "フィルターをクリア",
+      "noTicketsTitle": "サポートチケットがありません",
+      "noTicketsDescription": "予約、お支払い、またはアカウントについてお困りですか？チケットを作成いただければご連絡いたします。"
+    },
+    "table": {
+      "ticketNumber": "チケット番号",
+      "subject": "件名",
+      "category": "カテゴリー",
+      "priority": "優先度",
+      "status": "ステータス",
+      "updated": "更新日時",
+      "messages": "メッセージ",
+      "showing": "{{total}}件中 {{from}}〜{{to}}件を表示"
+    },
+    "sidebar": {
+      "needHelpTitle": "お困りですか？",
+      "needHelpDescription": "すぐに回答を見つけるか、サポートチームにお問い合わせください。",
+      "faqShortcuts": "よくある質問ショートカット",
+      "faqs": {
+        "createTicket": "チケットの作成方法",
+        "ticketStatus": "チケットのステータスについて",
+        "refunds": "返金とキャンセル",
+        "paymentBilling": "支払いと請求に関するヘルプ"
+      },
+      "faqToasts": {
+        "createTicket": "上部の「新規チケット」をクリックし、件名とメッセージを入力して送信してください。",
+        "ticketStatus": "対応中 = 返信待ち。解決済み = チームが解決したと判断した状態。クローズ = スレッドがアーカイブされた状態。"
+      },
+      "stillNeedHelpTitle": "まだお困りですか？",
+      "stillNeedHelpDescription": "サポートチームがお手伝いいたします。",
+      "contactSupport": "サポートに問い合わせる"
+    },
+    "detail": {
+      "category": "カテゴリー",
+      "priority": "優先度",
+      "status": "ステータス",
+      "lastUpdated": "最終更新",
+      "relatedTo": "関連する予約",
+      "bookingFallback": "予約",
+      "provider": "業者",
+      "conversation": "会話",
+      "loadingMessages": "読み込み中…",
+      "noMessages": "まだメッセージはありません。",
+      "timeline": {
+        "title": "チケットのタイムライン",
+        "ticketCreated": "チケットを作成",
+        "supportReplied": "サポートが返信しました",
+        "youReplied": "あなたが返信しました",
+        "awaitingCustomer": "お客様の返信待ち",
+        "respondToContinue": "続けるには返信してください",
+        "resolved": "解決済み",
+        "pending": "保留中"
+      },
+      "replyToCustomer": "お客様に返信",
+      "attachmentsNotAvailable": "チケットの返信での添付ファイルはまだご利用いただけません。",
+      "replyPlaceholder": "メッセージを入力...",
+      "closedNotice": "このチケットはクローズされています。さらにサポートが必要な場合は新しいチケットを作成してください。"
+    },
+    "dialog": {
+      "title": "新規サポートチケット",
+      "subtitle": "何が問題だったかお知らせください。チームがサポートいたします。",
+      "subjectLabel": "件名 *",
+      "subjectPlaceholder": "問題を簡潔に説明してください",
+      "bookingReferenceLabel": "予約番号",
+      "bookingReferencePlaceholder": "例: BK-123456",
+      "optional": "任意",
+      "categoryLabel": "カテゴリー *",
+      "priorityLabel": "優先度 *",
+      "messageLabel": "メッセージ *",
+      "messagePlaceholder": "できるだけ詳しく記載してください...",
+      "attachmentLabel": "添付ファイル（任意）",
+      "filesSelected_other": "{{count}}件のファイルを選択済み",
+      "dragDropPrefix": "ファイルをここにドラッグ＆ドロップするか、",
+      "browse": "参照",
+      "maxFileSize": "ファイルごとの最大サイズ: 5MB（PDF、JPG、PNG）",
+      "contactMethodLabel": "ご希望の連絡方法は？ *",
+      "contactEmailTitle": "メール",
+      "contactEmailHint": "メールで返信します",
+      "contactInAppTitle": "アプリ内",
+      "contactInAppHint": "受信ボックスで返信します",
+      "responseTimeNote": "通常、営業時間内で1〜2時間以内に返信いたします。",
+      "cancel": "キャンセル",
+      "submit": "チケットを送信",
+      "submitting": "送信中...",
+      "subjectTooShort": "件名は3文字以上で入力してください",
+      "describeIssue": "送信する前に問題を記載してください",
+      "attachmentsNotAvailable": "添付ファイルはまだご利用いただけません — チケットとメッセージは保存されました。",
+      "ticketOpened": "サポートチケットを作成しました"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "フィードバック",
+      "subtitle": "完了した依頼の業者を評価する"
+    },
+    "metrics": {
+      "totalReviews": "レビュー総数",
+      "allTimeReviews": "全期間のレビュー",
+      "pendingReviews": "未評価のレビュー",
+      "bookingsToRate": "評価待ちの予約",
+      "averageRating": "平均評価",
+      "acrossAllProviders": "全業者の平均",
+      "providersRated": "評価済みの業者",
+      "distinctProviders": "異なる業者数"
+    },
+    "tabs": {
+      "all": "すべて",
+      "pending": "未評価",
+      "submitted": "送信済み"
+    },
+    "search": {
+      "placeholder": "予約、サービス、業者を検索..."
+    },
+    "sort": {
+      "oldestFirst": "古い順",
+      "newestFirst": "新しい順"
+    },
+    "empty": {
+      "pendingTitle": "未評価の項目はありません",
+      "submittedTitle": "まだレビューがありません",
+      "allTitle": "まだ評価する項目がありません",
+      "description": "予約が完了してクローズされると、ここで業者を評価できるようになります。",
+      "viewMyBookings": "自分の予約を見る"
+    },
+    "serviceFallback": "サービス",
+    "providerFallback": "業者",
+    "row": {
+      "submitted": "送信済み",
+      "rateNow": "今すぐ評価"
+    },
+    "recent": {
+      "title": "最近のフィードバック",
+      "viewAll": "すべて表示",
+      "emptyDescription": "送信したレビューがここに表示されます。"
+    },
+    "starAriaLabel_other": "星{{count}}つ",
+    "detail": {
+      "title": "レビューの詳細",
+      "yourReview": "あなたのレビュー",
+      "noWrittenFeedback": "この予約への記入式フィードバックはありません。",
+      "bookingInformation": "予約情報",
+      "bookingId": "予約ID",
+      "service": "サービス",
+      "dateTime": "日時",
+      "amountPaid": "支払い金額",
+      "editReview": "レビューを編集",
+      "viewBooking": "予約を見る"
+    },
+    "aspects": {
+      "quality": "品質",
+      "punctuality": "時間厳守",
+      "communication": "コミュニケーション",
+      "value": "コストパフォーマンス"
+    },
+    "highlightTags": {
+      "professional": "プロフェッショナル",
+      "onTime": "時間通り",
+      "cleanWork": "丁寧な仕上がり",
+      "friendly": "フレンドリー"
+    },
+    "dialog": {
+      "title": "業者を評価する",
+      "subtitle": "この完了した予約についての体験を共有してください。",
+      "bookingCode": "予約コード",
+      "serviceDate": "サービス日",
+      "totalAmount": "合計金額",
+      "overallQuestion": "全体的な体験をどう評価しますか？",
+      "tapToRate": "星をタップして評価",
+      "rateAspects": "個別の項目を評価",
+      "shareFeedback": "フィードバックを共有",
+      "feedbackPlaceholder": "体験について教えてください...",
+      "whatStoodOut": "特に印象に残った点は？",
+      "optional": "任意",
+      "addPhotos": "写真を追加",
+      "uploadUpTo5": "作業の写真を最大5枚アップロード",
+      "photosSelected_other": "{{count}}枚選択済み",
+      "chooseFiles": "ファイルを選択",
+      "cancel": "キャンセル",
+      "submit": "レビューを送信",
+      "submitting": "送信中...",
+      "pickStarRating": "まず星評価を選択してください",
+      "photoAttachmentsNotAvailable": "写真の添付はまだご利用いただけません — 評価とコメントは保存されました。",
+      "thanksForFeedback": "フィードバックをありがとうございます！"
+    }
+  }
+}
