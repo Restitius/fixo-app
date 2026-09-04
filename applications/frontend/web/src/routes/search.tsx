@@ -8,6 +8,7 @@ import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { useAuth } from "@/lib/auth-context";
 import { bookingApi, type CatalogServiceResult } from "@/lib/api-client";
+import { useTranslation } from "react-i18next";
 
 const title = "Search — FIXO";
 
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/search")({
 });
 
 function SearchPage() {
+  const { t } = useTranslation("services");
   const { access_token, loading, customer, logout } = useAuth();
   const navigate = useNavigate();
   const { q } = Route.useSearch();
@@ -41,7 +43,7 @@ function SearchPage() {
   }
 
   return (
-    <PageShell title="Search" subtitle="Find a service across our real catalog" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("search.pageTitle")} subtitle={t("search.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 flex min-h-0 flex-1 flex-col">
         <div className="flex items-center gap-3 rounded-2xl bg-card p-2 shadow-[var(--shadow-card)]">
           <SearchIcon className="ml-3 size-5 text-muted-foreground" />
@@ -50,7 +52,7 @@ function SearchPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && runSearch()}
-            placeholder="Search services, e.g. Plumbing, Cleaning, AC repair..."
+            placeholder={t("search.placeholder")}
             className="h-11 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
           <button
@@ -58,22 +60,22 @@ function SearchPage() {
             className="rounded-xl px-5 py-2.5 text-sm font-semibold text-primary-foreground"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
-            Search
+            {t("search.searchButton")}
           </button>
         </div>
 
         <div className="mt-6">
           {!q ? (
-            <p className="text-sm text-muted-foreground">Type a keyword and press Enter or Search.</p>
+            <p className="text-sm text-muted-foreground">{t("search.prompt")}</p>
           ) : results === null ? (
             <div className="space-y-3">
               {[0, 1, 2].map((i) => <div key={i} className="h-20 animate-pulse rounded-2xl bg-muted/60" />)}
             </div>
           ) : results.length === 0 ? (
-            <EmptyState icon={SearchIcon} title="No results found" description={`Nothing matched "${q}". Try a different keyword.`} />
+            <EmptyState icon={SearchIcon} title={t("search.empty.title")} description={t("search.empty.description", { query: q })} />
           ) : (
             <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">{results.length} results for "{q}"</p>
+              <p className="text-sm text-muted-foreground">{t("search.resultsCount", { count: results.length, query: q })}</p>
               {results.map((r) => (
                 <button
                   key={r.service_id}
