@@ -1,0 +1,183 @@
+{
+  "common": {
+    "loading": "Carregando…",
+    "close": "Fechar",
+    "bookNow": "Reservar agora",
+    "topRated": "Mais bem avaliado",
+    "reviewsCount_one": "{{formatted}} avaliação",
+    "reviewsCount_other": "{{formatted}} avaliações",
+    "jobsDoneCount_one": "{{formatted}} trabalho concluído",
+    "jobsDoneCount_other": "{{formatted}} trabalhos concluídos",
+    "toast": {
+      "savedToBookmarks": "Salvo nos favoritos",
+      "removedFromBookmarks": "Removido dos favoritos"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "Explorar serviços",
+      "subtitle": "Encontre o serviço certo para sua casa ou escritório"
+    },
+    "metrics": {
+      "availableServices": { "label": "Serviços disponíveis", "hint": "Em todas as categorias" },
+      "averageRating": { "label": "Avaliação média", "hint": "Com base em avaliações reais dos prestadores" },
+      "trustedProviders": { "label": "Prestadores confiáveis", "hint": "Em todas as categorias" },
+      "emergencyReady": { "label": "Pronto para emergências", "hint": "Serviços de emergência listados" }
+    },
+    "searchPlaceholder": "Buscar serviços (ex.: Encanamento, Elétrica)...",
+    "sort": {
+      "popular": "Popular",
+      "topRated": "Mais bem avaliado",
+      "az": "A–Z"
+    },
+    "emptyState": {
+      "title": "Nenhum serviço encontrado",
+      "description": "Não encontramos nenhum serviço correspondente a \"{{query}}\". Tente outra palavra-chave.",
+      "action": "Limpar busca"
+    },
+    "fromPrice": "A partir de {{price}}",
+    "askProvider": "Consulte um prestador",
+    "jobsDoneCount_one": "{{formatted}} trabalho concluído",
+    "jobsDoneCount_other": "{{formatted}} trabalhos concluídos",
+    "serviceCount_one": "{{count}} serviço",
+    "serviceCount_other": "{{count}} serviços",
+    "findProviders": "Encontrar prestadores",
+    "popularCategories": "Categorias populares",
+    "providerCount_one": "{{count}} prestador",
+    "providerCount_other": "{{count}} prestadores",
+    "quickMatch": {
+      "title": "Combinação rápida de serviço",
+      "description": "Diga-nos o que você precisa e nós o conectaremos aos melhores prestadores.",
+      "cta": "Encontrar agora"
+    },
+    "dialog": {
+      "title": "Detalhes do serviço",
+      "jobsCompleted_one": "{{formatted}} trabalho concluído",
+      "jobsCompleted_other": "{{formatted}} trabalhos concluídos",
+      "startingFrom": "A partir de",
+      "providersAvailable": "Prestadores disponíveis",
+      "whatsIncluded": "O que está incluído",
+      "noServicesYet": "Os serviços reais desta categoria aparecerão aqui.",
+      "priceRange": "Faixa média de preço",
+      "priceFrom": "{{price}}+",
+      "varies": "Varia",
+      "priceVariesNote": "O preço varia de acordo com a complexidade da tarefa e os materiais necessários.",
+      "whyChooseFixo": "Por que os clientes escolhem a FIXO",
+      "reasons": {
+        "skilled": "Prestadores qualificados e experientes",
+        "quickResponse": "Resposta rápida e serviço confiável",
+        "qualityWork": "Trabalho de qualidade respaldado por avaliações reais",
+        "transparentPricing": "Preços transparentes e informados antecipadamente"
+      },
+      "features": {
+        "realReviews": { "title": "Avaliações reais", "hint": "De clientes reais" },
+        "upfrontPricing": { "title": "Preços transparentes", "hint": "Sem taxas ocultas" },
+        "onTimeService": { "title": "Serviço pontual", "hint": "Respeitando o seu tempo" },
+        "providersReadyCount_one": "{{count}} prestador",
+        "providersReadyCount_other": "{{count}} prestadores",
+        "readyToHelp": "Prontos para ajudar"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "Encontrar prestadores",
+    "pageTitleWithCategory": "Prestadores de {{category}}",
+    "subtitle": "Escolha um profissional confiável para o seu serviço",
+    "backToServices": "Voltar aos serviços",
+    "thisService": "este serviço",
+    "noCategory": {
+      "title": "Escolha um serviço primeiro",
+      "description": "Escolha uma categoria de serviço para ver os prestadores reais que a oferecem.",
+      "action": "Explorar serviços"
+    },
+    "metrics": {
+      "providersFound": { "label": "Prestadores encontrados", "hint": "Correspondentes a esta categoria" },
+      "averageRating": {
+        "label": "Avaliação média",
+        "hint_one": "Com base em {{formatted}} avaliação",
+        "hint_other": "Com base em {{formatted}} avaliações"
+      },
+      "totalReviews": { "label": "Total de avaliações", "hint": "Entre esses prestadores" },
+      "startingFrom": { "label": "A partir de", "hint": "Preços competitivos" }
+    },
+    "searchPlaceholder": "Buscar prestadores...",
+    "allLocations": "Todos os locais",
+    "anyRating": "Qualquer avaliação",
+    "sort": {
+      "recommended": "Recomendado",
+      "topRated": "Mais bem avaliado",
+      "lowestPrice": "Menor preço",
+      "mostJobs": "Mais trabalhos"
+    },
+    "noResults": {
+      "title": "Nenhum prestador de {{category}} no momento",
+      "description": "Ainda não temos ninguém que corresponda aos seus filtros. Tente ampliar sua busca.",
+      "action": "Limpar filtros"
+    },
+    "startingFromPrice": "A partir de {{price}}",
+    "removeBookmark": "Remover favorito",
+    "saveBookmark": "Salvar favorito",
+    "viewProfile": "Ver perfil",
+    "serviceArea": {
+      "title": "Área de atendimento",
+      "empty": "Ainda não há dados de localização para esses prestadores."
+    },
+    "recommendation": {
+      "title": "Nossa recomendação",
+      "description": "Esses prestadores são classificados com base em avaliações reais de clientes para {{category}}.",
+      "items": {
+        "reviews": "Avaliações reais de clientes reais",
+        "pricing": "Preços transparentes por trabalho",
+        "security": "Reservas e pagamentos seguros",
+        "support": "Suporte disponível caso algo dê errado"
+      }
+    },
+    "dialog": {
+      "title": "Perfil do prestador",
+      "activeSince": "Ativo desde",
+      "completedJobs": "Trabalhos concluídos",
+      "servicesOffered": "Serviços oferecidos",
+      "avgPrice": "Preço médio",
+      "servicesPricing": "Serviços e preços",
+      "allPricesInTZS": "Todos os preços em TZS",
+      "noServices": "Nenhum serviço listado ainda.",
+      "localFallback": "Local",
+      "features": {
+        "transparentPricing": { "title": "Preços transparentes", "hint": "Sem taxas ocultas" },
+        "realReviewsCount_one": "{{formatted}} avaliação real",
+        "realReviewsCount_other": "{{formatted}} avaliações reais",
+        "realReviews": { "hint": "De clientes reais" },
+        "coverageTitle": "Atendimento em {{city}}",
+        "coverage": { "hint": "Um especialista local perto de você" },
+        "securePayments": { "title": "Pagamentos seguros", "hint": "Processados com segurança" }
+      },
+      "saved": "Salvo",
+      "save": "Salvar",
+      "messageUnavailable": "As mensagens diretas ficam disponíveis assim que você tiver uma reserva ativa com este prestador.",
+      "messageProvider": "Enviar mensagem ao prestador"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "Favoritos",
+    "subtitle": "Seus prestadores salvos e favoritos",
+    "empty": {
+      "title": "Nenhum favorito ainda",
+      "description": "Salve os prestadores que você gosta a partir do perfil deles, e eles aparecerão aqui para acesso rápido depois.",
+      "action": "Explorar prestadores"
+    },
+    "remove": "Remover"
+  },
+  "search": {
+    "pageTitle": "Buscar",
+    "subtitle": "Encontre um serviço em nosso catálogo real",
+    "placeholder": "Buscar serviços, ex.: Encanamento, Limpeza, Reparo de ar-condicionado...",
+    "searchButton": "Buscar",
+    "prompt": "Digite uma palavra-chave e pressione Enter ou Buscar.",
+    "empty": {
+      "title": "Nenhum resultado encontrado",
+      "description": "Nada corresponde a \"{{query}}\". Tente outra palavra-chave."
+    },
+    "resultsCount_one": "{{count}} resultado para \"{{query}}\"",
+    "resultsCount_other": "{{count}} resultados para \"{{query}}\""
+  }
+}
