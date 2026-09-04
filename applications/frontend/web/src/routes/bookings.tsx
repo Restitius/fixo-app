@@ -21,6 +21,7 @@ import { TableFilterBar, TableCard, TableScroll, TableHead, TablePagination } fr
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type BookingHistoryRow } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 
 const title = "My Bookings — FIXO";
 const description = "View and manage your handyman bookings, appointments and service history.";
@@ -74,6 +75,7 @@ function avatarColor(seed: string) {
 }
 
 function BookingsPage() {
+  const { t } = useTranslation("bookings");
   const { access_token, loading, logout, customer } = useAuth();
   const [rows, setRows] = useState<BookingHistoryRow[] | null>(null);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("Upcoming");
@@ -98,7 +100,7 @@ function BookingsPage() {
   );
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -143,38 +145,44 @@ function BookingsPage() {
   const currency = rows?.[0]?.currency ?? "TZS";
 
   const STATS = [
-    { icon: Calendar, tone: "primary" as const, value: String(upcomingCount), label: "Upcoming Bookings", hint: "Scheduled ahead" },
-    { icon: CheckCircle2, tone: "success" as const, value: String(completedThisMonth), label: "Completed This Month", hint: "This calendar month" },
-    { icon: CreditCard, tone: "amber" as const, value: fmtMoney(pendingPayments.reduce((s, b) => s + b.agreed_amount, 0), currency), label: "Pending Payments", hint: "Awaiting authorization" },
-    { icon: TrendingUp, tone: "primary" as const, value: fmtMoney(totalSpent, currency), label: "Total Spent", hint: "All time" },
+    { icon: Calendar, tone: "primary" as const, value: String(upcomingCount), label: t("bookings.stats.upcomingBookings"), hint: t("bookings.stats.upcomingBookingsHint") },
+    { icon: CheckCircle2, tone: "success" as const, value: String(completedThisMonth), label: t("bookings.stats.completedThisMonth"), hint: t("bookings.stats.completedThisMonthHint") },
+    { icon: CreditCard, tone: "amber" as const, value: fmtMoney(pendingPayments.reduce((s, b) => s + b.agreed_amount, 0), currency), label: t("bookings.stats.pendingPayments"), hint: t("bookings.stats.pendingPaymentsHint") },
+    { icon: TrendingUp, tone: "primary" as const, value: fmtMoney(totalSpent, currency), label: t("bookings.stats.totalSpent"), hint: t("bookings.stats.totalSpentHint") },
   ];
 
   const emptyStateFor: Record<(typeof TABS)[number], { icon: typeof CalendarX; title: string; description: string; actionLabel: string; actionTo: string }> = {
     Upcoming: {
       icon: CalendarX,
-      title: "No upcoming bookings",
-      description: "You don't have any appointments scheduled yet. Book a service to see it here.",
-      actionLabel: "Book a Service",
+      title: t("bookings.emptyUpcoming.title"),
+      description: t("bookings.emptyUpcoming.description"),
+      actionLabel: t("bookings.emptyUpcoming.actionLabel"),
       actionTo: "/services",
     },
     Completed: {
       icon: CheckCircle2,
-      title: "No completed bookings yet",
-      description: "Jobs marked as finished will show up here.",
-      actionLabel: "Browse Services",
+      title: t("bookings.emptyCompleted.title"),
+      description: t("bookings.emptyCompleted.description"),
+      actionLabel: t("bookings.emptyCompleted.actionLabel"),
       actionTo: "/services",
     },
     Cancelled: {
       icon: XCircle,
-      title: "No cancelled bookings",
-      description: "Bookings you cancel will appear here for your records.",
-      actionLabel: "View Upcoming",
+      title: t("bookings.emptyCancelled.title"),
+      description: t("bookings.emptyCancelled.description"),
+      actionLabel: t("bookings.emptyCancelled.actionLabel"),
       actionTo: "/bookings",
     },
   };
 
+  const tabLabels: Record<(typeof TABS)[number], string> = {
+    Upcoming: t("bookings.tabs.upcoming"),
+    Completed: t("bookings.tabs.completed"),
+    Cancelled: t("bookings.tabs.cancelled"),
+  };
+
   return (
-    <PageShell title="My Bookings" subtitle="Track your appointments and service history" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("bookings.pageTitle")} subtitle={t("bookings.pageSubtitle")} userName={customer?.full_name} onLogout={logout}>
       {/* Tabs */}
       <div className="mt-6 inline-flex rounded-2xl bg-card p-1.5 shadow-[var(--shadow-card)]">
         {TABS.map((tab) => (
@@ -189,7 +197,7 @@ function BookingsPage() {
             }`}
             style={activeTab === tab ? { backgroundImage: "var(--gradient-primary)" } : undefined}
           >
-            {tab}
+            {tabLabels[tab]}
           </button>
         ))}
       </div>
@@ -205,22 +213,22 @@ function BookingsPage() {
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder="Search bookings..."
+        searchPlaceholder={t("bookings.searchPlaceholder")}
         filters={[
           {
             value: statusFilter,
             onChange: (v) => { setStatusFilter(v); setPage(1); },
-            placeholder: "Status",
+            placeholder: t("bookings.statusPlaceholder"),
             options: [
-              { value: "all", label: "All Statuses" },
+              { value: "all", label: t("bookings.allStatuses") },
               ...Array.from(new Set((rows ?? []).map((b) => b.status))).map((s) => ({ value: s, label: statusLabel(s) })),
             ],
           },
           {
             value: serviceFilter,
             onChange: (v) => { setServiceFilter(v); setPage(1); },
-            placeholder: "Service",
-            options: [{ value: "all", label: "All Services" }, ...services.map((s) => ({ value: s, label: s }))],
+            placeholder: t("bookings.servicePlaceholder"),
+            options: [{ value: "all", label: t("bookings.allServices") }, ...services.map((s) => ({ value: s, label: s }))],
           },
         ]}
       />
@@ -233,9 +241,9 @@ function BookingsPage() {
           {hasActiveFilters ? (
             <EmptyState
               icon={FilterX}
-              title="No matching bookings"
-              description="Try adjusting your search or filters to find what you're looking for."
-              actionLabel="Clear Filters"
+              title={t("bookings.emptyFiltered.title")}
+              description={t("bookings.emptyFiltered.description")}
+              actionLabel={t("bookings.emptyFiltered.actionLabel")}
               onAction={clearFilters}
             />
           ) : (
@@ -245,7 +253,7 @@ function BookingsPage() {
       ) : (
         <TableCard className="grow">
         <TableScroll minWidth={860}>
-          <TableHead columns={["Service", "Booking ID", "Schedule", "Provider", "Status", "Amount"]} />
+          <TableHead columns={[t("bookings.columns.service"), t("bookings.columns.bookingId"), t("bookings.columns.schedule"), t("bookings.columns.provider"), t("bookings.columns.status"), t("bookings.columns.amount")]} />
           <tbody>
                 {paged.map((b) => (
                   <tr
@@ -262,7 +270,7 @@ function BookingsPage() {
                             <Wrench className="size-5" />
                           )}
                         </span>
-                        <p className="font-semibold">{b.service_name ?? "Service"}</p>
+                        <p className="font-semibold">{b.service_name ?? t("bookings.serviceFallback")}</p>
                       </div>
                     </td>
                     <td className="px-4 py-4">
@@ -310,7 +318,7 @@ function BookingsPage() {
           from={(page - 1) * PAGE_SIZE + 1}
           to={Math.min(page * PAGE_SIZE, filtered.length)}
           total={filtered.length}
-          itemLabel="bookings"
+          itemLabel={t("bookings.itemLabel")}
         />
         </TableCard>
       )}
