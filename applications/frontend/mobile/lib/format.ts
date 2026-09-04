@@ -1,5 +1,5 @@
 // Formatting helpers shared by feature screens. Mirrors
-// applications/frontend/web-user/src/lib/format.ts.
+// applications/frontend/web/web-user/src/lib/format.ts.
 export function fmtDateTime(iso?: string | null): string {
   if (!iso) return '—'
   const d = new Date(iso)

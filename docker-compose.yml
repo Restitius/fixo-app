@@ -5,7 +5,7 @@
 # this application together. It covers the backend (FastAPI), the customer-
 # facing web frontend (TanStack Start / React), our own PostgreSQL and Redis —
 # each in its own container, fully isolated from any other project on this
-# machine. The provider-facing web app (applications/frontend/web-provider)
+# machine. The provider-facing web app (applications/frontend/web/web-provider)
 # has no service here yet — add one once it's scaffolded.
 #
 #   FIXO-APP
@@ -75,7 +75,7 @@ services:
 
   web-user:
     build:
-      context: ./applications/frontend/web-user
+      context: ./applications/frontend/web/web-user
       dockerfile: Dockerfile
     image: fixo-web-user:latest
     container_name: fixo-web-user
@@ -89,9 +89,9 @@ services:
     volumes:
       # Dev mounts — per-directory so TanStack's generated routeTree.gen.ts
       # (written to /app/src root) stays on the container filesystem.
-      - ./applications/frontend/web-user/src/routes:/app/src/routes
-      - ./applications/frontend/web-user/src/lib:/app/src/lib
-      - ./applications/frontend/web-user/src/components:/app/src/components
+      - ./applications/frontend/web/web-user/src/routes:/app/src/routes
+      - ./applications/frontend/web/web-user/src/lib:/app/src/lib
+      - ./applications/frontend/web/web-user/src/components:/app/src/components
 
 volumes:
   fixo_pgdata:
