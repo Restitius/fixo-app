@@ -1,0 +1,1 @@
+"""Client Registry — frontend application shell IDs (CLT-*), kinds and families."""

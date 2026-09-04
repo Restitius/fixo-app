@@ -16,6 +16,7 @@ components by stable IDs instead of hard-coding implementations.
 """
 from __future__ import annotations
 
+from app.registries.clients.client_registry import ClientRegistry
 from app.registries.commands.command_registry import CommandRegistry
 from app.registries.events.event_registry import EventRegistry
 from app.registries.events.listener_registry import ListenerRegistry
@@ -33,6 +34,7 @@ class RegistryManager:
         self.queries: QueryRegistry = QueryRegistry()
         self.integrations: IntegrationRegistry = IntegrationRegistry()
         self.screens: ScreenRegistry = ScreenRegistry()
+        self.clients: ClientRegistry = ClientRegistry()
         self.events: EventRegistry = EventRegistry()
         self.listeners: ListenerRegistry = ListenerRegistry()
         self.jobs: JobRegistry = JobRegistry()
@@ -45,6 +47,7 @@ class RegistryManager:
             "queries": self.queries.count(),
             "integrations": self.integrations.count(),
             "screens": self.screens.count(),
+            "clients": self.clients.count(),
             "events": self.events.count(),
             "listeners": self.listeners.count(),
             "jobs": self.jobs.count(),
