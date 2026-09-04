@@ -40,6 +40,7 @@ class Bootstrap:
             "register_queries",
             "register_integrations",
             "register_screens",
+            "register_clients",
             "register_events",
             "register_listeners",
             "register_jobs",
@@ -123,6 +124,11 @@ class Bootstrap:
         from app.startup.register_screens import register_screens
 
         register_screens(self.registry_manager.screens)
+
+    def _register_clients(self) -> None:
+        from app.startup.register_clients import register_clients
+
+        register_clients(self.registry_manager.clients)
 
     def _register_events(self) -> None:
         from app.startup.register_events import register_events
