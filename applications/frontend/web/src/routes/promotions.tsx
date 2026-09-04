@@ -33,6 +33,8 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type Promotion, type PromotionValidation } from "@/lib/api-client";
 import { fmtDate, fmtMoney } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 const title = "Promotions — FIXO";
 const description = "Deals and discounts on your next service.";
@@ -93,29 +95,36 @@ function appendLedger(customerId: string | undefined, entry: RedemptionEntry): R
   return next;
 }
 
+// Category keys are canonical, English identifiers used only to look up a
+// translated label (see the "rewards" namespace, promotions.categories.*) —
+// they are never rendered directly.
 const CATEGORY_KEYWORDS: [RegExp, string][] = [
-  [/plumb|leak|pipe|water/i, "Plumbing"],
-  [/clean/i, "Cleaning"],
-  [/paint/i, "Painting"],
-  [/\bac\b|air.?con|cooling/i, "AC & Cooling"],
-  [/electr/i, "Electrical"],
-  [/mov/i, "Moving"],
+  [/plumb|leak|pipe|water/i, "plumbing"],
+  [/clean/i, "cleaning"],
+  [/paint/i, "painting"],
+  [/\bac\b|air.?con|cooling/i, "acCooling"],
+  [/electr/i, "electrical"],
+  [/mov/i, "moving"],
 ];
 
 // The schema has no category column, so this is a disclosed label derived
 // from the promotion's own real name/description/code text — never a
 // fabricated fact independent of the underlying data.
-function inferCategory(p: Promotion): string {
+function inferCategoryKey(p: Promotion): string {
   const text = `${p.name} ${p.description ?? ""} ${p.code}`;
-  for (const [re, label] of CATEGORY_KEYWORDS) {
-    if (re.test(text)) return label;
+  for (const [re, key] of CATEGORY_KEYWORDS) {
+    if (re.test(text)) return key;
   }
-  return "General Services";
+  return "general";
 }
 
-function discountLabel(p: Promotion): string {
+function categoryLabel(key: string, t: TFunction): string {
+  return t(`promotions.categories.${key}`);
+}
+
+function discountLabel(p: Promotion, t: TFunction): string {
   if (p.description) return p.description;
-  return p.discount_type === "PERCENT" ? `${p.discount_value}% off` : `${fmtMoney(p.discount_value)} off`;
+  return p.discount_type === "PERCENT" ? t("promotions.discount.percentOff", { value: p.discount_value }) : t("promotions.discount.amountOff", { amount: fmtMoney(p.discount_value) });
 }
 
 function isExpiringSoon(p: Promotion): boolean {
@@ -128,17 +137,17 @@ function isPromoActive(p: Promotion): boolean {
   return now >= new Date(p.valid_from).getTime() && now <= new Date(p.valid_until).getTime();
 }
 
-function maxSavingsLabel(p: Promotion): string {
-  return p.max_discount != null ? fmtMoney(p.max_discount) : "No cap";
+function maxSavingsLabel(p: Promotion, t: TFunction): string {
+  return p.max_discount != null ? fmtMoney(p.max_discount) : t("promotions.labels.noCap");
 }
 
-function minOrderLabel(p: Promotion): string {
-  return p.min_amount && p.min_amount > 0 ? fmtMoney(p.min_amount) : "No minimum";
+function minOrderLabel(p: Promotion, t: TFunction): string {
+  return p.min_amount && p.min_amount > 0 ? fmtMoney(p.min_amount) : t("promotions.labels.noMinimum");
 }
 
-function usageLimitLabel(p: Promotion): string {
-  if (p.usage_limit == null) return "Unlimited";
-  return `${p.used_count ?? 0} of ${p.usage_limit} used`;
+function usageLimitLabel(p: Promotion, t: TFunction): string {
+  if (p.usage_limit == null) return t("promotions.labels.unlimited");
+  return t("promotions.labels.usageOfLimit", { used: p.used_count ?? 0, limit: p.usage_limit });
 }
 
 function isThisMonth(iso: string): boolean {
@@ -160,6 +169,7 @@ function Field({ icon: Icon, label, value }: { icon: typeof MapPin; label: strin
 }
 
 function PromotionsPage() {
+  const { t } = useTranslation("rewards");
   const { access_token, loading, logout, customer } = useAuth();
   const [promos, setPromos] = useState<Promotion[] | null>(null);
   const [code, setCode] = useState("");
@@ -188,25 +198,25 @@ function PromotionsPage() {
   }, [customer?.customer_id]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("promotions.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
   const doValidate = async () => {
     if (!code.trim()) {
-      toast.error("Enter a promotion code");
+      toast.error(t("promotions.promoCode.enterCodeFirst"));
       return;
     }
     const amt = Number(amount);
     if (!amt || amt <= 0) {
-      toast.error("Enter an order amount");
+      toast.error(t("promotions.promoCode.enterAmountFirst"));
       return;
     }
     setValidating(true);
     try {
       const res = await fixoSdk.validatePromotion(code.trim(), amt);
       setResult(res);
-      toast.success(`${res.code} applies — save ${fmtMoney(res.discount_amount)}`);
+      toast.success(t("promotions.promoCode.appliesSave", { code: res.code, amount: fmtMoney(res.discount_amount) }));
     } catch {
       setResult(null);
     } finally {
@@ -217,7 +227,7 @@ function PromotionsPage() {
   async function useThisPromotion(p: Promotion) {
     const amt = Number(amount);
     if (!amt || amt <= 0) {
-      toast.error("Enter an order amount above so we can calculate real savings.");
+      toast.error(t("promotions.toasts.enterOrderAmountToCalc"));
       return;
     }
     setApplying(true);
@@ -232,7 +242,7 @@ function PromotionsPage() {
         at: new Date().toISOString(),
       };
       setLedger(appendLedger(customer?.customer_id, entry));
-      toast.success(`${p.code} applied — saved ${fmtMoney(validated.discount_amount)}`);
+      toast.success(t("promotions.toasts.appliedSaved", { code: p.code, amount: fmtMoney(validated.discount_amount) }));
       setResult(null);
       setCode("");
       load();
@@ -244,16 +254,16 @@ function PromotionsPage() {
   }
 
   async function shareCode(p: Promotion) {
-    const text = `Use promo code ${p.code} on FIXO — ${discountLabel(p)}`;
+    const text = t("promotions.share.message", { code: p.code, discount: discountLabel(p, t) });
     if (navigator.share) {
       try {
-        await navigator.share({ title: "FIXO Promotion", text });
+        await navigator.share({ title: t("promotions.share.title"), text });
       } catch {
         // user cancelled the share sheet
       }
     } else {
       await navigator.clipboard.writeText(text);
-      toast.success("Promo code copied to clipboard");
+      toast.success(t("promotions.toasts.copiedToClipboard"));
     }
   }
 
@@ -265,19 +275,20 @@ function PromotionsPage() {
   const visiblePromos = showAllPromos ? promos ?? [] : (promos ?? []).slice(0, 3);
   const visibleRedemptions = showAllRedemptions ? ledger : ledger.slice(0, 5);
   const selectedRecentUse = selected ? ledger.filter((r) => r.promo_id === selected.promo_id).slice(0, 3) : [];
+  const selectedCategoryKey = selected ? inferCategoryKey(selected) : null;
 
   return (
     <PageShell
-      title="Promotions"
-      subtitle="Deals and discounts on your next service"
+      title={t("promotions.page.title")}
+      subtitle={t("promotions.page.subtitle")}
       userName={customer?.full_name}
       onLogout={logout}
     >
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Ticket} label="Active Promotions" hint="Currently available" value={String(activeCount)} />
-        <MetricCard icon={Wallet} label="Total Savings" hint="Across all redemptions" value={fmtMoney(totalSavings)} />
-        <MetricCard icon={Calendar} label="Used This Month" hint="Applied on bookings" value={String(usedThisMonth)} />
-        <MetricCard icon={Clock} label="Expiring Soon" hint="Within 7 days" value={String(expiringSoon)} />
+        <MetricCard icon={Ticket} label={t("promotions.metrics.activePromotions")} hint={t("promotions.metrics.currentlyAvailable")} value={String(activeCount)} />
+        <MetricCard icon={Wallet} label={t("promotions.metrics.totalSavings")} hint={t("promotions.metrics.acrossRedemptions")} value={fmtMoney(totalSavings)} />
+        <MetricCard icon={Calendar} label={t("promotions.metrics.usedThisMonth")} hint={t("promotions.metrics.appliedOnBookings")} value={String(usedThisMonth)} />
+        <MetricCard icon={Clock} label={t("promotions.metrics.expiringSoon")} hint={t("promotions.metrics.within7Days")} value={String(expiringSoon)} />
       </div>
 
       <div className="mt-6 flex min-h-0 flex-1 items-start gap-6">
@@ -287,15 +298,15 @@ function PromotionsPage() {
             {/* Promo code card */}
             <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <Ticket className="size-5 text-primary" /> Promo code
+                <Ticket className="size-5 text-primary" /> {t("promotions.promoCode.title")}
               </h3>
               <div className="mt-4 space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="code">Enter promo code</Label>
+                  <Label htmlFor="code">{t("promotions.promoCode.enterCode")}</Label>
                   <div className="relative">
                     <Input
                       id="code"
-                      placeholder="e.g. WELCOME10"
+                      placeholder={t("promotions.promoCode.placeholder")}
                       value={code}
                       onChange={(e) => setCode(e.target.value.toUpperCase())}
                       className="pr-10"
@@ -304,7 +315,7 @@ function PromotionsPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="amt">Order amount (TZS)</Label>
+                  <Label htmlFor="amt">{t("promotions.promoCode.orderAmount")}</Label>
                   <Input id="amt" type="number" min="1" value={amount} onChange={(e) => setAmount(e.target.value)} />
                 </div>
                 <Button
@@ -313,7 +324,7 @@ function PromotionsPage() {
                   onClick={() => void doValidate()}
                   style={{ backgroundImage: "var(--gradient-primary)" }}
                 >
-                  Validate code
+                  {t("promotions.promoCode.validateCode")}
                 </Button>
 
                 {result && (
@@ -322,8 +333,9 @@ function PromotionsPage() {
                     <div>
                       <p className="font-semibold">{result.name}</p>
                       <p className="text-sm">
-                        Save {fmtMoney(result.discount_amount)}
-                        {result.discount_type === "PERCENT" ? ` (${result.discount_value}%)` : ""}
+                        {result.discount_type === "PERCENT"
+                          ? t("promotions.promoCode.savePercent", { amount: fmtMoney(result.discount_amount), percent: result.discount_value })
+                          : t("promotions.promoCode.save", { amount: fmtMoney(result.discount_amount) })}
                       </p>
                     </div>
                   </div>
@@ -331,7 +343,7 @@ function PromotionsPage() {
 
                 <div className="flex items-start gap-2 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
                   <Info className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                  Promo codes apply only to eligible services and cannot be combined with other offers.
+                  {t("promotions.promoCode.disclaimer")}
                 </div>
               </div>
             </div>
@@ -339,15 +351,15 @@ function PromotionsPage() {
             {/* Available promotions card */}
             <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <Tag className="size-5 text-primary" /> Available promotions
+                <Tag className="size-5 text-primary" /> {t("promotions.availablePromotions.title")}
               </h3>
-              <p className="text-sm text-muted-foreground">Choose a promotion to apply to your booking.</p>
+              <p className="text-sm text-muted-foreground">{t("promotions.availablePromotions.subtitle")}</p>
 
               {promos === null ? (
                 <div className="mt-4 h-40 animate-pulse rounded-2xl bg-muted/60" />
               ) : promos.length === 0 ? (
                 <div className="mt-4">
-                  <EmptyState compact icon={Ticket} title="No active promotions" description="Check back soon — new deals show up here." />
+                  <EmptyState compact icon={Ticket} title={t("promotions.availablePromotions.noneTitle")} description={t("promotions.availablePromotions.noneDescription")} />
                 </div>
               ) : (
                 <>
@@ -359,13 +371,13 @@ function PromotionsPage() {
                         </span>
                         <div className="min-w-0 flex-1">
                           <p className="font-semibold text-primary">{p.code}</p>
-                          <p className="truncate text-sm text-muted-foreground">{discountLabel(p)}</p>
+                          <p className="truncate text-sm text-muted-foreground">{discountLabel(p, t)}</p>
                           <p className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
-                            <Calendar className="size-3" /> Expires {fmtDate(p.valid_until)}
+                            <Calendar className="size-3" /> {t("promotions.availablePromotions.expires", { date: fmtDate(p.valid_until) })}
                           </p>
                         </div>
                         <Button size="sm" variant="outline" onClick={() => setSelected(p)}>
-                          {selected?.promo_id === p.promo_id ? "Details" : "Use now"}
+                          {selected?.promo_id === p.promo_id ? t("promotions.availablePromotions.details") : t("promotions.availablePromotions.useNow")}
                         </Button>
                       </div>
                     ))}
@@ -375,7 +387,7 @@ function PromotionsPage() {
                       onClick={() => setShowAllPromos((v) => !v)}
                       className="mt-4 flex w-full items-center justify-end gap-1 text-sm font-semibold text-primary hover:underline"
                     >
-                      {showAllPromos ? "Show less" : "View all promotions"} <span aria-hidden>›</span>
+                      {showAllPromos ? t("promotions.availablePromotions.showLess") : t("promotions.availablePromotions.viewAll")} <span aria-hidden>›</span>
                     </button>
                   )}
                 </>
@@ -387,11 +399,11 @@ function PromotionsPage() {
           <div className="mt-6 flex grow shrink-0 flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex shrink-0 items-center justify-between">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
-                <History className="size-5 text-primary" /> Recent redemptions
+                <History className="size-5 text-primary" /> {t("promotions.redemptions.title")}
               </h3>
               {ledger.length > 5 && (
                 <button onClick={() => setShowAllRedemptions((v) => !v)} className="text-sm font-semibold text-primary hover:underline">
-                  {showAllRedemptions ? "Show less" : "View all"}
+                  {showAllRedemptions ? t("promotions.redemptions.showLess") : t("promotions.redemptions.viewAll")}
                 </button>
               )}
             </div>
@@ -401,8 +413,8 @@ function PromotionsPage() {
                 <EmptyState
                   compact
                   icon={History}
-                  title="No redemptions yet"
-                  description="Promotions you actually apply will show up here with the real savings amount."
+                  title={t("promotions.redemptions.noneTitle")}
+                  description={t("promotions.redemptions.noneDescription")}
                 />
               </div>
             ) : (
@@ -410,10 +422,10 @@ function PromotionsPage() {
                 <table className="w-full min-w-[560px] text-left text-sm">
                   <thead>
                     <tr className="border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      <th className="py-3 font-semibold">Promo code</th>
-                      <th className="px-4 py-3 font-semibold">Date</th>
-                      <th className="px-4 py-3 font-semibold">Savings</th>
-                      <th className="px-4 py-3 font-semibold">Status</th>
+                      <th className="py-3 font-semibold">{t("promotions.redemptions.columnCode")}</th>
+                      <th className="px-4 py-3 font-semibold">{t("promotions.redemptions.columnDate")}</th>
+                      <th className="px-4 py-3 font-semibold">{t("promotions.redemptions.columnSavings")}</th>
+                      <th className="px-4 py-3 font-semibold">{t("promotions.redemptions.columnStatus")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -424,7 +436,7 @@ function PromotionsPage() {
                         <td className="px-4 py-3 font-semibold">{fmtMoney(r.savings, r.currency)}</td>
                         <td className="px-4 py-3">
                           <span className="inline-flex items-center gap-1 rounded-full bg-success/15 px-2.5 py-1 text-xs font-semibold text-success">
-                            <CheckCircle2 className="size-3" /> Applied
+                            <CheckCircle2 className="size-3" /> {t("promotions.redemptions.applied")}
                           </span>
                         </td>
                       </tr>
@@ -437,10 +449,10 @@ function PromotionsPage() {
         </div>
 
         {/* Promotion details panel — in normal flow, no overlay, squeezes the column above */}
-        {selected && (
+        {selected && selectedCategoryKey && (
           <div className="w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Promotion details</h3>
+              <h3 className="text-lg font-semibold">{t("promotions.details.title")}</h3>
               <button onClick={() => setSelected(null)} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
                 <X className="size-4" />
               </button>
@@ -454,7 +466,7 @@ function PromotionsPage() {
                   </span>
                   <div>
                     <p className="text-lg font-semibold">{selected.code}</p>
-                    <p className="text-sm text-muted-foreground">{discountLabel(selected)}</p>
+                    <p className="text-sm text-muted-foreground">{discountLabel(selected, t)}</p>
                   </div>
                 </div>
                 <span
@@ -462,48 +474,48 @@ function PromotionsPage() {
                     isPromoActive(selected) ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {isPromoActive(selected) ? "Active" : "Expired"}
+                  {isPromoActive(selected) ? t("promotions.details.active") : t("promotions.details.expired")}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 rounded-2xl bg-primary/5 p-3 text-sm font-medium text-primary">
-                <Ticket className="size-4 shrink-0" /> Max savings: {maxSavingsLabel(selected)}
+                <Ticket className="size-4 shrink-0" /> {t("promotions.details.maxSavings", { amount: maxSavingsLabel(selected, t) })}
               </div>
 
               <div className="space-y-3 text-sm">
-                <Field icon={Hash} label="Promo code" value={selected.code} />
-                <Field icon={BadgePercent} label="Category" value={inferCategory(selected)} />
-                <Field icon={Calendar} label="Validity" value={`${fmtDate(selected.valid_from)} – ${fmtDate(selected.valid_until)}`} />
-                <Field icon={Percent} label="Minimum order" value={minOrderLabel(selected)} />
-                <Field icon={ListChecks} label="Usage limit" value={usageLimitLabel(selected)} />
-                <Field icon={MapPin} label="Eligible areas" value="All areas" />
+                <Field icon={Hash} label={t("promotions.details.promoCode")} value={selected.code} />
+                <Field icon={BadgePercent} label={t("promotions.details.category")} value={categoryLabel(selectedCategoryKey, t)} />
+                <Field icon={Calendar} label={t("promotions.details.validity")} value={t("promotions.details.validityRange", { from: fmtDate(selected.valid_from), to: fmtDate(selected.valid_until) })} />
+                <Field icon={Percent} label={t("promotions.details.minimumOrder")} value={minOrderLabel(selected, t)} />
+                <Field icon={ListChecks} label={t("promotions.details.usageLimit")} value={usageLimitLabel(selected, t)} />
+                <Field icon={MapPin} label={t("promotions.details.eligibleAreas")} value={t("promotions.details.allAreas")} />
               </div>
 
               <div>
-                <h4 className="mb-2 text-sm font-semibold">Conditions</h4>
+                <h4 className="mb-2 text-sm font-semibold">{t("promotions.details.conditionsTitle")}</h4>
                 <ul className="space-y-1.5 text-sm text-muted-foreground">
                   <li>
                     •{" "}
-                    {inferCategory(selected) === "General Services"
-                      ? "Valid only on eligible services."
-                      : `Valid only on eligible ${inferCategory(selected).toLowerCase()} services.`}
+                    {selectedCategoryKey === "general"
+                      ? t("promotions.details.conditionGeneral")
+                      : t("promotions.details.conditionCategory", { category: categoryLabel(selectedCategoryKey, t) })}
                   </li>
-                  <li>• Cannot be combined with other promo codes.</li>
-                  <li>• Applied immediately when you use this promotion.</li>
+                  <li>• {t("promotions.details.conditionNoCombine")}</li>
+                  <li>• {t("promotions.details.conditionAppliedImmediately")}</li>
                 </ul>
               </div>
 
               <div>
-                <h4 className="mb-2 text-sm font-semibold">Recent use</h4>
+                <h4 className="mb-2 text-sm font-semibold">{t("promotions.details.recentUseTitle")}</h4>
                 {selectedRecentUse.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No redemptions yet for this code.</p>
+                  <p className="text-sm text-muted-foreground">{t("promotions.details.noRecentUse")}</p>
                 ) : (
                   <table className="w-full text-left text-sm">
                     <thead>
                       <tr className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        <th className="py-1.5 font-semibold">Booking reference</th>
-                        <th className="py-1.5 font-semibold">Date</th>
-                        <th className="py-1.5 font-semibold">Savings</th>
+                        <th className="py-1.5 font-semibold">{t("promotions.details.columnBookingRef")}</th>
+                        <th className="py-1.5 font-semibold">{t("promotions.details.columnDate")}</th>
+                        <th className="py-1.5 font-semibold">{t("promotions.details.columnSavings")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -524,15 +536,13 @@ function PromotionsPage() {
                   onClick={() => void shareCode(selected)}
                   className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
                 >
-                  <Share2 className="size-4" /> Share code
+                  <Share2 className="size-4" /> {t("promotions.details.shareCode")}
                 </button>
                 <button
-                  onClick={() =>
-                    toast.info("Full terms will be listed here soon — see the conditions above in the meantime.")
-                  }
+                  onClick={() => toast.info(t("promotions.details.termsComingSoon"))}
                   className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
                 >
-                  <FileText className="size-4" /> View terms
+                  <FileText className="size-4" /> {t("promotions.details.viewTerms")}
                 </button>
               </div>
 
@@ -542,7 +552,7 @@ function PromotionsPage() {
                 className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                Use this promotion
+                {t("promotions.details.useThisPromotion")}
               </button>
             </div>
           </div>
