@@ -15,6 +15,10 @@ _screen_id: contextvars.ContextVar[str] = contextvars.ContextVar("log_screen_id"
 _tenant_id: contextvars.ContextVar[str] = contextvars.ContextVar("log_tenant_id", default="")
 _client_ip: contextvars.ContextVar[str] = contextvars.ContextVar("log_client_ip", default="")
 _trace_id: contextvars.ContextVar[str] = contextvars.ContextVar("log_trace_id", default="")
+_client_id: contextvars.ContextVar[str] = contextvars.ContextVar("log_client_id", default="")
+_client_kind: contextvars.ContextVar[str] = contextvars.ContextVar("log_client_kind", default="")
+_client_family: contextvars.ContextVar[str] = contextvars.ContextVar("log_client_family", default="")
+_client_version: contextvars.ContextVar[str] = contextvars.ContextVar("log_client_version", default="")
 
 
 def bind(**values: str) -> None:
@@ -28,6 +32,10 @@ def bind(**values: str) -> None:
         "tenant_id": _tenant_id,
         "client_ip": _client_ip,
         "trace_id": _trace_id,
+        "client_id": _client_id,
+        "client_kind": _client_kind,
+        "client_family": _client_family,
+        "client_version": _client_version,
     }
     for name, var in mapping.items():
         if name in values and values[name] is not None:
@@ -45,11 +53,16 @@ def current() -> dict[str, str]:
         "tenant_id": _tenant_id.get(),
         "client_ip": _client_ip.get(),
         "trace_id": _trace_id.get(),
+        "client_id": _client_id.get(),
+        "client_kind": _client_kind.get(),
+        "client_family": _client_family.get(),
+        "client_version": _client_version.get(),
     }
 
 
 def clear() -> None:
     """Reset every field (end of request/task)."""
     for var in (_request_id, _correlation_id, _user_id, _session_id,
-                _screen_id, _tenant_id, _client_ip, _trace_id):
+                _screen_id, _tenant_id, _client_ip, _trace_id,
+                _client_id, _client_kind, _client_family, _client_version):
         var.set("")
