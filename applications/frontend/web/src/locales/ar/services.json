@@ -1,0 +1,223 @@
+{
+  "common": {
+    "loading": "جارٍ التحميل…",
+    "close": "إغلاق",
+    "bookNow": "احجز الآن",
+    "topRated": "الأعلى تقييمًا",
+    "reviewsCount_zero": "بدون تقييمات",
+    "reviewsCount_one": "تقييم واحد",
+    "reviewsCount_two": "تقييمان",
+    "reviewsCount_few": "{{formatted}} تقييمات",
+    "reviewsCount_many": "{{formatted}} تقييمًا",
+    "reviewsCount_other": "{{formatted}} تقييم",
+    "jobsDoneCount_zero": "لا أعمال منجزة",
+    "jobsDoneCount_one": "عمل واحد منجز",
+    "jobsDoneCount_two": "عملان منجزان",
+    "jobsDoneCount_few": "{{formatted}} أعمال منجزة",
+    "jobsDoneCount_many": "{{formatted}} عملًا منجزًا",
+    "jobsDoneCount_other": "{{formatted}} عمل منجز",
+    "toast": {
+      "savedToBookmarks": "تم الحفظ في الإشارات المرجعية",
+      "removedFromBookmarks": "تمت الإزالة من الإشارات المرجعية"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "تصفح الخدمات",
+      "subtitle": "اعثر على الخدمة المناسبة لمنزلك أو مكتبك"
+    },
+    "metrics": {
+      "availableServices": { "label": "الخدمات المتاحة", "hint": "عبر جميع الفئات" },
+      "averageRating": { "label": "متوسط التقييم", "hint": "من تقييمات حقيقية لمزودي الخدمة" },
+      "trustedProviders": { "label": "مزودو خدمة موثوقون", "hint": "عبر جميع الفئات" },
+      "emergencyReady": { "label": "جاهز للطوارئ", "hint": "خدمات الطوارئ المدرجة" }
+    },
+    "searchPlaceholder": "ابحث عن خدمات (مثل السباكة، الكهرباء)...",
+    "sort": {
+      "popular": "الأكثر طلبًا",
+      "topRated": "الأعلى تقييمًا",
+      "az": "أ-ي"
+    },
+    "emptyState": {
+      "title": "لم يتم العثور على خدمات",
+      "description": "لم نتمكن من العثور على خدمات مطابقة لـ \"{{query}}\". جرّب كلمة مفتاحية أخرى.",
+      "action": "مسح البحث"
+    },
+    "fromPrice": "ابتداءً من {{price}}",
+    "askProvider": "اسأل مزود الخدمة",
+    "jobsDoneCount_zero": "لا أعمال منجزة",
+    "jobsDoneCount_one": "عمل واحد منجز",
+    "jobsDoneCount_two": "عملان منجزان",
+    "jobsDoneCount_few": "{{formatted}} أعمال منجزة",
+    "jobsDoneCount_many": "{{formatted}} عملًا منجزًا",
+    "jobsDoneCount_other": "{{formatted}} عمل منجز",
+    "serviceCount_zero": "لا خدمات",
+    "serviceCount_one": "خدمة واحدة",
+    "serviceCount_two": "خدمتان",
+    "serviceCount_few": "{{count}} خدمات",
+    "serviceCount_many": "{{count}} خدمة",
+    "serviceCount_other": "{{count}} خدمة",
+    "findProviders": "ابحث عن مزودي خدمة",
+    "popularCategories": "الفئات الشائعة",
+    "providerCount_zero": "لا مزودو خدمة",
+    "providerCount_one": "مزود خدمة واحد",
+    "providerCount_two": "مزودا خدمة",
+    "providerCount_few": "{{count}} مزودي خدمة",
+    "providerCount_many": "{{count}} مزود خدمة",
+    "providerCount_other": "{{count}} مزود خدمة",
+    "quickMatch": {
+      "title": "مطابقة سريعة للخدمة",
+      "description": "أخبرنا بما تحتاجه وسنطابقك مع أفضل مزودي الخدمة.",
+      "cta": "احصل على مطابقة الآن"
+    },
+    "dialog": {
+      "title": "تفاصيل الخدمة",
+      "jobsCompleted_zero": "لا أعمال مكتملة",
+      "jobsCompleted_one": "عمل واحد مكتمل",
+      "jobsCompleted_two": "عملان مكتملان",
+      "jobsCompleted_few": "{{formatted}} أعمال مكتملة",
+      "jobsCompleted_many": "{{formatted}} عملًا مكتملًا",
+      "jobsCompleted_other": "{{formatted}} عمل مكتمل",
+      "startingFrom": "ابتداءً من",
+      "providersAvailable": "مزودو الخدمة المتاحون",
+      "whatsIncluded": "ما الذي يشمله",
+      "noServicesYet": "ستظهر هنا الخدمات الحقيقية لهذه الفئة.",
+      "priceRange": "متوسط نطاق السعر",
+      "priceFrom": "{{price}}+",
+      "varies": "يتفاوت",
+      "priceVariesNote": "يختلف السعر حسب تعقيد المهمة والمواد المطلوبة.",
+      "whyChooseFixo": "لماذا يختار العملاء FIXO",
+      "reasons": {
+        "skilled": "مزودو خدمة ماهرون وذوو خبرة",
+        "quickResponse": "استجابة سريعة وخدمة موثوقة",
+        "qualityWork": "عمل عالي الجودة مدعوم بتقييمات حقيقية",
+        "transparentPricing": "تسعير شفاف ومسبق"
+      },
+      "features": {
+        "realReviews": { "title": "تقييمات حقيقية", "hint": "من عملاء حقيقيين" },
+        "upfrontPricing": { "title": "تسعير شفاف", "hint": "بدون رسوم خفية" },
+        "onTimeService": { "title": "خدمة في الوقت المحدد", "hint": "احترام وقتك" },
+        "providersReadyCount_zero": "لا مزودو خدمة",
+        "providersReadyCount_one": "مزود خدمة واحد",
+        "providersReadyCount_two": "مزودا خدمة",
+        "providersReadyCount_few": "{{count}} مزودي خدمة",
+        "providersReadyCount_many": "{{count}} مزود خدمة",
+        "providersReadyCount_other": "{{count}} مزود خدمة",
+        "readyToHelp": "جاهزون للمساعدة"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "ابحث عن مزودي خدمة",
+    "pageTitleWithCategory": "مزودو خدمة {{category}}",
+    "subtitle": "اختر متخصصًا موثوقًا لخدمتك",
+    "backToServices": "العودة إلى الخدمات",
+    "thisService": "هذه الخدمة",
+    "noCategory": {
+      "title": "اختر خدمة أولاً",
+      "description": "اختر فئة خدمة لرؤية مزودي الخدمة الحقيقيين الذين يقدمونها.",
+      "action": "تصفح الخدمات"
+    },
+    "metrics": {
+      "providersFound": { "label": "مزودو الخدمة الموجودون", "hint": "مطابقون لهذه الفئة" },
+      "averageRating": {
+        "label": "متوسط التقييم",
+        "hint_zero": "لا توجد تقييمات بعد",
+        "hint_one": "بناءً على تقييم واحد",
+        "hint_two": "بناءً على تقييمين",
+        "hint_few": "بناءً على {{formatted}} تقييمات",
+        "hint_many": "بناءً على {{formatted}} تقييمًا",
+        "hint_other": "بناءً على {{formatted}} تقييم"
+      },
+      "totalReviews": { "label": "إجمالي التقييمات", "hint": "عبر هؤلاء المزودين" },
+      "startingFrom": { "label": "ابتداءً من", "hint": "أسعار تنافسية" }
+    },
+    "searchPlaceholder": "ابحث عن مزودي خدمة...",
+    "allLocations": "جميع المواقع",
+    "anyRating": "أي تقييم",
+    "sort": {
+      "recommended": "موصى به",
+      "topRated": "الأعلى تقييمًا",
+      "lowestPrice": "الأقل سعرًا",
+      "mostJobs": "الأكثر أعمالًا"
+    },
+    "noResults": {
+      "title": "لا يوجد مزودو خدمة لـ {{category}} حاليًا",
+      "description": "لا يوجد لدينا أحد يطابق عوامل التصفية الخاصة بك بعد. جرّب توسيع نطاق بحثك.",
+      "action": "مسح عوامل التصفية"
+    },
+    "startingFromPrice": "ابتداءً من {{price}}",
+    "removeBookmark": "إزالة الإشارة المرجعية",
+    "saveBookmark": "حفظ كإشارة مرجعية",
+    "viewProfile": "عرض الملف الشخصي",
+    "serviceArea": {
+      "title": "منطقة الخدمة",
+      "empty": "لا توجد بيانات موقع بعد لهؤلاء المزودين."
+    },
+    "recommendation": {
+      "title": "توصيتنا",
+      "description": "يتم ترتيب مزودي الخدمة هؤلاء بناءً على تقييمات العملاء الحقيقية لـ {{category}}.",
+      "items": {
+        "reviews": "تقييمات حقيقية من عملاء حقيقيين",
+        "pricing": "تسعير شفاف لكل مهمة",
+        "security": "حجز ودفع آمنان",
+        "support": "الدعم متاح في حال حدوث أي مشكلة"
+      }
+    },
+    "dialog": {
+      "title": "الملف الشخصي لمزود الخدمة",
+      "activeSince": "نشط منذ",
+      "completedJobs": "الأعمال المكتملة",
+      "servicesOffered": "الخدمات المقدَّمة",
+      "avgPrice": "متوسط السعر",
+      "servicesPricing": "الخدمات والأسعار",
+      "allPricesInTZS": "جميع الأسعار بالشلن التنزاني (TZS)",
+      "noServices": "لا توجد خدمات مدرجة بعد.",
+      "localFallback": "محلي",
+      "features": {
+        "transparentPricing": { "title": "تسعير شفاف", "hint": "بدون رسوم خفية" },
+        "realReviewsCount_zero": "لا تقييمات حقيقية",
+        "realReviewsCount_one": "تقييم حقيقي واحد",
+        "realReviewsCount_two": "تقييمان حقيقيان",
+        "realReviewsCount_few": "{{formatted}} تقييمات حقيقية",
+        "realReviewsCount_many": "{{formatted}} تقييمًا حقيقيًا",
+        "realReviewsCount_other": "{{formatted}} تقييم حقيقي",
+        "realReviews": { "hint": "من عملاء حقيقيين" },
+        "coverageTitle": "تغطية {{city}}",
+        "coverage": { "hint": "خبير محلي بالقرب منك" },
+        "securePayments": { "title": "مدفوعات آمنة", "hint": "تتم معالجتها بأمان" }
+      },
+      "saved": "تم الحفظ",
+      "save": "حفظ",
+      "messageUnavailable": "تُفتح المراسلة المباشرة بمجرد أن يكون لديك حجز نشط مع مزود الخدمة هذا.",
+      "messageProvider": "مراسلة مزود الخدمة"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "الإشارات المرجعية",
+    "subtitle": "مزودو الخدمة المفضلون لديك المحفوظون",
+    "empty": {
+      "title": "لا توجد إشارات مرجعية بعد",
+      "description": "احفظ مزودي الخدمة الذين تفضلهم من ملفهم الشخصي، وسيظهرون هنا للوصول السريع لاحقًا.",
+      "action": "تصفح مزودي الخدمة"
+    },
+    "remove": "إزالة"
+  },
+  "search": {
+    "pageTitle": "بحث",
+    "subtitle": "اعثر على خدمة في كتالوجنا الحقيقي",
+    "placeholder": "ابحث عن خدمات، مثل السباكة، التنظيف، إصلاح المكيفات...",
+    "searchButton": "بحث",
+    "prompt": "اكتب كلمة مفتاحية واضغط على Enter أو بحث.",
+    "empty": {
+      "title": "لم يتم العثور على نتائج",
+      "description": "لا شيء يطابق \"{{query}}\". جرّب كلمة مفتاحية أخرى."
+    },
+    "resultsCount_zero": "لا نتائج لـ \"{{query}}\"",
+    "resultsCount_one": "نتيجة واحدة لـ \"{{query}}\"",
+    "resultsCount_two": "نتيجتان لـ \"{{query}}\"",
+    "resultsCount_few": "{{count}} نتائج لـ \"{{query}}\"",
+    "resultsCount_many": "{{count}} نتيجة لـ \"{{query}}\"",
+    "resultsCount_other": "{{count}} نتيجة لـ \"{{query}}\""
+  }
+}
