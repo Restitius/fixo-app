@@ -34,6 +34,8 @@ import { useAuth } from "@/lib/auth-context";
 import { bookingApi, fixoSdk, type BookingRow, type InvoiceDetail, type NotificationRow, type PaymentMethod } from "@/lib/api-client";
 import { fmtDate, fmtDateTime, fmtMoney, humanize, timeAgo } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 const title = "Notifications — FIXO";
 const description = "Updates, reminders and alerts.";
@@ -53,6 +55,13 @@ export const Route = createFileRoute("/notifications")({
 
 const TABS = ["All", "Unread", "Bookings", "Payments"] as const;
 type Tab = (typeof TABS)[number];
+
+const TAB_LABEL_KEYS: Record<Tab, string> = {
+  All: "tabs.all",
+  Unread: "tabs.unread",
+  Bookings: "tabs.bookings",
+  Payments: "tabs.payments",
+};
 
 // The real notification types the backend actually emits (see notify() call
 // sites across bookings/payments/invoices/tracking/maintenance services).
@@ -79,9 +88,9 @@ function iconFor(type: string) {
   return { Icon: Bell, tone: "bg-muted text-muted-foreground" };
 }
 
-function badgeFor(n: NotificationRow): { label: string; tone: string } | null {
-  if (!n.read_at) return { label: "New", tone: "bg-success/15 text-success" };
-  if (n.type === "PAYMENT.CAPTURED") return { label: "Paid", tone: "bg-primary/10 text-primary" };
+function badgeFor(n: NotificationRow, t: TFunction): { label: string; tone: string } | null {
+  if (!n.read_at) return { label: t("list.new"), tone: "bg-success/15 text-success" };
+  if (n.type === "PAYMENT.CAPTURED") return { label: t("list.paid"), tone: "bg-primary/10 text-primary" };
   return null;
 }
 
@@ -118,49 +127,50 @@ function Field({ icon: Icon, label, value }: { icon: typeof MapPin; label: strin
   );
 }
 
-function detailFields(n: NotificationRow, enrich: Enrichment | null, defaultMethod: PaymentMethod | null) {
+function detailFields(n: NotificationRow, enrich: Enrichment | null, defaultMethod: PaymentMethod | null, t: TFunction) {
   const rows: { icon: typeof MapPin; label: string; value: string }[] = [
-    { icon: Tag, label: "Notification type", value: humanize(n.type) },
+    { icon: Tag, label: t("detail.notificationType"), value: humanize(n.type) },
   ];
   if (enrich?.booking) {
     const b = enrich.booking;
-    rows.push({ icon: Hash, label: "Booking reference", value: b.booking_number });
-    rows.push({ icon: User, label: "Provider", value: b.provider_name ?? "—" });
-    rows.push({ icon: Wrench, label: "Service", value: b.service_name ?? "—" });
+    rows.push({ icon: Hash, label: t("detail.bookingReference"), value: b.booking_number });
+    rows.push({ icon: User, label: t("detail.provider"), value: b.provider_name ?? "—" });
+    rows.push({ icon: Wrench, label: t("detail.service"), value: b.service_name ?? "—" });
     rows.push({
       icon: Calendar,
-      label: "Scheduled visit",
+      label: t("detail.scheduledVisit"),
       value: `${fmtDate(b.scheduled_date)}${b.time_window ? `, ${humanize(b.time_window)}` : ""}`,
     });
     rows.push({
       icon: MapPin,
-      label: "Location",
+      label: t("detail.location"),
       value: b.address_city ? `${b.address_street ? `${b.address_street}, ` : ""}${b.address_city}` : "—",
     });
-    rows.push({ icon: Receipt, label: "Related amount", value: fmtMoney(b.agreed_amount, b.currency) });
+    rows.push({ icon: Receipt, label: t("detail.relatedAmount"), value: fmtMoney(b.agreed_amount, b.currency) });
     if (n.type.startsWith("PAYMENT")) {
-      rows.push({ icon: methodIcon(defaultMethod?.type), label: "Payment method", value: methodLabel(defaultMethod) });
+      rows.push({ icon: methodIcon(defaultMethod?.type), label: t("detail.paymentMethod"), value: methodLabel(defaultMethod) });
     }
   } else if (enrich?.invoice) {
     const inv = enrich.invoice;
-    rows.push({ icon: Receipt, label: "Invoice reference", value: inv.invoice_number });
-    rows.push({ icon: Hash, label: "Booking reference", value: inv.booking_number });
-    rows.push({ icon: User, label: "Provider", value: inv.provider_name });
-    rows.push({ icon: Wrench, label: "Service", value: inv.service_name ?? "—" });
+    rows.push({ icon: Receipt, label: t("detail.invoiceReference"), value: inv.invoice_number });
+    rows.push({ icon: Hash, label: t("detail.bookingReference"), value: inv.booking_number });
+    rows.push({ icon: User, label: t("detail.provider"), value: inv.provider_name });
+    rows.push({ icon: Wrench, label: t("detail.service"), value: inv.service_name ?? "—" });
     rows.push({
       icon: MapPin,
-      label: "Location",
+      label: t("detail.location"),
       value: inv.address_city ? `${inv.address_city}${inv.address_region ? `, ${inv.address_region}` : ""}` : "—",
     });
-    rows.push({ icon: methodIcon(defaultMethod?.type), label: "Payment method", value: methodLabel(defaultMethod) });
-    rows.push({ icon: Wallet, label: "Related amount", value: fmtMoney(inv.total_amount, inv.currency) });
+    rows.push({ icon: methodIcon(defaultMethod?.type), label: t("detail.paymentMethod"), value: methodLabel(defaultMethod) });
+    rows.push({ icon: Wallet, label: t("detail.relatedAmount"), value: fmtMoney(inv.total_amount, inv.currency) });
   } else if (n.ref_id) {
-    rows.push({ icon: Hash, label: "Reference", value: n.ref_id });
+    rows.push({ icon: Hash, label: t("detail.reference"), value: n.ref_id });
   }
   return rows;
 }
 
 function NotificationsPage() {
+  const { t } = useTranslation("notifications");
   const { access_token, loading, logout, customer } = useAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState<NotificationRow[] | null>(null);
@@ -199,7 +209,7 @@ function NotificationsPage() {
   }, [items, selected]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -218,7 +228,7 @@ function NotificationsPage() {
   async function markAll() {
     try {
       const res = await fixoSdk.markAllNotificationsRead();
-      toast.success(`${res.marked} notification${res.marked === 1 ? "" : "s"} marked as read`);
+      toast.success(t("list.markedAsRead", { count: res.marked }));
       await load();
     } catch {
       // toast emitted by client
@@ -261,36 +271,36 @@ function NotificationsPage() {
   const panelOpen = !!selected && !usesDialog(selected.type);
 
   return (
-    <PageShell title="Notifications" subtitle="Updates, reminders and alerts" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("page.title")} subtitle={t("page.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Bell} label="Total Notifications" hint="This month" value={String(totalThisMonth)} />
-        <MetricCard icon={Mail} label="Unread" hint="Needs attention" value={String(unreadCount)} tone="amber" tintValue />
-        <MetricCard icon={Calendar} label="Booking Updates" hint="Service progress" value={String(bookingCount)} />
-        <MetricCard icon={Wallet} label="Payment Alerts" hint="Recent billing" value={String(paymentCount)} tone="success" tintValue />
+        <MetricCard icon={Bell} label={t("metrics.totalNotifications")} hint={t("metrics.thisMonth")} value={String(totalThisMonth)} />
+        <MetricCard icon={Mail} label={t("metrics.unread")} hint={t("metrics.needsAttention")} value={String(unreadCount)} tone="amber" tintValue />
+        <MetricCard icon={Calendar} label={t("metrics.bookingUpdates")} hint={t("metrics.serviceProgress")} value={String(bookingCount)} />
+        <MetricCard icon={Wallet} label={t("metrics.paymentAlerts")} hint={t("metrics.recentBilling")} value={String(paymentCount)} tone="success" tintValue />
       </div>
 
       <div className="mt-6 flex min-h-0 flex-1 items-stretch gap-6">
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex h-full flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-lg font-semibold">Recent notifications</h3>
+              <h3 className="text-lg font-semibold">{t("list.heading")}</h3>
               <div className="flex flex-wrap items-center gap-3">
                 <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
-                  {TABS.map((t) => (
+                  {TABS.map((tb) => (
                     <button
-                      key={t}
-                      onClick={() => setTab(t)}
+                      key={tb}
+                      onClick={() => setTab(tb)}
                       className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-                        tab === t ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                        tab === tb ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                       }`}
-                      style={tab === t ? { backgroundImage: "var(--gradient-primary)" } : undefined}
+                      style={tab === tb ? { backgroundImage: "var(--gradient-primary)" } : undefined}
                     >
-                      {t}
+                      {t(TAB_LABEL_KEYS[tb])}
                     </button>
                   ))}
                 </div>
                 <Button variant="outline" size="sm" onClick={() => void markAll()} disabled={unreadCount === 0} className="gap-2">
-                  <CheckCheck className="size-4" /> Mark all read
+                  <CheckCheck className="size-4" /> {t("list.markAllRead")}
                 </Button>
               </div>
             </div>
@@ -301,16 +311,16 @@ function NotificationsPage() {
             ) : filtered.length === 0 ? (
               <div>
                 {tab !== "All" ? (
-                  <EmptyState compact icon={FilterX} title="No matching notifications" description="Try a different tab." actionLabel="Show all" onAction={() => setTab("All")} />
+                  <EmptyState compact icon={FilterX} title={t("list.noMatching")} description={t("list.tryDifferentTab")} actionLabel={t("list.showAll")} onAction={() => setTab("All")} />
                 ) : (
-                  <EmptyState compact icon={Bell} title="All caught up" description="No notifications here — updates and reminders will show up as they happen." />
+                  <EmptyState compact icon={Bell} title={t("list.allCaughtUp")} description={t("list.noNotificationsYet")} />
                 )}
               </div>
             ) : (
               <div className="divide-y divide-border">
                 {filtered.map((n) => {
                   const { Icon, tone } = iconFor(n.type);
-                  const badge = badgeFor(n);
+                  const badge = badgeFor(n, t);
                   const unread = !n.read_at;
                   return (
                     <button
@@ -345,7 +355,7 @@ function NotificationsPage() {
         {panelOpen && selected && (
           <div className="flex h-full w-[380px] shrink-0 flex-col animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Notification details</h3>
+              <h3 className="text-lg font-semibold">{t("panel.title")}</h3>
               <button onClick={closeAll} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
                 <X className="size-4" />
               </button>
@@ -370,8 +380,8 @@ function NotificationsPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  {badgeFor(selected) && (
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badgeFor(selected)!.tone}`}>{badgeFor(selected)!.label}</span>
+                  {badgeFor(selected, t) && (
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badgeFor(selected, t)!.tone}`}>{badgeFor(selected, t)!.label}</span>
                   )}
                   <p className="mt-1 text-xs text-muted-foreground">{fmtDateTime(selected.created_at)}</p>
                 </div>
@@ -383,14 +393,14 @@ function NotificationsPage() {
                 </div>
               ) : (
                 <div className="space-y-3 text-sm">
-                  {detailFields(selected, enrich, defaultMethod).map((f) => (
+                  {detailFields(selected, enrich, defaultMethod, t).map((f) => (
                     <Field key={f.label} icon={f.icon} label={f.label} value={f.value} />
                   ))}
                 </div>
               )}
 
               <div>
-                <h4 className="mb-3 text-sm font-semibold">What happened</h4>
+                <h4 className="mb-3 text-sm font-semibold">{t("panel.whatHappened")}</h4>
                 <ol className="space-y-3">
                   {siblings.map((s) => (
                     <TimelineStep key={s.notification_id} label={s.title} value={fmtDateTime(s.created_at)} />
@@ -400,24 +410,24 @@ function NotificationsPage() {
 
               <div className="flex items-start gap-2 rounded-xl bg-primary/5 p-3 text-xs text-muted-foreground">
                 <FileText className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                This update has been recorded against your booking.
+                {t("panel.recordedNote")}
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => {
-                    toast.info("Find the matching invoice on the Invoices page.");
+                    toast.info(t("panel.findInvoiceToast"));
                     navigate({ to: "/invoices" });
                   }}
                   className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
                 >
-                  <FileText className="size-4" /> Download invoice
+                  <FileText className="size-4" /> {t("panel.downloadInvoice")}
                 </button>
                 <button
                   onClick={() => navigate({ to: "/help" })}
                   className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
                 >
-                  <MessageCircle className="size-4" /> Contact support
+                  <MessageCircle className="size-4" /> {t("panel.contactSupport")}
                 </button>
               </div>
 
@@ -426,7 +436,7 @@ function NotificationsPage() {
                 className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                Done
+                {t("panel.done")}
               </button>
             </div>
           </div>
@@ -437,8 +447,8 @@ function NotificationsPage() {
       <Dialog open={dialogOpen} onOpenChange={(o) => !o && closeAll()}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Notification details</DialogTitle>
-            <p className="text-sm text-muted-foreground">Review the full update and take action</p>
+            <DialogTitle>{t("dialog.title")}</DialogTitle>
+            <p className="text-sm text-muted-foreground">{t("dialog.subtitle")}</p>
           </DialogHeader>
 
           {selected && (
@@ -455,12 +465,12 @@ function NotificationsPage() {
                   })()}
                   <div>
                     <p className="font-semibold">{selected.title}</p>
-                    {enrich?.booking && <p className="text-xs text-muted-foreground">Booking {enrich.booking.booking_number}</p>}
+                    {enrich?.booking && <p className="text-xs text-muted-foreground">{t("dialog.bookingLabel", { number: enrich.booking.booking_number })}</p>}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  {badgeFor(selected) && (
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badgeFor(selected)!.tone}`}>{badgeFor(selected)!.label}</span>
+                  {badgeFor(selected, t) && (
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badgeFor(selected, t)!.tone}`}>{badgeFor(selected, t)!.label}</span>
                   )}
                   <span className="text-sm text-muted-foreground">{timeAgo(selected.created_at)}</span>
                 </div>
@@ -472,15 +482,15 @@ function NotificationsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
-                  {detailFields(selected, enrich, defaultMethod).map((f) => (
+                  {detailFields(selected, enrich, defaultMethod, t).map((f) => (
                     <Field key={f.label} icon={f.icon} label={f.label} value={f.value} />
                   ))}
                 </div>
               )}
 
               <div>
-                <h4 className="mb-2 text-sm font-semibold">Message</h4>
-                <p className="text-sm text-muted-foreground">{selected.body ?? "No additional details for this notification."}</p>
+                <h4 className="mb-2 text-sm font-semibold">{t("dialog.message")}</h4>
+                <p className="text-sm text-muted-foreground">{selected.body ?? t("dialog.noDetails")}</p>
               </div>
 
               <div>
@@ -503,30 +513,30 @@ function NotificationsPage() {
 
               <div className="flex items-start gap-2 rounded-xl bg-primary/5 p-3 text-xs text-muted-foreground">
                 <MessageCircle className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                You can respond to this update directly from your booking page.
+                {t("dialog.respondNote")}
               </div>
 
               <div className="flex gap-2">
                 <button onClick={closeAll} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">
-                  Close
+                  {t("dialog.close")}
                 </button>
                 {!selected.read_at && (
                   <button
                     onClick={() => void markOne(selected.notification_id)}
                     className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
                   >
-                    Mark as read
+                    {t("dialog.markAsRead")}
                   </button>
                 )}
                 <button
                   onClick={() => {
-                    if (enrich?.booking) toast.info(`Find booking ${enrich.booking.booking_number} in your bookings list.`);
+                    if (enrich?.booking) toast.info(t("dialog.findBookingToast", { number: enrich.booking.booking_number }));
                     navigate({ to: "/bookings" });
                   }}
                   className="flex-1 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
                   style={{ backgroundImage: "var(--gradient-primary)" }}
                 >
-                  View booking
+                  {t("dialog.viewBooking")}
                 </button>
               </div>
             </div>
