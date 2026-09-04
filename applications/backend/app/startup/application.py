@@ -43,6 +43,7 @@ def create_application() -> FastAPI:
     # --- middleware (last added == outermost) -----------------------------
     from fastapi.middleware.cors import CORSMiddleware
 
+    from app.api.middleware.client_context import ClientContextMiddleware
     from app.api.middleware.correlation_id import CorrelationIdMiddleware
     from app.api.middleware.exception_handler import ExceptionHandlingMiddleware
     from app.api.middleware.logging import LoggingMiddleware
@@ -52,6 +53,7 @@ def create_application() -> FastAPI:
     application.add_middleware(ExceptionHandlingMiddleware)
     application.add_middleware(LoggingMiddleware)
     application.add_middleware(ScreenTrackingMiddleware)
+    application.add_middleware(ClientContextMiddleware)
     application.add_middleware(CorrelationIdMiddleware)
     application.add_middleware(RequestIdMiddleware)
 
