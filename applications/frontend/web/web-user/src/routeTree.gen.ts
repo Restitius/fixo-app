@@ -13,9 +13,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ActivityRouteImport } from './routes/activity'
 import { Route as BookRouteImport } from './routes/book'
 import { Route as BookingsRouteImport } from './routes/bookings'
+import { Route as BookmarksRouteImport } from './routes/bookmarks'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
@@ -26,6 +29,7 @@ import { Route as PromotionsRouteImport } from './routes/promotions'
 import { Route as ProtectedRouteImport } from './routes/protected'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
 import { Route as WalletRouteImport } from './routes/wallet'
@@ -50,6 +54,16 @@ const BookingsRoute = BookingsRouteImport.update({
   path: '/bookings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookmarksRoute = BookmarksRouteImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeedbackRoute = FeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
@@ -63,6 +77,11 @@ const HelpRoute = HelpRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InboxRoute = InboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InvoicesRoute = InvoicesRouteImport.update({
@@ -115,6 +134,11 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -136,9 +160,12 @@ export interface FileRoutesByFullPath {
   '/activity': typeof ActivityRoute
   '/book': typeof BookRoute
   '/bookings': typeof BookingsRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/calendar': typeof CalendarRoute
   '/feedback': typeof FeedbackRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/inbox': typeof InboxRoute
   '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
@@ -149,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/protected': typeof ProtectedRoute
   '/providers': typeof ProvidersRoute
   '/register': typeof RegisterRoute
+  '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
@@ -158,9 +186,12 @@ export interface FileRoutesByTo {
   '/activity': typeof ActivityRoute
   '/book': typeof BookRoute
   '/bookings': typeof BookingsRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/calendar': typeof CalendarRoute
   '/feedback': typeof FeedbackRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/inbox': typeof InboxRoute
   '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
@@ -171,6 +202,7 @@ export interface FileRoutesByTo {
   '/protected': typeof ProtectedRoute
   '/providers': typeof ProvidersRoute
   '/register': typeof RegisterRoute
+  '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
@@ -181,9 +213,12 @@ export interface FileRoutesById {
   '/activity': typeof ActivityRoute
   '/book': typeof BookRoute
   '/bookings': typeof BookingsRoute
+  '/bookmarks': typeof BookmarksRoute
+  '/calendar': typeof CalendarRoute
   '/feedback': typeof FeedbackRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/inbox': typeof InboxRoute
   '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
@@ -194,6 +229,7 @@ export interface FileRoutesById {
   '/protected': typeof ProtectedRoute
   '/providers': typeof ProvidersRoute
   '/register': typeof RegisterRoute
+  '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
@@ -205,9 +241,12 @@ export interface FileRouteTypes {
     | '/activity'
     | '/book'
     | '/bookings'
+    | '/bookmarks'
+    | '/calendar'
     | '/feedback'
     | '/help'
     | '/history'
+    | '/inbox'
     | '/invoices'
     | '/login'
     | '/loyalty'
@@ -218,6 +257,7 @@ export interface FileRouteTypes {
     | '/protected'
     | '/providers'
     | '/register'
+    | '/search'
     | '/services'
     | '/verify-otp'
     | '/wallet'
@@ -227,9 +267,12 @@ export interface FileRouteTypes {
     | '/activity'
     | '/book'
     | '/bookings'
+    | '/bookmarks'
+    | '/calendar'
     | '/feedback'
     | '/help'
     | '/history'
+    | '/inbox'
     | '/invoices'
     | '/login'
     | '/loyalty'
@@ -240,6 +283,7 @@ export interface FileRouteTypes {
     | '/protected'
     | '/providers'
     | '/register'
+    | '/search'
     | '/services'
     | '/verify-otp'
     | '/wallet'
@@ -249,9 +293,12 @@ export interface FileRouteTypes {
     | '/activity'
     | '/book'
     | '/bookings'
+    | '/bookmarks'
+    | '/calendar'
     | '/feedback'
     | '/help'
     | '/history'
+    | '/inbox'
     | '/invoices'
     | '/login'
     | '/loyalty'
@@ -262,6 +309,7 @@ export interface FileRouteTypes {
     | '/protected'
     | '/providers'
     | '/register'
+    | '/search'
     | '/services'
     | '/verify-otp'
     | '/wallet'
@@ -272,9 +320,12 @@ export interface RootRouteChildren {
   ActivityRoute: typeof ActivityRoute
   BookRoute: typeof BookRoute
   BookingsRoute: typeof BookingsRoute
+  BookmarksRoute: typeof BookmarksRoute
+  CalendarRoute: typeof CalendarRoute
   FeedbackRoute: typeof FeedbackRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
+  InboxRoute: typeof InboxRoute
   InvoicesRoute: typeof InvoicesRoute
   LoginRoute: typeof LoginRoute
   LoyaltyRoute: typeof LoyaltyRoute
@@ -285,6 +336,7 @@ export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRoute
   ProvidersRoute: typeof ProvidersRoute
   RegisterRoute: typeof RegisterRoute
+  SearchRoute: typeof SearchRoute
   ServicesRoute: typeof ServicesRoute
   VerifyOtpRoute: typeof VerifyOtpRoute
   WalletRoute: typeof WalletRoute
@@ -320,6 +372,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bookmarks': {
+      id: '/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/bookmarks'
+      preLoaderRoute: typeof BookmarksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/feedback': {
       id: '/feedback'
       path: '/feedback'
@@ -339,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inbox': {
+      id: '/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof InboxRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invoices': {
@@ -411,6 +484,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -440,9 +520,12 @@ const rootRouteChildren: RootRouteChildren = {
   ActivityRoute: ActivityRoute,
   BookRoute: BookRoute,
   BookingsRoute: BookingsRoute,
+  BookmarksRoute: BookmarksRoute,
+  CalendarRoute: CalendarRoute,
   FeedbackRoute: FeedbackRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
+  InboxRoute: InboxRoute,
   InvoicesRoute: InvoicesRoute,
   LoginRoute: LoginRoute,
   LoyaltyRoute: LoyaltyRoute,
@@ -453,6 +536,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRoute,
   ProvidersRoute: ProvidersRoute,
   RegisterRoute: RegisterRoute,
+  SearchRoute: SearchRoute,
   ServicesRoute: ServicesRoute,
   VerifyOtpRoute: VerifyOtpRoute,
   WalletRoute: WalletRoute,

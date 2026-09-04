@@ -1,5 +1,5 @@
 // Lightweight API client — JSON, bearer header, one silent refresh on 401.
-// Mirrors applications/frontend/web-user/src/lib/api-client.ts field-for-field so
+// Mirrors applications/frontend/web/web-user/src/lib/api-client.ts field-for-field so
 // screens ported from web can reuse the same shapes.
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000/api/v1'
 
