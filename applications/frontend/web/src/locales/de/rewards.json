@@ -1,0 +1,225 @@
+{
+  "loyalty": {
+    "loading": "Wird geladen…",
+    "page": {
+      "title": "Treueprogramm",
+      "subtitle": "Prämien für Stammkunden"
+    },
+    "ptsValue": "{{points}} Pkt.",
+    "metrics": {
+      "pointsBalance": "Punktestand",
+      "availableNow": "Aktuell verfügbar",
+      "tierStatus": "Stufenstatus",
+      "ptsToTier": "{{points}} Pkt. bis {{tier}}",
+      "topTier": "Höchste Stufe",
+      "earnedThisMonth": "Diesen Monat gesammelt",
+      "fromActivities_one": "Aus {{count}} Aktivität",
+      "fromActivities_other": "Aus {{count}} Aktivitäten",
+      "redeemed": "Eingelöst",
+      "rewardsUsed_one": "{{count}} Prämie eingelöst",
+      "rewardsUsed_other": "{{count}} Prämien eingelöst"
+    },
+    "tierCard": {
+      "currentTier": "Aktuelle Stufe",
+      "tierName": "Stufe {{tier}}",
+      "progressToTier": "Fortschritt bis {{tier}}",
+      "reachedTopTier": "Du hast die höchste Stufe erreicht",
+      "ptsOfPts": "{{balance}} / {{target}} Pkt.",
+      "quickActions": "Schnellzugriff",
+      "earnPoints": "Punkte sammeln",
+      "redeemReward": "Prämie einlösen",
+      "viewRules": "Regeln ansehen",
+      "conversionNote": "100 Punkte = 1.000 TZS Prämienguthaben"
+    },
+    "activity": {
+      "recentActivity": "Letzte Punktaktivität",
+      "viewAll": "Alle anzeigen",
+      "noActivityYet": "Noch keine Punktaktivität",
+      "noActivityHint": "Buche eine Leistung, um Treuepunkte zu sammeln.",
+      "columnActivity": "Aktivität",
+      "columnDate": "Datum",
+      "columnPoints": "Punkte",
+      "columnStatus": "Status",
+      "earned": "Gesammelt",
+      "redeemed": "Eingelöst"
+    },
+    "rewards": {
+      "availableRewards": "Verfügbare Prämien",
+      "viewAllRewards": "Alle Prämien anzeigen",
+      "minPts": "Mind. {{points}} Pkt."
+    },
+    "earnDialog": {
+      "title": "Punkte sammeln",
+      "pointsLabel": "Punkte",
+      "placeholder": "z. B. 100",
+      "enterPointsFirst": "Gib zuerst Punkte ein",
+      "adding": "Wird hinzugefügt...",
+      "addPoints": "Punkte hinzufügen",
+      "earnedToast": "{{points}} Pkt. gesammelt — Stand {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "Prämie einlösen",
+      "subtitle": "Nutze deine Punkte für verfügbare Vorteile",
+      "currentBalance": "Aktueller Stand",
+      "notEnoughPoints": "Nicht genug Punkte für diese Prämie",
+      "confirmDeduction": "Bitte bestätige, dass du verstehst, dass Punkte abgezogen werden",
+      "notEnoughPointsBadge": "Nicht genug Punkte",
+      "selectedReward": "Ausgewählte Prämie",
+      "pointsRequired": "Benötigte Punkte",
+      "remainingAfter": "Verbleibende Punkte nach dem Einlösen",
+      "consentLabel": "Ich verstehe, dass Punkte sofort abgezogen werden",
+      "instantNote": "Eingelöste Prämien werden sofort auf deinem Konto angewendet.",
+      "cancel": "Abbrechen",
+      "redeeming": "Wird eingelöst...",
+      "redeemNow": "Jetzt einlösen",
+      "redeemedToast": "{{reward}} eingelöst!"
+    },
+    "detailSheet": {
+      "title": "Treuedetails",
+      "memberSince": "Mitglied seit",
+      "tierBenefits": "Stufenvorteile",
+      "benefitsValue": "{{tier}}-Vorteile",
+      "rewardConversion": "Prämienumrechnung",
+      "conversionValue": "100 Pkt. = 1.000 TZS",
+      "nextMilestone": "Nächster Prämienmeilenstein",
+      "milestoneValue": "{{points}} Pkt. (Stufe {{tier}})",
+      "topTierReached": "Höchste Stufe erreicht",
+      "selectedActivity": "Ausgewählte Aktivität",
+      "referenceCode": "Referenzcode",
+      "pointsEarned": "Gesammelte Punkte",
+      "pointsSpent": "Ausgegebene Punkte",
+      "balanceAfter": "Stand danach",
+      "timeline": "Zeitverlauf",
+      "recorded": "{{activity}} erfasst",
+      "viewRules": "Regeln ansehen",
+      "share": "Teilen",
+      "copiedToClipboard": "In die Zwischenablage kopiert",
+      "done": "Fertig"
+    },
+    "tierBenefits": {
+      "Bronze": ["1 Punkt pro 1.000 TZS Ausgaben", "Standard-Buchungspriorität"],
+      "Silver": ["1 Punkt pro 1.000 TZS Ausgaben", "Bevorzugter Kundensupport"],
+      "Gold": ["10 % Bonuspunkte auf jede Buchung", "Bevorzugte Anbieterzuordnung"],
+      "Platinum": ["20 % Bonuspunkte auf jede Buchung", "Dedizierte Support-Hotline", "Kostenloses Prioritätsbuchungs-Add-on"]
+    },
+    "rewardCatalog": {
+      "discount5000": "{{amount}} TZS Rabatt",
+      "priorityBooking": "Prioritätsbuchung",
+      "freeInspection": "Kostenlose Inspektion"
+    },
+    "share": {
+      "title": "FIXO Treueprogramm",
+      "message": "{{activity}} — {{sign}}{{points}} Pkt.",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} Pkt. (Ref. {{ref}})"
+    }
+  },
+  "promotions": {
+    "loading": "Wird geladen…",
+    "page": {
+      "title": "Aktionen",
+      "subtitle": "Angebote und Rabatte für deine nächste Leistung"
+    },
+    "metrics": {
+      "activePromotions": "Aktive Aktionen",
+      "currentlyAvailable": "Derzeit verfügbar",
+      "totalSavings": "Gesamtersparnis",
+      "acrossRedemptions": "Über alle Einlösungen",
+      "usedThisMonth": "Diesen Monat genutzt",
+      "appliedOnBookings": "Auf Buchungen angewendet",
+      "expiringSoon": "Läuft bald ab",
+      "within7Days": "Innerhalb von 7 Tagen"
+    },
+    "categories": {
+      "plumbing": "Sanitär",
+      "cleaning": "Reinigung",
+      "painting": "Malerarbeiten",
+      "acCooling": "Klimaanlage & Kühlung",
+      "electrical": "Elektrik",
+      "moving": "Umzug",
+      "general": "Allgemeine Dienstleistungen"
+    },
+    "discount": {
+      "percentOff": "{{value}} % Rabatt",
+      "amountOff": "{{amount}} Rabatt"
+    },
+    "labels": {
+      "noCap": "Keine Obergrenze",
+      "noMinimum": "Kein Mindestbetrag",
+      "unlimited": "Unbegrenzt",
+      "usageOfLimit": "{{used}} von {{limit}} genutzt"
+    },
+    "promoCode": {
+      "title": "Aktionscode",
+      "enterCode": "Aktionscode eingeben",
+      "placeholder": "z. B. WELCOME10",
+      "orderAmount": "Bestellbetrag (TZS)",
+      "validateCode": "Code prüfen",
+      "enterCodeFirst": "Gib einen Aktionscode ein",
+      "enterAmountFirst": "Gib einen Bestellbetrag ein",
+      "appliesSave": "{{code}} gilt — spare {{amount}}",
+      "save": "Spare {{amount}}",
+      "savePercent": "Spare {{amount}} ({{percent}} %)",
+      "disclaimer": "Aktionscodes gelten nur für berechtigte Leistungen und können nicht mit anderen Angeboten kombiniert werden."
+    },
+    "availablePromotions": {
+      "title": "Verfügbare Aktionen",
+      "subtitle": "Wähle eine Aktion, die du auf deine Buchung anwenden möchtest.",
+      "noneTitle": "Keine aktiven Aktionen",
+      "noneDescription": "Schau bald wieder vorbei — neue Angebote erscheinen hier.",
+      "expires": "Läuft ab am {{date}}",
+      "details": "Details",
+      "useNow": "Jetzt nutzen",
+      "showLess": "Weniger anzeigen",
+      "viewAll": "Alle Aktionen anzeigen"
+    },
+    "redemptions": {
+      "title": "Zuletzt eingelöst",
+      "showLess": "Weniger anzeigen",
+      "viewAll": "Alle anzeigen",
+      "noneTitle": "Noch keine Einlösungen",
+      "noneDescription": "Aktionen, die du tatsächlich anwendest, erscheinen hier mit dem tatsächlich ersparten Betrag.",
+      "columnCode": "Aktionscode",
+      "columnDate": "Datum",
+      "columnSavings": "Ersparnis",
+      "columnStatus": "Status",
+      "applied": "Angewendet"
+    },
+    "details": {
+      "title": "Aktionsdetails",
+      "active": "Aktiv",
+      "expired": "Abgelaufen",
+      "maxSavings": "Maximale Ersparnis: {{amount}}",
+      "promoCode": "Aktionscode",
+      "category": "Kategorie",
+      "validity": "Gültigkeit",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "Mindestbestellwert",
+      "usageLimit": "Nutzungslimit",
+      "eligibleAreas": "Berechtigte Gebiete",
+      "allAreas": "Alle Gebiete",
+      "conditionsTitle": "Bedingungen",
+      "conditionGeneral": "Nur für berechtigte Leistungen gültig.",
+      "conditionCategory": "Nur für berechtigte {{category}}-Leistungen gültig.",
+      "conditionNoCombine": "Kann nicht mit anderen Aktionscodes kombiniert werden.",
+      "conditionAppliedImmediately": "Wird sofort angewendet, wenn du diese Aktion nutzt.",
+      "recentUseTitle": "Letzte Nutzung",
+      "noRecentUse": "Für diesen Code gibt es noch keine Einlösungen.",
+      "columnBookingRef": "Buchungsreferenz",
+      "columnDate": "Datum",
+      "columnSavings": "Ersparnis",
+      "shareCode": "Code teilen",
+      "viewTerms": "Bedingungen ansehen",
+      "useThisPromotion": "Diese Aktion nutzen",
+      "termsComingSoon": "Die vollständigen Bedingungen werden hier bald aufgeführt — sieh dir bis dahin die Bedingungen oben an."
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "Gib oben einen Bestellbetrag ein, damit wir die tatsächliche Ersparnis berechnen können.",
+      "appliedSaved": "{{code}} angewendet — {{amount}} gespart",
+      "copiedToClipboard": "Aktionscode in die Zwischenablage kopiert"
+    },
+    "share": {
+      "title": "FIXO Aktion",
+      "message": "Verwende den Aktionscode {{code}} bei FIXO — {{discount}}"
+    }
+  }
+}

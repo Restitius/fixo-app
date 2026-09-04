@@ -1,0 +1,225 @@
+{
+  "loyalty": {
+    "loading": "लोड हो रहा है…",
+    "page": {
+      "title": "लॉयल्टी",
+      "subtitle": "बार-बार आने वाले ग्राहकों के लिए इनाम"
+    },
+    "ptsValue": "{{points}} अंक",
+    "metrics": {
+      "pointsBalance": "अंक शेष",
+      "availableNow": "अभी उपलब्ध",
+      "tierStatus": "स्तर की स्थिति",
+      "ptsToTier": "{{tier}} तक {{points}} अंक शेष",
+      "topTier": "सर्वोच्च स्तर",
+      "earnedThisMonth": "इस माह अर्जित",
+      "fromActivities_one": "{{count}} गतिविधि से",
+      "fromActivities_other": "{{count}} गतिविधियों से",
+      "redeemed": "भुनाए गए",
+      "rewardsUsed_one": "{{count}} इनाम उपयोग किया गया",
+      "rewardsUsed_other": "{{count}} इनाम उपयोग किए गए"
+    },
+    "tierCard": {
+      "currentTier": "वर्तमान स्तर",
+      "tierName": "{{tier}} स्तर",
+      "progressToTier": "{{tier}} की ओर प्रगति",
+      "reachedTopTier": "आपने सर्वोच्च स्तर हासिल कर लिया है",
+      "ptsOfPts": "{{balance}} / {{target}} अंक",
+      "quickActions": "त्वरित कार्य",
+      "earnPoints": "अंक अर्जित करें",
+      "redeemReward": "इनाम भुनाएं",
+      "viewRules": "नियम देखें",
+      "conversionNote": "100 अंक = TZS 1,000 का इनाम क्रेडिट"
+    },
+    "activity": {
+      "recentActivity": "हाल की अंक गतिविधि",
+      "viewAll": "सभी देखें",
+      "noActivityYet": "अभी तक कोई अंक गतिविधि नहीं",
+      "noActivityHint": "लॉयल्टी अंक अर्जित करना शुरू करने के लिए एक सेवा बुक करें।",
+      "columnActivity": "गतिविधि",
+      "columnDate": "तारीख़",
+      "columnPoints": "अंक",
+      "columnStatus": "स्थिति",
+      "earned": "अर्जित",
+      "redeemed": "भुनाया गया"
+    },
+    "rewards": {
+      "availableRewards": "उपलब्ध इनाम",
+      "viewAllRewards": "सभी इनाम देखें",
+      "minPts": "न्यूनतम {{points}} अंक"
+    },
+    "earnDialog": {
+      "title": "अंक अर्जित करें",
+      "pointsLabel": "अंक",
+      "placeholder": "उदा. 100",
+      "enterPointsFirst": "पहले अंक दर्ज करें",
+      "adding": "जोड़ा जा रहा है...",
+      "addPoints": "अंक जोड़ें",
+      "earnedToast": "{{points}} अंक अर्जित हुए — शेष {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "इनाम भुनाएं",
+      "subtitle": "उपलब्ध लाभों के लिए अपने अंक उपयोग करें",
+      "currentBalance": "वर्तमान शेष",
+      "notEnoughPoints": "इस इनाम के लिए पर्याप्त अंक नहीं हैं",
+      "confirmDeduction": "कृपया पुष्टि करें कि आप समझते हैं कि अंक काटे जाएंगे",
+      "notEnoughPointsBadge": "पर्याप्त अंक नहीं",
+      "selectedReward": "चयनित इनाम",
+      "pointsRequired": "आवश्यक अंक",
+      "remainingAfter": "भुनाने के बाद शेष अंक",
+      "consentLabel": "मैं समझता/समझती हूं कि अंक तुरंत काटे जाएंगे",
+      "instantNote": "भुनाए गए इनाम आपके खाते में तुरंत लागू हो जाते हैं।",
+      "cancel": "रद्द करें",
+      "redeeming": "भुनाया जा रहा है...",
+      "redeemNow": "अभी भुनाएं",
+      "redeemedToast": "{{reward}} भुनाया गया!"
+    },
+    "detailSheet": {
+      "title": "लॉयल्टी विवरण",
+      "memberSince": "सदस्य बने",
+      "tierBenefits": "स्तर लाभ",
+      "benefitsValue": "{{tier}} लाभ",
+      "rewardConversion": "इनाम रूपांतरण",
+      "conversionValue": "100 अंक = TZS 1,000",
+      "nextMilestone": "अगला इनाम पड़ाव",
+      "milestoneValue": "{{points}} अंक ({{tier}} स्तर)",
+      "topTierReached": "सर्वोच्च स्तर हासिल",
+      "selectedActivity": "चयनित गतिविधि",
+      "referenceCode": "संदर्भ कोड",
+      "pointsEarned": "अर्जित अंक",
+      "pointsSpent": "उपयोग किए गए अंक",
+      "balanceAfter": "बाद का शेष",
+      "timeline": "समयरेखा",
+      "recorded": "{{activity}} दर्ज की गई",
+      "viewRules": "नियम देखें",
+      "share": "साझा करें",
+      "copiedToClipboard": "क्लिपबोर्ड पर कॉपी किया गया",
+      "done": "हो गया"
+    },
+    "tierBenefits": {
+      "Bronze": ["हर TZS 1,000 खर्च पर 1 अंक अर्जित करें", "मानक बुकिंग प्राथमिकता"],
+      "Silver": ["हर TZS 1,000 खर्च पर 1 अंक अर्जित करें", "प्राथमिकता ग्राहक सहायता"],
+      "Gold": ["हर बुकिंग पर 10% बोनस अंक", "प्राथमिकता प्रदाता मिलान"],
+      "Platinum": ["हर बुकिंग पर 20% बोनस अंक", "समर्पित सहायता लाइन", "निःशुल्क प्राथमिकता बुकिंग ऐड-ऑन"]
+    },
+    "rewardCatalog": {
+      "discount5000": "TZS {{amount}} की छूट",
+      "priorityBooking": "प्राथमिकता बुकिंग",
+      "freeInspection": "मुफ़्त निरीक्षण"
+    },
+    "share": {
+      "title": "FIXO लॉयल्टी",
+      "message": "{{activity}} — {{sign}}{{points}} अंक",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} अंक (संदर्भ {{ref}})"
+    }
+  },
+  "promotions": {
+    "loading": "लोड हो रहा है…",
+    "page": {
+      "title": "प्रमोशन",
+      "subtitle": "आपकी अगली सेवा पर ऑफ़र और छूट"
+    },
+    "metrics": {
+      "activePromotions": "सक्रिय प्रमोशन",
+      "currentlyAvailable": "वर्तमान में उपलब्ध",
+      "totalSavings": "कुल बचत",
+      "acrossRedemptions": "सभी उपयोगों में",
+      "usedThisMonth": "इस माह उपयोग किए गए",
+      "appliedOnBookings": "बुकिंग पर लागू",
+      "expiringSoon": "जल्द समाप्त होने वाले",
+      "within7Days": "7 दिनों के भीतर"
+    },
+    "categories": {
+      "plumbing": "प्लंबिंग",
+      "cleaning": "सफ़ाई",
+      "painting": "पेंटिंग",
+      "acCooling": "एसी और कूलिंग",
+      "electrical": "इलेक्ट्रिकल",
+      "moving": "शिफ्टिंग",
+      "general": "सामान्य सेवाएं"
+    },
+    "discount": {
+      "percentOff": "{{value}}% की छूट",
+      "amountOff": "{{amount}} की छूट"
+    },
+    "labels": {
+      "noCap": "कोई सीमा नहीं",
+      "noMinimum": "कोई न्यूनतम नहीं",
+      "unlimited": "असीमित",
+      "usageOfLimit": "{{limit}} में से {{used}} उपयोग किए गए"
+    },
+    "promoCode": {
+      "title": "प्रोमो कोड",
+      "enterCode": "प्रोमो कोड दर्ज करें",
+      "placeholder": "उदा. WELCOME10",
+      "orderAmount": "ऑर्डर राशि (TZS)",
+      "validateCode": "कोड सत्यापित करें",
+      "enterCodeFirst": "एक प्रमोशन कोड दर्ज करें",
+      "enterAmountFirst": "एक ऑर्डर राशि दर्ज करें",
+      "appliesSave": "{{code}} लागू है — {{amount}} बचाएं",
+      "save": "{{amount}} बचाएं",
+      "savePercent": "{{amount}} बचाएं ({{percent}}%)",
+      "disclaimer": "प्रोमो कोड केवल पात्र सेवाओं पर लागू होते हैं और अन्य ऑफ़र के साथ संयोजित नहीं किए जा सकते।"
+    },
+    "availablePromotions": {
+      "title": "उपलब्ध प्रमोशन",
+      "subtitle": "अपनी बुकिंग पर लागू करने के लिए एक प्रमोशन चुनें।",
+      "noneTitle": "कोई सक्रिय प्रमोशन नहीं",
+      "noneDescription": "जल्द ही वापस देखें — नए ऑफ़र यहां दिखाई देंगे।",
+      "expires": "{{date}} को समाप्त होता है",
+      "details": "विवरण",
+      "useNow": "अभी उपयोग करें",
+      "showLess": "कम दिखाएं",
+      "viewAll": "सभी प्रमोशन देखें"
+    },
+    "redemptions": {
+      "title": "हाल के उपयोग",
+      "showLess": "कम दिखाएं",
+      "viewAll": "सभी देखें",
+      "noneTitle": "अभी तक कोई उपयोग नहीं",
+      "noneDescription": "आपके द्वारा वास्तव में लागू किए गए प्रमोशन यहां वास्तविक बचत राशि के साथ दिखाई देंगे।",
+      "columnCode": "प्रोमो कोड",
+      "columnDate": "तारीख़",
+      "columnSavings": "बचत",
+      "columnStatus": "स्थिति",
+      "applied": "लागू किया गया"
+    },
+    "details": {
+      "title": "प्रमोशन विवरण",
+      "active": "सक्रिय",
+      "expired": "समाप्त",
+      "maxSavings": "अधिकतम बचत: {{amount}}",
+      "promoCode": "प्रोमो कोड",
+      "category": "श्रेणी",
+      "validity": "वैधता",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "न्यूनतम ऑर्डर",
+      "usageLimit": "उपयोग सीमा",
+      "eligibleAreas": "पात्र क्षेत्र",
+      "allAreas": "सभी क्षेत्र",
+      "conditionsTitle": "शर्तें",
+      "conditionGeneral": "केवल पात्र सेवाओं पर मान्य।",
+      "conditionCategory": "केवल पात्र {{category}} सेवाओं पर मान्य।",
+      "conditionNoCombine": "अन्य प्रोमो कोड के साथ संयोजित नहीं किया जा सकता।",
+      "conditionAppliedImmediately": "इस प्रमोशन का उपयोग करते ही तुरंत लागू हो जाता है।",
+      "recentUseTitle": "हाल का उपयोग",
+      "noRecentUse": "इस कोड के लिए अभी तक कोई उपयोग नहीं हुआ है।",
+      "columnBookingRef": "बुकिंग संदर्भ",
+      "columnDate": "तारीख़",
+      "columnSavings": "बचत",
+      "shareCode": "कोड साझा करें",
+      "viewTerms": "शर्तें देखें",
+      "useThisPromotion": "इस प्रमोशन का उपयोग करें",
+      "termsComingSoon": "पूरी शर्तें जल्द ही यहां सूचीबद्ध की जाएंगी — तब तक ऊपर दी गई शर्तें देखें।"
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "वास्तविक बचत की गणना करने के लिए ऊपर एक ऑर्डर राशि दर्ज करें।",
+      "appliedSaved": "{{code}} लागू किया गया — {{amount}} की बचत हुई",
+      "copiedToClipboard": "प्रोमो कोड क्लिपबोर्ड पर कॉपी किया गया"
+    },
+    "share": {
+      "title": "FIXO प्रमोशन",
+      "message": "FIXO पर प्रोमो कोड {{code}} का उपयोग करें — {{discount}}"
+    }
+  }
+}
