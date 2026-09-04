@@ -1396,4 +1396,25 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/onboarding/complete_step.sql
+  PRV.PROFILE.GET:
+    description: Provider's own full profile, personal + professional (Provider Phase 3).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/profile/get.sql
+  PRV.PROFILE.UPDATE:
+    description: Curate profile fields; absent params keep current values (Provider Phase 3).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/profile/update.sql
+  PRV.PROFILE.PUBLIC:
+    description: Public-safe profile projection for customer preview (Provider Phase 3).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/profile/public.sql
 version: 1
