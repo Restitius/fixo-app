@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 import { useAuth } from "@/lib/auth-context";
 import { favoritesApi, type FavoriteProvider } from "@/lib/api-client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const title = "Bookmarks — FIXO";
 const description = "Your saved, favorite providers in one place.";
@@ -31,6 +32,7 @@ function initials(name: string) {
 const TONES = ["bg-sky-500/15 text-sky-600", "bg-primary/10 text-primary", "bg-success/15 text-success", "bg-amber-500/15 text-amber-600"];
 
 function BookmarksPage() {
+  const { t } = useTranslation("services");
   const { access_token, loading, customer, logout } = useAuth();
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState<FavoriteProvider[] | null>(null);
@@ -47,7 +49,7 @@ function BookmarksPage() {
       const result = await favoritesApi.toggle(providerId);
       if (!result.is_favorite) {
         setFavorites((prev) => (prev ?? []).filter((f) => f.provider_id !== providerId));
-        toast.success("Removed from bookmarks");
+        toast.success(t("common.toast.removedFromBookmarks"));
       }
     } finally {
       setRemovingId(null);
@@ -55,14 +57,14 @@ function BookmarksPage() {
   }
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("common.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
   const dataLoaded = favorites !== null;
 
   return (
-    <PageShell title="Bookmarks" subtitle="Your saved, favorite providers" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("bookmarks.pageTitle")} subtitle={t("bookmarks.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 flex min-h-0 flex-1 flex-col">
         {!dataLoaded ? (
           <div className="space-y-4">
@@ -73,9 +75,9 @@ function BookmarksPage() {
         ) : favorites.length === 0 ? (
           <EmptyState
             icon={Bookmark}
-            title="No bookmarks yet"
-            description="Save providers you like from their profile, and they'll show up here for quick access later."
-            actionLabel="Browse Providers"
+            title={t("bookmarks.empty.title")}
+            description={t("bookmarks.empty.description")}
+            actionLabel={t("bookmarks.empty.action")}
             actionTo="/services"
           />
         ) : (
@@ -94,13 +96,13 @@ function BookmarksPage() {
                     <h3 className="font-semibold">{p.display_name}</h3>
                     {p.rating_avg >= 4.8 && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                        <Award className="size-3" /> Top Rated
+                        <Award className="size-3" /> {t("common.topRated")}
                       </span>
                     )}
                   </div>
                   <p className="flex items-center gap-1 text-sm">
                     <Star className="size-3.5 fill-current text-[#FFB800]" /> {p.rating_avg.toFixed(1)}
-                    <span className="text-muted-foreground">({p.rating_count.toLocaleString()} reviews)</span>
+                    <span className="text-muted-foreground">({t("common.reviewsCount", { count: p.rating_count, formatted: p.rating_count.toLocaleString() })})</span>
                   </p>
                   {p.headline && <p className="mt-0.5 text-sm text-muted-foreground">{p.headline}</p>}
                   {p.city && (
@@ -110,7 +112,7 @@ function BookmarksPage() {
                   )}
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1 text-sm">
-                  <span className="flex items-center gap-1 text-muted-foreground"><Briefcase className="size-3.5" /> {p.jobs_completed.toLocaleString()} jobs done</span>
+                  <span className="flex items-center gap-1 text-muted-foreground"><Briefcase className="size-3.5" /> {t("common.jobsDoneCount", { count: p.jobs_completed, formatted: p.jobs_completed.toLocaleString() })}</span>
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button
@@ -118,14 +120,14 @@ function BookmarksPage() {
                     disabled={removingId === p.provider_id}
                     className="flex items-center gap-2 rounded-xl border border-destructive/40 px-4 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/5 disabled:opacity-60"
                   >
-                    <BookmarkX className="size-4" /> Remove
+                    <BookmarkX className="size-4" /> {t("bookmarks.remove")}
                   </button>
                   <button
                     onClick={() => navigate({ to: "/book", search: { providerId: p.provider_id, providerName: p.display_name, path: "find-provider" } })}
                     className="rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground"
                     style={{ backgroundImage: "var(--gradient-primary)" }}
                   >
-                    Book Now
+                    {t("common.bookNow")}
                   </button>
                 </div>
               </div>

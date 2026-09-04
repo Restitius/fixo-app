@@ -1,0 +1,183 @@
+{
+  "common": {
+    "loading": "Inapakia…",
+    "close": "Funga",
+    "bookNow": "Weka Miadi Sasa",
+    "topRated": "Kiwango cha Juu",
+    "reviewsCount_one": "Tathmini {{formatted}}",
+    "reviewsCount_other": "Tathmini {{formatted}}",
+    "jobsDoneCount_one": "Kazi {{formatted}} imekamilika",
+    "jobsDoneCount_other": "Kazi {{formatted}} zimekamilika",
+    "toast": {
+      "savedToBookmarks": "Imehifadhiwa kwenye alamisho",
+      "removedFromBookmarks": "Imeondolewa kwenye alamisho"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "Vinjari Huduma",
+      "subtitle": "Pata huduma inayofaa kwa nyumba au ofisi yako"
+    },
+    "metrics": {
+      "availableServices": { "label": "Huduma Zinazopatikana", "hint": "Katika kategoria zote" },
+      "averageRating": { "label": "Wastani wa Ukadiriaji", "hint": "Kutoka kwa ukadiriaji halisi wa watoa huduma" },
+      "trustedProviders": { "label": "Watoa Huduma Wanaoaminika", "hint": "Katika kategoria zote" },
+      "emergencyReady": { "label": "Tayari kwa Dharura", "hint": "Huduma za dharura zilizoorodheshwa" }
+    },
+    "searchPlaceholder": "Tafuta huduma (mfano Mabomba, Umeme)...",
+    "sort": {
+      "popular": "Maarufu",
+      "topRated": "Kiwango cha Juu",
+      "az": "A–Z"
+    },
+    "emptyState": {
+      "title": "Hakuna huduma zilizopatikana",
+      "description": "Hatukuweza kupata huduma zinazolingana na \"{{query}}\". Jaribu neno lingine.",
+      "action": "Futa Utafutaji"
+    },
+    "fromPrice": "Kuanzia {{price}}",
+    "askProvider": "Muulize mtoa huduma",
+    "jobsDoneCount_one": "Kazi {{formatted}} imekamilika",
+    "jobsDoneCount_other": "Kazi {{formatted}} zimekamilika",
+    "serviceCount_one": "Huduma {{count}}",
+    "serviceCount_other": "Huduma {{count}}",
+    "findProviders": "Tafuta Watoa Huduma",
+    "popularCategories": "Kategoria Maarufu",
+    "providerCount_one": "Mtoa huduma {{count}}",
+    "providerCount_other": "Watoa huduma {{count}}",
+    "quickMatch": {
+      "title": "Uwiano wa Haraka wa Huduma",
+      "description": "Tuambie unachohitaji nasi tutakulinganisha na watoa huduma bora.",
+      "cta": "Pata Mechi Sasa"
+    },
+    "dialog": {
+      "title": "Maelezo ya Huduma",
+      "jobsCompleted_one": "Kazi {{formatted}} imekamilika",
+      "jobsCompleted_other": "Kazi {{formatted}} zimekamilika",
+      "startingFrom": "Kuanzia",
+      "providersAvailable": "Watoa huduma wanaopatikana",
+      "whatsIncluded": "Kilichojumuishwa",
+      "noServicesYet": "Huduma halisi za kategoria hii zitaonekana hapa.",
+      "priceRange": "Wastani wa bei",
+      "priceFrom": "{{price}}+",
+      "varies": "Inatofautiana",
+      "priceVariesNote": "Bei hutofautiana kulingana na ugumu wa kazi na vifaa vinavyohitajika.",
+      "whyChooseFixo": "Kwa nini wateja wanachagua FIXO",
+      "reasons": {
+        "skilled": "Watoa huduma wenye ujuzi na uzoefu",
+        "quickResponse": "Mwitikio wa haraka na huduma ya kuaminika",
+        "qualityWork": "Kazi bora inayoungwa mkono na tathmini halisi",
+        "transparentPricing": "Bei wazi na ya uwazi"
+      },
+      "features": {
+        "realReviews": { "title": "Tathmini Halisi", "hint": "Kutoka kwa wateja halisi" },
+        "upfrontPricing": { "title": "Bei Wazi", "hint": "Hakuna gharama zilizofichwa" },
+        "onTimeService": { "title": "Huduma kwa Wakati", "hint": "Kuheshimu muda wako" },
+        "providersReadyCount_one": "Mtoa huduma {{count}}",
+        "providersReadyCount_other": "Watoa huduma {{count}}",
+        "readyToHelp": "Tayari kusaidia"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "Tafuta Watoa Huduma",
+    "pageTitleWithCategory": "Watoa Huduma wa {{category}}",
+    "subtitle": "Chagua mtaalamu unayemwamini kwa huduma yako",
+    "backToServices": "Rudi kwenye Huduma",
+    "thisService": "huduma hii",
+    "noCategory": {
+      "title": "Chagua huduma kwanza",
+      "description": "Chagua kategoria ya huduma ili kuona watoa huduma halisi wanaotoa huduma hiyo.",
+      "action": "Vinjari Huduma"
+    },
+    "metrics": {
+      "providersFound": { "label": "Watoa Huduma Waliopatikana", "hint": "Wanaolingana na kategoria hii" },
+      "averageRating": {
+        "label": "Wastani wa Ukadiriaji",
+        "hint_one": "Kulingana na tathmini {{formatted}}",
+        "hint_other": "Kulingana na tathmini {{formatted}}"
+      },
+      "totalReviews": { "label": "Jumla ya Tathmini", "hint": "Katika watoa huduma hawa" },
+      "startingFrom": { "label": "Kuanzia", "hint": "Bei shindani" }
+    },
+    "searchPlaceholder": "Tafuta watoa huduma...",
+    "allLocations": "Maeneo Yote",
+    "anyRating": "Ukadiriaji Wowote",
+    "sort": {
+      "recommended": "Inayopendekezwa",
+      "topRated": "Kiwango cha Juu",
+      "lowestPrice": "Bei ya Chini Zaidi",
+      "mostJobs": "Kazi Nyingi Zaidi"
+    },
+    "noResults": {
+      "title": "Hakuna watoa huduma wa {{category}} kwa sasa",
+      "description": "Hatuna yeyote anayelingana na vichujio vyako bado. Jaribu kupanua utafutaji wako.",
+      "action": "Futa Vichujio"
+    },
+    "startingFromPrice": "Kuanzia {{price}}",
+    "removeBookmark": "Ondoa alamisho",
+    "saveBookmark": "Hifadhi alamisho",
+    "viewProfile": "Angalia Wasifu",
+    "serviceArea": {
+      "title": "Eneo la Huduma",
+      "empty": "Hakuna data ya eneo bado kwa watoa huduma hawa."
+    },
+    "recommendation": {
+      "title": "Mapendekezo Yetu",
+      "description": "Watoa huduma hawa wamepangwa kulingana na ukadiriaji halisi wa wateja kwa {{category}}.",
+      "items": {
+        "reviews": "Tathmini halisi kutoka kwa wateja halisi",
+        "pricing": "Bei wazi kwa kila kazi",
+        "security": "Uwekaji miadi na malipo salama",
+        "support": "Msaada unapatikana endapo kuna tatizo"
+      }
+    },
+    "dialog": {
+      "title": "Wasifu wa Mtoa Huduma",
+      "activeSince": "Anafanya kazi Tangu",
+      "completedJobs": "Kazi Zilizokamilika",
+      "servicesOffered": "Huduma Zinazotolewa",
+      "avgPrice": "Bei ya Wastani",
+      "servicesPricing": "Huduma na Bei",
+      "allPricesInTZS": "Bei zote ziko kwa TZS",
+      "noServices": "Hakuna huduma zilizoorodheshwa bado.",
+      "localFallback": "Karibu",
+      "features": {
+        "transparentPricing": { "title": "Bei Wazi", "hint": "Hakuna gharama zilizofichwa" },
+        "realReviewsCount_one": "Tathmini Halisi {{formatted}}",
+        "realReviewsCount_other": "Tathmini Halisi {{formatted}}",
+        "realReviews": { "hint": "Kutoka kwa wateja halisi" },
+        "coverageTitle": "Huduma ya {{city}}",
+        "coverage": { "hint": "Mtaalamu wa karibu nawe" },
+        "securePayments": { "title": "Malipo Salama", "hint": "Yanachakatwa kwa usalama" }
+      },
+      "saved": "Imehifadhiwa",
+      "save": "Hifadhi",
+      "messageUnavailable": "Mazungumzo ya moja kwa moja yatafunguliwa mara tu utakapokuwa na miadi inayoendelea na mtoa huduma huyu.",
+      "messageProvider": "Tuma Ujumbe kwa Mtoa Huduma"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "Alamisho",
+    "subtitle": "Watoa huduma wako uliowahifadhi",
+    "empty": {
+      "title": "Hakuna alamisho bado",
+      "description": "Hifadhi watoa huduma unaowapenda kutoka kwenye wasifu wao, nao wataonekana hapa kwa ufikiaji wa haraka baadaye.",
+      "action": "Vinjari Watoa Huduma"
+    },
+    "remove": "Ondoa"
+  },
+  "search": {
+    "pageTitle": "Tafuta",
+    "subtitle": "Pata huduma katika katalogi yetu halisi",
+    "placeholder": "Tafuta huduma, mfano Mabomba, Usafi, Ukarabati wa AC...",
+    "searchButton": "Tafuta",
+    "prompt": "Andika neno na bonyeza Enter au Tafuta.",
+    "empty": {
+      "title": "Hakuna matokeo yaliyopatikana",
+      "description": "Hakuna kilicholingana na \"{{query}}\". Jaribu neno lingine."
+    },
+    "resultsCount_one": "Matokeo {{count}} kwa \"{{query}}\"",
+    "resultsCount_other": "Matokeo {{count}} kwa \"{{query}}\""
+  }
+}

@@ -34,6 +34,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { useAuth } from "@/lib/auth-context";
 import { bookingApi, type CatalogCategory, type CatalogServiceResult } from "@/lib/api-client";
 import { fmtMoney } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 
 const title = "Browse Services — FIXO";
 const description = "Discover trusted handyman services for plumbing, electrical, cleaning, repairs and more.";
@@ -68,14 +69,16 @@ function toneFor(i: number) {
   return TONES[i % TONES.length];
 }
 
-const SORTS = ["Popular", "Top Rated", "A–Z"] as const;
+const SORT_OPTIONS = ["popular", "topRated", "az"] as const;
+type SortOption = (typeof SORT_OPTIONS)[number];
 
 function ServicesPage() {
+  const { t } = useTranslation("services");
   const { access_token, loading, customer, logout } = useAuth();
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CatalogCategory[] | null>(null);
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<(typeof SORTS)[number]>("Popular");
+  const [sort, setSort] = useState<SortOption>("popular");
   const [detail, setDetail] = useState<CatalogCategory | null>(null);
 
   useEffect(() => {
@@ -91,8 +94,8 @@ function ServicesPage() {
       list = list.filter((c) => c.name.toLowerCase().includes(q) || c.description.toLowerCase().includes(q));
     }
     list = [...list];
-    if (sort === "Popular") list.sort((a, b) => (b.provider_count ?? 0) - (a.provider_count ?? 0));
-    else if (sort === "Top Rated") list.sort((a, b) => (b.avg_rating ?? 0) - (a.avg_rating ?? 0));
+    if (sort === "popular") list.sort((a, b) => (b.provider_count ?? 0) - (a.provider_count ?? 0));
+    else if (sort === "topRated") list.sort((a, b) => (b.avg_rating ?? 0) - (a.avg_rating ?? 0));
     else list.sort((a, b) => a.name.localeCompare(b.name));
     return list;
   }, [categories, search, sort]);
@@ -106,7 +109,7 @@ function ServicesPage() {
   const popular = useMemo(() => [...(categories ?? [])].sort((a, b) => (b.provider_count ?? 0) - (a.provider_count ?? 0)).slice(0, 5), [categories]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("common.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -115,12 +118,12 @@ function ServicesPage() {
   }
 
   return (
-    <PageShell title="Browse Services" subtitle="Find the right service for your home or office" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("services.page.title")} subtitle={t("services.page.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Sparkles} label="Available Services" hint="Across all categories" value={dataLoaded ? String(totalServices) : "—"} />
-        <MetricCard icon={Star} label="Average Rating" hint="From real provider ratings" value={dataLoaded ? (avgRating ? avgRating.toFixed(1) : "—") : "—"} tone="amber" tintValue />
-        <MetricCard icon={Users} label="Trusted Providers" hint="Across all categories" value={dataLoaded ? String(trustedProviders) : "—"} tone="success" tintValue />
-        <MetricCard icon={Siren} label="Emergency Ready" hint="Emergency services listed" value={dataLoaded ? String(emergencyCategory?.service_count ?? 0) : "—"} />
+        <MetricCard icon={Sparkles} label={t("services.metrics.availableServices.label")} hint={t("services.metrics.availableServices.hint")} value={dataLoaded ? String(totalServices) : "—"} />
+        <MetricCard icon={Star} label={t("services.metrics.averageRating.label")} hint={t("services.metrics.averageRating.hint")} value={dataLoaded ? (avgRating ? avgRating.toFixed(1) : "—") : "—"} tone="amber" tintValue />
+        <MetricCard icon={Users} label={t("services.metrics.trustedProviders.label")} hint={t("services.metrics.trustedProviders.hint")} value={dataLoaded ? String(trustedProviders) : "—"} tone="success" tintValue />
+        <MetricCard icon={Siren} label={t("services.metrics.emergencyReady.label")} hint={t("services.metrics.emergencyReady.hint")} value={dataLoaded ? String(emergencyCategory?.service_count ?? 0) : "—"} />
       </div>
 
       <div className="mt-6 flex items-start gap-6">
@@ -131,11 +134,11 @@ function ServicesPage() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search for services (e.g. Plumbing, Electrical)..."
+                placeholder={t("services.searchPlaceholder")}
                 className="h-11 w-full rounded-xl bg-card pl-4 pr-11 text-sm shadow-[var(--shadow-card)] outline-none placeholder:text-muted-foreground"
               />
             </div>
-            {SORTS.map((s) => (
+            {SORT_OPTIONS.map((s) => (
               <button
                 key={s}
                 onClick={() => setSort(s)}
@@ -144,7 +147,7 @@ function ServicesPage() {
                 }`}
                 style={sort === s ? { backgroundImage: "var(--gradient-primary)" } : undefined}
               >
-                {s}
+                {t(`services.sort.${s}`)}
               </button>
             ))}
           </div>
@@ -157,9 +160,9 @@ function ServicesPage() {
             <div className="mt-6">
               <EmptyState
                 icon={SearchX}
-                title="No services found"
-                description={`We couldn't find any services matching "${search}". Try a different keyword.`}
-                actionLabel="Clear Search"
+                title={t("services.emptyState.title")}
+                description={t("services.emptyState.description", { query: search })}
+                actionLabel={t("services.emptyState.action")}
                 onAction={() => setSearch("")}
               />
             </div>
@@ -190,8 +193,12 @@ function ServicesPage() {
                     <p className="mt-1 text-sm text-muted-foreground">{c.description}</p>
 
                     <div className="mt-4 flex items-center justify-between text-sm">
-                      <span className="font-medium text-primary">{c.min_price != null ? `From ${fmtMoney(c.min_price)}` : "Ask a provider"}</span>
-                      <span className="text-muted-foreground">{c.total_jobs != null ? `${c.total_jobs.toLocaleString()} jobs done` : `${c.service_count} services`}</span>
+                      <span className="font-medium text-primary">{c.min_price != null ? t("services.fromPrice", { price: fmtMoney(c.min_price) }) : t("services.askProvider")}</span>
+                      <span className="text-muted-foreground">
+                        {c.total_jobs != null
+                          ? t("services.jobsDoneCount", { count: c.total_jobs, formatted: c.total_jobs.toLocaleString() })
+                          : t("services.serviceCount", { count: c.service_count })}
+                      </span>
                     </div>
 
                     <button
@@ -199,7 +206,7 @@ function ServicesPage() {
                       className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
                       style={{ backgroundImage: "var(--gradient-primary)" }}
                     >
-                      Find Providers
+                      {t("services.findProviders")}
                       <ArrowRight className="size-4" />
                     </button>
                   </div>
@@ -212,7 +219,7 @@ function ServicesPage() {
         <div className="w-[320px] shrink-0 space-y-6 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
           <div>
             <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-              <Users className="size-5 text-primary" /> Popular Categories
+              <Users className="size-5 text-primary" /> {t("services.popularCategories")}
             </h3>
             <div className="space-y-1">
               {popular.map((c, i) => {
@@ -225,7 +232,7 @@ function ServicesPage() {
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{c.name}</p>
-                      <p className="text-xs text-muted-foreground">{c.provider_count ?? 0} providers</p>
+                      <p className="text-xs text-muted-foreground">{t("services.providerCount", { count: c.provider_count ?? 0 })}</p>
                     </div>
                   </button>
                 );
@@ -237,14 +244,14 @@ function ServicesPage() {
             <span className="mx-auto flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Sparkles className="size-5" />
             </span>
-            <p className="mt-3 font-semibold">Quick Service Match</p>
-            <p className="mt-1 text-xs text-muted-foreground">Tell us what you need and we'll match you with the best providers.</p>
+            <p className="mt-3 font-semibold">{t("services.quickMatch.title")}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t("services.quickMatch.description")}</p>
             <button
               onClick={() => navigate({ to: "/book", search: {} })}
               className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary-foreground"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
-              Get Matched Now
+              {t("services.quickMatch.cta")}
             </button>
           </div>
         </div>
@@ -264,6 +271,7 @@ function ServiceDetailsDialog({
   onClose: () => void;
   onFindProviders: (c: CatalogCategory) => void;
 }) {
+  const { t } = useTranslation("services");
   const navigate = useNavigate();
   const [services, setServices] = useState<CatalogServiceResult[] | null>(null);
 
@@ -286,7 +294,7 @@ function ServiceDetailsDialog({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-background p-6" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between">
-          <h2 className="text-xl font-bold">Service Details</h2>
+          <h2 className="text-xl font-bold">{t("services.dialog.title")}</h2>
           <button onClick={onClose} className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="size-5" /></button>
         </div>
 
@@ -299,7 +307,7 @@ function ServiceDetailsDialog({
             {category.avg_rating != null && (
               <p className="flex items-center gap-1 text-sm text-muted-foreground">
                 <Star className="size-3.5 fill-current text-[#FFB800]" /> {category.avg_rating.toFixed(1)}
-                {" "}({(category.total_jobs ?? 0).toLocaleString()} jobs completed)
+                {" "}({t("services.dialog.jobsCompleted", { count: category.total_jobs ?? 0, formatted: (category.total_jobs ?? 0).toLocaleString() })})
               </p>
             )}
           </div>
@@ -307,13 +315,13 @@ function ServiceDetailsDialog({
 
         <div className="mt-4 grid grid-cols-2 gap-4 rounded-2xl bg-muted/40 p-4">
           <div>
-            <p className="text-xs text-muted-foreground">Starting from</p>
-            <p className="text-lg font-bold text-primary">{category.min_price != null ? fmtMoney(category.min_price) : "Ask a provider"}</p>
+            <p className="text-xs text-muted-foreground">{t("services.dialog.startingFrom")}</p>
+            <p className="text-lg font-bold text-primary">{category.min_price != null ? fmtMoney(category.min_price) : t("services.askProvider")}</p>
           </div>
           <div className="flex items-center gap-2">
             <Users className="size-4 text-muted-foreground" />
             <div>
-              <p className="text-xs text-muted-foreground">Providers available</p>
+              <p className="text-xs text-muted-foreground">{t("services.dialog.providersAvailable")}</p>
               <p className="text-sm font-semibold">{category.provider_count ?? 0}</p>
             </div>
           </div>
@@ -323,11 +331,11 @@ function ServiceDetailsDialog({
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-border p-4">
-            <h4 className="mb-2 font-semibold">What's included</h4>
+            <h4 className="mb-2 font-semibold">{t("services.dialog.whatsIncluded")}</h4>
             {services === null ? (
-              <p className="text-sm text-muted-foreground">Loading…</p>
+              <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
             ) : services.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Real services for this category will show up here.</p>
+              <p className="text-sm text-muted-foreground">{t("services.dialog.noServicesYet")}</p>
             ) : (
               <ul className="space-y-2 text-sm">
                 {services.map((s) => (
@@ -339,58 +347,58 @@ function ServiceDetailsDialog({
             )}
           </div>
           <div className="rounded-2xl border border-border p-4">
-            <h4 className="mb-2 flex items-center gap-2 font-semibold"><Tag className="size-4 text-primary" /> Average price range</h4>
+            <h4 className="mb-2 flex items-center gap-2 font-semibold"><Tag className="size-4 text-primary" /> {t("services.dialog.priceRange")}</h4>
             <p className="text-lg font-bold text-primary">
-              {category.min_price != null ? `${fmtMoney(category.min_price)}+` : "Varies"}
+              {category.min_price != null ? t("services.dialog.priceFrom", { price: fmtMoney(category.min_price) }) : t("services.dialog.varies")}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">Price varies based on task complexity and materials required.</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t("services.dialog.priceVariesNote")}</p>
           </div>
         </div>
 
         <div className="mt-4">
-          <h4 className="mb-2 font-semibold">Why customers choose FIXO</h4>
+          <h4 className="mb-2 font-semibold">{t("services.dialog.whyChooseFixo")}</h4>
           <ul className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> Skilled and experienced providers</li>
-            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> Quick response and reliable service</li>
-            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> Quality work backed by real reviews</li>
-            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> Transparent, upfront pricing</li>
+            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> {t("services.dialog.reasons.skilled")}</li>
+            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> {t("services.dialog.reasons.quickResponse")}</li>
+            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> {t("services.dialog.reasons.qualityWork")}</li>
+            <li className="flex items-center gap-2"><Check className="size-4 shrink-0 text-success" /> {t("services.dialog.reasons.transparentPricing")}</li>
           </ul>
         </div>
 
         <div className="mt-4 grid grid-cols-4 gap-3 rounded-2xl bg-primary/5 p-4 text-center text-xs">
           <div>
             <Shield className="mx-auto size-5 text-primary" />
-            <p className="mt-1 font-semibold">Real Reviews</p>
-            <p className="text-muted-foreground">From real customers</p>
+            <p className="mt-1 font-semibold">{t("services.dialog.features.realReviews.title")}</p>
+            <p className="text-muted-foreground">{t("services.dialog.features.realReviews.hint")}</p>
           </div>
           <div>
             <Tag className="mx-auto size-5 text-primary" />
-            <p className="mt-1 font-semibold">Upfront Pricing</p>
-            <p className="text-muted-foreground">No hidden charges</p>
+            <p className="mt-1 font-semibold">{t("services.dialog.features.upfrontPricing.title")}</p>
+            <p className="text-muted-foreground">{t("services.dialog.features.upfrontPricing.hint")}</p>
           </div>
           <div>
             <Clock className="mx-auto size-5 text-primary" />
-            <p className="mt-1 font-semibold">On-time Service</p>
-            <p className="text-muted-foreground">Respecting your time</p>
+            <p className="mt-1 font-semibold">{t("services.dialog.features.onTimeService.title")}</p>
+            <p className="text-muted-foreground">{t("services.dialog.features.onTimeService.hint")}</p>
           </div>
           <div>
             <ThumbsUp className="mx-auto size-5 text-primary" />
-            <p className="mt-1 font-semibold">{category.provider_count ?? 0} Providers</p>
-            <p className="text-muted-foreground">Ready to help</p>
+            <p className="mt-1 font-semibold">{t("services.dialog.features.providersReadyCount", { count: category.provider_count ?? 0 })}</p>
+            <p className="text-muted-foreground">{t("services.dialog.features.readyToHelp")}</p>
           </div>
         </div>
 
         <div className="mt-4 flex gap-3">
-          <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">Close</button>
+          <button onClick={onClose} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">{t("common.close")}</button>
           <button onClick={() => onFindProviders(category)} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-primary py-3 text-sm font-semibold text-primary hover:bg-primary/5">
-            Find Providers <ArrowRight className="size-4" />
+            {t("services.findProviders")} <ArrowRight className="size-4" />
           </button>
           <button
             onClick={() => navigate({ to: "/book", search: { category: category.name, categoryId: category.category_id, path: "direct" } })}
             className="flex-1 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
-            Book Now
+            {t("common.bookNow")}
           </button>
         </div>
       </div>
