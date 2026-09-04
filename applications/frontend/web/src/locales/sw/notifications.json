@@ -1,0 +1,69 @@
+{
+  "loading": "Inapakia…",
+  "page": {
+    "title": "Arifa",
+    "subtitle": "Masasisho, vikumbusho na tahadhari"
+  },
+  "tabs": {
+    "all": "Zote",
+    "unread": "Ambazo Hazijasomwa",
+    "bookings": "Uhifadhi",
+    "payments": "Malipo"
+  },
+  "metrics": {
+    "totalNotifications": "Jumla ya Arifa",
+    "thisMonth": "Mwezi huu",
+    "unread": "Hazijasomwa",
+    "needsAttention": "Zinahitaji uangalizi",
+    "bookingUpdates": "Masasisho ya Uhifadhi",
+    "serviceProgress": "Maendeleo ya huduma",
+    "paymentAlerts": "Tahadhari za Malipo",
+    "recentBilling": "Malipo ya karibuni"
+  },
+  "list": {
+    "heading": "Arifa za Hivi Karibuni",
+    "markAllRead": "Weka zote kama zimesomwa",
+    "markedAsRead_one": "Arifa {{count}} imewekwa kama imesomwa",
+    "markedAsRead_other": "Arifa {{count}} zimewekwa kama zimesomwa",
+    "noMatching": "Hakuna arifa zinazolingana",
+    "tryDifferentTab": "Jaribu kichupo kingine.",
+    "showAll": "Onyesha zote",
+    "allCaughtUp": "Umepata kila kitu",
+    "noNotificationsYet": "Hakuna arifa hapa bado — masasisho na vikumbusho vitaonekana yanapotokea.",
+    "new": "Mpya",
+    "paid": "Imelipwa"
+  },
+  "detail": {
+    "notificationType": "Aina ya arifa",
+    "bookingReference": "Nambari ya uhifadhi",
+    "provider": "Mtoa huduma",
+    "service": "Huduma",
+    "scheduledVisit": "Ziara iliyopangwa",
+    "location": "Mahali",
+    "relatedAmount": "Kiasi kinachohusika",
+    "paymentMethod": "Njia ya malipo",
+    "invoiceReference": "Nambari ya ankara",
+    "reference": "Kumbukumbu"
+  },
+  "panel": {
+    "title": "Maelezo ya Arifa",
+    "whatHappened": "Kilichotokea",
+    "recordedNote": "Sasisho hili limerekodiwa dhidi ya uhifadhi wako.",
+    "downloadInvoice": "Pakua ankara",
+    "findInvoiceToast": "Tafuta ankara husika kwenye ukurasa wa Ankara.",
+    "contactSupport": "Wasiliana na msaada",
+    "done": "Imekamilika"
+  },
+  "dialog": {
+    "title": "Maelezo ya Arifa",
+    "subtitle": "Pitia sasisho kamili na uchukue hatua",
+    "bookingLabel": "Uhifadhi {{number}}",
+    "message": "Ujumbe",
+    "noDetails": "Hakuna maelezo zaidi kwa arifa hii.",
+    "respondNote": "Unaweza kujibu sasisho hili moja kwa moja kutoka kwenye ukurasa wa uhifadhi wako.",
+    "close": "Funga",
+    "markAsRead": "Weka kama imesomwa",
+    "viewBooking": "Angalia uhifadhi",
+    "findBookingToast": "Tafuta uhifadhi {{number}} kwenye orodha yako ya uhifadhi."
+  }
+}
