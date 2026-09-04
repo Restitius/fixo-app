@@ -2,15 +2,17 @@
 # FIXO-APP — whole-application container stack.
 #
 # One compose PROJECT named FIXO-APP so Docker Desktop groups every service of
-# this application together. It covers the backend (FastAPI), the web frontend
-# (TanStack Start / React), our own PostgreSQL and Redis — each in its own
-# container, fully isolated from any other project on this machine.
+# this application together. It covers the backend (FastAPI), the customer-
+# facing web frontend (TanStack Start / React), our own PostgreSQL and Redis —
+# each in its own container, fully isolated from any other project on this
+# machine. The provider-facing web app (applications/frontend/web-provider)
+# has no service here yet — add one once it's scaffolded.
 #
 #   FIXO-APP
-#   ├── fixo-postgres    :5434   our PostgreSQL (dedicated volume)
-#   ├── fixo-redis       :6370   cache / queues
-#   ├── fixo-api         :8000   FastAPI backend
-#   └── fixo-web         :3000   web frontend
+#   ├── fixo-postgres     :5434   our PostgreSQL (dedicated volume)
+#   ├── fixo-redis        :6370   cache / queues
+#   ├── fixo-api          :8000   FastAPI backend
+#   └── fixo-web-user     :3000   customer-facing web frontend
 # =============================================================================
 name: FIXO-APP
 
@@ -71,12 +73,12 @@ services:
       - ./applications/backend/app:/srv/app
       - ./applications/backend/migrations:/srv/migrations
 
-  web:
+  web-user:
     build:
-      context: ./applications/frontend/web
+      context: ./applications/frontend/web-user
       dockerfile: Dockerfile
-    image: fixo-web:latest
-    container_name: fixo-web
+    image: fixo-web-user:latest
+    container_name: fixo-web-user
     restart: unless-stopped
     environment:
       VITE_API_URL: http://localhost:8000/api/v1
@@ -87,9 +89,9 @@ services:
     volumes:
       # Dev mounts — per-directory so TanStack's generated routeTree.gen.ts
       # (written to /app/src root) stays on the container filesystem.
-      - ./applications/frontend/web/src/routes:/app/src/routes
-      - ./applications/frontend/web/src/lib:/app/src/lib
-      - ./applications/frontend/web/src/components:/app/src/components
+      - ./applications/frontend/web-user/src/routes:/app/src/routes
+      - ./applications/frontend/web-user/src/lib:/app/src/lib
+      - ./applications/frontend/web-user/src/components:/app/src/components
 
 volumes:
   fixo_pgdata:
