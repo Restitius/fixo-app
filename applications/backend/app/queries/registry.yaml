@@ -1368,4 +1368,32 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/auth/session_revoke_all.sql
+  PROV.ONBOARD.STEPS.LIST:
+    description: Provider onboarding step catalogue (Provider Phase 2).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/onboarding/steps.sql
+  PROV.ONBOARD.STATUS:
+    description: Onboarding steps with this provider's saved progress (Provider Phase 2).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/onboarding/status.sql
+  PROV.ONBOARD.STEP.SAVE:
+    description: Auto-saves one onboarding step's data without completing (Provider Phase 2).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/onboarding/save_step.sql
+  PROV.ONBOARD.STEP.COMPLETE:
+    description: Marks one onboarding step completed with its saved data (Provider Phase 2).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/onboarding/complete_step.sql
 version: 1

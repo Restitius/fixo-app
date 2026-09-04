@@ -27,6 +27,7 @@ from app.api.v1.onboarding import router as onboarding_router
 from app.api.v1.properties import router as properties_router
 from app.api.v1.providers import router as providers_router
 from app.domains.providers.api.auth_router import router as provider_auth_router
+from app.domains.providers.api.onboarding_router import router as provider_onboarding_router
 from app.api.v1.quotations import router as quotations_router
 from app.api.v1.tracking import router as tracking_router
 from app.api.v1.public import router as public_router
@@ -62,6 +63,7 @@ api_v1_router.include_router(matching_router)
 api_v1_router.include_router(quotations_router)
 api_v1_router.include_router(providers_router)
 api_v1_router.include_router(provider_auth_router)
+api_v1_router.include_router(provider_onboarding_router)
 api_v1_router.include_router(bookings_router)
 api_v1_router.include_router(change_requests_router)
 api_v1_router.include_router(invoices_router)
