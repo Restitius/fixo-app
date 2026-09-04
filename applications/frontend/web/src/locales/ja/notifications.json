@@ -1,0 +1,68 @@
+{
+  "loading": "読み込み中…",
+  "page": {
+    "title": "通知",
+    "subtitle": "アップデート、リマインダー、アラート"
+  },
+  "tabs": {
+    "all": "すべて",
+    "unread": "未読",
+    "bookings": "予約",
+    "payments": "支払い"
+  },
+  "metrics": {
+    "totalNotifications": "通知の合計",
+    "thisMonth": "今月",
+    "unread": "未読",
+    "needsAttention": "要確認",
+    "bookingUpdates": "予約の更新",
+    "serviceProgress": "サービスの進捗",
+    "paymentAlerts": "支払いアラート",
+    "recentBilling": "直近の請求"
+  },
+  "list": {
+    "heading": "最近の通知",
+    "markAllRead": "すべて既読にする",
+    "markedAsRead_other": "{{count}} 件の通知を既読にしました",
+    "noMatching": "該当する通知はありません",
+    "tryDifferentTab": "別のタブをお試しください。",
+    "showAll": "すべて表示",
+    "allCaughtUp": "すべて確認済みです",
+    "noNotificationsYet": "まだ通知はありません — アップデートやリマインダーが届くとここに表示されます。",
+    "new": "新着",
+    "paid": "支払い済み"
+  },
+  "detail": {
+    "notificationType": "通知の種類",
+    "bookingReference": "予約番号",
+    "provider": "提供事業者",
+    "service": "サービス",
+    "scheduledVisit": "訪問予定",
+    "location": "場所",
+    "relatedAmount": "関連金額",
+    "paymentMethod": "支払い方法",
+    "invoiceReference": "請求書番号",
+    "reference": "参照番号"
+  },
+  "panel": {
+    "title": "通知の詳細",
+    "whatHappened": "経過",
+    "recordedNote": "この更新はご予約に記録されています。",
+    "downloadInvoice": "請求書をダウンロード",
+    "findInvoiceToast": "該当する請求書は請求書ページでご確認ください。",
+    "contactSupport": "サポートに問い合わせる",
+    "done": "完了"
+  },
+  "dialog": {
+    "title": "通知の詳細",
+    "subtitle": "更新内容を確認して対応してください",
+    "bookingLabel": "予約 {{number}}",
+    "message": "メッセージ",
+    "noDetails": "この通知には追加の詳細はありません。",
+    "respondNote": "予約ページから直接この更新に返信できます。",
+    "close": "閉じる",
+    "markAsRead": "既読にする",
+    "viewBooking": "予約を見る",
+    "findBookingToast": "予約一覧から予約 {{number}} をご確認ください。"
+  }
+}

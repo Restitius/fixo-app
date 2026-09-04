@@ -1,0 +1,69 @@
+{
+  "loading": "Carregando…",
+  "page": {
+    "title": "Notificações",
+    "subtitle": "Atualizações, lembretes e alertas"
+  },
+  "tabs": {
+    "all": "Todas",
+    "unread": "Não lidas",
+    "bookings": "Reservas",
+    "payments": "Pagamentos"
+  },
+  "metrics": {
+    "totalNotifications": "Total de Notificações",
+    "thisMonth": "Este mês",
+    "unread": "Não lidas",
+    "needsAttention": "Precisa de atenção",
+    "bookingUpdates": "Atualizações de Reservas",
+    "serviceProgress": "Progresso do serviço",
+    "paymentAlerts": "Alertas de Pagamento",
+    "recentBilling": "Faturamento recente"
+  },
+  "list": {
+    "heading": "Notificações recentes",
+    "markAllRead": "Marcar todas como lidas",
+    "markedAsRead_one": "{{count}} notificação marcada como lida",
+    "markedAsRead_other": "{{count}} notificações marcadas como lidas",
+    "noMatching": "Nenhuma notificação correspondente",
+    "tryDifferentTab": "Tente outra aba.",
+    "showAll": "Mostrar todas",
+    "allCaughtUp": "Você está em dia",
+    "noNotificationsYet": "Ainda não há notificações aqui — atualizações e lembretes aparecerão conforme forem acontecendo.",
+    "new": "Nova",
+    "paid": "Pago"
+  },
+  "detail": {
+    "notificationType": "Tipo de notificação",
+    "bookingReference": "Referência da reserva",
+    "provider": "Prestador",
+    "service": "Serviço",
+    "scheduledVisit": "Visita agendada",
+    "location": "Local",
+    "relatedAmount": "Valor relacionado",
+    "paymentMethod": "Método de pagamento",
+    "invoiceReference": "Referência da fatura",
+    "reference": "Referência"
+  },
+  "panel": {
+    "title": "Detalhes da notificação",
+    "whatHappened": "O que aconteceu",
+    "recordedNote": "Esta atualização foi registrada na sua reserva.",
+    "downloadInvoice": "Baixar fatura",
+    "findInvoiceToast": "Encontre a fatura correspondente na página de Faturas.",
+    "contactSupport": "Contatar suporte",
+    "done": "Concluído"
+  },
+  "dialog": {
+    "title": "Detalhes da notificação",
+    "subtitle": "Revise a atualização completa e tome uma ação",
+    "bookingLabel": "Reserva {{number}}",
+    "message": "Mensagem",
+    "noDetails": "Nenhum detalhe adicional para esta notificação.",
+    "respondNote": "Você pode responder a esta atualização diretamente na página da sua reserva.",
+    "close": "Fechar",
+    "markAsRead": "Marcar como lida",
+    "viewBooking": "Ver reserva",
+    "findBookingToast": "Encontre a reserva {{number}} na sua lista de reservas."
+  }
+}
