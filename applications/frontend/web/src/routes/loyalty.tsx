@@ -33,6 +33,8 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type LoyaltyAccount, type LoyaltyTxn } from "@/lib/api-client";
 import { fmtDate, fmtDateTime, fmtPoints, humanize } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 export const Route = createFileRoute("/loyalty")({
   component: LoyaltyPage,
@@ -42,6 +44,10 @@ export const Route = createFileRoute("/loyalty")({
 // recalculates it from points. This ladder is a disclosed, client-defined
 // progression used only to show "points to next tier"; it doesn't override
 // or contradict any real backend rule because none exists.
+// Tier names (Bronze/Silver/Gold/Platinum) are treated like account data —
+// the same enum-style values shown untranslated on the Profile page — so
+// they stay in English here too and are only interpolated into translated
+// sentences, never routed through t() themselves.
 const TIER_LADDER = [
   { name: "Bronze", min: 0 },
   { name: "Silver", min: 1000 },
@@ -49,21 +55,24 @@ const TIER_LADDER = [
   { name: "Platinum", min: 6000 },
 ] as const;
 
-const TIER_BENEFITS: Record<string, string[]> = {
-  Bronze: ["Earn 1 point per TZS 1,000 spent", "Standard booking priority"],
-  Silver: ["Earn 1 point per TZS 1,000 spent", "Priority customer support"],
-  Gold: ["10% bonus points on every booking", "Priority provider matching"],
-  Platinum: ["20% bonus points on every booking", "Dedicated support line", "Free priority booking add-on"],
-};
+function tierBenefits(tierLabel: string, t: TFunction): string[] {
+  const result = t(`loyalty.tierBenefits.${tierLabel}`, { returnObjects: true, defaultValue: [] });
+  return Array.isArray(result) ? (result as string[]) : [];
+}
 
 // A disclosed, hardcoded reward catalog — there's no backend rewards-catalog
 // domain, so this is product config (like a price list), not user data.
-// Redeeming spends real points via the real loyalty API.
+// Redeeming spends real points via the real loyalty API. Labels are looked
+// up from the "rewards" namespace by labelKey at render time.
 const REWARD_CATALOG = [
-  { id: "discount-5000", icon: Ticket, label: "TZS 5,000 off", cost: 3000, activity: "REWARD_DISCOUNT_5000" },
-  { id: "priority-booking", icon: Crown, label: "Priority booking", cost: 2000, activity: "REWARD_PRIORITY_BOOKING" },
-  { id: "free-inspection", icon: Stethoscope, label: "Free inspection", cost: 1500, activity: "REWARD_FREE_INSPECTION" },
+  { id: "discount-5000", icon: Ticket, labelKey: "discount5000", labelOptions: { amount: "5,000" } as Record<string, unknown> | undefined, cost: 3000, activity: "REWARD_DISCOUNT_5000" },
+  { id: "priority-booking", icon: Crown, labelKey: "priorityBooking", labelOptions: undefined as Record<string, unknown> | undefined, cost: 2000, activity: "REWARD_PRIORITY_BOOKING" },
+  { id: "free-inspection", icon: Stethoscope, labelKey: "freeInspection", labelOptions: undefined as Record<string, unknown> | undefined, cost: 1500, activity: "REWARD_FREE_INSPECTION" },
 ] as const;
+
+function rewardLabel(r: (typeof REWARD_CATALOG)[number], t: TFunction): string {
+  return r.labelOptions ? t(`loyalty.rewardCatalog.${r.labelKey}`, r.labelOptions) : t(`loyalty.rewardCatalog.${r.labelKey}`);
+}
 
 function tierIndex(tierName: string) {
   const i = TIER_LADDER.findIndex((t) => t.name.toLowerCase() === tierName.toLowerCase());
@@ -79,6 +88,7 @@ function activityIcon(activity: string) {
 }
 
 function LoyaltyPage() {
+  const { t } = useTranslation("rewards");
   const { access_token, loading, logout, customer } = useAuth();
   const navigate = useNavigate();
   const [account, setAccount] = useState<LoyaltyAccount | null>(null);
@@ -103,7 +113,7 @@ function LoyaltyPage() {
   }, [access_token, loading, load]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loyalty.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -127,12 +137,33 @@ function LoyaltyPage() {
   const memberSince = (txns ?? []).length > 0 ? txns![txns!.length - 1]!.created_at : null;
 
   return (
-    <PageShell title="Loyalty" subtitle="Rewards for recurring customers" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("loyalty.page.title")} subtitle={t("loyalty.page.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Star} label="Points Balance" hint="Available now" value={fmtPoints(balance)} tintValue />
-        <MetricCard icon={Award} label="Tier Status" hint={nextTier ? `${fmtPoints(nextTier.min - balance)} pts to ${nextTier.name}` : "Top tier"} value={humanize(tier)} tone="primary" tintValue />
-        <MetricCard icon={TrendingUp} label="Earned This Month" hint={`From ${earnedThisMonthCount} ${earnedThisMonthCount === 1 ? "activity" : "activities"}`} value={fmtPoints(earnedThisMonth)} tone="success" tintValue />
-        <MetricCard icon={Gift} label="Redeemed" hint={`${redeemedCount} reward${redeemedCount === 1 ? "" : "s"} used`} value={fmtPoints(redeemedTotal)} tone="amber" tintValue />
+        <MetricCard icon={Star} label={t("loyalty.metrics.pointsBalance")} hint={t("loyalty.metrics.availableNow")} value={fmtPoints(balance)} tintValue />
+        <MetricCard
+          icon={Award}
+          label={t("loyalty.metrics.tierStatus")}
+          hint={nextTier ? t("loyalty.metrics.ptsToTier", { points: fmtPoints(nextTier.min - balance), tier: nextTier.name }) : t("loyalty.metrics.topTier")}
+          value={humanize(tier)}
+          tone="primary"
+          tintValue
+        />
+        <MetricCard
+          icon={TrendingUp}
+          label={t("loyalty.metrics.earnedThisMonth")}
+          hint={t("loyalty.metrics.fromActivities", { count: earnedThisMonthCount })}
+          value={fmtPoints(earnedThisMonth)}
+          tone="success"
+          tintValue
+        />
+        <MetricCard
+          icon={Gift}
+          label={t("loyalty.metrics.redeemed")}
+          hint={t("loyalty.metrics.rewardsUsed", { count: redeemedCount })}
+          value={fmtPoints(redeemedTotal)}
+          tone="amber"
+          tintValue
+        />
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
@@ -145,54 +176,56 @@ function LoyaltyPage() {
                 <Award className="size-7" />
               </span>
               <div>
-                <p className="text-sm opacity-80">Current tier</p>
-                <p className="text-2xl font-bold">{humanize(tier)} tier</p>
+                <p className="text-sm opacity-80">{t("loyalty.tierCard.currentTier")}</p>
+                <p className="text-2xl font-bold">{t("loyalty.tierCard.tierName", { tier: humanize(tier) })}</p>
               </div>
             </div>
             <div className="relative mt-6">
               <div className="flex items-center justify-between text-sm">
-                <span className="opacity-90">{nextTier ? `Progress to ${nextTier.name}` : "You've reached the top tier"}</span>
+                <span className="opacity-90">
+                  {nextTier ? t("loyalty.tierCard.progressToTier", { tier: nextTier.name }) : t("loyalty.tierCard.reachedTopTier")}
+                </span>
               </div>
               <Progress value={progressPct} className="mt-2 bg-white/25 [&>div]:bg-white" />
               <p className="mt-2 text-sm opacity-90">
-                {fmtPoints(balance)} / {fmtPoints(nextTier ? nextTier.min : balance)} pts
+                {t("loyalty.tierCard.ptsOfPts", { balance: fmtPoints(balance), target: fmtPoints(nextTier ? nextTier.min : balance) })}
               </p>
             </div>
           </div>
 
           <div className="p-6">
-            <h3 className="text-lg font-semibold">Quick actions</h3>
+            <h3 className="text-lg font-semibold">{t("loyalty.tierCard.quickActions")}</h3>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <button
                 onClick={() => setShowEarn(true)}
                 className="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                <Sparkles className="size-4" /> Earn points
+                <Sparkles className="size-4" /> {t("loyalty.tierCard.earnPoints")}
               </button>
               <button
                 onClick={() => setShowRedeem(true)}
                 className="flex items-center justify-center gap-2 rounded-xl border border-primary py-3 text-sm font-semibold text-primary hover:bg-primary/5"
               >
-                <Gift className="size-4" /> Redeem reward
+                <Gift className="size-4" /> {t("loyalty.tierCard.redeemReward")}
               </button>
             </div>
             <button
               onClick={() => setShowRules((v) => !v)}
               className="mt-3 flex w-full items-center justify-center gap-2 py-2 text-sm font-medium text-primary hover:underline"
             >
-              <FileText className="size-4" /> View rules
+              <FileText className="size-4" /> {t("loyalty.tierCard.viewRules")}
             </button>
             {showRules && (
               <ul className="mt-2 space-y-1 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
-                {(TIER_BENEFITS[humanize(tier)] ?? []).map((b) => (
+                {tierBenefits(humanize(tier), t).map((b) => (
                   <li key={b}>• {b}</li>
                 ))}
               </ul>
             )}
             <div className="mt-4 flex items-start gap-2 rounded-xl bg-primary/5 p-3 text-xs text-muted-foreground">
               <Info className="mt-0.5 size-3.5 shrink-0 text-primary" />
-              100 points = TZS 1,000 reward credit
+              {t("loyalty.tierCard.conversionNote")}
             </div>
           </div>
         </div>
@@ -201,12 +234,12 @@ function LoyaltyPage() {
         <div className="space-y-6">
           <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Recent points activity</h3>
+              <h3 className="text-lg font-semibold">{t("loyalty.activity.recentActivity")}</h3>
               <button
                 onClick={() => navigate({ to: "/history", search: { category: "loyalty" } })}
                 className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
               >
-                View all <ChevronRight className="size-3.5" />
+                {t("loyalty.activity.viewAll")} <ChevronRight className="size-3.5" />
               </button>
             </div>
 
@@ -217,45 +250,45 @@ function LoyaltyPage() {
                 <span className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Award className="size-7" strokeWidth={1.5} />
                 </span>
-                <p className="mt-3 font-semibold">No points activity yet</p>
-                <p className="mt-1 text-sm text-muted-foreground">Book a service to start earning loyalty points.</p>
+                <p className="mt-3 font-semibold">{t("loyalty.activity.noActivityYet")}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("loyalty.activity.noActivityHint")}</p>
               </div>
             ) : (
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full min-w-[420px] text-left text-sm">
                   <thead>
                     <tr className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      <th className="pb-2 font-semibold">Activity</th>
-                      <th className="pb-2 font-semibold">Date</th>
-                      <th className="pb-2 font-semibold">Points</th>
-                      <th className="pb-2 font-semibold">Status</th>
+                      <th className="pb-2 font-semibold">{t("loyalty.activity.columnActivity")}</th>
+                      <th className="pb-2 font-semibold">{t("loyalty.activity.columnDate")}</th>
+                      <th className="pb-2 font-semibold">{t("loyalty.activity.columnPoints")}</th>
+                      <th className="pb-2 font-semibold">{t("loyalty.activity.columnStatus")}</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {txns.slice(0, 4).map((t, i) => {
-                      const { icon: Icon, className } = activityIcon(t.activity);
+                    {txns.slice(0, 4).map((t2, i) => {
+                      const { icon: Icon, className } = activityIcon(t2.activity);
                       return (
-                        <tr key={t.txn_id ?? i} onClick={() => setSelectedTxn(t)} className="cursor-pointer border-t border-border hover:bg-muted/40">
+                        <tr key={t2.txn_id ?? i} onClick={() => setSelectedTxn(t2)} className="cursor-pointer border-t border-border hover:bg-muted/40">
                           <td className="py-3">
                             <div className="flex items-center gap-2.5">
                               <span className={`flex size-8 shrink-0 items-center justify-center rounded-full ${className}`}>
                                 <Icon className="size-4" />
                               </span>
-                              <span className="font-medium">{humanize(t.activity)}</span>
+                              <span className="font-medium">{humanize(t2.activity)}</span>
                             </div>
                           </td>
-                          <td className="py-3 text-muted-foreground">{fmtDate(t.created_at)}</td>
-                          <td className={`py-3 font-semibold ${t.points > 0 ? "text-success" : "text-destructive"}`}>
-                            {t.points > 0 ? "+" : "−"}
-                            {fmtPoints(Math.abs(t.points))}
+                          <td className="py-3 text-muted-foreground">{fmtDate(t2.created_at)}</td>
+                          <td className={`py-3 font-semibold ${t2.points > 0 ? "text-success" : "text-destructive"}`}>
+                            {t2.points > 0 ? "+" : "−"}
+                            {fmtPoints(Math.abs(t2.points))}
                           </td>
                           <td className="py-3">
                             <span
                               className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                                t.points > 0 ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"
+                                t2.points > 0 ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"
                               }`}
                             >
-                              {t.points > 0 ? "Earned" : "Redeemed"}
+                              {t2.points > 0 ? t("loyalty.activity.earned") : t("loyalty.activity.redeemed")}
                             </span>
                           </td>
                         </tr>
@@ -269,9 +302,9 @@ function LoyaltyPage() {
 
           <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Available rewards</h3>
+              <h3 className="text-lg font-semibold">{t("loyalty.rewards.availableRewards")}</h3>
               <button onClick={() => setShowRedeem(true)} className="flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
-                View all rewards <ChevronRight className="size-3.5" />
+                {t("loyalty.rewards.viewAllRewards")} <ChevronRight className="size-3.5" />
               </button>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
@@ -286,8 +319,8 @@ function LoyaltyPage() {
                       <r.icon className="size-4" />
                     </span>
                     <div>
-                      <p className="text-sm font-medium">{r.label}</p>
-                      <p className="text-xs text-muted-foreground">Min. {fmtPoints(r.cost)} pts</p>
+                      <p className="text-sm font-medium">{rewardLabel(r, t)}</p>
+                      <p className="text-xs text-muted-foreground">{t("loyalty.rewards.minPts", { points: fmtPoints(r.cost) })}</p>
                     </div>
                   </div>
                   <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
@@ -314,19 +347,20 @@ function LoyaltyPage() {
 }
 
 function EarnPointsDialog({ open, onOpenChange, onEarned }: { open: boolean; onOpenChange: (v: boolean) => void; onEarned: () => void }) {
+  const { t } = useTranslation("rewards");
   const [points, setPoints] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function submit() {
     const n = Number(points);
     if (!n || n <= 0) {
-      toast.error("Enter points first");
+      toast.error(t("loyalty.earnDialog.enterPointsFirst"));
       return;
     }
     setBusy(true);
     try {
       const row = await fixoSdk.loyaltyEarn(n);
-      toast.success(`Earned ${fmtPoints(row.points)} pts — balance ${fmtPoints(row.running_total)}`);
+      toast.success(t("loyalty.earnDialog.earnedToast", { points: fmtPoints(row.points), balance: fmtPoints(row.running_total) }));
       setPoints("");
       onOpenChange(false);
       onEarned();
@@ -341,18 +375,18 @@ function EarnPointsDialog({ open, onOpenChange, onEarned }: { open: boolean; onO
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle>Earn points</DialogTitle>
+          <DialogTitle>{t("loyalty.earnDialog.title")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
-          <Label htmlFor="earn-pts">Points</Label>
-          <Input id="earn-pts" type="number" min="1" inputMode="numeric" placeholder="e.g. 100" value={points} onChange={(e) => setPoints(e.target.value)} />
+          <Label htmlFor="earn-pts">{t("loyalty.earnDialog.pointsLabel")}</Label>
+          <Input id="earn-pts" type="number" min="1" inputMode="numeric" placeholder={t("loyalty.earnDialog.placeholder")} value={points} onChange={(e) => setPoints(e.target.value)} />
           <button
             onClick={() => void submit()}
             disabled={busy}
             className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
-            <Plus className="size-4" /> {busy ? "Adding..." : "Add points"}
+            <Plus className="size-4" /> {busy ? t("loyalty.earnDialog.adding") : t("loyalty.earnDialog.addPoints")}
           </button>
         </div>
       </DialogContent>
@@ -371,6 +405,7 @@ function RedeemRewardDialog({
   balance: number;
   onRedeemed: () => void;
 }) {
+  const { t } = useTranslation("rewards");
   const [selected, setSelected] = useState<(typeof REWARD_CATALOG)[number]>(REWARD_CATALOG[1]);
   const [consent, setConsent] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -379,17 +414,17 @@ function RedeemRewardDialog({
 
   async function redeem() {
     if (balance < selected.cost) {
-      toast.error("Not enough points for this reward");
+      toast.error(t("loyalty.redeemDialog.notEnoughPoints"));
       return;
     }
     if (!consent) {
-      toast.error("Please confirm you understand points will be deducted");
+      toast.error(t("loyalty.redeemDialog.confirmDeduction"));
       return;
     }
     setBusy(true);
     try {
       await fixoSdk.loyaltySpend(selected.cost, selected.activity);
-      toast.success(`${selected.label} redeemed!`);
+      toast.success(t("loyalty.redeemDialog.redeemedToast", { reward: rewardLabel(selected, t) }));
       onOpenChange(false);
       onRedeemed();
     } catch {
@@ -403,15 +438,15 @@ function RedeemRewardDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Redeem reward</DialogTitle>
+          <DialogTitle>{t("loyalty.redeemDialog.title")}</DialogTitle>
         </DialogHeader>
-        <p className="-mt-3 text-sm text-muted-foreground">Use your points for available benefits</p>
+        <p className="-mt-3 text-sm text-muted-foreground">{t("loyalty.redeemDialog.subtitle")}</p>
 
         <div className="rounded-2xl bg-primary/5 p-4 text-center">
           <p className="flex items-center justify-center gap-1.5 text-xl font-bold text-primary">
-            <Star className="size-5 fill-current" /> {fmtPoints(balance)} pts
+            <Star className="size-5 fill-current" /> {t("loyalty.ptsValue", { points: fmtPoints(balance) })}
           </p>
-          <p className="text-sm text-muted-foreground">Current balance</p>
+          <p className="text-sm text-muted-foreground">{t("loyalty.redeemDialog.currentBalance")}</p>
         </div>
 
         <div className="grid grid-cols-3 gap-3">
@@ -435,9 +470,9 @@ function RedeemRewardDialog({
                 <span className="mx-auto flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <r.icon className="size-5" />
                 </span>
-                <p className="mt-2 text-sm font-medium">{r.label}</p>
-                <p className="text-xs text-muted-foreground">{fmtPoints(r.cost)} pts</p>
-                {disabled && <p className="mt-1 text-[10px] font-medium text-destructive">Not enough points</p>}
+                <p className="mt-2 text-sm font-medium">{rewardLabel(r, t)}</p>
+                <p className="text-xs text-muted-foreground">{t("loyalty.ptsValue", { points: fmtPoints(r.cost) })}</p>
+                {disabled && <p className="mt-1 text-[10px] font-medium text-destructive">{t("loyalty.redeemDialog.notEnoughPointsBadge")}</p>}
               </button>
             );
           })}
@@ -445,32 +480,32 @@ function RedeemRewardDialog({
 
         <div className="space-y-2 rounded-2xl bg-muted/50 p-4 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Selected reward</span>
-            <span className="font-medium">{selected.label}</span>
+            <span className="text-muted-foreground">{t("loyalty.redeemDialog.selectedReward")}</span>
+            <span className="font-medium">{rewardLabel(selected, t)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Points required</span>
-            <span className="font-medium">{fmtPoints(selected.cost)} pts</span>
+            <span className="text-muted-foreground">{t("loyalty.redeemDialog.pointsRequired")}</span>
+            <span className="font-medium">{t("loyalty.ptsValue", { points: fmtPoints(selected.cost) })}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Remaining points after redemption</span>
-            <span className="font-semibold text-primary">{fmtPoints(Math.max(0, remaining))} pts</span>
+            <span className="text-muted-foreground">{t("loyalty.redeemDialog.remainingAfter")}</span>
+            <span className="font-semibold text-primary">{t("loyalty.ptsValue", { points: fmtPoints(Math.max(0, remaining)) })}</span>
           </div>
         </div>
 
         <label className="flex items-center gap-2 text-sm">
           <Checkbox checked={consent} onCheckedChange={(v) => setConsent(!!v)} />
-          I understand points will be deducted immediately
+          {t("loyalty.redeemDialog.consentLabel")}
         </label>
 
         <div className="flex items-start gap-2 rounded-xl bg-primary/5 p-3 text-xs text-muted-foreground">
           <Info className="mt-0.5 size-3.5 shrink-0 text-primary" />
-          Redeemed rewards apply instantly to your account.
+          {t("loyalty.redeemDialog.instantNote")}
         </div>
 
         <div className="flex gap-2">
           <button onClick={() => onOpenChange(false)} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">
-            Cancel
+            {t("loyalty.redeemDialog.cancel")}
           </button>
           <button
             onClick={() => void redeem()}
@@ -478,7 +513,7 @@ function RedeemRewardDialog({
             className="flex-1 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
-            {busy ? "Redeeming..." : "Redeem now"}
+            {busy ? t("loyalty.redeemDialog.redeeming") : t("loyalty.redeemDialog.redeemNow")}
           </button>
         </div>
       </DialogContent>
@@ -503,20 +538,25 @@ function ActivityDetailSheet({
   memberSince: string | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useTranslation("rewards");
+
   async function share() {
     if (!txn) return;
-    const text = `${humanize(txn.activity)} — ${txn.points > 0 ? "+" : "−"}${fmtPoints(Math.abs(txn.points))} pts${
-      txn.reference_id ? ` (ref ${txn.reference_id})` : ""
-    }`;
+    const activity = humanize(txn.activity);
+    const sign = txn.points > 0 ? "+" : "−";
+    const points = fmtPoints(Math.abs(txn.points));
+    const text = txn.reference_id
+      ? t("loyalty.share.messageWithRef", { activity, sign, points, ref: txn.reference_id })
+      : t("loyalty.share.message", { activity, sign, points });
     if (navigator.share) {
       try {
-        await navigator.share({ title: "FIXO Loyalty", text });
+        await navigator.share({ title: t("loyalty.share.title"), text });
       } catch {
         // cancelled
       }
     } else {
       await navigator.clipboard.writeText(text);
-      toast.success("Copied to clipboard");
+      toast.success(t("loyalty.detailSheet.copiedToClipboard"));
     }
   }
 
@@ -524,42 +564,46 @@ function ActivityDetailSheet({
     <Sheet open={!!txn} onOpenChange={(o) => !o && onOpenChange(false)}>
       <SheetContent className="w-full overflow-y-auto sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Loyalty details</SheetTitle>
+          <SheetTitle>{t("loyalty.detailSheet.title")}</SheetTitle>
         </SheetHeader>
         {txn && (
           <div className="mt-4 space-y-5">
             <div className="rounded-2xl p-4 text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold">{humanize(tier)} tier</p>
-                  <p className="text-sm opacity-90">{fmtPoints(balance)} pts</p>
+                  <p className="font-semibold">{t("loyalty.tierCard.tierName", { tier: humanize(tier) })}</p>
+                  <p className="text-sm opacity-90">{t("loyalty.ptsValue", { points: fmtPoints(balance) })}</p>
                 </div>
-                {nextTier && <p className="text-xs opacity-80">{fmtPoints(nextTier.min - balance)} pts to {nextTier.name}</p>}
+                {nextTier && (
+                  <p className="text-xs opacity-80">{t("loyalty.metrics.ptsToTier", { points: fmtPoints(nextTier.min - balance), tier: nextTier.name })}</p>
+                )}
               </div>
               <Progress value={progressPct} className="mt-3 bg-white/25 [&>div]:bg-white" />
             </div>
 
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Member since</span>
+                <span className="text-muted-foreground">{t("loyalty.detailSheet.memberSince")}</span>
                 <span className="font-medium">{memberSince ? fmtDate(memberSince) : "—"}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Tier benefits</span>
-                <span className="font-medium">{humanize(tier)} benefits</span>
+                <span className="text-muted-foreground">{t("loyalty.detailSheet.tierBenefits")}</span>
+                <span className="font-medium">{t("loyalty.detailSheet.benefitsValue", { tier: humanize(tier) })}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Reward conversion</span>
-                <span className="font-medium">100 pts = TZS 1,000</span>
+                <span className="text-muted-foreground">{t("loyalty.detailSheet.rewardConversion")}</span>
+                <span className="font-medium">{t("loyalty.detailSheet.conversionValue")}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Next reward milestone</span>
-                <span className="font-medium">{nextTier ? `${fmtPoints(nextTier.min)} pts (${nextTier.name} tier)` : "Top tier reached"}</span>
+                <span className="text-muted-foreground">{t("loyalty.detailSheet.nextMilestone")}</span>
+                <span className="font-medium">
+                  {nextTier ? t("loyalty.detailSheet.milestoneValue", { points: fmtPoints(nextTier.min), tier: nextTier.name }) : t("loyalty.detailSheet.topTierReached")}
+                </span>
               </div>
             </div>
 
             <div>
-              <h4 className="mb-2 text-sm font-semibold">Selected activity</h4>
+              <h4 className="mb-2 text-sm font-semibold">{t("loyalty.detailSheet.selectedActivity")}</h4>
               <div className="flex items-center justify-between rounded-2xl border border-border p-3">
                 <div className="flex items-center gap-2.5">
                   {(() => {
@@ -576,36 +620,36 @@ function ActivityDetailSheet({
                   </div>
                 </div>
                 <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${txn.points > 0 ? "bg-success/15 text-success" : "bg-destructive/15 text-destructive"}`}>
-                  {txn.points > 0 ? "Earned" : "Redeemed"}
+                  {txn.points > 0 ? t("loyalty.activity.earned") : t("loyalty.activity.redeemed")}
                 </span>
               </div>
               <div className="mt-3 space-y-2 rounded-2xl bg-muted/50 p-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Reference code</span>
+                  <span className="text-muted-foreground">{t("loyalty.detailSheet.referenceCode")}</span>
                   <span className="font-medium">{txn.reference_id ?? "—"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">{txn.points > 0 ? "Points earned" : "Points spent"}</span>
+                  <span className="text-muted-foreground">{txn.points > 0 ? t("loyalty.detailSheet.pointsEarned") : t("loyalty.detailSheet.pointsSpent")}</span>
                   <span className={`font-semibold ${txn.points > 0 ? "text-success" : "text-destructive"}`}>
                     {txn.points > 0 ? "+" : "−"}
                     {fmtPoints(Math.abs(txn.points))}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Balance after</span>
-                  <span className="font-medium">{fmtPoints(txn.running_total)} pts</span>
+                  <span className="text-muted-foreground">{t("loyalty.detailSheet.balanceAfter")}</span>
+                  <span className="font-medium">{t("loyalty.ptsValue", { points: fmtPoints(txn.running_total) })}</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <h4 className="mb-2 text-sm font-semibold">Timeline</h4>
+              <h4 className="mb-2 text-sm font-semibold">{t("loyalty.detailSheet.timeline")}</h4>
               <div className="flex items-start gap-3">
                 <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-success text-white">
                   <Check className="size-3" />
                 </span>
                 <div>
-                  <p className="text-sm font-medium">{humanize(txn.activity)} recorded</p>
+                  <p className="text-sm font-medium">{t("loyalty.detailSheet.recorded", { activity: humanize(txn.activity) })}</p>
                   <p className="text-xs text-muted-foreground">{fmtDateTime(txn.created_at)}</p>
                 </div>
               </div>
@@ -613,10 +657,10 @@ function ActivityDetailSheet({
 
             <div className="grid grid-cols-2 gap-2">
               <button className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted">
-                <FileText className="size-4" /> View rules
+                <FileText className="size-4" /> {t("loyalty.detailSheet.viewRules")}
               </button>
               <button onClick={() => void share()} className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted">
-                <Send className="size-4" /> Share
+                <Send className="size-4" /> {t("loyalty.detailSheet.share")}
               </button>
             </div>
 
@@ -625,7 +669,7 @@ function ActivityDetailSheet({
               className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
-              Done
+              {t("loyalty.detailSheet.done")}
             </button>
           </div>
         )}

@@ -1,0 +1,225 @@
+{
+  "loyalty": {
+    "loading": "Inapakia…",
+    "page": {
+      "title": "Uaminifu",
+      "subtitle": "Zawadi kwa wateja wa mara kwa mara"
+    },
+    "ptsValue": "pointi {{points}}",
+    "metrics": {
+      "pointsBalance": "Salio la Pointi",
+      "availableNow": "Zinazopatikana sasa",
+      "tierStatus": "Kiwango cha Uanachama",
+      "ptsToTier": "pointi {{points}} hadi {{tier}}",
+      "topTier": "Kiwango cha juu kabisa",
+      "earnedThisMonth": "Zilizopatikana Mwezi Huu",
+      "fromActivities_one": "Kutoka shughuli {{count}}",
+      "fromActivities_other": "Kutoka shughuli {{count}}",
+      "redeemed": "Zilizotumika",
+      "rewardsUsed_one": "Zawadi {{count}} imetumika",
+      "rewardsUsed_other": "Zawadi {{count}} zimetumika"
+    },
+    "tierCard": {
+      "currentTier": "Kiwango cha sasa",
+      "tierName": "Kiwango cha {{tier}}",
+      "progressToTier": "Maendeleo kuelekea {{tier}}",
+      "reachedTopTier": "Umefikia kiwango cha juu kabisa",
+      "ptsOfPts": "pointi {{balance}} / {{target}}",
+      "quickActions": "Vitendo vya haraka",
+      "earnPoints": "Pata pointi",
+      "redeemReward": "Tumia zawadi",
+      "viewRules": "Angalia kanuni",
+      "conversionNote": "Pointi 100 = TZS 1,000 za zawadi"
+    },
+    "activity": {
+      "recentActivity": "Shughuli za hivi karibuni za pointi",
+      "viewAll": "Angalia zote",
+      "noActivityYet": "Hakuna shughuli za pointi bado",
+      "noActivityHint": "Agiza huduma ili uanze kupata pointi za uaminifu.",
+      "columnActivity": "Shughuli",
+      "columnDate": "Tarehe",
+      "columnPoints": "Pointi",
+      "columnStatus": "Hali",
+      "earned": "Zimepatikana",
+      "redeemed": "Zimetumika"
+    },
+    "rewards": {
+      "availableRewards": "Zawadi zinazopatikana",
+      "viewAllRewards": "Angalia zawadi zote",
+      "minPts": "Kiwango cha chini pointi {{points}}"
+    },
+    "earnDialog": {
+      "title": "Pata pointi",
+      "pointsLabel": "Pointi",
+      "placeholder": "mfano 100",
+      "enterPointsFirst": "Weka pointi kwanza",
+      "adding": "Inaongeza...",
+      "addPoints": "Ongeza pointi",
+      "earnedToast": "Umepata pointi {{points}} — salio {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "Tumia zawadi",
+      "subtitle": "Tumia pointi zako kupata manufaa yanayopatikana",
+      "currentBalance": "Salio la sasa",
+      "notEnoughPoints": "Huna pointi za kutosha kwa zawadi hii",
+      "confirmDeduction": "Tafadhali thibitisha unaelewa pointi zitapunguzwa",
+      "notEnoughPointsBadge": "Pointi hazitoshi",
+      "selectedReward": "Zawadi iliyochaguliwa",
+      "pointsRequired": "Pointi zinazohitajika",
+      "remainingAfter": "Pointi zilizosalia baada ya kutumia",
+      "consentLabel": "Ninaelewa pointi zitapunguzwa mara moja",
+      "instantNote": "Zawadi zilizotumika zinatumika papo hapo kwenye akaunti yako.",
+      "cancel": "Ghairi",
+      "redeeming": "Inatumika...",
+      "redeemNow": "Tumia sasa",
+      "redeemedToast": "{{reward}} imetumika!"
+    },
+    "detailSheet": {
+      "title": "Maelezo ya uaminifu",
+      "memberSince": "Mwanachama tangu",
+      "tierBenefits": "Manufaa ya kiwango",
+      "benefitsValue": "Manufaa ya {{tier}}",
+      "rewardConversion": "Ubadilishaji wa zawadi",
+      "conversionValue": "Pointi 100 = TZS 1,000",
+      "nextMilestone": "Lengo linalofuata la zawadi",
+      "milestoneValue": "pointi {{points}} (kiwango cha {{tier}})",
+      "topTierReached": "Kiwango cha juu kimefikiwa",
+      "selectedActivity": "Shughuli iliyochaguliwa",
+      "referenceCode": "Nambari ya rejea",
+      "pointsEarned": "Pointi zilizopatikana",
+      "pointsSpent": "Pointi zilizotumika",
+      "balanceAfter": "Salio baada ya",
+      "timeline": "Ratiba ya matukio",
+      "recorded": "{{activity}} imerekodiwa",
+      "viewRules": "Angalia kanuni",
+      "share": "Shiriki",
+      "copiedToClipboard": "Imenakiliwa kwenye ubao wa kunakili",
+      "done": "Imekamilika"
+    },
+    "tierBenefits": {
+      "Bronze": ["Pata pointi 1 kwa kila TZS 1,000 zilizotumika", "Kipaumbele cha kawaida cha uagizaji"],
+      "Silver": ["Pata pointi 1 kwa kila TZS 1,000 zilizotumika", "Msaada wa wateja wa kipaumbele"],
+      "Gold": ["Pointi za ziada 10% kwa kila uagizaji", "Ulinganishaji wa mtoa huduma wa kipaumbele"],
+      "Platinum": ["Pointi za ziada 20% kwa kila uagizaji", "Simu maalum ya msaada", "Nyongeza ya uagizaji wa kipaumbele bila malipo"]
+    },
+    "rewardCatalog": {
+      "discount5000": "Punguzo la TZS {{amount}}",
+      "priorityBooking": "Uagizaji wa kipaumbele",
+      "freeInspection": "Ukaguzi wa bure"
+    },
+    "share": {
+      "title": "Uaminifu wa FIXO",
+      "message": "{{activity}} — {{sign}}{{points}} pointi",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} pointi (rejea {{ref}})"
+    }
+  },
+  "promotions": {
+    "loading": "Inapakia…",
+    "page": {
+      "title": "Ofa",
+      "subtitle": "Punguzo na ofa kwa huduma yako inayofuata"
+    },
+    "metrics": {
+      "activePromotions": "Ofa Zinazoendelea",
+      "currentlyAvailable": "Zinazopatikana sasa",
+      "totalSavings": "Jumla ya Akiba",
+      "acrossRedemptions": "Katika matumizi yote",
+      "usedThisMonth": "Zilizotumika Mwezi Huu",
+      "appliedOnBookings": "Zilizotumika kwenye maagizo",
+      "expiringSoon": "Zinazokaribia Kuisha",
+      "within7Days": "Ndani ya siku 7"
+    },
+    "categories": {
+      "plumbing": "Mabomba",
+      "cleaning": "Usafi",
+      "painting": "Upakaji rangi",
+      "acCooling": "AC na Upoezaji",
+      "electrical": "Umeme",
+      "moving": "Uhamishaji",
+      "general": "Huduma za Jumla"
+    },
+    "discount": {
+      "percentOff": "punguzo la {{value}}%",
+      "amountOff": "punguzo la {{amount}}"
+    },
+    "labels": {
+      "noCap": "Hakuna ukomo",
+      "noMinimum": "Hakuna kiwango cha chini",
+      "unlimited": "Hazina ukomo",
+      "usageOfLimit": "{{used}} kati ya {{limit}} zimetumika"
+    },
+    "promoCode": {
+      "title": "Msimbo wa ofa",
+      "enterCode": "Weka msimbo wa ofa",
+      "placeholder": "mfano WELCOME10",
+      "orderAmount": "Kiasi cha agizo (TZS)",
+      "validateCode": "Thibitisha msimbo",
+      "enterCodeFirst": "Weka msimbo wa ofa",
+      "enterAmountFirst": "Weka kiasi cha agizo",
+      "appliesSave": "{{code}} inafanya kazi — okoa {{amount}}",
+      "save": "Okoa {{amount}}",
+      "savePercent": "Okoa {{amount}} ({{percent}}%)",
+      "disclaimer": "Misimbo ya ofa inatumika tu kwa huduma zinazostahili na haiwezi kuunganishwa na ofa nyingine."
+    },
+    "availablePromotions": {
+      "title": "Ofa zinazopatikana",
+      "subtitle": "Chagua ofa ya kutumia kwenye agizo lako.",
+      "noneTitle": "Hakuna ofa zinazoendelea",
+      "noneDescription": "Rudi baadaye — ofa mpya zitaonekana hapa.",
+      "expires": "Inaisha {{date}}",
+      "details": "Maelezo",
+      "useNow": "Tumia sasa",
+      "showLess": "Onyesha kidogo",
+      "viewAll": "Angalia ofa zote"
+    },
+    "redemptions": {
+      "title": "Matumizi ya hivi karibuni",
+      "showLess": "Onyesha kidogo",
+      "viewAll": "Angalia zote",
+      "noneTitle": "Hakuna matumizi bado",
+      "noneDescription": "Ofa unazotumia kwa kweli zitaonekana hapa pamoja na kiasi halisi cha akiba.",
+      "columnCode": "Msimbo wa ofa",
+      "columnDate": "Tarehe",
+      "columnSavings": "Akiba",
+      "columnStatus": "Hali",
+      "applied": "Imetumika"
+    },
+    "details": {
+      "title": "Maelezo ya ofa",
+      "active": "Inaendelea",
+      "expired": "Imeisha",
+      "maxSavings": "Akiba ya juu: {{amount}}",
+      "promoCode": "Msimbo wa ofa",
+      "category": "Kategoria",
+      "validity": "Uhalali",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "Kiwango cha chini cha agizo",
+      "usageLimit": "Kikomo cha matumizi",
+      "eligibleAreas": "Maeneo yanayostahili",
+      "allAreas": "Maeneo yote",
+      "conditionsTitle": "Masharti",
+      "conditionGeneral": "Inatumika tu kwa huduma zinazostahili.",
+      "conditionCategory": "Inatumika tu kwa huduma za {{category}} zinazostahili.",
+      "conditionNoCombine": "Haiwezi kuunganishwa na misimbo mingine ya ofa.",
+      "conditionAppliedImmediately": "Inatumika mara moja unapotumia ofa hii.",
+      "recentUseTitle": "Matumizi ya hivi karibuni",
+      "noRecentUse": "Hakuna matumizi bado kwa msimbo huu.",
+      "columnBookingRef": "Nambari ya rejea ya agizo",
+      "columnDate": "Tarehe",
+      "columnSavings": "Akiba",
+      "shareCode": "Shiriki msimbo",
+      "viewTerms": "Angalia masharti",
+      "useThisPromotion": "Tumia ofa hii",
+      "termsComingSoon": "Masharti kamili yataonyeshwa hapa hivi karibuni — angalia masharti hapo juu kwa sasa."
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "Weka kiasi cha agizo hapo juu ili tuweze kukokotoa akiba halisi.",
+      "appliedSaved": "{{code}} imetumika — umeokoa {{amount}}",
+      "copiedToClipboard": "Msimbo wa ofa umenakiliwa kwenye ubao wa kunakili"
+    },
+    "share": {
+      "title": "Ofa ya FIXO",
+      "message": "Tumia msimbo wa ofa {{code}} kwenye FIXO — {{discount}}"
+    }
+  }
+}
