@@ -22,6 +22,8 @@ class EventContext:
     session_id: str = ""
     screen_id: str = ""
     tenant_id: str = ""
+    client_id: str = ""
+    client_version: str = ""
 
 
 @dataclass
