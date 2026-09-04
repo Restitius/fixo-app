@@ -17,3 +17,14 @@ class ScreenPermissions:
         if "*" in granted:
             return True
         return screen.permission in granted
+
+    @staticmethod
+    def visible_for_client(
+        granted: frozenset[str] | set[str],
+        screen: ScreenDefinition,
+        client_id: str | None = None,
+    ) -> bool:
+        """Permission AND shell visibility — empty screen.clients = all shells."""
+        if client_id is not None and screen.clients and client_id not in screen.clients:
+            return False
+        return ScreenPermissions.satisfies(granted, screen)

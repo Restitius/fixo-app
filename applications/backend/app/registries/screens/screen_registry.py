@@ -40,6 +40,20 @@ class ScreenRegistry:
     def find_by_module(self, module: str) -> list[ScreenDefinition]:
         return sorted((s for s in self._screens.values() if s.module == module), key=lambda s: s.id)
 
+    def find_by_client(self, client_id: str) -> list[ScreenDefinition]:
+        """Screens explicitly listing this CLT-* client (excludes shared screens)."""
+        return sorted(
+            (s for s in self._screens.values() if s.clients and client_id in s.clients),
+            key=lambda s: s.id,
+        )
+
+    def find_by_client_and_route(self, client_id: str, route: str) -> ScreenDefinition | None:
+        """Resolve a route for a client — shared screens (empty clients) win on tie."""
+        for screen in self._screens.values():
+            if screen.route == route and (not screen.clients or client_id in screen.clients):
+                return screen
+        return None
+
     def all(self) -> list[ScreenDefinition]:
         return sorted(self._screens.values(), key=lambda s: s.id)
 
