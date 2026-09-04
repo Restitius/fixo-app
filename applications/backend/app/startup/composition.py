@@ -28,6 +28,7 @@ class Composition:
         self.customer_repository: Any = None
         self.otp_repository: Any = None
         self.session_repository: Any = None
+        self.provider_account_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -130,6 +131,9 @@ class Composition:
         self.customer_repository = CustomerSqlAdapter(self.sql_query_manager)
         self.otp_repository = OtpSqlAdapter(self.sql_query_manager)
         self.session_repository = SessionSqlAdapter(self.sql_query_manager)
+        from app.adapters.persistence.provider_account_sql_adapter import ProviderAccountSqlAdapter
+
+        self.provider_account_repository = ProviderAccountSqlAdapter(self.sql_query_manager)
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
         self.public_content_repository = PublicContentSqlAdapter(self.sql_query_manager)
         self.search_manager = SearchManager(self.sql_query_manager)
@@ -260,6 +264,19 @@ class Composition:
             customers=self.customer_repository,
             otps=self.otp_repository,
             sessions=self.session_repository,
+            hasher=self._hasher,
+            jwt_service=self.jwt,
+            events=events,
+        )
+
+    def provider_auth_service(self) -> Any:
+        """ProviderAuthService — provider registration + auth (Requirement Phase 1)."""
+        from app.domains.providers.services.provider_auth_service import ProviderAuthService
+        from app.platform.events.event_manager import EventManager
+
+        events = EventManager() if _event_bus_available() else None
+        return ProviderAuthService(
+            providers=self.provider_account_repository,
             hasher=self._hasher,
             jwt_service=self.jwt,
             events=events,
