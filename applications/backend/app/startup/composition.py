@@ -29,6 +29,7 @@ class Composition:
         self.otp_repository: Any = None
         self.session_repository: Any = None
         self.provider_account_repository: Any = None
+        self.provider_onboarding_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -134,6 +135,13 @@ class Composition:
         from app.adapters.persistence.provider_account_sql_adapter import ProviderAccountSqlAdapter
 
         self.provider_account_repository = ProviderAccountSqlAdapter(self.sql_query_manager)
+        from app.adapters.persistence.provider_onboarding_sql_adapter import (
+            ProviderOnboardingSqlAdapter,
+        )
+
+        self.provider_onboarding_repository = ProviderOnboardingSqlAdapter(
+            self.sql_query_manager
+        )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
         self.public_content_repository = PublicContentSqlAdapter(self.sql_query_manager)
         self.search_manager = SearchManager(self.sql_query_manager)
@@ -280,6 +288,18 @@ class Composition:
             hasher=self._hasher,
             jwt_service=self.jwt,
             events=events,
+        )
+
+    def provider_onboarding_service(self) -> Any:
+        """ProviderOnboardingService — guided 7-step onboarding (Requirement Phase 2)."""
+        from app.domains.providers.services.provider_onboarding_service import (
+            ProviderOnboardingService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderOnboardingService(
+            onboarding=self.provider_onboarding_repository,
+            events=EventManager() if _event_bus_available() else None,
         )
 
     def public_service(self) -> Any:
