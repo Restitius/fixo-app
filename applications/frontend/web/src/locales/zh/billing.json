@@ -1,0 +1,248 @@
+{
+  "invoices": {
+    "loading": "加载中…",
+    "page": {
+      "title": "账单",
+      "subtitle": "已完成工作的计费记录"
+    },
+    "metrics": {
+      "totalInvoices": "账单总数",
+      "allTime": "累计",
+      "paidInvoices": "已付账单",
+      "completed": "已完成",
+      "pending": "待处理",
+      "awaitingPayment": "等待付款",
+      "totalBilled": "累计账单金额",
+      "acrossAllInvoices": "所有账单合计"
+    },
+    "recentInvoices": "最近账单",
+    "tabs": {
+      "all": "全部",
+      "paid": "已付款",
+      "pending": "待付款",
+      "overdue": "已逾期"
+    },
+    "downloadAll": "全部下载",
+    "empty": {
+      "titleAll": "暂无账单",
+      "titleFilteredPaid": "暂无已付款账单",
+      "titleFilteredPending": "暂无待付款账单",
+      "titleFilteredOverdue": "暂无逾期账单",
+      "descriptionAll": "预约完成并确认后即会开具账单。请在下次服务后再来查看。",
+      "descriptionFiltered": "试试切换其他标签查看其他账单。",
+      "viewMyBookings": "查看我的预约"
+    },
+    "table": {
+      "service": "服务",
+      "invoiceNumber": "账单编号",
+      "provider": "服务商",
+      "issueDate": "开具日期",
+      "paymentMethod": "付款方式",
+      "status": "状态",
+      "amount": "金额"
+    },
+    "serviceFallback": "服务",
+    "pagination": {
+      "showing_other": "显示第 {{from}} 至 {{to}} 条,共 {{count}} 张账单"
+    },
+    "fields": {
+      "invoiceNumber": "账单编号",
+      "bookingReference": "预约编号",
+      "provider": "服务商",
+      "category": "类别",
+      "invoiceDate": "账单日期",
+      "dueDate": "到期日期",
+      "location": "地点",
+      "paymentMethod": "付款方式",
+      "customer": "客户"
+    },
+    "billing": {
+      "subtotal": "小计",
+      "platformFee": "平台服务费",
+      "totalAmount": "总金额",
+      "serviceCharge": "服务费用"
+    },
+    "panel": {
+      "title": "账单详情",
+      "progressTimeline": "进度时间线",
+      "downloadInvoice": "下载账单",
+      "contactSupport": "联系客服",
+      "payNotWiredToast": "账单付款尚未接入实时支付网关 — 请前往「付款」管理您的资金。",
+      "payNow": "立即付款"
+    },
+    "timeline": {
+      "invoiceIssued": "账单已开具",
+      "paymentPending": "付款待处理",
+      "reminderScheduled": "已安排提醒",
+      "issued": "已开具",
+      "paid": "已付款",
+      "downloaded": "已下载"
+    },
+    "dialog": {
+      "receiptCopied": "收据摘要已复制到剪贴板",
+      "billingBreakdown": "费用明细",
+      "receiptNote": "此账单可作为您已完成服务的可下载收据。",
+      "close": "关闭",
+      "shareReceipt": "分享收据",
+      "downloadPdf": "下载 PDF",
+      "progress": "进度",
+      "shareText": "账单 {{invoiceNumber}} — 已向 {{provider}} 支付 {{amount}}"
+    }
+  },
+  "payments": {
+    "loading": "加载中…",
+    "page": {
+      "title": "付款",
+      "subtitle": "管理已保存的付款方式并追踪扣款"
+    },
+    "toast": {
+      "defaultUpdated": "默认付款方式已更新",
+      "methodRemoved": "付款方式已移除"
+    },
+    "metrics": {
+      "savedMethods": "已保存的方式",
+      "savedMethodsHint": "{{default}} 个默认 · {{backup}} 个备用",
+      "noMethodsYet": "暂无付款方式",
+      "thisMonthCharges": "本月扣款",
+      "acrossBookings_other": "涉及 {{count}} 个预约",
+      "pendingAuthorizations": "待授权",
+      "authorizationCount_other": "{{count}} 项授权"
+    },
+    "methods": {
+      "title": "付款方式",
+      "subtitle": "已保存的方式,让付款更快更安全",
+      "addMethod": "添加方式",
+      "searchPlaceholder": "搜索付款方式...",
+      "filterType": "类型",
+      "filterAllTypes": "所有类型",
+      "filterCard": "银行卡",
+      "filterMobileMoney": "移动支付",
+      "filterBank": "银行账户",
+      "emptyFilteredTitle": "没有匹配的付款方式",
+      "emptyFilteredDescription": "请尝试调整搜索条件或筛选器。",
+      "clearFilters": "清除筛选",
+      "emptyTitle": "暂无付款方式",
+      "emptyDescription": "添加银行卡、移动支付或银行账户以加快结账速度。",
+      "addPaymentMethod": "添加付款方式",
+      "columns": {
+        "method": "方式",
+        "type": "类型",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "expires": "有效期至 {{date}}",
+      "default": "默认",
+      "backup": "备用",
+      "setAsDefault": "设为默认",
+      "remove": "移除",
+      "secureFooter": "您的付款信息已加密,仅存储脱敏信息。"
+    },
+    "charges": {
+      "title": "近期扣款",
+      "subtitle": "最新的扣款与授权记录",
+      "searchPlaceholder": "搜索扣款记录...",
+      "filterStatus": "状态",
+      "filterAllStatuses": "所有状态",
+      "filterAuthorized": "已授权",
+      "filterPaid": "已付款",
+      "filterClosed": "已结清",
+      "emptyFilteredTitle": "没有匹配的扣款记录",
+      "emptyFilteredDescription": "请尝试调整搜索条件或筛选器。",
+      "clearFilters": "清除筛选",
+      "emptyTitle": "暂无扣款记录",
+      "emptyDescription": "完成预约并授权付款后,记录将显示在此处。",
+      "browseServices": "浏览服务",
+      "columns": {
+        "service": "服务",
+        "bookingId": "预约编号",
+        "date": "日期",
+        "provider": "服务商",
+        "status": "状态",
+        "amount": "金额"
+      },
+      "serviceFallback": "服务",
+      "itemLabel": "笔扣款"
+    },
+    "viewFullHistory": "在「历史记录」中查看完整付款历史 →",
+    "chargeDetailsTitle": "扣款详情",
+    "dialog": {
+      "title": "添加付款方式",
+      "tabCard": "银行卡",
+      "tabMobileMoney": "移动支付",
+      "tabBank": "银行账户",
+      "errors": {
+        "cardRequired": "请填写持卡人姓名、卡号和有效期",
+        "invalidPhone": "请输入有效的电话号码",
+        "bankRequired": "请输入银行名称和账号"
+      },
+      "methodAdded": "付款方式已添加",
+      "labels": {
+        "cardholderName": "持卡人姓名",
+        "cardNumber": "卡号",
+        "expiryDate": "有效期",
+        "cvv": "安全码 CVV",
+        "provider": "运营商",
+        "billingPhone": "账单电话号码",
+        "bankName": "银行名称",
+        "accountNumber": "账号"
+      },
+      "placeholders": {
+        "cardholderName": "例如 Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "月 / 年",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "例如 CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "设为默认付款方式",
+      "secureNote": "您的付款信息已加密并安全存储。",
+      "cancel": "取消",
+      "saving": "保存中...",
+      "saveMethod": "保存方式"
+    }
+  },
+  "wallet": {
+    "loading": "加载中…",
+    "page": {
+      "title": "钱包",
+      "subtitle": "您的服务钱包与账目记录"
+    },
+    "errors": {
+      "positiveAmount": "请输入正数金额"
+    },
+    "toast": {
+      "credited": "已充值 {{amount}}",
+      "debited": "已扣款 {{amount}}"
+    },
+    "metrics": {
+      "availableBalance": "可用余额",
+      "rightNow": "实时",
+      "totalCredited": "累计充值",
+      "allTime": "累计",
+      "totalDebited": "累计扣款"
+    },
+    "amountLabel": "金额({{currency}})",
+    "amountPlaceholder": "例如 20000",
+    "creditButton": "充值",
+    "debitButton": "扣款",
+    "refresh": "刷新",
+    "searchPlaceholder": "搜索交易记录...",
+    "filterType": "类型",
+    "filterAllTypes": "所有类型",
+    "filterCredit": "充值",
+    "filterDebit": "扣款",
+    "emptyFilteredTitle": "没有匹配的交易记录",
+    "emptyFilteredDescription": "请尝试调整搜索条件或筛选器。",
+    "clearFilters": "清除筛选",
+    "emptyTitle": "暂无交易记录",
+    "emptyDescription": "钱包中的充值、扣款和冻结记录将显示在此处。",
+    "columns": {
+      "type": "类型",
+      "date": "日期",
+      "amount": "金额",
+      "balanceAfter": "变动后余额"
+    },
+    "itemLabel": "笔交易"
+  }
+}

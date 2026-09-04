@@ -1,0 +1,263 @@
+{
+  "invoices": {
+    "loading": "جارٍ التحميل…",
+    "page": {
+      "title": "الفواتير",
+      "subtitle": "سجلات الفوترة لأعمالك المكتملة"
+    },
+    "metrics": {
+      "totalInvoices": "إجمالي الفواتير",
+      "allTime": "منذ البداية",
+      "paidInvoices": "الفواتير المدفوعة",
+      "completed": "مكتملة",
+      "pending": "قيد الانتظار",
+      "awaitingPayment": "بانتظار الدفع",
+      "totalBilled": "إجمالي المبلغ المفوتر",
+      "acrossAllInvoices": "في جميع الفواتير"
+    },
+    "recentInvoices": "الفواتير الأخيرة",
+    "tabs": {
+      "all": "الكل",
+      "paid": "مدفوعة",
+      "pending": "قيد الانتظار",
+      "overdue": "متأخرة"
+    },
+    "downloadAll": "تنزيل الكل",
+    "empty": {
+      "titleAll": "لا توجد فواتير بعد",
+      "titleFilteredPaid": "لا توجد فواتير مدفوعة",
+      "titleFilteredPending": "لا توجد فواتير قيد الانتظار",
+      "titleFilteredOverdue": "لا توجد فواتير متأخرة",
+      "descriptionAll": "تُصدر الفاتورة بمجرد اكتمال الحجز وتأكيده. تحقق مرة أخرى بعد مهمتك القادمة.",
+      "descriptionFiltered": "جرّب تبويبًا آخر لرؤية فواتير أخرى.",
+      "viewMyBookings": "عرض حجوزاتي"
+    },
+    "table": {
+      "service": "الخدمة",
+      "invoiceNumber": "رقم الفاتورة",
+      "provider": "مقدم الخدمة",
+      "issueDate": "تاريخ الإصدار",
+      "paymentMethod": "طريقة الدفع",
+      "status": "الحالة",
+      "amount": "المبلغ"
+    },
+    "serviceFallback": "الخدمة",
+    "pagination": {
+      "showing_zero": "لا توجد فواتير لعرضها",
+      "showing_one": "عرض {{from}} إلى {{to}} من فاتورة واحدة",
+      "showing_two": "عرض {{from}} إلى {{to}} من فاتورتين",
+      "showing_few": "عرض {{from}} إلى {{to}} من {{count}} فواتير",
+      "showing_many": "عرض {{from}} إلى {{to}} من {{count}} فاتورة",
+      "showing_other": "عرض {{from}} إلى {{to}} من {{count}} فاتورة"
+    },
+    "fields": {
+      "invoiceNumber": "رقم الفاتورة",
+      "bookingReference": "مرجع الحجز",
+      "provider": "مقدم الخدمة",
+      "category": "الفئة",
+      "invoiceDate": "تاريخ الفاتورة",
+      "dueDate": "تاريخ الاستحقاق",
+      "location": "الموقع",
+      "paymentMethod": "طريقة الدفع",
+      "customer": "العميل"
+    },
+    "billing": {
+      "subtotal": "المجموع الفرعي",
+      "platformFee": "رسوم المنصة",
+      "totalAmount": "المبلغ الإجمالي",
+      "serviceCharge": "رسوم الخدمة"
+    },
+    "panel": {
+      "title": "تفاصيل الفاتورة",
+      "progressTimeline": "الجدول الزمني للتقدم",
+      "downloadInvoice": "تنزيل الفاتورة",
+      "contactSupport": "التواصل مع الدعم",
+      "payNotWiredToast": "لم يتم ربط مدفوعات الفواتير ببوابة فعلية بعد — انتقل إلى المدفوعات لإدارة أموالك.",
+      "payNow": "ادفع الآن"
+    },
+    "timeline": {
+      "invoiceIssued": "تم إصدار الفاتورة",
+      "paymentPending": "الدفع قيد الانتظار",
+      "reminderScheduled": "تم جدولة التذكير",
+      "issued": "تم الإصدار",
+      "paid": "تم الدفع",
+      "downloaded": "تم التنزيل"
+    },
+    "dialog": {
+      "receiptCopied": "تم نسخ ملخص الإيصال إلى الحافظة",
+      "billingBreakdown": "تفاصيل الفوترة",
+      "receiptNote": "هذه الفاتورة متاحة كإيصال قابل للتنزيل لخدمتك المكتملة.",
+      "close": "إغلاق",
+      "shareReceipt": "مشاركة الإيصال",
+      "downloadPdf": "تنزيل PDF",
+      "progress": "التقدم",
+      "shareText": "الفاتورة {{invoiceNumber}} — تم دفع {{amount}} إلى {{provider}}"
+    }
+  },
+  "payments": {
+    "loading": "جارٍ التحميل…",
+    "page": {
+      "title": "المدفوعات",
+      "subtitle": "إدارة طرق الدفع المحفوظة وتتبع المدفوعات"
+    },
+    "toast": {
+      "defaultUpdated": "تم تحديث طريقة الدفع الافتراضية",
+      "methodRemoved": "تمت إزالة طريقة الدفع"
+    },
+    "metrics": {
+      "savedMethods": "الطرق المحفوظة",
+      "savedMethodsHint": "{{default}} افتراضية · {{backup}} احتياطية",
+      "noMethodsYet": "لا توجد طرق بعد",
+      "thisMonthCharges": "مدفوعات هذا الشهر",
+      "acrossBookings_zero": "عبر لا حجوزات",
+      "acrossBookings_one": "عبر حجز واحد",
+      "acrossBookings_two": "عبر حجزين",
+      "acrossBookings_few": "عبر {{count}} حجوزات",
+      "acrossBookings_many": "عبر {{count}} حجزًا",
+      "acrossBookings_other": "عبر {{count}} حجز",
+      "pendingAuthorizations": "التفويضات المعلّقة",
+      "authorizationCount_zero": "لا تفويضات",
+      "authorizationCount_one": "تفويض واحد",
+      "authorizationCount_two": "تفويضان",
+      "authorizationCount_few": "{{count}} تفويضات",
+      "authorizationCount_many": "{{count}} تفويضًا",
+      "authorizationCount_other": "{{count}} تفويض"
+    },
+    "methods": {
+      "title": "طرق الدفع",
+      "subtitle": "طرق محفوظة لمدفوعات أسرع وأكثر أمانًا",
+      "addMethod": "إضافة طريقة",
+      "searchPlaceholder": "البحث في طرق الدفع...",
+      "filterType": "النوع",
+      "filterAllTypes": "جميع الأنواع",
+      "filterCard": "بطاقة",
+      "filterMobileMoney": "المحفظة النقالة",
+      "filterBank": "بنك",
+      "emptyFilteredTitle": "لا توجد طرق مطابقة",
+      "emptyFilteredDescription": "حاول تعديل البحث أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "emptyTitle": "لا توجد طرق دفع بعد",
+      "emptyDescription": "أضف بطاقة أو محفظة نقالة أو حسابًا بنكيًا لتسريع عملية الدفع.",
+      "addPaymentMethod": "إضافة طريقة دفع",
+      "columns": {
+        "method": "الطريقة",
+        "type": "النوع",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "expires": "تنتهي في {{date}}",
+      "default": "افتراضية",
+      "backup": "احتياطية",
+      "setAsDefault": "تعيين كافتراضية",
+      "remove": "إزالة",
+      "secureFooter": "معلومات الدفع الخاصة بك مشفّرة ولا يُحفظ سوى البيانات المموّهة."
+    },
+    "charges": {
+      "title": "المدفوعات الأخيرة",
+      "subtitle": "أحدث المدفوعات والتفويضات",
+      "searchPlaceholder": "البحث في المدفوعات...",
+      "filterStatus": "الحالة",
+      "filterAllStatuses": "جميع الحالات",
+      "filterAuthorized": "مفوَّض",
+      "filterPaid": "مدفوع",
+      "filterClosed": "مغلق",
+      "emptyFilteredTitle": "لا توجد مدفوعات مطابقة",
+      "emptyFilteredDescription": "حاول تعديل البحث أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "emptyTitle": "لا توجد مدفوعات بعد",
+      "emptyDescription": "بمجرد إتمام حجز وتفويض الدفع، سيظهر هنا.",
+      "browseServices": "تصفح الخدمات",
+      "columns": {
+        "service": "الخدمة",
+        "bookingId": "رقم الحجز",
+        "date": "التاريخ",
+        "provider": "مقدم الخدمة",
+        "status": "الحالة",
+        "amount": "المبلغ"
+      },
+      "serviceFallback": "الخدمة",
+      "itemLabel": "مدفوعات"
+    },
+    "viewFullHistory": "عرض السجل الكامل للمدفوعات في السجل ←",
+    "chargeDetailsTitle": "تفاصيل الدفعة",
+    "dialog": {
+      "title": "إضافة طريقة دفع",
+      "tabCard": "بطاقة",
+      "tabMobileMoney": "المحفظة النقالة",
+      "tabBank": "بنك",
+      "errors": {
+        "cardRequired": "أدخل اسم حامل البطاقة ورقم البطاقة وتاريخ الانتهاء",
+        "invalidPhone": "أدخل رقم هاتف صحيحًا",
+        "bankRequired": "أدخل اسم البنك ورقم الحساب"
+      },
+      "methodAdded": "تمت إضافة طريقة الدفع",
+      "labels": {
+        "cardholderName": "اسم حامل البطاقة",
+        "cardNumber": "رقم البطاقة",
+        "expiryDate": "تاريخ الانتهاء",
+        "cvv": "رمز التحقق CVV",
+        "provider": "مزوّد الخدمة",
+        "billingPhone": "رقم هاتف الفوترة",
+        "bankName": "اسم البنك",
+        "accountNumber": "رقم الحساب"
+      },
+      "placeholders": {
+        "cardholderName": "مثال: Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "شهر / سنة",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "مثال: بنك CRDB",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "تعيين كطريقة دفع افتراضية",
+      "secureNote": "معلومات الدفع الخاصة بك مشفّرة ومحفوظة بأمان.",
+      "cancel": "إلغاء",
+      "saving": "جارٍ الحفظ...",
+      "saveMethod": "حفظ الطريقة"
+    }
+  },
+  "wallet": {
+    "loading": "جارٍ التحميل…",
+    "page": {
+      "title": "المحفظة",
+      "subtitle": "محفظة خدماتك وسجل معاملاتها"
+    },
+    "errors": {
+      "positiveAmount": "أدخل مبلغًا موجبًا"
+    },
+    "toast": {
+      "credited": "تمت الإضافة بمبلغ {{amount}}",
+      "debited": "تم الخصم بمبلغ {{amount}}"
+    },
+    "metrics": {
+      "availableBalance": "الرصيد المتاح",
+      "rightNow": "الآن",
+      "totalCredited": "إجمالي المضاف",
+      "allTime": "منذ البداية",
+      "totalDebited": "إجمالي المخصوم"
+    },
+    "amountLabel": "المبلغ ({{currency}})",
+    "amountPlaceholder": "مثال: 20000",
+    "creditButton": "إضافة",
+    "debitButton": "خصم",
+    "refresh": "تحديث",
+    "searchPlaceholder": "البحث في المعاملات...",
+    "filterType": "النوع",
+    "filterAllTypes": "جميع الأنواع",
+    "filterCredit": "إضافة",
+    "filterDebit": "خصم",
+    "emptyFilteredTitle": "لا توجد معاملات مطابقة",
+    "emptyFilteredDescription": "حاول تعديل البحث أو عوامل التصفية.",
+    "clearFilters": "مسح عوامل التصفية",
+    "emptyTitle": "لا توجد معاملات بعد",
+    "emptyDescription": "ستظهر هنا عمليات الإضافة والخصم والحجوزات المؤقتة في محفظتك.",
+    "columns": {
+      "type": "النوع",
+      "date": "التاريخ",
+      "amount": "المبلغ",
+      "balanceAfter": "الرصيد بعد العملية"
+    },
+    "itemLabel": "معاملات"
+  }
+}

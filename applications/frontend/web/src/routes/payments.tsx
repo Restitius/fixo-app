@@ -44,6 +44,7 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type BookingHistoryRow, type PaymentMethod } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const title = "Payments — FIXO";
 const description = "Manage your saved payment methods and review charges from past bookings.";
@@ -82,6 +83,7 @@ function chargeStatusStyle(status: string) {
 }
 
 function PaymentsPage() {
+  const { t } = useTranslation("billing");
   const { access_token, loading, logout, customer } = useAuth();
   const navigate = useNavigate();
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
@@ -137,7 +139,7 @@ function PaymentsPage() {
   );
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("payments.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -145,7 +147,7 @@ function PaymentsPage() {
     try {
       await fixoSdk.setDefaultPaymentMethod(id);
       setMethods((prev) => prev?.map((m) => ({ ...m, is_default: m.method_id === id })) ?? null);
-      toast.success("Default payment method updated");
+      toast.success(t("payments.toast.defaultUpdated"));
     } catch {
       // toast emitted by client
     }
@@ -155,7 +157,7 @@ function PaymentsPage() {
     try {
       await fixoSdk.removePaymentMethod(id);
       setMethods((prev) => prev?.filter((m) => m.method_id !== id) ?? null);
-      toast.success("Payment method removed");
+      toast.success(t("payments.toast.methodRemoved"));
     } catch {
       // toast emitted by client
     }
@@ -177,57 +179,57 @@ function PaymentsPage() {
 
   return (
     <PageShell
-      title="Payments"
-      subtitle="Manage saved methods and track charges"
+      title={t("payments.page.title")}
+      subtitle={t("payments.page.subtitle")}
       userName={customer?.full_name}
       onLogout={logout}
     >
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <MetricCard
           icon={CreditCard}
-          label="Saved Methods"
+          label={t("payments.metrics.savedMethods")}
           value={String((methods ?? []).length)}
-          hint={methods && methods.length > 0 ? `${defaultCount} default · ${backupCount} backup` : "No methods yet"}
+          hint={methods && methods.length > 0 ? t("payments.metrics.savedMethodsHint", { default: defaultCount, backup: backupCount }) : t("payments.metrics.noMethodsYet")}
         />
         <MetricCard
           icon={TrendingUp}
-          label="This Month Charges"
+          label={t("payments.metrics.thisMonthCharges")}
           value={fmtMoney(thisMonthCharges.reduce((s, c) => s + c.agreed_amount, 0), thisMonthCharges[0]?.currency ?? "TZS")}
-          hint={`Across ${thisMonthCharges.length} booking${thisMonthCharges.length === 1 ? "" : "s"}`}
+          hint={t("payments.metrics.acrossBookings", { count: thisMonthCharges.length })}
         />
         <MetricCard
           icon={ShieldCheck}
-          label="Pending Authorizations"
+          label={t("payments.metrics.pendingAuthorizations")}
           value={fmtMoney(pending.reduce((s, c) => s + c.agreed_amount, 0), pending[0]?.currency ?? "TZS")}
-          hint={`${pending.length} authorization${pending.length === 1 ? "" : "s"}`}
+          hint={t("payments.metrics.authorizationCount", { count: pending.length })}
         />
       </div>
 
       {/* Payment methods */}
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold">Payment methods</h3>
-          <p className="text-sm text-muted-foreground">Saved methods for faster, secure payments</p>
+          <h3 className="text-lg font-semibold">{t("payments.methods.title")}</h3>
+          <p className="text-sm text-muted-foreground">{t("payments.methods.subtitle")}</p>
         </div>
         <Button size="sm" onClick={() => setShowAddDialog(true)} className="gap-2">
-          <Plus className="size-4" /> Add Method
+          <Plus className="size-4" /> {t("payments.methods.addMethod")}
         </Button>
       </div>
 
       <TableFilterBar
         search={methodSearch}
         onSearchChange={setMethodSearch}
-        searchPlaceholder="Search payment methods..."
+        searchPlaceholder={t("payments.methods.searchPlaceholder")}
         filters={[
           {
             value: methodTypeFilter,
             onChange: setMethodTypeFilter,
-            placeholder: "Type",
+            placeholder: t("payments.methods.filterType"),
             options: [
-              { value: "all", label: "All Types" },
-              { value: "card", label: "Card" },
-              { value: "mpesa", label: "Mobile Money" },
-              { value: "bank", label: "Bank" },
+              { value: "all", label: t("payments.methods.filterAllTypes") },
+              { value: "card", label: t("payments.methods.filterCard") },
+              { value: "mpesa", label: t("payments.methods.filterMobileMoney") },
+              { value: "bank", label: t("payments.methods.filterBank") },
             ],
             width: "w-[160px]",
           },
@@ -239,13 +241,13 @@ function PaymentsPage() {
       ) : filteredMethods.length === 0 ? (
         <div className="mt-6">
           {methodHasFilters ? (
-            <EmptyState icon={FilterX} title="No matching methods" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setMethodSearch(""); setMethodTypeFilter("all"); }} />
+            <EmptyState icon={FilterX} title={t("payments.methods.emptyFilteredTitle")} description={t("payments.methods.emptyFilteredDescription")} actionLabel={t("payments.methods.clearFilters")} onAction={() => { setMethodSearch(""); setMethodTypeFilter("all"); }} />
           ) : (
             <EmptyState
               icon={CreditCard}
-              title="No payment methods yet"
-              description="Add a card, mobile money or bank account to speed up checkout."
-              actionLabel="Add Payment Method"
+              title={t("payments.methods.emptyTitle")}
+              description={t("payments.methods.emptyDescription")}
+              actionLabel={t("payments.methods.addPaymentMethod")}
               onAction={() => setShowAddDialog(true)}
             />
           )}
@@ -253,7 +255,7 @@ function PaymentsPage() {
       ) : (
         <TableCard>
           <TableScroll minWidth={640}>
-            <TableHead columns={["Method", "Type", "Status", "Actions"]} />
+            <TableHead columns={[t("payments.methods.columns.method"), t("payments.methods.columns.type"), t("payments.methods.columns.status"), t("payments.methods.columns.actions")]} />
             <tbody>
               {filteredMethods.map((m) => {
                 const Icon = methodIcon(m.type);
@@ -268,14 +270,14 @@ function PaymentsPage() {
                         </span>
                         <div>
                           <p className="font-semibold">{m.provider || humanize(m.type)} •••• {masked}</p>
-                          <p className="text-xs text-muted-foreground">{expiry ? `Expires ${expiry}` : "—"}</p>
+                          <p className="text-xs text-muted-foreground">{expiry ? t("payments.methods.expires", { date: expiry }) : "—"}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-4 text-muted-foreground">{humanize(m.type)}</td>
                     <td className="px-4 py-4">
                       <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${m.is_default ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
-                        {m.is_default ? "Default" : "Backup"}
+                        {m.is_default ? t("payments.methods.default") : t("payments.methods.backup")}
                       </span>
                     </td>
                     <td className="px-4 py-4">
@@ -288,14 +290,14 @@ function PaymentsPage() {
                         <DropdownMenuContent align="end">
                           {!m.is_default && (
                             <DropdownMenuItem onClick={() => void setDefault(m.method_id)} className="gap-2">
-                              <Star className="size-4" /> Set as default
+                              <Star className="size-4" /> {t("payments.methods.setAsDefault")}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
                             onClick={() => void removeMethod(m.method_id)}
                             className="gap-2 text-destructive focus:text-destructive"
                           >
-                            <Trash2 className="size-4" /> Remove
+                            <Trash2 className="size-4" /> {t("payments.methods.remove")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -310,29 +312,29 @@ function PaymentsPage() {
 
       <div className="mt-4 flex items-center gap-2 rounded-2xl bg-muted/50 p-3 text-xs text-muted-foreground">
         <ShieldCheck className="size-4 shrink-0" />
-        Your payment details are encrypted and only masked information is stored.
+        {t("payments.methods.secureFooter")}
       </div>
 
       {/* Recent charges */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold">Recent charges</h3>
-        <p className="text-sm text-muted-foreground">Latest charges and authorizations</p>
+        <h3 className="text-lg font-semibold">{t("payments.charges.title")}</h3>
+        <p className="text-sm text-muted-foreground">{t("payments.charges.subtitle")}</p>
       </div>
 
       <TableFilterBar
         search={chargeSearch}
         onSearchChange={(v) => { setChargeSearch(v); setChargePage(1); }}
-        searchPlaceholder="Search charges..."
+        searchPlaceholder={t("payments.charges.searchPlaceholder")}
         filters={[
           {
             value: chargeStatusFilter,
             onChange: (v) => { setChargeStatusFilter(v); setChargePage(1); },
-            placeholder: "Status",
+            placeholder: t("payments.charges.filterStatus"),
             options: [
-              { value: "all", label: "All Statuses" },
-              { value: "PAYMENT_AUTHORIZED", label: "Authorized" },
-              { value: "PAID", label: "Paid" },
-              { value: "CLOSED", label: "Closed" },
+              { value: "all", label: t("payments.charges.filterAllStatuses") },
+              { value: "PAYMENT_AUTHORIZED", label: t("payments.charges.filterAuthorized") },
+              { value: "PAID", label: t("payments.charges.filterPaid") },
+              { value: "CLOSED", label: t("payments.charges.filterClosed") },
             ],
           },
         ]}
@@ -343,15 +345,22 @@ function PaymentsPage() {
       ) : filteredCharges.length === 0 ? (
         <div className="mt-6">
           {chargeHasFilters ? (
-            <EmptyState icon={FilterX} title="No matching charges" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setChargeSearch(""); setChargeStatusFilter("all"); }} />
+            <EmptyState icon={FilterX} title={t("payments.charges.emptyFilteredTitle")} description={t("payments.charges.emptyFilteredDescription")} actionLabel={t("payments.charges.clearFilters")} onAction={() => { setChargeSearch(""); setChargeStatusFilter("all"); }} />
           ) : (
-            <EmptyState icon={Receipt} title="No charges yet" description="Once you complete a booking and authorize payment, it will show up here." actionLabel="Browse Services" actionTo="/services" />
+            <EmptyState icon={Receipt} title={t("payments.charges.emptyTitle")} description={t("payments.charges.emptyDescription")} actionLabel={t("payments.charges.browseServices")} actionTo="/services" />
           )}
         </div>
       ) : (
         <TableCard className="grow">
           <TableScroll minWidth={720}>
-            <TableHead columns={["Service", "Booking ID", "Date", "Provider", "Status", "Amount"]} />
+            <TableHead columns={[
+              t("payments.charges.columns.service"),
+              t("payments.charges.columns.bookingId"),
+              t("payments.charges.columns.date"),
+              t("payments.charges.columns.provider"),
+              t("payments.charges.columns.status"),
+              t("payments.charges.columns.amount"),
+            ]} />
             <tbody>
               {chargePaged.map((b) => (
                 <tr
@@ -359,7 +368,7 @@ function PaymentsPage() {
                   onClick={() => setOpenBookingId(b.booking_id)}
                   className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40"
                 >
-                  <td className="px-6 py-4 font-semibold">{b.service_name ?? "Service"}</td>
+                  <td className="px-6 py-4 font-semibold">{b.service_name ?? t("payments.charges.serviceFallback")}</td>
                   <td className="px-4 py-4 text-primary font-semibold">{b.booking_number}</td>
                   <td className="px-4 py-4 text-muted-foreground">{fmtDate(b.scheduled_date)}</td>
                   <td className="px-4 py-4">{b.provider_name ?? "—"}</td>
@@ -380,7 +389,7 @@ function PaymentsPage() {
             from={(chargePage - 1) * PAGE_SIZE + 1}
             to={Math.min(chargePage * PAGE_SIZE, filteredCharges.length)}
             total={filteredCharges.length}
-            itemLabel="charges"
+            itemLabel={t("payments.charges.itemLabel")}
           />
         </TableCard>
       )}
@@ -389,7 +398,7 @@ function PaymentsPage() {
           onClick={() => navigate({ to: "/history", search: { category: "payments" } })}
           className="mt-3 text-sm font-semibold text-primary hover:underline"
         >
-          View full payment history in History →
+          {t("payments.viewFullHistory")}
         </button>
       )}
 
@@ -403,7 +412,7 @@ function PaymentsPage() {
       <BookingDetailSheet
         bookingId={openBookingId}
         onOpenChange={(o) => !o && setOpenBookingId(null)}
-        title="Charge details"
+        title={t("payments.chargeDetailsTitle")}
       />
     </PageShell>
   );
@@ -420,6 +429,7 @@ function AddPaymentMethodDialog({
   isFirst: boolean;
   onAdded: (m: PaymentMethod) => void;
 }) {
+  const { t } = useTranslation("billing");
   const [tab, setTab] = useState<"card" | "mpesa" | "bank">("card");
   const [card, setCard] = useState({ name: "", number: "", expiry: "", cvv: "" });
   const [mobile, setMobile] = useState({ provider: MOBILE_PROVIDERS[0] as string, phone: "" });
@@ -442,21 +452,21 @@ function AddPaymentMethodDialog({
     if (tab === "card") {
       const digits = card.number.replace(/\s/g, "");
       if (!card.name.trim() || digits.length < 4 || !card.expiry.trim()) {
-        toast.error("Fill in cardholder name, card number and expiry date");
+        toast.error(t("payments.dialog.errors.cardRequired"));
         return;
       }
       provider = brandFromCardNumber(digits);
       details = { last4: digits.slice(-4), expiry: card.expiry.trim(), cardholder: card.name.trim() };
     } else if (tab === "mpesa") {
       if (mobile.phone.trim().length < 7) {
-        toast.error("Enter a valid phone number");
+        toast.error(t("payments.dialog.errors.invalidPhone"));
         return;
       }
       provider = mobile.provider;
       details = { last4: mobile.phone.trim().slice(-4) };
     } else {
       if (!bank.bankName.trim() || bank.account.trim().length < 4) {
-        toast.error("Enter bank name and account number");
+        toast.error(t("payments.dialog.errors.bankRequired"));
         return;
       }
       provider = bank.bankName.trim();
@@ -467,7 +477,7 @@ function AddPaymentMethodDialog({
     try {
       const created = await fixoSdk.addPaymentMethod(tab, provider, details, makeDefault || isFirst);
       onAdded({ ...created, is_default: makeDefault || isFirst });
-      toast.success("Payment method added");
+      toast.success(t("payments.dialog.methodAdded"));
       reset();
       onOpenChange(false);
     } catch {
@@ -486,19 +496,19 @@ function AddPaymentMethodDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Add payment method</DialogTitle>
+          <DialogTitle>{t("payments.dialog.title")}</DialogTitle>
         </DialogHeader>
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="card" className="gap-1.5">
-              <CreditCard className="size-4" /> Card
+              <CreditCard className="size-4" /> {t("payments.dialog.tabCard")}
             </TabsTrigger>
             <TabsTrigger value="mpesa" className="gap-1.5">
-              <Smartphone className="size-4" /> Mobile Money
+              <Smartphone className="size-4" /> {t("payments.dialog.tabMobileMoney")}
             </TabsTrigger>
             <TabsTrigger value="bank" className="gap-1.5">
-              <Landmark className="size-4" /> Bank
+              <Landmark className="size-4" /> {t("payments.dialog.tabBank")}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -507,17 +517,17 @@ function AddPaymentMethodDialog({
           {tab === "card" && (
             <>
               <div className="space-y-1.5">
-                <Label>Cardholder name</Label>
+                <Label>{t("payments.dialog.labels.cardholderName")}</Label>
                 <Input
-                  placeholder="e.g. Restitius Rushambya"
+                  placeholder={t("payments.dialog.placeholders.cardholderName")}
                   value={card.name}
                   onChange={(e) => setCard((d) => ({ ...d, name: e.target.value }))}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Card number</Label>
+                <Label>{t("payments.dialog.labels.cardNumber")}</Label>
                 <Input
-                  placeholder="1234 5678 9012 3456"
+                  placeholder={t("payments.dialog.placeholders.cardNumber")}
                   value={card.number}
                   onChange={(e) => setCard((d) => ({ ...d, number: e.target.value }))}
                   maxLength={19}
@@ -525,18 +535,18 @@ function AddPaymentMethodDialog({
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Expiry date</Label>
+                  <Label>{t("payments.dialog.labels.expiryDate")}</Label>
                   <Input
-                    placeholder="MM / YY"
+                    placeholder={t("payments.dialog.placeholders.expiryDate")}
                     value={card.expiry}
                     onChange={(e) => setCard((d) => ({ ...d, expiry: e.target.value }))}
                     maxLength={7}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>CVV</Label>
+                  <Label>{t("payments.dialog.labels.cvv")}</Label>
                   <Input
-                    placeholder="123"
+                    placeholder={t("payments.dialog.placeholders.cvv")}
                     value={card.cvv}
                     onChange={(e) => setCard((d) => ({ ...d, cvv: e.target.value }))}
                     maxLength={4}
@@ -549,7 +559,7 @@ function AddPaymentMethodDialog({
           {tab === "mpesa" && (
             <>
               <div className="space-y-1.5">
-                <Label>Provider</Label>
+                <Label>{t("payments.dialog.labels.provider")}</Label>
                 <Select value={mobile.provider} onValueChange={(v) => setMobile((d) => ({ ...d, provider: v }))}>
                   <SelectTrigger>
                     <SelectValue />
@@ -564,9 +574,9 @@ function AddPaymentMethodDialog({
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Billing phone</Label>
+                <Label>{t("payments.dialog.labels.billingPhone")}</Label>
                 <Input
-                  placeholder="+255 712 345 678"
+                  placeholder={t("payments.dialog.placeholders.billingPhone")}
                   value={mobile.phone}
                   onChange={(e) => setMobile((d) => ({ ...d, phone: e.target.value }))}
                 />
@@ -577,17 +587,17 @@ function AddPaymentMethodDialog({
           {tab === "bank" && (
             <>
               <div className="space-y-1.5">
-                <Label>Bank name</Label>
+                <Label>{t("payments.dialog.labels.bankName")}</Label>
                 <Input
-                  placeholder="e.g. CRDB Bank"
+                  placeholder={t("payments.dialog.placeholders.bankName")}
                   value={bank.bankName}
                   onChange={(e) => setBank((d) => ({ ...d, bankName: e.target.value }))}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Account number</Label>
+                <Label>{t("payments.dialog.labels.accountNumber")}</Label>
                 <Input
-                  placeholder="0123456789"
+                  placeholder={t("payments.dialog.placeholders.accountNumber")}
                   value={bank.account}
                   onChange={(e) => setBank((d) => ({ ...d, account: e.target.value }))}
                 />
@@ -597,20 +607,20 @@ function AddPaymentMethodDialog({
 
           <label className="flex items-center gap-2 text-sm">
             <Checkbox checked={makeDefault || isFirst} disabled={isFirst} onCheckedChange={(v) => setMakeDefault(!!v)} />
-            Set as default payment method
+            {t("payments.dialog.setAsDefault")}
           </label>
 
           <div className="flex items-start gap-2 rounded-xl bg-muted/50 p-3 text-xs text-muted-foreground">
             <Lock className="mt-0.5 size-3.5 shrink-0" />
-            Your payment details are encrypted and securely stored.
+            {t("payments.dialog.secureNote")}
           </div>
 
           <div className="flex gap-2">
             <Button variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>
-              Cancel
+              {t("payments.dialog.cancel")}
             </Button>
             <Button className="flex-1" disabled={saving} onClick={() => void save()}>
-              {saving ? "Saving..." : "Save Method"}
+              {saving ? t("payments.dialog.saving") : t("payments.dialog.saveMethod")}
             </Button>
           </div>
         </div>

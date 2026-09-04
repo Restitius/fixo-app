@@ -21,6 +21,7 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type WalletTxn } from "@/lib/api-client";
 import { fmtDateTime, fmtMoney, humanize } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/wallet")({
   component: WalletPage,
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/wallet")({
 const PAGE_SIZE = 8;
 
 function WalletPage() {
+  const { t } = useTranslation("billing");
   const { access_token, loading, logout, customer } = useAuth();
   const [balance, setBalance] = useState<{ balance: number; currency: string } | null>(null);
   const [txns, setTxns] = useState<WalletTxn[] | null>(null);
@@ -66,21 +68,23 @@ function WalletPage() {
   );
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("wallet.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
   const applyAmount = async (kind: "credit" | "debit") => {
     const n = Number(amount);
     if (!n || n <= 0) {
-      toast.error("Enter a positive amount");
+      toast.error(t("wallet.errors.positiveAmount"));
       return;
     }
     setBusy(true);
     try {
       const row = kind === "credit" ? await fixoSdk.walletCredit(n) : await fixoSdk.walletDebit(n);
       toast.success(
-        `${kind === "credit" ? "Credited" : "Debited"} ${fmtMoney(row.amount, row.currency)}`,
+        t(kind === "credit" ? "wallet.toast.credited" : "wallet.toast.debited", {
+          amount: fmtMoney(row.amount, row.currency),
+        }),
       );
       setAmount("");
       await load();
@@ -106,34 +110,34 @@ function WalletPage() {
   }
 
   return (
-    <PageShell title="Wallet" subtitle="Your service wallet and ledger" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("wallet.page.title")} subtitle={t("wallet.page.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <MetricCard icon={WalletIcon} label="Available Balance" hint="Right now" value={balance ? fmtMoney(balance.balance, balance.currency) : "—"} hero />
-        <MetricCard icon={ArrowDownLeft} label="Total Credited" hint="All time" value={fmtMoney(credited, currency)} tone="success" />
-        <MetricCard icon={ArrowUpRight} label="Total Debited" hint="All time" value={fmtMoney(debited, currency)} tone="destructive" />
+        <MetricCard icon={WalletIcon} label={t("wallet.metrics.availableBalance")} hint={t("wallet.metrics.rightNow")} value={balance ? fmtMoney(balance.balance, balance.currency) : "—"} hero />
+        <MetricCard icon={ArrowDownLeft} label={t("wallet.metrics.totalCredited")} hint={t("wallet.metrics.allTime")} value={fmtMoney(credited, currency)} tone="success" />
+        <MetricCard icon={ArrowUpRight} label={t("wallet.metrics.totalDebited")} hint={t("wallet.metrics.allTime")} value={fmtMoney(debited, currency)} tone="destructive" />
       </div>
 
       <div className="mt-6 flex flex-wrap items-end gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
         <div className="min-w-[180px] flex-1 space-y-1.5">
-          <Label htmlFor="amount">Amount ({currency})</Label>
+          <Label htmlFor="amount">{t("wallet.amountLabel", { currency })}</Label>
           <Input
             id="amount"
             type="number"
             min="1"
             step="0.01"
             inputMode="decimal"
-            placeholder="e.g. 20000"
+            placeholder={t("wallet.amountPlaceholder")}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
         <Button disabled={busy} onClick={() => void applyAmount("credit")} className="gap-2">
-          <ArrowDownLeft className="size-4" /> Credit
+          <ArrowDownLeft className="size-4" /> {t("wallet.creditButton")}
         </Button>
         <Button disabled={busy} variant="outline" onClick={() => void applyAmount("debit")} className="gap-2">
-          <ArrowUpRight className="size-4" /> Debit
+          <ArrowUpRight className="size-4" /> {t("wallet.debitButton")}
         </Button>
-        <Button variant="ghost" size="icon" onClick={() => void load()} title="Refresh">
+        <Button variant="ghost" size="icon" onClick={() => void load()} title={t("wallet.refresh")}>
           <RefreshCw className="size-4" />
         </Button>
       </div>
@@ -141,16 +145,16 @@ function WalletPage() {
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder="Search transactions..."
+        searchPlaceholder={t("wallet.searchPlaceholder")}
         filters={[
           {
             value: typeFilter,
             onChange: (v) => { setTypeFilter(v); setPage(1); },
-            placeholder: "Type",
+            placeholder: t("wallet.filterType"),
             options: [
-              { value: "all", label: "All Types" },
-              { value: "CREDIT", label: "Credit" },
-              { value: "DEBIT", label: "Debit" },
+              { value: "all", label: t("wallet.filterAllTypes") },
+              { value: "CREDIT", label: t("wallet.filterCredit") },
+              { value: "DEBIT", label: t("wallet.filterDebit") },
             ],
           },
         ]}
@@ -161,15 +165,15 @@ function WalletPage() {
       ) : filtered.length === 0 ? (
         <div className="mt-6">
           {hasActiveFilters ? (
-            <EmptyState icon={FilterX} title="No matching transactions" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={clearFilters} />
+            <EmptyState icon={FilterX} title={t("wallet.emptyFilteredTitle")} description={t("wallet.emptyFilteredDescription")} actionLabel={t("wallet.clearFilters")} onAction={clearFilters} />
           ) : (
-            <EmptyState icon={Receipt} title="No transactions yet" description="Credits, debits and holds on your wallet will show up here." />
+            <EmptyState icon={Receipt} title={t("wallet.emptyTitle")} description={t("wallet.emptyDescription")} />
           )}
         </div>
       ) : (
         <TableCard className="grow">
           <TableScroll minWidth={640}>
-            <TableHead columns={["Type", "Date", "Amount", "Balance After"]} />
+            <TableHead columns={[t("wallet.columns.type"), t("wallet.columns.date"), t("wallet.columns.amount"), t("wallet.columns.balanceAfter")]} />
             <tbody>
               {paged.map((t, i) => (
                 <tr key={t.entry_id ?? i} className="border-b border-border last:border-0 hover:bg-muted/40">
@@ -202,7 +206,7 @@ function WalletPage() {
             from={(page - 1) * PAGE_SIZE + 1}
             to={Math.min(page * PAGE_SIZE, filtered.length)}
             total={filtered.length}
-            itemLabel="transactions"
+            itemLabel={t("wallet.itemLabel")}
           />
         </TableCard>
       )}
