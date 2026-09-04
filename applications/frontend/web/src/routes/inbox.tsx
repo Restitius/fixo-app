@@ -11,6 +11,7 @@ import { EmptyState } from "@/components/dashboard/EmptyState";
 import { useAuth } from "@/lib/auth-context";
 import { bookingApi, fixoSdk, type BookingHistoryRow, type BookingMessage } from "@/lib/api-client";
 import { humanize } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 
 const title = "Inbox — FIXO";
 const description = "Message the providers on your real bookings.";
@@ -33,6 +34,7 @@ function initials(name: string) {
 }
 
 function InboxPage() {
+  const { t } = useTranslation("bookings");
   const { access_token, loading, customer, logout } = useAuth();
   const [bookings, setBookings] = useState<BookingHistoryRow[] | null>(null);
   const [active, setActive] = useState<BookingHistoryRow | null>(null);
@@ -43,14 +45,14 @@ function InboxPage() {
   }, [access_token, loading]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
   const withProvider = (bookings ?? []).filter((b) => b.provider_name);
 
   return (
-    <PageShell title="Inbox" subtitle="Message the providers on your bookings" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("inbox.pageTitle")} subtitle={t("inbox.pageSubtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 flex min-h-0 flex-1 flex-col">
         {bookings === null ? (
           <div className="space-y-3">
@@ -59,9 +61,9 @@ function InboxPage() {
         ) : withProvider.length === 0 ? (
           <EmptyState
             icon={MessageCircle}
-            title="No conversations yet"
-            description="Once a provider is assigned to one of your bookings, you can message them here."
-            actionLabel="Browse Services"
+            title={t("inbox.emptyTitle")}
+            description={t("inbox.emptyDescription")}
+            actionLabel={t("inbox.browseServices")}
             actionTo="/services"
           />
         ) : (
@@ -78,7 +80,7 @@ function InboxPage() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{b.provider_name}</p>
                   <p className="truncate text-sm text-muted-foreground">
-                    {b.service_name ?? "Service"} · {humanize(b.status)}
+                    {b.service_name ?? t("inbox.serviceFallback")} · {humanize(b.status)}
                   </p>
                 </div>
                 <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
@@ -94,6 +96,7 @@ function InboxPage() {
 }
 
 function ThreadDialog({ booking, onClose }: { booking: BookingHistoryRow | null; onClose: () => void }) {
+  const { t } = useTranslation("bookings");
   const [messages, setMessages] = useState<BookingMessage[] | null>(null);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
@@ -137,7 +140,7 @@ function ThreadDialog({ booking, onClose }: { booking: BookingHistoryRow | null;
                 <Loader2 className="size-5 animate-spin text-muted-foreground" />
               </div>
             ) : messages.length === 0 ? (
-              <p className="py-8 text-center text-sm text-muted-foreground">No messages yet — say hello!</p>
+              <p className="py-8 text-center text-sm text-muted-foreground">{t("inbox.noMessagesYet")}</p>
             ) : (
               messages.map((m) => (
                 <div key={m.message_id} className={`flex ${m.from_provider ? "justify-start" : "justify-end"}`}>
@@ -158,7 +161,7 @@ function ThreadDialog({ booking, onClose }: { booking: BookingHistoryRow | null;
               value={body}
               onChange={(e) => setBody(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Message..."
+              placeholder={t("inbox.messagePlaceholder")}
               className="h-11 flex-1 rounded-full bg-muted px-5 text-sm outline-none placeholder:text-muted-foreground"
             />
             <button

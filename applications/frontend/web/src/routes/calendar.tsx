@@ -7,6 +7,7 @@ import { PageShell } from "@/components/dashboard/PageShell";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type BookingHistoryRow } from "@/lib/api-client";
 import { fmtMoney, humanize } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 
 const title = "Calendar — FIXO";
 const description = "See your bookings laid out by date.";
@@ -24,19 +25,33 @@ export const Route = createFileRoute("/calendar")({
   component: CalendarPage,
 });
 
-const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+// A Monday-start reference week, used only to derive each weekday's short
+// label (e.g. "Mon", "Tue"...) in the active language via Intl, instead of
+// hardcoding English initials.
+const WEEKDAY_REFERENCE = new Date(2024, 0, 1);
 
 function dateKey(d: Date) {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
 function CalendarPage() {
+  const { t, i18n } = useTranslation("bookings");
   const { access_token, loading, customer, logout } = useAuth();
   const navigate = useNavigate();
   const [bookings, setBookings] = useState<BookingHistoryRow[] | null>(null);
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [selected, setSelected] = useState<Date>(today);
+
+  const weekdayLabels = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(WEEKDAY_REFERENCE);
+        d.setDate(WEEKDAY_REFERENCE.getDate() + i);
+        return new Intl.DateTimeFormat(i18n.language, { weekday: "short" }).format(d);
+      }),
+    [i18n.language],
+  );
 
   useEffect(() => {
     if (!(access_token && !loading)) return;
@@ -58,16 +73,16 @@ function CalendarPage() {
   const month = viewMonth.getMonth();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7;
-  const monthLabel = viewMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  const monthLabel = viewMonth.toLocaleDateString(i18n.language, { month: "long", year: "numeric" });
   const selectedBookings = byDay.get(dateKey(selected)) ?? [];
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
   return (
-    <PageShell title="Calendar" subtitle="Your bookings, laid out by date" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("calendar.pageTitle")} subtitle={t("calendar.pageSubtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_1fr]">
         <div className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
@@ -89,8 +104,8 @@ function CalendarPage() {
           </div>
 
           <div className="mt-5 grid grid-cols-7 gap-y-2 text-center">
-            {WEEKDAYS.map((w) => (
-              <span key={w} className="text-xs font-medium text-muted-foreground">{w}</span>
+            {weekdayLabels.map((w, i) => (
+              <span key={i} className="text-xs font-medium text-muted-foreground">{w}</span>
             ))}
             {Array.from({ length: firstDayOffset }).map((_, i) => (
               <span key={`b${i}`} />
@@ -126,10 +141,10 @@ function CalendarPage() {
         <div className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
             <h3 className="font-bold">
-              {selected.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              {selected.toLocaleDateString(i18n.language, { weekday: "long", month: "long", day: "numeric" })}
             </h3>
             <button onClick={() => navigate({ to: "/bookings" })} className="text-sm font-semibold text-primary hover:underline">
-              My Bookings
+              {t("calendar.myBookings")}
             </button>
           </div>
 
@@ -138,7 +153,7 @@ function CalendarPage() {
           ) : selectedBookings.length === 0 ? (
             <div className="mt-8 flex flex-col items-center py-6 text-center">
               <CalendarDays className="size-10 text-muted-foreground" />
-              <p className="mt-3 text-sm text-muted-foreground">No bookings on this day.</p>
+              <p className="mt-3 text-sm text-muted-foreground">{t("calendar.noBookingsThisDay")}</p>
             </div>
           ) : (
             <div className="mt-4 space-y-3">
@@ -152,7 +167,7 @@ function CalendarPage() {
                     <Clock className="size-5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold">{b.service_name ?? "Service"}</p>
+                    <p className="truncate font-semibold">{b.service_name ?? t("calendar.serviceFallback")}</p>
                     <p className="truncate text-xs text-muted-foreground">
                       {b.provider_name ?? "—"}{b.time_window ? ` · ${humanize(b.time_window)}` : ""}
                     </p>
@@ -165,7 +180,7 @@ function CalendarPage() {
 
           <div className="mt-6 flex items-center gap-2 rounded-2xl bg-primary/5 p-3 text-xs text-muted-foreground">
             <MapPin className="size-3.5 shrink-0 text-primary" />
-            Dates with a purple dot have at least one real booking scheduled.
+            {t("calendar.footerHint")}
           </div>
         </div>
       </div>

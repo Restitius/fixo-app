@@ -1,0 +1,208 @@
+{
+  "loading": "Inapakia…",
+  "bookings": {
+    "pageTitle": "Miadi Yangu",
+    "pageSubtitle": "Fuatilia miadi yako na historia ya huduma",
+    "tabs": {
+      "upcoming": "Zinazokuja",
+      "completed": "Zilizokamilika",
+      "cancelled": "Zilizoghairiwa"
+    },
+    "stats": {
+      "upcomingBookings": "Miadi Ijayo",
+      "upcomingBookingsHint": "Iliyopangwa",
+      "completedThisMonth": "Zilizokamilika Mwezi Huu",
+      "completedThisMonthHint": "Mwezi huu wa kalenda",
+      "pendingPayments": "Malipo Yanayosubiri",
+      "pendingPaymentsHint": "Yanasubiri idhini",
+      "totalSpent": "Jumla Iliyotumika",
+      "totalSpentHint": "Wakati wote"
+    },
+    "searchPlaceholder": "Tafuta miadi...",
+    "statusPlaceholder": "Hali",
+    "allStatuses": "Hali Zote",
+    "servicePlaceholder": "Huduma",
+    "allServices": "Huduma Zote",
+    "emptyUpcoming": {
+      "title": "Hakuna miadi ijayo",
+      "description": "Huna miadi yoyote iliyopangwa bado. Weka miadi ya huduma ili ionekane hapa.",
+      "actionLabel": "Weka Miadi ya Huduma"
+    },
+    "emptyCompleted": {
+      "title": "Bado hakuna miadi iliyokamilika",
+      "description": "Kazi zilizowekwa alama kuwa zimekamilika zitaonekana hapa.",
+      "actionLabel": "Vinjari Huduma"
+    },
+    "emptyCancelled": {
+      "title": "Hakuna miadi iliyoghairiwa",
+      "description": "Miadi unayoghairi itaonekana hapa kwa kumbukumbu zako.",
+      "actionLabel": "Tazama Zinazokuja"
+    },
+    "emptyFiltered": {
+      "title": "Hakuna miadi inayolingana",
+      "description": "Jaribu kurekebisha utafutaji au vichujio vyako ili kupata unachotafuta.",
+      "actionLabel": "Futa Vichujio"
+    },
+    "columns": {
+      "service": "Huduma",
+      "bookingId": "Kitambulisho cha Miadi",
+      "schedule": "Ratiba",
+      "provider": "Mtoa Huduma",
+      "status": "Hali",
+      "amount": "Kiasi"
+    },
+    "serviceFallback": "Huduma",
+    "itemLabel": "miadi"
+  },
+  "calendar": {
+    "pageTitle": "Kalenda",
+    "pageSubtitle": "Miadi yako, iliyopangwa kwa tarehe",
+    "myBookings": "Miadi Yangu",
+    "noBookingsThisDay": "Hakuna miadi siku hii.",
+    "serviceFallback": "Huduma",
+    "footerHint": "Tarehe zenye alama ya zambarau zina angalau miadi moja halisi iliyopangwa."
+  },
+  "inbox": {
+    "pageTitle": "Kikasha",
+    "pageSubtitle": "Wasiliana na watoa huduma wa miadi yako",
+    "emptyTitle": "Bado hakuna mazungumzo",
+    "emptyDescription": "Mtoa huduma akishawekwa kwenye mojawapo ya miadi yako, unaweza kuwasiliana naye hapa.",
+    "browseServices": "Vinjari Huduma",
+    "serviceFallback": "Huduma",
+    "noMessagesYet": "Bado hakuna ujumbe — sema hujambo!",
+    "messagePlaceholder": "Ujumbe..."
+  },
+  "history": {
+    "pageTitle": "Historia",
+    "pageSubtitle": "Kila kilichotokea kwenye akaunti yako, mahali pamoja",
+    "viewing": "Unaangalia",
+    "detailSheetTitle": "Maelezo ya historia",
+    "categories": {
+      "bookings": "Miadi",
+      "payments": "Malipo",
+      "wallet": "Pochi",
+      "loyalty": "Uaminifu",
+      "invoices": "Ankara"
+    },
+    "bookingsSection": {
+      "totalBookings": "Jumla ya Miadi",
+      "totalBookingsHint": "Wakati wote",
+      "paidJobs": "Kazi Zilizolipwa",
+      "paidJobsHint": "Zilizokamilika",
+      "cancelled": "Zilizoghairiwa",
+      "cancelledHint": "Wakati wote",
+      "totalCharged": "Jumla Iliyotozwa",
+      "totalChargedHint": "Wakati wote",
+      "pendingAuthorizations": "Idhini Zinazosubiri",
+      "pendingAuthorizationsHint": "Zinasubiri kukamilishwa",
+      "fullyPaid": "Zilizolipwa Kikamilifu",
+      "fullyPaidHint": "Zilizokamilika",
+      "searchBookings": "Tafuta miadi...",
+      "searchCharges": "Tafuta malipo...",
+      "statusPlaceholder": "Hali",
+      "allStatuses": "Hali Zote",
+      "statusPaid": "Imelipwa",
+      "statusClosed": "Imefungwa",
+      "statusCancelled": "Imeghairiwa",
+      "statusAuthorized": "Imeidhinishwa",
+      "emptyMatchingTitle": "Hakuna matokeo yanayolingana",
+      "emptyMatchingDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "noBookingsTitle": "Bado hakuna miadi",
+      "noBookingsDescription": "Kazi zilizokamilika na kulipwa zitaonekana hapa.",
+      "noChargesTitle": "Bado hakuna malipo",
+      "noChargesDescription": "Malipo kutoka kwa miadi yako yataonekana hapa.",
+      "browseServices": "Vinjari Huduma",
+      "columns": {
+        "service": "Huduma",
+        "bookingId": "Kitambulisho cha Miadi",
+        "date": "Tarehe",
+        "provider": "Mtoa Huduma",
+        "status": "Hali",
+        "amount": "Kiasi"
+      },
+      "serviceFallback": "Huduma",
+      "itemLabelBookings": "miadi",
+      "itemLabelCharges": "malipo"
+    },
+    "walletSection": {
+      "totalCredited": "Jumla Iliyowekwa",
+      "totalCreditedHint": "Wakati wote",
+      "totalDebited": "Jumla Iliyotolewa",
+      "totalDebitedHint": "Wakati wote",
+      "currentBalance": "Salio la Sasa",
+      "currentBalanceHint": "Hivi sasa",
+      "searchPlaceholder": "Tafuta miamala...",
+      "typePlaceholder": "Aina",
+      "allTypes": "Aina Zote",
+      "credit": "Kuweka",
+      "debit": "Kutoa",
+      "emptyMatchingTitle": "Hakuna miamala inayolingana",
+      "emptyMatchingDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "emptyTitle": "Bado hakuna shughuli za pochi",
+      "emptyDescription": "Kuweka, kutoa na masalio yatakayoshikiliwa yataonekana hapa.",
+      "goToWallet": "Nenda kwa Pochi",
+      "columns": {
+        "type": "Aina",
+        "date": "Tarehe",
+        "amount": "Kiasi",
+        "balanceAfter": "Salio Baada"
+      },
+      "itemLabel": "miamala"
+    },
+    "loyaltySection": {
+      "pointsEarned": "Pointi Zilizopatikana",
+      "pointsEarnedHint": "Wakati wote",
+      "pointsSpent": "Pointi Zilizotumika",
+      "pointsSpentHint": "Wakati wote",
+      "currentBalance": "Salio la Sasa",
+      "currentBalanceHint": "Hivi sasa",
+      "searchPlaceholder": "Tafuta shughuli...",
+      "typePlaceholder": "Aina",
+      "all": "Zote",
+      "earned": "Zilizopatikana",
+      "spent": "Zilizotumika",
+      "emptyMatchingTitle": "Hakuna shughuli zinazolingana",
+      "emptyMatchingDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "emptyTitle": "Bado hakuna shughuli za uaminifu",
+      "emptyDescription": "Weka miadi ya huduma ili uanze kupata pointi za uaminifu.",
+      "goToLoyalty": "Nenda kwa Uaminifu",
+      "columns": {
+        "activity": "Shughuli",
+        "date": "Tarehe",
+        "points": "Pointi",
+        "balanceAfter": "Salio Baada"
+      },
+      "itemLabel": "kumbukumbu"
+    },
+    "invoicesSection": {
+      "totalInvoices": "Jumla ya Ankara",
+      "totalInvoicesHint": "Wakati wote",
+      "paid": "Zilizolipwa",
+      "paidHint": "Zilizokamilika",
+      "outstanding": "Zinazodaiwa",
+      "outstandingHint": "Zinasubiri malipo",
+      "searchPlaceholder": "Tafuta ankara...",
+      "statusPlaceholder": "Hali",
+      "allStatuses": "Hali Zote",
+      "issued": "Zilizotolewa",
+      "paidStatus": "Imelipwa",
+      "emptyMatchingTitle": "Hakuna ankara zinazolingana",
+      "emptyMatchingDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "emptyTitle": "Bado hakuna ankara",
+      "emptyDescription": "Ankara hutolewa mara moja miadi inapokamilika na kuthibitishwa.",
+      "goToInvoices": "Nenda kwa Ankara",
+      "columns": {
+        "invoiceNumber": "Nambari ya Ankara",
+        "booking": "Miadi",
+        "date": "Tarehe",
+        "status": "Hali",
+        "amount": "Kiasi"
+      },
+      "itemLabel": "ankara"
+    }
+  }
+}
