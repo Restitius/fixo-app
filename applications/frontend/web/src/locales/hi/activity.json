@@ -1,0 +1,134 @@
+{
+  "loading": "लोड हो रहा है…",
+  "page": {
+    "title": "गतिविधि",
+    "subtitle": "आपकी यात्रा का कालानुक्रमिक रिकॉर्ड"
+  },
+  "metrics": {
+    "totalEvents": "कुल इवेंट",
+    "totalEventsHint": "सभी दर्ज की गई गतिविधि",
+    "bookingEvents": "बुकिंग इवेंट",
+    "bookingEventsHint": "बनाई गई बुकिंग",
+    "paymentActions": "भुगतान कार्रवाइयाँ",
+    "paymentActionsHint": "भुगतान और प्राधिकरण",
+    "thisWeek": "इस सप्ताह",
+    "thisWeekHint": "इस सप्ताह के इवेंट"
+  },
+  "filters": {
+    "searchPlaceholder": "गतिविधि खोजें...",
+    "allEvents": "सभी इवेंट",
+    "range": {
+      "7": "पिछले 7 दिन",
+      "30": "पिछले 30 दिन",
+      "90": "पिछले 90 दिन",
+      "all": "पूरा समय"
+    }
+  },
+  "actions": {
+    "export": "निर्यात करें",
+    "viewTimeline": "टाइमलाइन देखें",
+    "clearFilters": "फ़िल्टर साफ़ करें",
+    "browseServices": "सेवाएं ब्राउज़ करें",
+    "viewBooking": "बुकिंग देखें",
+    "viewPayment": "भुगतान देखें",
+    "viewDetails": "विवरण देखें",
+    "openTimeline": "टाइमलाइन खोलें",
+    "downloadInvoice": "इनवॉइस डाउनलोड करें",
+    "leaveReview": "समीक्षा दें",
+    "close": "बंद करें"
+  },
+  "empty": {
+    "noMatchTitle": "कोई मेल खाती गतिविधि नहीं",
+    "noMatchDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+    "noActivityTitle": "अभी तक कोई गतिविधि नहीं",
+    "noActivityDescription": "बुकिंग इवेंट — पुष्टिकरण, भुगतान, अपडेट — यहां दिखाई देंगे।"
+  },
+  "table": {
+    "event": "इवेंट",
+    "booking": "बुकिंग",
+    "category": "श्रेणी",
+    "details": "विवरण",
+    "date": "तारीख",
+    "status": "स्थिति"
+  },
+  "pagination": {
+    "showing": "{{total}} इवेंट में से {{from}} से {{to}} दिखाए जा रहे हैं"
+  },
+  "toast": {
+    "exported": "गतिविधि निर्यात की गई",
+    "openingFeedback": "फ़ीडबैक खोला जा रहा है — समीक्षा देने के लिए यह बुकिंग खोजें।"
+  },
+  "categories": {
+    "Booking": "बुकिंग",
+    "Payment": "भुगतान",
+    "Service": "सेवा",
+    "Invoice": "इनवॉइस",
+    "Feedback": "फ़ीडबैक"
+  },
+  "status": {
+    "pending": "लंबित",
+    "failed": "विफल",
+    "completed": "पूर्ण",
+    "authorized": "अधिकृत"
+  },
+  "eventTypes": {
+    "bookingCreated": "बुकिंग बनाई गई",
+    "paymentAuthorized": "भुगतान अधिकृत",
+    "paymentFailed": "भुगतान विफल",
+    "providerAssigned": "प्रदाता नियुक्त",
+    "providerOnTheWay": "प्रदाता रास्ते में है",
+    "providerArrived": "प्रदाता पहुंच गया",
+    "arrivalVerified": "आगमन सत्यापित",
+    "serviceStarted": "सेवा शुरू हुई",
+    "serviceCompleted": "सेवा पूर्ण हुई",
+    "bookingCancelled": "बुकिंग रद्द की गई",
+    "changeProposed": "परिवर्तन प्रस्तावित",
+    "changeApproved": "परिवर्तन स्वीकृत",
+    "changeRejected": "परिवर्तन अस्वीकृत",
+    "invoiceReady": "इनवॉइस तैयार",
+    "reviewSubmitted": "समीक्षा सबमिट की गई",
+    "reviewPending": "समीक्षा लंबित"
+  },
+  "pendingReview": {
+    "detail": "कृपया अपनी प्रतिक्रिया साझा करें"
+  },
+  "common": {
+    "service": "सेवा"
+  },
+  "insights": {
+    "heading": "गतिविधि अंतर्दृष्टि",
+    "mostRecentBooking": "सबसे हाल की बुकिंग",
+    "lastPayment": "अंतिम भुगतान",
+    "latestCompletedService": "नवीनतम पूर्ण सेवा",
+    "withProvider": "{{name}} के साथ",
+    "exploreYourJourney": "अपनी यात्रा का अन्वेषण करें",
+    "viewFullTimelineHint": "अपनी गतिविधि की पूरी टाइमलाइन देखें।"
+  },
+  "fields": {
+    "dateTime": "तारीख और समय",
+    "booking": "बुकिंग",
+    "provider": "प्रदाता",
+    "payment": "भुगतान",
+    "paymentStatus": "भुगतान स्थिति",
+    "eventType": "इवेंट प्रकार",
+    "bookingReference": "बुकिंग संदर्भ",
+    "paymentReference": "भुगतान संदर्भ",
+    "amount": "राशि",
+    "status": "स्थिति"
+  },
+  "journey": {
+    "timeline": "यात्रा टाइमलाइन",
+    "notYetReached": "अभी तक नहीं पहुंचा",
+    "description": "विवरण",
+    "noDetails": "इस इवेंट के लिए कोई अतिरिक्त विवरण नहीं है।"
+  },
+  "payment": {
+    "dialogTitle": "गतिविधि विवरण",
+    "dialogSubtitle": "इस गतिविधि के बारे में विस्तृत जानकारी",
+    "progressTimeline": "प्रगति टाइमलाइन",
+    "nextStep": "अगला चरण:",
+    "upcoming": "आगामी",
+    "failedNote": "यह भुगतान प्रयास विफल रहा — आप इसे अपनी बुकिंग से पुनः प्रयास कर सकते हैं।",
+    "authorizedNote": "आपका भुगतान सफलतापूर्वक अधिकृत कर दिया गया है। हम इस बुकिंग की प्रगति के बारे में आपको सूचित करते रहेंगे।"
+  }
+}
