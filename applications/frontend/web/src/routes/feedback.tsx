@@ -40,6 +40,7 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type BookingHistoryRow, type BookingRating } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const title = "Feedback — FIXO";
 const description = "Rate your providers and share feedback on completed bookings.";
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/feedback")({
 
 const TABS = ["All", "Pending", "Submitted"] as const;
 type Tab = (typeof TABS)[number];
+const TAB_LABEL_KEYS: Record<Tab, string> = { All: "all", Pending: "pending", Submitted: "submitted" };
 
 // The RATINGS table only stores one overall 1-5 rating + a single comment —
 // no per-aspect scores, tags or photos. Rather than silently discard the
@@ -67,12 +69,22 @@ type Tab = (typeof TABS)[number];
 // decoded back out for display — nothing shown is invented, it's exactly
 // what the customer entered, just packed into the only column available.
 const ASPECTS = [
-  { key: "Q", label: "Quality", icon: Award },
-  { key: "P", label: "Punctuality", icon: Clock },
-  { key: "C", label: "Communication", icon: MessageSquare },
-  { key: "V", label: "Value", icon: Tag },
+  { key: "Q", labelKey: "quality", icon: Award },
+  { key: "P", labelKey: "punctuality", icon: Clock },
+  { key: "C", labelKey: "communication", icon: MessageSquare },
+  { key: "V", labelKey: "value", icon: Tag },
 ] as const;
+// These English strings are the real wire format persisted (packed) into the
+// RATINGS.comment column — they must stay stable so existing stored reviews
+// keep decoding correctly. Only their *display* is translated, via the
+// labelKey lookup below; the stored/compared value never changes.
 const HIGHLIGHT_TAGS = ["Professional", "On time", "Clean work", "Friendly"] as const;
+const HIGHLIGHT_TAG_LABEL_KEYS: Record<string, string> = {
+  Professional: "professional",
+  "On time": "onTime",
+  "Clean work": "cleanWork",
+  Friendly: "friendly",
+};
 const ENCODE_RE = /^\[\[A:([^\]]*)\]\](?:\[\[T:([^\]]*)\]\])?\s?/;
 
 function encodeComment(aspects: Record<string, number>, tags: string[], text: string): string {
@@ -112,11 +124,12 @@ function iconForService(name?: string | null) {
 }
 
 function StarPicker({ value, onChange, size = "size-8" }: { value: number; onChange: (n: number) => void; size?: string }) {
+  const { t } = useTranslation("support");
   const [hover, setHover] = useState(0);
   return (
     <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((n) => (
-        <button key={n} type="button" onMouseEnter={() => setHover(n)} onMouseLeave={() => setHover(0)} onClick={() => onChange(n)} aria-label={`${n} star`}>
+        <button key={n} type="button" onMouseEnter={() => setHover(n)} onMouseLeave={() => setHover(0)} onClick={() => onChange(n)} aria-label={t("feedback.starAriaLabel", { count: n })}>
           <Star className={`${size} transition-colors ${n <= (hover || value) ? "fill-current text-[#FFB800]" : "text-muted-foreground"}`} />
         </button>
       ))}
@@ -140,6 +153,7 @@ interface FeedbackRow {
 }
 
 function FeedbackPage() {
+  const { t } = useTranslation("support");
   const { access_token, loading, logout, customer } = useAuth();
   const navigate = useNavigate();
   const [bookings, setBookings] = useState<BookingHistoryRow[] | null>(null);
@@ -194,7 +208,7 @@ function FeedbackPage() {
   }, [rows, tab, search, sortOldest]);
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -210,13 +224,15 @@ function FeedbackPage() {
     setDetailTarget(null);
   }
 
+  const emptyTitle = tab === "Pending" ? t("feedback.empty.pendingTitle") : tab === "Submitted" ? t("feedback.empty.submittedTitle") : t("feedback.empty.allTitle");
+
   return (
-    <PageShell title="Feedback" subtitle="Rate providers for your completed jobs" userName={customer?.full_name} onLogout={logout}>
+    <PageShell title={t("feedback.page.title")} subtitle={t("feedback.page.subtitle")} userName={customer?.full_name} onLogout={logout}>
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={MessageSquareHeart} label="Total Reviews" hint="All time reviews" value={dataLoaded ? String(submittedCount) : "—"} />
-        <MetricCard icon={ClipboardList} label="Pending Reviews" hint="Bookings to rate" value={dataLoaded ? String(pendingCount) : "—"} tone="amber" tintValue />
-        <MetricCard icon={Star} label="Average Rating" hint="Across all providers" value={dataLoaded ? avgRating.toFixed(1) : "—"} tone="success" tintValue />
-        <MetricCard icon={Users} label="Providers Rated" hint="Distinct providers" value={dataLoaded ? String(providersRated) : "—"} />
+        <MetricCard icon={MessageSquareHeart} label={t("feedback.metrics.totalReviews")} hint={t("feedback.metrics.allTimeReviews")} value={dataLoaded ? String(submittedCount) : "—"} />
+        <MetricCard icon={ClipboardList} label={t("feedback.metrics.pendingReviews")} hint={t("feedback.metrics.bookingsToRate")} value={dataLoaded ? String(pendingCount) : "—"} tone="amber" tintValue />
+        <MetricCard icon={Star} label={t("feedback.metrics.averageRating")} hint={t("feedback.metrics.acrossAllProviders")} value={dataLoaded ? avgRating.toFixed(1) : "—"} tone="success" tintValue />
+        <MetricCard icon={Users} label={t("feedback.metrics.providersRated")} hint={t("feedback.metrics.distinctProviders")} value={dataLoaded ? String(providersRated) : "—"} />
       </div>
 
       <div className="mt-6 flex min-h-0 flex-1 items-stretch gap-6">
@@ -224,16 +240,16 @@ function FeedbackPage() {
           <div className="flex h-full flex-col rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
-                {TABS.map((t) => (
+                {TABS.map((tb) => (
                   <button
-                    key={t}
-                    onClick={() => setTab(t)}
+                    key={tb}
+                    onClick={() => setTab(tb)}
                     className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-                      tab === t ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      tab === tb ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                     }`}
-                    style={tab === t ? { backgroundImage: "var(--gradient-primary)" } : undefined}
+                    style={tab === tb ? { backgroundImage: "var(--gradient-primary)" } : undefined}
                   >
-                    {t}
+                    {t(`feedback.tabs.${TAB_LABEL_KEYS[tb]}`)}
                   </button>
                 ))}
               </div>
@@ -241,14 +257,14 @@ function FeedbackPage() {
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search bookings, services or providers..."
+                  placeholder={t("feedback.search.placeholder")}
                   className="h-10 w-full min-w-[180px] rounded-xl border border-border bg-background px-3 text-sm outline-none placeholder:text-muted-foreground sm:w-64"
                 />
                 <button
                   onClick={() => setSortOldest((v) => !v)}
                   className="flex h-10 shrink-0 items-center gap-1 rounded-xl border border-border px-3 text-sm font-medium hover:bg-muted"
                 >
-                  {sortOldest ? "Oldest first" : "Newest first"}
+                  {sortOldest ? t("feedback.sort.oldestFirst") : t("feedback.sort.newestFirst")}
                 </button>
               </div>
             </div>
@@ -260,9 +276,9 @@ function FeedbackPage() {
                 <EmptyState
                   compact
                   icon={MessageSquareHeart}
-                  title={tab === "Pending" ? "Nothing pending" : tab === "Submitted" ? "No reviews yet" : "Nothing to rate yet"}
-                  description="Once a booking is completed and closed, you'll be able to rate your provider here."
-                  actionLabel="View My Bookings"
+                  title={emptyTitle}
+                  description={t("feedback.empty.description")}
+                  actionLabel={t("feedback.empty.viewMyBookings")}
                   actionTo="/bookings"
                 />
               ) : (
@@ -280,8 +296,8 @@ function FeedbackPage() {
                           <Icon className="size-5" />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="font-semibold">{row.booking.service_name ?? "Service"}</p>
-                          <p className="text-sm text-muted-foreground">{row.booking.provider_name ?? "Provider"}</p>
+                          <p className="font-semibold">{row.booking.service_name ?? t("feedback.serviceFallback")}</p>
+                          <p className="text-sm text-muted-foreground">{row.booking.provider_name ?? t("feedback.providerFallback")}</p>
                           {row.rating && decoded?.text && <p className="mt-0.5 truncate text-xs text-muted-foreground">{decoded.text}</p>}
                         </div>
                         <div className="flex shrink-0 flex-col items-end gap-1">
@@ -291,9 +307,9 @@ function FeedbackPage() {
                           </span>
                         </div>
                         {row.rating ? (
-                          <span className="rounded-full bg-success/15 px-2.5 py-1 text-xs font-semibold text-success">Submitted</span>
+                          <span className="rounded-full bg-success/15 px-2.5 py-1 text-xs font-semibold text-success">{t("feedback.row.submitted")}</span>
                         ) : (
-                          <span className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">Rate now</span>
+                          <span className="rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary">{t("feedback.row.rateNow")}</span>
                         )}
                       </button>
                     );
@@ -319,20 +335,20 @@ function FeedbackPage() {
         {!detailTarget && (
           <div className="flex h-full w-[320px] shrink-0 flex-col rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Recent feedback</h3>
+              <h3 className="text-lg font-semibold">{t("feedback.recent.title")}</h3>
               <button onClick={() => setTab("Submitted")} className="text-sm font-semibold text-primary hover:underline">
-                View all
+                {t("feedback.recent.viewAll")}
               </button>
             </div>
             {recentFeedback.length === 0 ? (
-              <p className="mt-4 text-sm text-muted-foreground">Your submitted reviews will show up here.</p>
+              <p className="mt-4 text-sm text-muted-foreground">{t("feedback.recent.emptyDescription")}</p>
             ) : (
               <div className="mt-4 flex-1 divide-y divide-border">
                 {recentFeedback.map((row) => {
                   const decoded = decodeComment(row.rating?.comment);
                   return (
                     <button key={row.booking.booking_id} onClick={() => setDetailTarget(row)} className="block w-full py-3 text-left">
-                      <p className="font-semibold">{row.booking.provider_name ?? "Provider"}</p>
+                      <p className="font-semibold">{row.booking.provider_name ?? t("feedback.providerFallback")}</p>
                       <div className="mt-1 flex items-center gap-2">
                         <Stars value={row.rating!.rating} className="size-3.5" />
                         <span className="text-xs text-muted-foreground">{fmtDate(row.rating!.created_at)}</span>
@@ -376,6 +392,7 @@ function Field({ icon: Icon, label, value }: { icon: typeof Hash; label: string;
 }
 
 function ReviewDetailsPanel({ row, onClose, onEdit }: { row: FeedbackRow; onClose: () => void; onEdit: () => void }) {
+  const { t } = useTranslation("support");
   const navigate = useNavigate();
   const rating = row.rating!;
   const decoded = decodeComment(rating.comment);
@@ -385,7 +402,7 @@ function ReviewDetailsPanel({ row, onClose, onEdit }: { row: FeedbackRow; onClos
   return (
     <div className="h-full w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Review details</h3>
+        <h3 className="text-lg font-semibold">{t("feedback.detail.title")}</h3>
         <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
           <X className="size-4" />
         </button>
@@ -407,7 +424,7 @@ function ReviewDetailsPanel({ row, onClose, onEdit }: { row: FeedbackRow; onClos
               if (!v) return null;
               return (
                 <div key={a.key} className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{a.label}</span>
+                  <span className="text-muted-foreground">{t(`feedback.aspects.${a.labelKey}`)}</span>
                   <Stars value={v} className="size-3.5" />
                 </div>
               );
@@ -417,38 +434,38 @@ function ReviewDetailsPanel({ row, onClose, onEdit }: { row: FeedbackRow; onClos
 
         {decoded.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {decoded.tags.map((t) => (
-              <span key={t} className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
-                {t}
+            {decoded.tags.map((tg) => (
+              <span key={tg} className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                {HIGHLIGHT_TAG_LABEL_KEYS[tg] ? t(`feedback.highlightTags.${HIGHLIGHT_TAG_LABEL_KEYS[tg]}`) : tg}
               </span>
             ))}
           </div>
         )}
 
         <div>
-          <h4 className="mb-2 text-sm font-semibold">Your review</h4>
-          <p className="text-sm text-muted-foreground">{decoded.text || "No written feedback for this booking."}</p>
+          <h4 className="mb-2 text-sm font-semibold">{t("feedback.detail.yourReview")}</h4>
+          <p className="text-sm text-muted-foreground">{decoded.text || t("feedback.detail.noWrittenFeedback")}</p>
         </div>
 
         <div>
-          <h4 className="mb-2 text-sm font-semibold">Booking information</h4>
+          <h4 className="mb-2 text-sm font-semibold">{t("feedback.detail.bookingInformation")}</h4>
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <Field icon={Hash} label="Booking ID" value={row.booking.booking_number} />
-            <Field icon={Wrench} label="Service" value={row.booking.service_name ?? "—"} />
-            <Field icon={Calendar} label="Date & Time" value={fmtDate(row.booking.scheduled_date ?? row.booking.completed_at ?? row.booking.created_at)} />
-            <Field icon={Receipt} label="Amount Paid" value={fmtMoney(row.booking.agreed_amount, row.booking.currency)} />
+            <Field icon={Hash} label={t("feedback.detail.bookingId")} value={row.booking.booking_number} />
+            <Field icon={Wrench} label={t("feedback.detail.service")} value={row.booking.service_name ?? "—"} />
+            <Field icon={Calendar} label={t("feedback.detail.dateTime")} value={fmtDate(row.booking.scheduled_date ?? row.booking.completed_at ?? row.booking.created_at)} />
+            <Field icon={Receipt} label={t("feedback.detail.amountPaid")} value={fmtMoney(row.booking.agreed_amount, row.booking.currency)} />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
           <button onClick={onEdit} className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted">
-            <Pencil className="size-4" /> Edit review
+            <Pencil className="size-4" /> {t("feedback.detail.editReview")}
           </button>
           <button
             onClick={() => navigate({ to: "/bookings" })}
             className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
           >
-            <FileText className="size-4" /> View booking
+            <FileText className="size-4" /> {t("feedback.detail.viewBooking")}
           </button>
         </div>
       </div>
@@ -467,6 +484,7 @@ function RateDialog({
   onOpenChange: (o: boolean) => void;
   onSubmitted: (rating: BookingRating) => void;
 }) {
+  const { t } = useTranslation("support");
   const [overall, setOverall] = useState(0);
   const [aspects, setAspects] = useState<Record<string, number>>({});
   const [tags, setTags] = useState<string[]>([]);
@@ -491,13 +509,13 @@ function RateDialog({
     setPhotoNames([]);
   }, [row]);
 
-  function toggleTag(t: string) {
-    setTags((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
+  function toggleTag(tg: string) {
+    setTags((prev) => (prev.includes(tg) ? prev.filter((x) => x !== tg) : [...prev, tg]));
   }
 
   async function submit() {
     if (!row || overall === 0) {
-      toast.error("Pick a star rating first");
+      toast.error(t("feedback.dialog.pickStarRating"));
       return;
     }
     setSubmitting(true);
@@ -505,9 +523,9 @@ function RateDialog({
       const comment = encodeComment(aspects, tags, text);
       const res = await fixoSdk.submitRating(row.booking.booking_id, overall, comment);
       if (photoNames.length > 0) {
-        toast.info("Photo attachments aren't available yet — your rating and comments were saved.");
+        toast.info(t("feedback.dialog.photoAttachmentsNotAvailable"));
       }
-      toast.success("Thanks for your feedback!");
+      toast.success(t("feedback.dialog.thanksForFeedback"));
       onSubmitted({ ...res, booking_number: row.booking.booking_number, service_name: row.booking.service_name, provider_name: row.booking.provider_name });
     } catch {
       // toast emitted by client
@@ -520,8 +538,8 @@ function RateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl overflow-y-auto max-h-[90vh]">
         <DialogHeader>
-          <DialogTitle>Rate your provider</DialogTitle>
-          <p className="text-sm text-muted-foreground">Share your experience for this completed booking.</p>
+          <DialogTitle>{t("feedback.dialog.title")}</DialogTitle>
+          <p className="text-sm text-muted-foreground">{t("feedback.dialog.subtitle")}</p>
         </DialogHeader>
 
         {row && (
@@ -538,37 +556,37 @@ function RateDialog({
                 </span>
                 <div>
                   <p className="flex items-center gap-1.5 font-semibold">
-                    {row.booking.provider_name ?? "Provider"} <CheckCircle2 className="size-4 text-primary" />
+                    {row.booking.provider_name ?? t("feedback.providerFallback")} <CheckCircle2 className="size-4 text-primary" />
                   </p>
-                  <p className="text-sm text-muted-foreground">{row.booking.service_name ?? "Service"}</p>
+                  <p className="text-sm text-muted-foreground">{row.booking.service_name ?? t("feedback.serviceFallback")}</p>
                 </div>
               </div>
               <div className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3 text-sm">
-                <Field icon={FileText} label="Booking code" value={row.booking.booking_number} />
+                <Field icon={FileText} label={t("feedback.dialog.bookingCode")} value={row.booking.booking_number} />
                 <Field
                   icon={Calendar}
-                  label="Service date"
+                  label={t("feedback.dialog.serviceDate")}
                   value={fmtDate(row.booking.scheduled_date ?? row.booking.completed_at ?? row.booking.created_at)}
                 />
-                <Field icon={Receipt} label="Total amount" value={fmtMoney(row.booking.agreed_amount, row.booking.currency)} />
+                <Field icon={Receipt} label={t("feedback.dialog.totalAmount")} value={fmtMoney(row.booking.agreed_amount, row.booking.currency)} />
               </div>
             </div>
 
             <div className="text-center">
-              <p className="font-semibold">How would you rate your overall experience?</p>
+              <p className="font-semibold">{t("feedback.dialog.overallQuestion")}</p>
               <div className="mt-3 flex justify-center">
                 <StarPicker value={overall} onChange={setOverall} />
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Tap a star to rate</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t("feedback.dialog.tapToRate")}</p>
             </div>
 
             <div>
-              <p className="mb-3 font-semibold">Rate specific aspects</p>
+              <p className="mb-3 font-semibold">{t("feedback.dialog.rateAspects")}</p>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {ASPECTS.map((a) => (
                   <div key={a.key} className="flex flex-col items-center gap-2 rounded-xl border border-border p-3">
                     <a.icon className="size-4 text-primary" />
-                    <span className="text-xs font-medium">{a.label}</span>
+                    <span className="text-xs font-medium">{t(`feedback.aspects.${a.labelKey}`)}</span>
                     <StarPicker size="size-3.5" value={aspects[a.key] ?? 0} onChange={(n) => setAspects((prev) => ({ ...prev, [a.key]: n }))} />
                   </div>
                 ))}
@@ -576,26 +594,26 @@ function RateDialog({
             </div>
 
             <div>
-              <p className="mb-2 font-semibold">Share your feedback</p>
-              <Textarea value={text} onChange={(e) => setText(e.target.value.slice(0, 420))} placeholder="Tell us about your experience..." className="min-h-24" />
+              <p className="mb-2 font-semibold">{t("feedback.dialog.shareFeedback")}</p>
+              <Textarea value={text} onChange={(e) => setText(e.target.value.slice(0, 420))} placeholder={t("feedback.dialog.feedbackPlaceholder")} className="min-h-24" />
               <p className="mt-1 text-right text-xs text-muted-foreground">{text.length}/420</p>
             </div>
 
             <div>
-              <p className="mb-2 font-semibold">What stood out? <span className="font-normal text-muted-foreground">(Optional)</span></p>
+              <p className="mb-2 font-semibold">{t("feedback.dialog.whatStoodOut")} <span className="font-normal text-muted-foreground">({t("feedback.dialog.optional")})</span></p>
               <div className="flex flex-wrap gap-2">
-                {HIGHLIGHT_TAGS.map((t) => (
+                {HIGHLIGHT_TAGS.map((tg) => (
                   <button
-                    key={t}
-                    onClick={() => toggleTag(t)}
+                    key={tg}
+                    onClick={() => toggleTag(tg)}
                     className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium ${
-                      tags.includes(t) ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted"
+                      tags.includes(tg) ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted"
                     }`}
                   >
-                    <span className={`flex size-3.5 items-center justify-center rounded-full border-2 ${tags.includes(t) ? "border-primary bg-primary" : "border-muted-foreground"}`}>
-                      {tags.includes(t) && <Check className="size-2.5 text-primary-foreground" />}
+                    <span className={`flex size-3.5 items-center justify-center rounded-full border-2 ${tags.includes(tg) ? "border-primary bg-primary" : "border-muted-foreground"}`}>
+                      {tags.includes(tg) && <Check className="size-2.5 text-primary-foreground" />}
                     </span>
-                    {t}
+                    {t(`feedback.highlightTags.${HIGHLIGHT_TAG_LABEL_KEYS[tg]}`)}
                   </button>
                 ))}
               </div>
@@ -607,11 +625,11 @@ function RateDialog({
                   <Camera className="size-5" />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">Add photos <span className="font-normal text-muted-foreground">(optional)</span></p>
-                  <p className="text-xs text-muted-foreground">{photoNames.length > 0 ? `${photoNames.length} selected` : "Upload up to 5 photos of the work"}</p>
+                  <p className="text-sm font-semibold">{t("feedback.dialog.addPhotos")} <span className="font-normal text-muted-foreground">({t("feedback.dialog.optional")})</span></p>
+                  <p className="text-xs text-muted-foreground">{photoNames.length > 0 ? t("feedback.dialog.photosSelected", { count: photoNames.length }) : t("feedback.dialog.uploadUpTo5")}</p>
                 </div>
               </div>
-              <span className="shrink-0 rounded-xl border border-border px-3 py-2 text-sm font-medium">Choose files</span>
+              <span className="shrink-0 rounded-xl border border-border px-3 py-2 text-sm font-medium">{t("feedback.dialog.chooseFiles")}</span>
               <input
                 type="file"
                 accept="image/*"
@@ -623,7 +641,7 @@ function RateDialog({
 
             <div className="flex gap-2">
               <button onClick={() => onOpenChange(false)} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">
-                Cancel
+                {t("feedback.dialog.cancel")}
               </button>
               <button
                 onClick={() => void submit()}
@@ -631,7 +649,7 @@ function RateDialog({
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                <Send className="size-4" /> {submitting ? "Submitting..." : "Submit review"}
+                <Send className="size-4" /> {submitting ? t("feedback.dialog.submitting") : t("feedback.dialog.submit")}
               </button>
             </div>
           </div>

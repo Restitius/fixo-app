@@ -1,0 +1,223 @@
+{
+  "loading": "Loading…",
+  "help": {
+    "page": {
+      "title": "Help",
+      "subtitle": "Support tickets and helpdesk"
+    },
+    "metrics": {
+      "openTickets": "Open Tickets",
+      "viewAllOpen": "View all open",
+      "resolved": "Resolved",
+      "viewResolved": "View resolved",
+      "avgResponse": "Avg Response",
+      "thisMonth": "This month",
+      "unreadReplies": "Unread Replies",
+      "viewReplies": "View replies",
+      "durationMinutes": "{{count}}m",
+      "durationHours": "{{count}}h",
+      "durationHoursMinutes": "{{hours}}h {{minutes}}m"
+    },
+    "search": {
+      "placeholder": "Search tickets..."
+    },
+    "filters": {
+      "allStatuses": "All Statuses",
+      "open": "Open",
+      "resolved": "Resolved",
+      "closed": "Closed",
+      "allCategories": "All Categories"
+    },
+    "newTicket": "New Ticket",
+    "empty": {
+      "noMatchingTitle": "No matching tickets",
+      "noMatchingDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "noTicketsTitle": "No support tickets",
+      "noTicketsDescription": "Need help with a booking, payment or your account? Open a ticket and we'll get back to you."
+    },
+    "table": {
+      "ticketNumber": "Ticket #",
+      "subject": "Subject",
+      "category": "Category",
+      "priority": "Priority",
+      "status": "Status",
+      "updated": "Updated",
+      "messages": "Messages",
+      "showing": "Showing {{from}} to {{to}} of {{total}} tickets"
+    },
+    "sidebar": {
+      "needHelpTitle": "Need help?",
+      "needHelpDescription": "Find quick answers or get in touch with our support team.",
+      "faqShortcuts": "FAQ shortcuts",
+      "faqs": {
+        "createTicket": "How to create a ticket",
+        "ticketStatus": "Understanding ticket status",
+        "refunds": "Refund and cancellations",
+        "paymentBilling": "Payment & billing help"
+      },
+      "faqToasts": {
+        "createTicket": "Click \"New Ticket\" above, fill in the subject and message, and submit.",
+        "ticketStatus": "Open = awaiting a reply. Resolved = the team considers it solved. Closed = the thread is archived."
+      },
+      "stillNeedHelpTitle": "Still need help?",
+      "stillNeedHelpDescription": "Our support team is here for you.",
+      "contactSupport": "Contact Support"
+    },
+    "detail": {
+      "category": "Category",
+      "priority": "Priority",
+      "status": "Status",
+      "lastUpdated": "Last updated",
+      "relatedTo": "Related to",
+      "bookingFallback": "Booking",
+      "provider": "Provider",
+      "conversation": "Conversation",
+      "loadingMessages": "Loading…",
+      "noMessages": "No messages yet.",
+      "timeline": {
+        "title": "Ticket Timeline",
+        "ticketCreated": "Ticket created",
+        "supportReplied": "Support replied",
+        "youReplied": "You replied",
+        "awaitingCustomer": "Awaiting customer",
+        "respondToContinue": "Respond to continue",
+        "resolved": "Resolved",
+        "pending": "Pending"
+      },
+      "replyToCustomer": "Reply to customer",
+      "attachmentsNotAvailable": "Attachments aren't available on ticket replies yet.",
+      "replyPlaceholder": "Type your message...",
+      "closedNotice": "This ticket is closed. Open a new ticket if you need further help."
+    },
+    "dialog": {
+      "title": "New Support Ticket",
+      "subtitle": "Tell us what went wrong and our team will help.",
+      "subjectLabel": "Subject *",
+      "subjectPlaceholder": "Briefly describe your issue",
+      "bookingReferenceLabel": "Booking reference",
+      "bookingReferencePlaceholder": "e.g. BK-123456",
+      "optional": "Optional",
+      "categoryLabel": "Category *",
+      "priorityLabel": "Priority *",
+      "messageLabel": "Message *",
+      "messagePlaceholder": "Provide as much detail as possible...",
+      "attachmentLabel": "Attachment (optional)",
+      "filesSelected_one": "{{count}} file selected",
+      "filesSelected_other": "{{count}} files selected",
+      "dragDropPrefix": "Drag and drop files here or",
+      "browse": "browse",
+      "maxFileSize": "Max 5MB per file (PDF, JPG, PNG)",
+      "contactMethodLabel": "How would you like us to contact you? *",
+      "contactEmailTitle": "Email",
+      "contactEmailHint": "We'll reply to your email",
+      "contactInAppTitle": "In-app",
+      "contactInAppHint": "We'll reply in your inbox",
+      "responseTimeNote": "Our team typically responds within 1-2 business hours.",
+      "cancel": "Cancel",
+      "submit": "Submit Ticket",
+      "submitting": "Submitting...",
+      "subjectTooShort": "Subject must be at least 3 characters",
+      "describeIssue": "Describe the issue before submitting",
+      "attachmentsNotAvailable": "Attachments aren't available yet — your ticket and message were saved.",
+      "ticketOpened": "Support ticket opened"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "Feedback",
+      "subtitle": "Rate providers for your completed jobs"
+    },
+    "metrics": {
+      "totalReviews": "Total Reviews",
+      "allTimeReviews": "All time reviews",
+      "pendingReviews": "Pending Reviews",
+      "bookingsToRate": "Bookings to rate",
+      "averageRating": "Average Rating",
+      "acrossAllProviders": "Across all providers",
+      "providersRated": "Providers Rated",
+      "distinctProviders": "Distinct providers"
+    },
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "submitted": "Submitted"
+    },
+    "search": {
+      "placeholder": "Search bookings, services or providers..."
+    },
+    "sort": {
+      "oldestFirst": "Oldest first",
+      "newestFirst": "Newest first"
+    },
+    "empty": {
+      "pendingTitle": "Nothing pending",
+      "submittedTitle": "No reviews yet",
+      "allTitle": "Nothing to rate yet",
+      "description": "Once a booking is completed and closed, you'll be able to rate your provider here.",
+      "viewMyBookings": "View My Bookings"
+    },
+    "serviceFallback": "Service",
+    "providerFallback": "Provider",
+    "row": {
+      "submitted": "Submitted",
+      "rateNow": "Rate now"
+    },
+    "recent": {
+      "title": "Recent feedback",
+      "viewAll": "View all",
+      "emptyDescription": "Your submitted reviews will show up here."
+    },
+    "starAriaLabel_one": "{{count}} star",
+    "starAriaLabel_other": "{{count}} stars",
+    "detail": {
+      "title": "Review details",
+      "yourReview": "Your review",
+      "noWrittenFeedback": "No written feedback for this booking.",
+      "bookingInformation": "Booking information",
+      "bookingId": "Booking ID",
+      "service": "Service",
+      "dateTime": "Date & Time",
+      "amountPaid": "Amount Paid",
+      "editReview": "Edit review",
+      "viewBooking": "View booking"
+    },
+    "aspects": {
+      "quality": "Quality",
+      "punctuality": "Punctuality",
+      "communication": "Communication",
+      "value": "Value"
+    },
+    "highlightTags": {
+      "professional": "Professional",
+      "onTime": "On time",
+      "cleanWork": "Clean work",
+      "friendly": "Friendly"
+    },
+    "dialog": {
+      "title": "Rate your provider",
+      "subtitle": "Share your experience for this completed booking.",
+      "bookingCode": "Booking code",
+      "serviceDate": "Service date",
+      "totalAmount": "Total amount",
+      "overallQuestion": "How would you rate your overall experience?",
+      "tapToRate": "Tap a star to rate",
+      "rateAspects": "Rate specific aspects",
+      "shareFeedback": "Share your feedback",
+      "feedbackPlaceholder": "Tell us about your experience...",
+      "whatStoodOut": "What stood out?",
+      "optional": "Optional",
+      "addPhotos": "Add photos",
+      "uploadUpTo5": "Upload up to 5 photos of the work",
+      "photosSelected_one": "{{count}} selected",
+      "photosSelected_other": "{{count}} selected",
+      "chooseFiles": "Choose files",
+      "cancel": "Cancel",
+      "submit": "Submit review",
+      "submitting": "Submitting...",
+      "pickStarRating": "Pick a star rating first",
+      "photoAttachmentsNotAvailable": "Photo attachments aren't available yet — your rating and comments were saved.",
+      "thanksForFeedback": "Thanks for your feedback!"
+    }
+  }
+}
