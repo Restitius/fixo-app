@@ -1,0 +1,134 @@
+{
+  "loading": "Loading…",
+  "page": {
+    "title": "Activity",
+    "subtitle": "A chronological log of your journey"
+  },
+  "metrics": {
+    "totalEvents": "Total Events",
+    "totalEventsHint": "All activity recorded",
+    "bookingEvents": "Booking Events",
+    "bookingEventsHint": "Bookings created",
+    "paymentActions": "Payment Actions",
+    "paymentActionsHint": "Payments & authorizations",
+    "thisWeek": "This Week",
+    "thisWeekHint": "Events this week"
+  },
+  "filters": {
+    "searchPlaceholder": "Search activity...",
+    "allEvents": "All Events",
+    "range": {
+      "7": "Last 7 days",
+      "30": "Last 30 days",
+      "90": "Last 90 days",
+      "all": "All time"
+    }
+  },
+  "actions": {
+    "export": "Export",
+    "viewTimeline": "View timeline",
+    "clearFilters": "Clear Filters",
+    "browseServices": "Browse Services",
+    "viewBooking": "View booking",
+    "viewPayment": "View payment",
+    "viewDetails": "View details",
+    "openTimeline": "Open timeline",
+    "downloadInvoice": "Download invoice",
+    "leaveReview": "Leave review",
+    "close": "Close"
+  },
+  "empty": {
+    "noMatchTitle": "No matching activity",
+    "noMatchDescription": "Try adjusting your search or filters.",
+    "noActivityTitle": "No activity yet",
+    "noActivityDescription": "Booking events — confirmations, payments, updates — will show up here."
+  },
+  "table": {
+    "event": "Event",
+    "booking": "Booking",
+    "category": "Category",
+    "details": "Details",
+    "date": "Date",
+    "status": "Status"
+  },
+  "pagination": {
+    "showing": "Showing {{from}} to {{to}} of {{total}} events"
+  },
+  "toast": {
+    "exported": "Activity exported",
+    "openingFeedback": "Opening Feedback — find this booking to leave your review."
+  },
+  "categories": {
+    "Booking": "Booking",
+    "Payment": "Payment",
+    "Service": "Service",
+    "Invoice": "Invoice",
+    "Feedback": "Feedback"
+  },
+  "status": {
+    "pending": "Pending",
+    "failed": "Failed",
+    "completed": "Completed",
+    "authorized": "Authorized"
+  },
+  "eventTypes": {
+    "bookingCreated": "Booking Created",
+    "paymentAuthorized": "Payment Authorized",
+    "paymentFailed": "Payment Failed",
+    "providerAssigned": "Provider Assigned",
+    "providerOnTheWay": "Provider On The Way",
+    "providerArrived": "Provider Arrived",
+    "arrivalVerified": "Arrival Verified",
+    "serviceStarted": "Service Started",
+    "serviceCompleted": "Service Completed",
+    "bookingCancelled": "Booking Cancelled",
+    "changeProposed": "Change Proposed",
+    "changeApproved": "Change Approved",
+    "changeRejected": "Change Rejected",
+    "invoiceReady": "Invoice Ready",
+    "reviewSubmitted": "Review Submitted",
+    "reviewPending": "Review Pending"
+  },
+  "pendingReview": {
+    "detail": "Please share your feedback"
+  },
+  "common": {
+    "service": "Service"
+  },
+  "insights": {
+    "heading": "Activity insights",
+    "mostRecentBooking": "Most recent booking",
+    "lastPayment": "Last payment",
+    "latestCompletedService": "Latest completed service",
+    "withProvider": "with {{name}}",
+    "exploreYourJourney": "Explore your journey",
+    "viewFullTimelineHint": "View full timeline of your activity."
+  },
+  "fields": {
+    "dateTime": "Date & Time",
+    "booking": "Booking",
+    "provider": "Provider",
+    "payment": "Payment",
+    "paymentStatus": "Payment Status",
+    "eventType": "Event Type",
+    "bookingReference": "Booking Reference",
+    "paymentReference": "Payment Reference",
+    "amount": "Amount",
+    "status": "Status"
+  },
+  "journey": {
+    "timeline": "Journey Timeline",
+    "notYetReached": "Not yet reached",
+    "description": "Description",
+    "noDetails": "No additional details for this event."
+  },
+  "payment": {
+    "dialogTitle": "Activity details",
+    "dialogSubtitle": "Detailed information about this activity",
+    "progressTimeline": "Progress timeline",
+    "nextStep": "Next Step:",
+    "upcoming": "Upcoming",
+    "failedNote": "This payment attempt failed — you can retry it from your booking.",
+    "authorizedNote": "Your payment has been authorized successfully. We'll keep this booking updated as it progresses."
+  }
+}

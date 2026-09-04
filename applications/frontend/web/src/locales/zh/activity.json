@@ -1,0 +1,134 @@
+{
+  "loading": "加载中…",
+  "page": {
+    "title": "活动",
+    "subtitle": "按时间顺序记录您的历程"
+  },
+  "metrics": {
+    "totalEvents": "总事件数",
+    "totalEventsHint": "已记录的所有活动",
+    "bookingEvents": "预订事件",
+    "bookingEventsHint": "已创建的预订",
+    "paymentActions": "支付操作",
+    "paymentActionsHint": "支付与授权",
+    "thisWeek": "本周",
+    "thisWeekHint": "本周的事件"
+  },
+  "filters": {
+    "searchPlaceholder": "搜索活动...",
+    "allEvents": "所有事件",
+    "range": {
+      "7": "最近7天",
+      "30": "最近30天",
+      "90": "最近90天",
+      "all": "所有时间"
+    }
+  },
+  "actions": {
+    "export": "导出",
+    "viewTimeline": "查看时间线",
+    "clearFilters": "清除筛选",
+    "browseServices": "浏览服务",
+    "viewBooking": "查看预订",
+    "viewPayment": "查看付款",
+    "viewDetails": "查看详情",
+    "openTimeline": "打开时间线",
+    "downloadInvoice": "下载发票",
+    "leaveReview": "发表评价",
+    "close": "关闭"
+  },
+  "empty": {
+    "noMatchTitle": "没有匹配的活动",
+    "noMatchDescription": "请尝试调整您的搜索或筛选条件。",
+    "noActivityTitle": "暂无活动",
+    "noActivityDescription": "预订事件——确认、付款、更新——将显示在此处。"
+  },
+  "table": {
+    "event": "事件",
+    "booking": "预订",
+    "category": "类别",
+    "details": "详情",
+    "date": "日期",
+    "status": "状态"
+  },
+  "pagination": {
+    "showing": "显示第 {{from}} 至 {{to}} 项，共 {{total}} 个事件"
+  },
+  "toast": {
+    "exported": "活动已导出",
+    "openingFeedback": "正在打开反馈——找到此预订以发表您的评价。"
+  },
+  "categories": {
+    "Booking": "预订",
+    "Payment": "支付",
+    "Service": "服务",
+    "Invoice": "发票",
+    "Feedback": "反馈"
+  },
+  "status": {
+    "pending": "待处理",
+    "failed": "失败",
+    "completed": "已完成",
+    "authorized": "已授权"
+  },
+  "eventTypes": {
+    "bookingCreated": "预订已创建",
+    "paymentAuthorized": "支付已授权",
+    "paymentFailed": "支付失败",
+    "providerAssigned": "已分配服务人员",
+    "providerOnTheWay": "服务人员正在路上",
+    "providerArrived": "服务人员已到达",
+    "arrivalVerified": "到达已核实",
+    "serviceStarted": "服务已开始",
+    "serviceCompleted": "服务已完成",
+    "bookingCancelled": "预订已取消",
+    "changeProposed": "已提出变更",
+    "changeApproved": "变更已批准",
+    "changeRejected": "变更已被拒绝",
+    "invoiceReady": "发票已就绪",
+    "reviewSubmitted": "评价已提交",
+    "reviewPending": "评价待提交"
+  },
+  "pendingReview": {
+    "detail": "请分享您的反馈"
+  },
+  "common": {
+    "service": "服务"
+  },
+  "insights": {
+    "heading": "活动洞察",
+    "mostRecentBooking": "最近的预订",
+    "lastPayment": "最近的付款",
+    "latestCompletedService": "最新完成的服务",
+    "withProvider": "与 {{name}}",
+    "exploreYourJourney": "探索您的历程",
+    "viewFullTimelineHint": "查看您活动的完整时间线。"
+  },
+  "fields": {
+    "dateTime": "日期与时间",
+    "booking": "预订",
+    "provider": "服务人员",
+    "payment": "支付",
+    "paymentStatus": "支付状态",
+    "eventType": "事件类型",
+    "bookingReference": "预订编号",
+    "paymentReference": "支付编号",
+    "amount": "金额",
+    "status": "状态"
+  },
+  "journey": {
+    "timeline": "历程时间线",
+    "notYetReached": "尚未到达",
+    "description": "描述",
+    "noDetails": "此事件暂无更多详情。"
+  },
+  "payment": {
+    "dialogTitle": "活动详情",
+    "dialogSubtitle": "此活动的详细信息",
+    "progressTimeline": "进度时间线",
+    "nextStep": "下一步：",
+    "upcoming": "即将进行",
+    "failedNote": "此次支付尝试失败——您可以从预订中重试。",
+    "authorizedNote": "您的付款已成功授权。我们将持续更新此预订的进展。"
+  }
+}

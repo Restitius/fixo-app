@@ -1,0 +1,134 @@
+{
+  "loading": "Inapakia…",
+  "page": {
+    "title": "Shughuli",
+    "subtitle": "Kumbukumbu ya matukio ya safari yako kwa mpangilio wa nyakati"
+  },
+  "metrics": {
+    "totalEvents": "Matukio Yote",
+    "totalEventsHint": "Shughuli zote zilizorekodiwa",
+    "bookingEvents": "Matukio ya Uhifadhi",
+    "bookingEventsHint": "Uhifadhi uliofanywa",
+    "paymentActions": "Vitendo vya Malipo",
+    "paymentActionsHint": "Malipo na uidhinishaji",
+    "thisWeek": "Wiki Hii",
+    "thisWeekHint": "Matukio wiki hii"
+  },
+  "filters": {
+    "searchPlaceholder": "Tafuta shughuli...",
+    "allEvents": "Matukio Yote",
+    "range": {
+      "7": "Siku 7 zilizopita",
+      "30": "Siku 30 zilizopita",
+      "90": "Siku 90 zilizopita",
+      "all": "Wakati wote"
+    }
+  },
+  "actions": {
+    "export": "Hamisha",
+    "viewTimeline": "Angalia ratiba ya matukio",
+    "clearFilters": "Futa Vichujio",
+    "browseServices": "Vinjari Huduma",
+    "viewBooking": "Angalia uhifadhi",
+    "viewPayment": "Angalia malipo",
+    "viewDetails": "Angalia maelezo",
+    "openTimeline": "Fungua ratiba ya matukio",
+    "downloadInvoice": "Pakua ankara",
+    "leaveReview": "Toa maoni",
+    "close": "Funga"
+  },
+  "empty": {
+    "noMatchTitle": "Hakuna shughuli zinazolingana",
+    "noMatchDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+    "noActivityTitle": "Bado hakuna shughuli",
+    "noActivityDescription": "Matukio ya uhifadhi — uthibitisho, malipo, masasisho — yataonekana hapa."
+  },
+  "table": {
+    "event": "Tukio",
+    "booking": "Uhifadhi",
+    "category": "Aina",
+    "details": "Maelezo",
+    "date": "Tarehe",
+    "status": "Hali"
+  },
+  "pagination": {
+    "showing": "Inaonyesha {{from}} hadi {{to}} kati ya matukio {{total}}"
+  },
+  "toast": {
+    "exported": "Shughuli imehamishwa",
+    "openingFeedback": "Inafungua Maoni — tafuta uhifadhi huu ili kutoa maoni yako."
+  },
+  "categories": {
+    "Booking": "Uhifadhi",
+    "Payment": "Malipo",
+    "Service": "Huduma",
+    "Invoice": "Ankara",
+    "Feedback": "Maoni"
+  },
+  "status": {
+    "pending": "Inasubiri",
+    "failed": "Imeshindwa",
+    "completed": "Imekamilika",
+    "authorized": "Imeidhinishwa"
+  },
+  "eventTypes": {
+    "bookingCreated": "Uhifadhi Umeundwa",
+    "paymentAuthorized": "Malipo Yameidhinishwa",
+    "paymentFailed": "Malipo Yameshindwa",
+    "providerAssigned": "Mtoa Huduma Amepangwa",
+    "providerOnTheWay": "Mtoa Huduma Yuko Njiani",
+    "providerArrived": "Mtoa Huduma Amewasili",
+    "arrivalVerified": "Kuwasili Kumethibitishwa",
+    "serviceStarted": "Huduma Imeanza",
+    "serviceCompleted": "Huduma Imekamilika",
+    "bookingCancelled": "Uhifadhi Umeghairiwa",
+    "changeProposed": "Mabadiliko Yamependekezwa",
+    "changeApproved": "Mabadiliko Yameidhinishwa",
+    "changeRejected": "Mabadiliko Yamekataliwa",
+    "invoiceReady": "Ankara Iko Tayari",
+    "reviewSubmitted": "Maoni Yamewasilishwa",
+    "reviewPending": "Maoni Yanasubiriwa"
+  },
+  "pendingReview": {
+    "detail": "Tafadhali toa maoni yako"
+  },
+  "common": {
+    "service": "Huduma"
+  },
+  "insights": {
+    "heading": "Maarifa ya Shughuli",
+    "mostRecentBooking": "Uhifadhi wa hivi karibuni",
+    "lastPayment": "Malipo ya mwisho",
+    "latestCompletedService": "Huduma ya hivi karibuni iliyokamilika",
+    "withProvider": "na {{name}}",
+    "exploreYourJourney": "Chunguza safari yako",
+    "viewFullTimelineHint": "Angalia ratiba kamili ya shughuli zako."
+  },
+  "fields": {
+    "dateTime": "Tarehe na Muda",
+    "booking": "Uhifadhi",
+    "provider": "Mtoa Huduma",
+    "payment": "Malipo",
+    "paymentStatus": "Hali ya Malipo",
+    "eventType": "Aina ya Tukio",
+    "bookingReference": "Nambari ya Uhifadhi",
+    "paymentReference": "Nambari ya Malipo",
+    "amount": "Kiasi",
+    "status": "Hali"
+  },
+  "journey": {
+    "timeline": "Ratiba ya Safari",
+    "notYetReached": "Bado haijafikiwa",
+    "description": "Maelezo",
+    "noDetails": "Hakuna maelezo zaidi kuhusu tukio hili."
+  },
+  "payment": {
+    "dialogTitle": "Maelezo ya Shughuli",
+    "dialogSubtitle": "Maelezo kamili kuhusu shughuli hii",
+    "progressTimeline": "Ratiba ya Maendeleo",
+    "nextStep": "Hatua Inayofuata:",
+    "upcoming": "Inakuja",
+    "failedNote": "Jaribio hili la malipo limeshindwa — unaweza kujaribu tena kupitia uhifadhi wako.",
+    "authorizedNote": "Malipo yako yameidhinishwa kwa mafanikio. Tutaendelea kukujulisha maendeleo ya uhifadhi huu."
+  }
+}
