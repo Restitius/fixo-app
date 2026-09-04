@@ -126,6 +126,7 @@ Audit (separate from logs!), Observability, multi-database DatabaseManager.
 | Kind          | Format example     | Lives in                          |
 |---------------|--------------------|-----------------------------------|
 | Screen        | SCR-AST-001        | registries/screens                |
+| Client        | CLT-WEB-PROVIDER   | registries/clients                |
 | Query         | ASSET.GET_BY_ID    | queries/registry.yaml + query_ids |
 | Integration   | INT-PAY-001        | registries/integrations           |
 | Event         | EVT-AST-CREATED    | domains/*/events                  |
@@ -134,6 +135,22 @@ Audit (separate from logs!), Observability, multi-database DatabaseManager.
 
 Traceability chain: SCR-AST-001 -> GET /api/v1/assets -> ASSET.LIST ->
 find_asset.sql -> EVT-AST-CREATED -> listeners -> NTF-AST-CREATED.
+
+### Client shell attribution (X-Client-ID / X-Client-Version)
+
+Every request is attributed to the frontend shell that originated it via the
+`X-Client-ID` header (a `CLT-*` id, e.g. `CLT-WEB-PROVIDER`) plus
+`X-Client-Version`. The `ClientContextMiddleware` resolves these into a
+`ClientContext` that flows into logs, `RequestContext`, `EventContext` and the
+job-origin helper (`app/platform/origin.py`). This is an **attribution** axis —
+it answers "which application did this?" in logs/events/audit/jobs — and is
+**never** an authorization control. Missing/unknown ids fall back to
+`CLT-UNKNOWN` so no request is ever rejected; enforcement stays with RBAC +
+ownership rules.
+
+Chain: `CLT-WEB-PROVIDER` -> `SCR-PRV-...` -> `PRV.BOOKING.LIST` -> rows.
+
+See `docs/client-attribution-implementation.md` for the full reference.
 
 ## 5. Standard response envelope
 
