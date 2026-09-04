@@ -44,6 +44,7 @@ import {
   type WalletTxn,
 } from "@/lib/api-client";
 import { fmtDate, fmtMoney, fmtPoints, humanize } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 
 const title = "History — FIXO";
 const description = "Your history across bookings, payments, wallet, loyalty and invoices.";
@@ -67,17 +68,18 @@ export const Route = createFileRoute("/history")({
 });
 
 const CATEGORIES = [
-  { id: "bookings", label: "Bookings", icon: ClipboardList },
-  { id: "payments", label: "Payments", icon: Receipt },
-  { id: "wallet", label: "Wallet", icon: WalletIcon },
-  { id: "loyalty", label: "Loyalty", icon: Sparkles },
-  { id: "invoices", label: "Invoices", icon: FileText },
+  { id: "bookings", labelKey: "bookings", icon: ClipboardList },
+  { id: "payments", labelKey: "payments", icon: Receipt },
+  { id: "wallet", labelKey: "wallet", icon: WalletIcon },
+  { id: "loyalty", labelKey: "loyalty", icon: Sparkles },
+  { id: "invoices", labelKey: "invoices", icon: FileText },
 ] as const;
 type CategoryId = (typeof CATEGORIES)[number]["id"];
 
 const PAGE_SIZE = 8;
 
 function HistoryPage() {
+  const { t } = useTranslation("bookings");
   const { access_token, loading, logout, customer } = useAuth();
   const navigate = useNavigate();
   const { category } = Route.useSearch();
@@ -88,19 +90,19 @@ function HistoryPage() {
   }
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
   return (
     <PageShell
-      title="History"
-      subtitle="Everything that's happened on your account, in one place"
+      title={t("history.pageTitle")}
+      subtitle={t("history.pageSubtitle")}
       userName={customer?.full_name}
       onLogout={logout}
     >
       <div className="mt-6 flex items-center gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
-        <span className="text-sm font-medium text-muted-foreground">Viewing</span>
+        <span className="text-sm font-medium text-muted-foreground">{t("history.viewing")}</span>
         <Select value={active} onValueChange={(v) => setCategory(v as CategoryId)}>
           <SelectTrigger className="h-11 w-[200px] rounded-xl border-0 bg-muted">
             <SelectValue />
@@ -109,7 +111,7 @@ function HistoryPage() {
             {CATEGORIES.map((c) => (
               <SelectItem key={c.id} value={c.id}>
                 <span className="flex items-center gap-2">
-                  <c.icon className="size-4" /> {c.label}
+                  <c.icon className="size-4" /> {t(`history.categories.${c.labelKey}`)}
                 </span>
               </SelectItem>
             ))}
@@ -142,6 +144,7 @@ function statusColor(status: string) {
 // ---- Bookings / Payments (same data source, different framing) ------------
 
 function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
+  const { t } = useTranslation("bookings");
   const [rows, setRows] = useState<BookingHistoryRow[] | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -178,15 +181,15 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
   const statusOptions =
     mode === "bookings"
       ? [
-          { value: "all", label: "All Statuses" },
-          { value: "PAID", label: "Paid" },
-          { value: "CLOSED", label: "Closed" },
-          { value: "CANCELLED", label: "Cancelled" },
+          { value: "all", label: t("history.bookingsSection.allStatuses") },
+          { value: "PAID", label: t("history.bookingsSection.statusPaid") },
+          { value: "CLOSED", label: t("history.bookingsSection.statusClosed") },
+          { value: "CANCELLED", label: t("history.bookingsSection.statusCancelled") },
         ]
       : [
-          { value: "all", label: "All Statuses" },
-          { value: "PAYMENT_AUTHORIZED", label: "Authorized" },
-          { value: "PAID", label: "Paid" },
+          { value: "all", label: t("history.bookingsSection.allStatuses") },
+          { value: "PAYMENT_AUTHORIZED", label: t("history.bookingsSection.statusAuthorized") },
+          { value: "PAID", label: t("history.bookingsSection.statusPaid") },
         ];
 
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -198,15 +201,15 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         {mode === "bookings" ? (
           <>
-            <MetricCard icon={Calendar} label="Total Bookings" hint="All time" value={String(total)} />
-            <MetricCard icon={CheckCircle2} label="Paid Jobs" hint="Completed" value={String(paid)} tone="success" />
-            <MetricCard icon={XCircle} label="Cancelled" hint="All time" value={String(cancelled)} tone="destructive" />
+            <MetricCard icon={Calendar} label={t("history.bookingsSection.totalBookings")} hint={t("history.bookingsSection.totalBookingsHint")} value={String(total)} />
+            <MetricCard icon={CheckCircle2} label={t("history.bookingsSection.paidJobs")} hint={t("history.bookingsSection.paidJobsHint")} value={String(paid)} tone="success" />
+            <MetricCard icon={XCircle} label={t("history.bookingsSection.cancelled")} hint={t("history.bookingsSection.cancelledHint")} value={String(cancelled)} tone="destructive" />
           </>
         ) : (
           <>
-            <MetricCard icon={Receipt} label="Total Charged" hint="All time" value={fmtMoney(totalCharged, rows?.[0]?.currency ?? "TZS")} />
-            <MetricCard icon={Clock} label="Pending Authorizations" hint="Awaiting capture" value={String(authorized)} tone="amber" />
-            <MetricCard icon={CheckCircle2} label="Fully Paid" hint="Completed" value={String(paid)} tone="success" />
+            <MetricCard icon={Receipt} label={t("history.bookingsSection.totalCharged")} hint={t("history.bookingsSection.totalChargedHint")} value={fmtMoney(totalCharged, rows?.[0]?.currency ?? "TZS")} />
+            <MetricCard icon={Clock} label={t("history.bookingsSection.pendingAuthorizations")} hint={t("history.bookingsSection.pendingAuthorizationsHint")} value={String(authorized)} tone="amber" />
+            <MetricCard icon={CheckCircle2} label={t("history.bookingsSection.fullyPaid")} hint={t("history.bookingsSection.fullyPaidHint")} value={String(paid)} tone="success" />
           </>
         )}
       </div>
@@ -214,8 +217,8 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder={mode === "bookings" ? "Search bookings..." : "Search charges..."}
-        filters={[{ value: statusFilter, onChange: (v) => { setStatusFilter(v); setPage(1); }, placeholder: "Status", options: statusOptions }]}
+        searchPlaceholder={mode === "bookings" ? t("history.bookingsSection.searchBookings") : t("history.bookingsSection.searchCharges")}
+        filters={[{ value: statusFilter, onChange: (v) => { setStatusFilter(v); setPage(1); }, placeholder: t("history.bookingsSection.statusPlaceholder"), options: statusOptions }]}
       />
 
       {rows === null ? (
@@ -223,13 +226,13 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
       ) : filtered.length === 0 ? (
         <div className="mt-6">
           {hasActiveFilters ? (
-            <EmptyState icon={FilterX} title="No matching results" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); }} />
+            <EmptyState icon={FilterX} title={t("history.bookingsSection.emptyMatchingTitle")} description={t("history.bookingsSection.emptyMatchingDescription")} actionLabel={t("history.bookingsSection.clearFilters")} onAction={() => { setSearch(""); setStatusFilter("all"); }} />
           ) : (
             <EmptyState
               icon={mode === "bookings" ? HistoryIcon : Receipt}
-              title={mode === "bookings" ? "No bookings yet" : "No charges yet"}
-              description={mode === "bookings" ? "Completed and paid jobs will appear here." : "Charges from your bookings will show up here."}
-              actionLabel="Browse Services"
+              title={mode === "bookings" ? t("history.bookingsSection.noBookingsTitle") : t("history.bookingsSection.noChargesTitle")}
+              description={mode === "bookings" ? t("history.bookingsSection.noBookingsDescription") : t("history.bookingsSection.noChargesDescription")}
+              actionLabel={t("history.bookingsSection.browseServices")}
               actionTo="/services"
             />
           )}
@@ -237,11 +240,11 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
       ) : (
         <TableCard className="grow">
           <TableScroll minWidth={760}>
-            <TableHead columns={["Service", "Booking ID", "Date", "Provider", "Status", "Amount"]} />
+            <TableHead columns={[t("history.bookingsSection.columns.service"), t("history.bookingsSection.columns.bookingId"), t("history.bookingsSection.columns.date"), t("history.bookingsSection.columns.provider"), t("history.bookingsSection.columns.status"), t("history.bookingsSection.columns.amount")]} />
             <tbody>
               {paged.map((b) => (
                 <tr key={b.booking_id} onClick={() => setOpenId(b.booking_id)} className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/40">
-                  <td className="px-6 py-4 font-semibold">{b.service_name ?? "Service"}</td>
+                  <td className="px-6 py-4 font-semibold">{b.service_name ?? t("history.bookingsSection.serviceFallback")}</td>
                   <td className="px-4 py-4 text-primary font-semibold">{b.booking_number}</td>
                   <td className="px-4 py-4 text-muted-foreground">{fmtDate(b.scheduled_date)}</td>
                   <td className="px-4 py-4">{b.provider_name ?? "—"}</td>
@@ -260,12 +263,12 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
             from={(page - 1) * PAGE_SIZE + 1}
             to={Math.min(page * PAGE_SIZE, filtered.length)}
             total={filtered.length}
-            itemLabel={mode === "bookings" ? "bookings" : "charges"}
+            itemLabel={mode === "bookings" ? t("history.bookingsSection.itemLabelBookings") : t("history.bookingsSection.itemLabelCharges")}
           />
         </TableCard>
       )}
 
-      <BookingDetailSheet bookingId={openId} onOpenChange={(o) => !o && setOpenId(null)} title="History details" />
+      <BookingDetailSheet bookingId={openId} onOpenChange={(o) => !o && setOpenId(null)} title={t("history.detailSheetTitle")} />
     </>
   );
 }
@@ -273,6 +276,7 @@ function BookingsSection({ mode }: { mode: "bookings" | "payments" }) {
 // ---- Wallet -----------------------------------------------------------------
 
 function WalletSection() {
+  const { t } = useTranslation("bookings");
   const [rows, setRows] = useState<WalletTxn[] | null>(null);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -303,16 +307,16 @@ function WalletSection() {
   return (
     <>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <MetricCard icon={ArrowDownLeft} label="Total Credited" hint="All time" value={fmtMoney(credits, currency)} tone="success" />
-        <MetricCard icon={ArrowUpRight} label="Total Debited" hint="All time" value={fmtMoney(debits, currency)} tone="destructive" />
-        <MetricCard icon={WalletIcon} label="Current Balance" hint="Right now" value={fmtMoney(balance, currency)} />
+        <MetricCard icon={ArrowDownLeft} label={t("history.walletSection.totalCredited")} hint={t("history.walletSection.totalCreditedHint")} value={fmtMoney(credits, currency)} tone="success" />
+        <MetricCard icon={ArrowUpRight} label={t("history.walletSection.totalDebited")} hint={t("history.walletSection.totalDebitedHint")} value={fmtMoney(debits, currency)} tone="destructive" />
+        <MetricCard icon={WalletIcon} label={t("history.walletSection.currentBalance")} hint={t("history.walletSection.currentBalanceHint")} value={fmtMoney(balance, currency)} />
       </div>
 
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder="Search transactions..."
-        filters={[{ value: typeFilter, onChange: (v) => { setTypeFilter(v); setPage(1); }, placeholder: "Type", options: [{ value: "all", label: "All Types" }, { value: "CREDIT", label: "Credit" }, { value: "DEBIT", label: "Debit" }] }]}
+        searchPlaceholder={t("history.walletSection.searchPlaceholder")}
+        filters={[{ value: typeFilter, onChange: (v) => { setTypeFilter(v); setPage(1); }, placeholder: t("history.walletSection.typePlaceholder"), options: [{ value: "all", label: t("history.walletSection.allTypes") }, { value: "CREDIT", label: t("history.walletSection.credit") }, { value: "DEBIT", label: t("history.walletSection.debit") }] }]}
       />
 
       {rows === null ? (
@@ -320,25 +324,25 @@ function WalletSection() {
       ) : filtered.length === 0 ? (
         <div className="mt-6">
           {hasActiveFilters ? (
-            <EmptyState icon={FilterX} title="No matching transactions" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setTypeFilter("all"); }} />
+            <EmptyState icon={FilterX} title={t("history.walletSection.emptyMatchingTitle")} description={t("history.walletSection.emptyMatchingDescription")} actionLabel={t("history.walletSection.clearFilters")} onAction={() => { setSearch(""); setTypeFilter("all"); }} />
           ) : (
-            <EmptyState icon={WalletIcon} title="No wallet activity yet" description="Credits, debits and holds will appear here." actionLabel="Go to Wallet" actionTo="/wallet" />
+            <EmptyState icon={WalletIcon} title={t("history.walletSection.emptyTitle")} description={t("history.walletSection.emptyDescription")} actionLabel={t("history.walletSection.goToWallet")} actionTo="/wallet" />
           )}
         </div>
       ) : (
         <TableCard className="grow">
           <TableScroll minWidth={640}>
-            <TableHead columns={["Type", "Date", "Amount", "Balance After"]} />
+            <TableHead columns={[t("history.walletSection.columns.type"), t("history.walletSection.columns.date"), t("history.walletSection.columns.amount"), t("history.walletSection.columns.balanceAfter")]} />
             <tbody>
-              {paged.map((t, i) => (
-                <tr key={t.entry_id ?? i} className="border-b border-border last:border-0 hover:bg-muted/40">
-                  <td className="px-6 py-4 font-semibold">{humanize(t.entry_type)}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(t.created_at)}</td>
-                  <td className={`px-4 py-4 font-semibold ${t.entry_type === "CREDIT" ? "text-success" : "text-destructive"}`}>
-                    {t.entry_type === "CREDIT" ? "+" : "−"}
-                    {fmtMoney(t.amount, t.currency)}
+              {paged.map((tx, i) => (
+                <tr key={tx.entry_id ?? i} className="border-b border-border last:border-0 hover:bg-muted/40">
+                  <td className="px-6 py-4 font-semibold">{humanize(tx.entry_type)}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(tx.created_at)}</td>
+                  <td className={`px-4 py-4 font-semibold ${tx.entry_type === "CREDIT" ? "text-success" : "text-destructive"}`}>
+                    {tx.entry_type === "CREDIT" ? "+" : "−"}
+                    {fmtMoney(tx.amount, tx.currency)}
                   </td>
-                  <td className="px-4 py-4">{fmtMoney(t.running_balance, t.currency)}</td>
+                  <td className="px-4 py-4">{fmtMoney(tx.running_balance, tx.currency)}</td>
                 </tr>
               ))}
             </tbody>
@@ -350,7 +354,7 @@ function WalletSection() {
             from={(page - 1) * PAGE_SIZE + 1}
             to={Math.min(page * PAGE_SIZE, filtered.length)}
             total={filtered.length}
-            itemLabel="transactions"
+            itemLabel={t("history.walletSection.itemLabel")}
           />
         </TableCard>
       )}
@@ -361,6 +365,7 @@ function WalletSection() {
 // ---- Loyalty ----------------------------------------------------------------
 
 function LoyaltySection() {
+  const { t } = useTranslation("bookings");
   const [rows, setRows] = useState<LoyaltyTxn[] | null>(null);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -390,16 +395,16 @@ function LoyaltySection() {
   return (
     <>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <MetricCard icon={ArrowDownLeft} label="Points Earned" hint="All time" value={fmtPoints(earned)} tone="success" />
-        <MetricCard icon={ArrowUpRight} label="Points Spent" hint="All time" value={fmtPoints(spent)} tone="destructive" />
-        <MetricCard icon={Award} label="Current Balance" hint="Right now" value={fmtPoints(balance)} />
+        <MetricCard icon={ArrowDownLeft} label={t("history.loyaltySection.pointsEarned")} hint={t("history.loyaltySection.pointsEarnedHint")} value={fmtPoints(earned)} tone="success" />
+        <MetricCard icon={ArrowUpRight} label={t("history.loyaltySection.pointsSpent")} hint={t("history.loyaltySection.pointsSpentHint")} value={fmtPoints(spent)} tone="destructive" />
+        <MetricCard icon={Award} label={t("history.loyaltySection.currentBalance")} hint={t("history.loyaltySection.currentBalanceHint")} value={fmtPoints(balance)} />
       </div>
 
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder="Search activity..."
-        filters={[{ value: typeFilter, onChange: (v) => { setTypeFilter(v); setPage(1); }, placeholder: "Type", options: [{ value: "all", label: "All" }, { value: "earned", label: "Earned" }, { value: "spent", label: "Spent" }] }]}
+        searchPlaceholder={t("history.loyaltySection.searchPlaceholder")}
+        filters={[{ value: typeFilter, onChange: (v) => { setTypeFilter(v); setPage(1); }, placeholder: t("history.loyaltySection.typePlaceholder"), options: [{ value: "all", label: t("history.loyaltySection.all") }, { value: "earned", label: t("history.loyaltySection.earned") }, { value: "spent", label: t("history.loyaltySection.spent") }] }]}
       />
 
       {rows === null ? (
@@ -407,25 +412,25 @@ function LoyaltySection() {
       ) : filtered.length === 0 ? (
         <div className="mt-6">
           {hasActiveFilters ? (
-            <EmptyState icon={FilterX} title="No matching activity" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setTypeFilter("all"); }} />
+            <EmptyState icon={FilterX} title={t("history.loyaltySection.emptyMatchingTitle")} description={t("history.loyaltySection.emptyMatchingDescription")} actionLabel={t("history.loyaltySection.clearFilters")} onAction={() => { setSearch(""); setTypeFilter("all"); }} />
           ) : (
-            <EmptyState icon={Award} title="No loyalty activity yet" description="Book a service to start earning loyalty points." actionLabel="Go to Loyalty" actionTo="/loyalty" />
+            <EmptyState icon={Award} title={t("history.loyaltySection.emptyTitle")} description={t("history.loyaltySection.emptyDescription")} actionLabel={t("history.loyaltySection.goToLoyalty")} actionTo="/loyalty" />
           )}
         </div>
       ) : (
         <TableCard className="grow">
           <TableScroll minWidth={640}>
-            <TableHead columns={["Activity", "Date", "Points", "Balance After"]} />
+            <TableHead columns={[t("history.loyaltySection.columns.activity"), t("history.loyaltySection.columns.date"), t("history.loyaltySection.columns.points"), t("history.loyaltySection.columns.balanceAfter")]} />
             <tbody>
-              {paged.map((t, i) => (
-                <tr key={t.txn_id ?? i} className="border-b border-border last:border-0 hover:bg-muted/40">
-                  <td className="px-6 py-4 font-semibold">{humanize(t.activity)}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(t.created_at)}</td>
-                  <td className={`px-4 py-4 font-semibold ${t.points > 0 ? "text-success" : "text-destructive"}`}>
-                    {t.points > 0 ? "+" : "−"}
-                    {fmtPoints(Math.abs(t.points))}
+              {paged.map((tx, i) => (
+                <tr key={tx.txn_id ?? i} className="border-b border-border last:border-0 hover:bg-muted/40">
+                  <td className="px-6 py-4 font-semibold">{humanize(tx.activity)}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(tx.created_at)}</td>
+                  <td className={`px-4 py-4 font-semibold ${tx.points > 0 ? "text-success" : "text-destructive"}`}>
+                    {tx.points > 0 ? "+" : "−"}
+                    {fmtPoints(Math.abs(tx.points))}
                   </td>
-                  <td className="px-4 py-4">{fmtPoints(t.running_total)}</td>
+                  <td className="px-4 py-4">{fmtPoints(tx.running_total)}</td>
                 </tr>
               ))}
             </tbody>
@@ -437,7 +442,7 @@ function LoyaltySection() {
             from={(page - 1) * PAGE_SIZE + 1}
             to={Math.min(page * PAGE_SIZE, filtered.length)}
             total={filtered.length}
-            itemLabel="entries"
+            itemLabel={t("history.loyaltySection.itemLabel")}
           />
         </TableCard>
       )}
@@ -448,6 +453,7 @@ function LoyaltySection() {
 // ---- Invoices ----------------------------------------------------------------
 
 function InvoicesSection() {
+  const { t } = useTranslation("bookings");
   const [rows, setRows] = useState<InvoiceRow[] | null>(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -477,16 +483,16 @@ function InvoicesSection() {
   return (
     <>
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <MetricCard icon={FileText} label="Total Invoices" hint="All time" value={String(total)} />
-        <MetricCard icon={CheckCircle2} label="Paid" hint="Completed" value={String(paid)} tone="success" />
-        <MetricCard icon={Receipt} label="Outstanding" hint="Awaiting payment" value={fmtMoney(outstanding, rows?.[0]?.currency ?? "TZS")} tone="amber" />
+        <MetricCard icon={FileText} label={t("history.invoicesSection.totalInvoices")} hint={t("history.invoicesSection.totalInvoicesHint")} value={String(total)} />
+        <MetricCard icon={CheckCircle2} label={t("history.invoicesSection.paid")} hint={t("history.invoicesSection.paidHint")} value={String(paid)} tone="success" />
+        <MetricCard icon={Receipt} label={t("history.invoicesSection.outstanding")} hint={t("history.invoicesSection.outstandingHint")} value={fmtMoney(outstanding, rows?.[0]?.currency ?? "TZS")} tone="amber" />
       </div>
 
       <TableFilterBar
         search={search}
         onSearchChange={(v) => { setSearch(v); setPage(1); }}
-        searchPlaceholder="Search invoices..."
-        filters={[{ value: statusFilter, onChange: (v) => { setStatusFilter(v); setPage(1); }, placeholder: "Status", options: [{ value: "all", label: "All Statuses" }, { value: "ISSUED", label: "Issued" }, { value: "PAID", label: "Paid" }] }]}
+        searchPlaceholder={t("history.invoicesSection.searchPlaceholder")}
+        filters={[{ value: statusFilter, onChange: (v) => { setStatusFilter(v); setPage(1); }, placeholder: t("history.invoicesSection.statusPlaceholder"), options: [{ value: "all", label: t("history.invoicesSection.allStatuses") }, { value: "ISSUED", label: t("history.invoicesSection.issued") }, { value: "PAID", label: t("history.invoicesSection.paidStatus") }] }]}
       />
 
       {rows === null ? (
@@ -494,15 +500,15 @@ function InvoicesSection() {
       ) : filtered.length === 0 ? (
         <div className="mt-6">
           {hasActiveFilters ? (
-            <EmptyState icon={FilterX} title="No matching invoices" description="Try adjusting your search or filters." actionLabel="Clear Filters" onAction={() => { setSearch(""); setStatusFilter("all"); }} />
+            <EmptyState icon={FilterX} title={t("history.invoicesSection.emptyMatchingTitle")} description={t("history.invoicesSection.emptyMatchingDescription")} actionLabel={t("history.invoicesSection.clearFilters")} onAction={() => { setSearch(""); setStatusFilter("all"); }} />
           ) : (
-            <EmptyState icon={FileText} title="No invoices yet" description="An invoice is issued once a booking is completed and confirmed." actionLabel="Go to Invoices" actionTo="/invoices" />
+            <EmptyState icon={FileText} title={t("history.invoicesSection.emptyTitle")} description={t("history.invoicesSection.emptyDescription")} actionLabel={t("history.invoicesSection.goToInvoices")} actionTo="/invoices" />
           )}
         </div>
       ) : (
         <TableCard className="grow">
           <TableScroll minWidth={700}>
-            <TableHead columns={["Invoice #", "Booking", "Date", "Status", "Amount"]} />
+            <TableHead columns={[t("history.invoicesSection.columns.invoiceNumber"), t("history.invoicesSection.columns.booking"), t("history.invoicesSection.columns.date"), t("history.invoicesSection.columns.status"), t("history.invoicesSection.columns.amount")]} />
             <tbody>
               {paged.map((inv) => (
                 <tr key={inv.invoice_id} className="border-b border-border last:border-0 hover:bg-muted/40">
@@ -524,7 +530,7 @@ function InvoicesSection() {
             from={(page - 1) * PAGE_SIZE + 1}
             to={Math.min(page * PAGE_SIZE, filtered.length)}
             total={filtered.length}
-            itemLabel="invoices"
+            itemLabel={t("history.invoicesSection.itemLabel")}
           />
         </TableCard>
       )}
