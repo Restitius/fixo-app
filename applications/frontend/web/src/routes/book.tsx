@@ -66,6 +66,7 @@ import {
   type ServiceRequestRow,
   type WalletBalance,
 } from "@/lib/api-client";
+import { useTranslation } from "react-i18next";
 
 const title = "Book a Service — FIXO";
 const description = "Request a service, get matched with providers and confirm your booking.";
@@ -109,10 +110,16 @@ function iconFor(name: string): LucideIcon {
 }
 
 const TIME_WINDOWS = [
-  { value: "MORNING", label: "Morning", hint: "8am – 12pm" },
-  { value: "AFTERNOON", label: "Afternoon", hint: "12pm – 5pm" },
-  { value: "EVENING", label: "Evening", hint: "5pm – 9pm" },
+  { value: "MORNING", labelKey: "morning" },
+  { value: "AFTERNOON", labelKey: "afternoon" },
+  { value: "EVENING", labelKey: "evening" },
 ] as const;
+
+const SORT_LABEL_KEY: Record<"Best Match" | "Fastest" | "Lowest Price", string> = {
+  "Best Match": "bestMatch",
+  Fastest: "fastest",
+  "Lowest Price": "lowestPrice",
+};
 
 const STEPS = ["Service", "Details", "Address", "Review", "Provider", "Payment", "Done"] as const;
 type Step = (typeof STEPS)[number];
@@ -135,6 +142,7 @@ function displayDate(iso: string) {
 }
 
 function BookPage() {
+  const { t } = useTranslation("booking");
   const navigate = useNavigate();
   const { access_token, loading, customer, logout } = useAuth();
   const search = Route.useSearch();
@@ -236,7 +244,7 @@ function BookPage() {
       })
       .catch(() => {
         if (cancelled) return;
-        setServiceError(`We couldn't load services for ${categoryName} right now.`);
+        setServiceError(t("service.loadErrorDescription", { category: categoryName }));
       });
     return () => {
       cancelled = true;
@@ -316,7 +324,7 @@ function BookPage() {
       !addrDraft.street_address.trim() ||
       !addrDraft.city.trim()
     ) {
-      toast.error("Fill in recipient, phone, street and city.");
+      toast.error(t("address.fillRequiredFields"));
       return;
     }
     setSavingAddress(true);
@@ -341,7 +349,7 @@ function BookPage() {
   function addPhotos(files: FileList | null) {
     if (!files) return;
     const next = Array.from(files).filter((f) => f.type.startsWith("image/") && f.size <= 5 * 1024 * 1024);
-    if (next.length < files.length) toast.error("Only images up to 5MB are added.");
+    if (next.length < files.length) toast.error(t("details.photoSizeError"));
     setPhotos((prev) => [...prev, ...next].slice(0, 5));
   }
 
@@ -351,7 +359,7 @@ function BookPage() {
     setReviewIssue(null);
     try {
       const fullDescription = notes.trim()
-        ? `${jobDescription.trim()}\n\nAdditional notes: ${notes.trim()}`
+        ? `${jobDescription.trim()}\n\n${t("details.additionalNotesPrefix", { notes: notes.trim() })}`
         : jobDescription.trim();
       const created = await bookingApi.createServiceRequest({
         service_id: selectedService.service_id,
@@ -418,7 +426,7 @@ function BookPage() {
       await bookingApi.sendBookingMessage(booking.booking_id, messageBody.trim());
       setMessageSent(true);
       setMessageBody("");
-      toast.success("Message sent to your provider");
+      toast.success(t("done.messageSentToast"));
     } catch {
       // apiClient already toasts the error
     } finally {
@@ -476,19 +484,25 @@ function BookPage() {
   );
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("common.loading")}</div>;
   }
 
   return (
     <PageShell
-      title="Book a Service"
-      subtitle={categoryName ? `${categoryName} · ${path === "find-provider" ? "book with a chosen provider" : "choose address and schedule"}` : "let's find you the right pro"}
+      title={t("page.title")}
+      subtitle={
+        categoryName
+          ? path === "find-provider"
+            ? t("page.subtitleFindProvider", { category: categoryName })
+            : t("page.subtitleChooseAddress", { category: categoryName })
+          : t("page.subtitleDefault")
+      }
       userName={customer?.full_name}
       onLogout={logout}
     >
       <div className="mt-2 flex items-center gap-3">
         <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-          Path: {path === "find-provider" ? "Find Provider First" : "Book Directly"}
+          {t("path.badge", { mode: path === "find-provider" ? t("path.findProviderFirst") : t("path.bookDirectly") })}
         </span>
       </div>
 
@@ -499,8 +513,8 @@ function BookPage() {
           <section className="animate-in fade-in slide-in-from-bottom-2">
             {!categoryName ? (
               <>
-                <h2 className="text-lg font-semibold">What do you need help with?</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Choose a category to see the exact jobs we cover.</p>
+                <h2 className="text-lg font-semibold">{t("service.chooseCategoryTitle")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("service.chooseCategorySubtitle")}</p>
                 {categories === null ? (
                   <LoadingRows />
                 ) : (
@@ -520,7 +534,7 @@ function BookPage() {
                             <p className="font-semibold">{c.name}</p>
                             <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">{c.description}</p>
                             {c.min_price != null && (
-                              <p className="mt-1 text-xs font-semibold text-primary">From {fmtMoney(c.min_price)}</p>
+                              <p className="mt-1 text-xs font-semibold text-primary">{t("service.fromPrice", { price: fmtMoney(c.min_price) })}</p>
                             )}
                           </div>
                         </button>
@@ -531,16 +545,16 @@ function BookPage() {
               </>
             ) : (
               <>
-                <h2 className="text-lg font-semibold">Choose the exact {categoryName.toLowerCase()} task</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Pick the job that best matches what you need.</p>
+                <h2 className="text-lg font-semibold">{t("service.chooseTaskTitle", { category: categoryName.toLowerCase() })}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("service.chooseTaskSubtitle")}</p>
 
                 {serviceError ? (
                   <div className="mt-6">
                     <EmptyState
                       icon={AlertTriangle}
-                      title="Couldn't load services"
+                      title={t("service.loadErrorTitle")}
                       description={serviceError}
-                      actionLabel="Back to Services"
+                      actionLabel={t("service.backToServices")}
                       actionTo="/services"
                     />
                   </div>
@@ -575,8 +589,8 @@ function BookPage() {
 
                 {!search.providerId && (
                   <>
-                    <h3 className="mt-8 text-sm font-semibold">Choose how you want to continue</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">Both options are great — you can change later.</p>
+                    <h3 className="mt-8 text-sm font-semibold">{t("service.choosePathTitle")}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{t("service.choosePathSubtitle")}</p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <button
                         onClick={() => setPath("direct")}
@@ -590,8 +604,8 @@ function BookPage() {
                           </span>
                           {path === "direct" && <Check className="size-4 text-primary" />}
                         </div>
-                        <p className="mt-3 font-semibold">Book Directly</p>
-                        <p className="mt-1 text-sm text-muted-foreground">Tell us your needs and we'll match a provider for you.</p>
+                        <p className="mt-3 font-semibold">{t("path.bookDirectly")}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{t("service.bookDirectlyDesc")}</p>
                       </button>
                       <button
                         onClick={() => setPath("find-provider")}
@@ -605,8 +619,8 @@ function BookPage() {
                           </span>
                           {path === "find-provider" && <Check className="size-4 text-primary" />}
                         </div>
-                        <p className="mt-3 font-semibold">Find Provider First</p>
-                        <p className="mt-1 text-sm text-muted-foreground">Browse real providers and pick one before booking.</p>
+                        <p className="mt-3 font-semibold">{t("path.findProviderFirst")}</p>
+                        <p className="mt-1 text-sm text-muted-foreground">{t("service.findProviderDesc")}</p>
                       </button>
                     </div>
                   </>
@@ -640,17 +654,17 @@ function BookPage() {
                             <p className="font-semibold">{providerProfile.display_name}</p>
                             {providerProfile.rating_avg >= 4.8 && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                                <Award className="size-3" /> Top Rated
+                                <Award className="size-3" /> {t("details.topRated")}
                               </span>
                             )}
                           </div>
                           <p className="flex items-center gap-1 text-sm">
                             <Star className="size-3.5 fill-current text-[#FFB800]" /> {providerProfile.rating_avg.toFixed(1)}
-                            <span className="text-muted-foreground"> ({providerProfile.rating_count.toLocaleString()} reviews)</span>
+                            <span className="text-muted-foreground"> {t("details.reviewsCount", { count: providerProfile.rating_count, formatted: providerProfile.rating_count.toLocaleString() })}</span>
                           </p>
                           <p className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1"><Briefcase className="size-3" /> {providerProfile.jobs_completed.toLocaleString()} jobs done</span>
-                            <span className="flex items-center gap-1"><CalendarIcon className="size-3" /> Since {new Date(providerProfile.created_at).getFullYear()}</span>
+                            <span className="flex items-center gap-1"><Briefcase className="size-3" /> {t("details.jobsDone", { count: providerProfile.jobs_completed, formatted: providerProfile.jobs_completed.toLocaleString() })}</span>
+                            <span className="flex items-center gap-1"><CalendarIcon className="size-3" /> {t("details.since", { year: new Date(providerProfile.created_at).getFullYear() })}</span>
                           </p>
                         </div>
                       </div>
@@ -660,31 +674,31 @@ function BookPage() {
                   </div>
                 )}
 
-                <h2 className="text-lg font-semibold">Tell us about the job</h2>
-                <p className="mt-1 text-sm text-muted-foreground">A clear description helps providers quote accurately.</p>
+                <h2 className="text-lg font-semibold">{t("details.title")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("details.subtitle")}</p>
 
-                <label className="mt-4 block text-sm font-medium">Describe the issue *</label>
+                <label className="mt-4 block text-sm font-medium">{t("details.describeIssueLabel")}</label>
                 <Textarea
                   value={jobDescription}
                   onChange={(e) => setJobDescription(e.target.value)}
-                  placeholder="Describe the issue in as much detail as possible..."
+                  placeholder={t("details.describePlaceholder")}
                   className="mt-2 min-h-28 rounded-2xl"
                   maxLength={2000}
                 />
                 <p className="mt-1 text-right text-xs text-muted-foreground">
-                  {jobDescription.trim().length}/10 min characters
+                  {t("details.minCharacters", { count: jobDescription.trim().length })}
                 </p>
 
-                <label className="mt-4 block text-sm font-medium">Additional notes (optional)</label>
+                <label className="mt-4 block text-sm font-medium">{t("details.notesLabel")}</label>
                 <Textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Anything the provider should know before arriving?"
+                  placeholder={t("details.notesPlaceholder")}
                   className="mt-2 min-h-20 rounded-2xl"
                   maxLength={300}
                 />
 
-                <label className="mt-4 block text-sm font-medium">Upload photos (optional)</label>
+                <label className="mt-4 block text-sm font-medium">{t("details.photosLabel")}</label>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -699,8 +713,8 @@ function BookPage() {
                   className="mt-2 flex w-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-border py-8 text-center hover:bg-muted/40"
                 >
                   <Camera className="size-6 text-muted-foreground" />
-                  <span className="text-sm font-semibold text-primary">Click to upload</span>
-                  <span className="text-xs text-muted-foreground">JPG, PNG up to 5MB each · up to 5 images</span>
+                  <span className="text-sm font-semibold text-primary">{t("details.clickToUpload")}</span>
+                  <span className="text-xs text-muted-foreground">{t("details.photoHint")}</span>
                 </button>
                 {photos.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -736,8 +750,8 @@ function BookPage() {
           <section className="animate-in fade-in slide-in-from-bottom-2">
             <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
               <div className="min-w-0">
-                <h2 className="text-lg font-semibold">Where and when?</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Choose a saved address or add a new one.</p>
+                <h2 className="text-lg font-semibold">{t("address.title")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("address.subtitle")}</p>
 
                 {addresses === null ? (
                   <LoadingRows />
@@ -762,7 +776,7 @@ function BookPage() {
                             {a.label}
                             {a.is_default && (
                               <span className="ml-2 rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-secondary-foreground">
-                                Default
+                                {t("address.default")}
                               </span>
                             )}
                           </p>
@@ -783,46 +797,46 @@ function BookPage() {
                         onClick={() => setShowAddressForm(true)}
                         className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-border py-4 text-sm font-medium text-muted-foreground hover:bg-muted/50"
                       >
-                        <Plus className="size-4" /> Add a new address
+                        <Plus className="size-4" /> {t("address.addNewAddress")}
                       </button>
                     ) : (
                       <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
-                        <p className="mb-3 text-sm font-semibold">New address</p>
+                        <p className="mb-3 text-sm font-semibold">{t("address.newAddressTitle")}</p>
                         <div className="grid gap-3 sm:grid-cols-2">
                           <input
                             value={addrDraft.label}
                             onChange={(e) => setAddrDraft((d) => ({ ...d, label: e.target.value }))}
-                            placeholder="Label (e.g. Home)"
+                            placeholder={t("address.labelPlaceholder")}
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none"
                           />
                           <input
                             value={addrDraft.recipient_name}
                             onChange={(e) => setAddrDraft((d) => ({ ...d, recipient_name: e.target.value }))}
-                            placeholder="Recipient name"
+                            placeholder={t("address.recipientNamePlaceholder")}
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none"
                           />
                           <input
                             value={addrDraft.phone}
                             onChange={(e) => setAddrDraft((d) => ({ ...d, phone: e.target.value }))}
-                            placeholder="Phone"
+                            placeholder={t("address.phonePlaceholder")}
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none"
                           />
                           <input
                             value={addrDraft.city}
                             onChange={(e) => setAddrDraft((d) => ({ ...d, city: e.target.value }))}
-                            placeholder="City"
+                            placeholder={t("address.cityPlaceholder")}
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none"
                           />
                           <input
                             value={addrDraft.street_address}
                             onChange={(e) => setAddrDraft((d) => ({ ...d, street_address: e.target.value }))}
-                            placeholder="Street address"
+                            placeholder={t("address.streetPlaceholder")}
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none sm:col-span-2"
                           />
                           <input
                             value={addrDraft.region}
                             onChange={(e) => setAddrDraft((d) => ({ ...d, region: e.target.value }))}
-                            placeholder="Region (optional)"
+                            placeholder={t("address.regionPlaceholder")}
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none"
                           />
                         </div>
@@ -833,14 +847,14 @@ function BookPage() {
                             className="rounded-xl px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                             style={{ backgroundImage: "var(--gradient-primary)" }}
                           >
-                            {savingAddress ? "Saving..." : "Save address"}
+                            {savingAddress ? t("address.saving") : t("address.saveAddress")}
                           </button>
                           {(addresses ?? []).length > 0 && (
                             <button
                               onClick={() => setShowAddressForm(false)}
                               className="rounded-xl px-5 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted/50"
                             >
-                              Cancel
+                              {t("address.cancel")}
                             </button>
                           )}
                         </div>
@@ -849,8 +863,8 @@ function BookPage() {
                   </div>
                 )}
 
-                <h3 className="mt-8 text-sm font-semibold">Preferred schedule</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Tell us when works best for you.</p>
+                <h3 className="mt-8 text-sm font-semibold">{t("address.scheduleTitle")}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{t("address.scheduleSubtitle")}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
                     onClick={() => { setPreferredDate(new Date()); setShowCalendar(false); }}
@@ -858,7 +872,7 @@ function BookPage() {
                       preferredDate && isSameDay(preferredDate, new Date()) ? "border-primary bg-primary/5 text-primary" : "border-border text-foreground/80 hover:bg-muted/50"
                     }`}
                   >
-                    Today
+                    {t("address.today")}
                   </button>
                   <button
                     onClick={() => { const t = new Date(); t.setDate(t.getDate() + 1); setPreferredDate(t); setShowCalendar(false); }}
@@ -867,15 +881,15 @@ function BookPage() {
                         ? "border-primary bg-primary/5 text-primary" : "border-border text-foreground/80 hover:bg-muted/50"
                     }`}
                   >
-                    Tomorrow
+                    {t("address.tomorrow")}
                   </button>
                   <button
                     onClick={() => setShowCalendar((v) => !v)}
                     className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted/50"
                   >
-                    {preferredDate && !isSameDay(preferredDate, new Date()) && !(() => { const t = new Date(); t.setDate(t.getDate() + 1); return isSameDay(preferredDate, t); })()
+                    {preferredDate && !isSameDay(preferredDate, new Date()) && !(() => { const t2 = new Date(); t2.setDate(t2.getDate() + 1); return isSameDay(preferredDate, t2); })()
                       ? formatDate(preferredDate)
-                      : "Pick a date"}
+                      : t("address.pickDate")}
                   </button>
                 </div>
                 {showCalendar && (
@@ -895,8 +909,8 @@ function BookPage() {
                           : "border-border text-foreground/80 hover:bg-muted/50"
                       }`}
                     >
-                      {w.label}
-                      <span className="ml-1.5 text-xs text-muted-foreground">{w.hint}</span>
+                      {t(`address.timeWindows.${w.labelKey}.label`)}
+                      <span className="ml-1.5 text-xs text-muted-foreground">{t(`address.timeWindows.${w.labelKey}.hint`)}</span>
                     </button>
                   ))}
                 </div>
@@ -922,26 +936,26 @@ function BookPage() {
           <section className="animate-in fade-in slide-in-from-bottom-2">
             <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
               <div className="min-w-0">
-                <h2 className="text-lg font-semibold">Review your request</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Double check everything before we find you a pro.</p>
+                <h2 className="text-lg font-semibold">{t("review.title")}</h2>
+                <p className="mt-1 text-sm text-muted-foreground">{t("review.subtitle")}</p>
 
                 <div className="mt-5 divide-y divide-border rounded-2xl bg-card shadow-[var(--shadow-xs)]">
-                  <ReviewRow label="Service" value={`${selectedService.name} (${categoryName ?? ""})`} onEdit={() => goTo("Service")} />
-                  <ReviewRow label="Job details" value={jobDescription} onEdit={() => goTo("Details")} />
+                  <ReviewRow label={t("review.serviceLabel")} value={`${selectedService.name} (${categoryName ?? ""})`} onEdit={() => goTo("Service")} />
+                  <ReviewRow label={t("review.jobDetailsLabel")} value={jobDescription} onEdit={() => goTo("Details")} />
                   {photos.length > 0 && (
-                    <ReviewRow label="Photos" value={`${photos.length} attached`} onEdit={() => goTo("Details")} />
+                    <ReviewRow label={t("review.photosLabel")} value={t("review.photosAttached", { count: photos.length })} onEdit={() => goTo("Details")} />
                   )}
                   <ReviewRow
-                    label="Address"
+                    label={t("review.addressLabel")}
                     value={selectedAddress ? `${selectedAddress.street_address}, ${selectedAddress.city}` : ""}
                     onEdit={() => goTo("Address")}
                   />
                   <ReviewRow
-                    label="Schedule"
+                    label={t("review.scheduleLabel")}
                     value={
                       [preferredDate ? formatDate(preferredDate) : null, timeWindow]
                         .filter(Boolean)
-                        .join(" · ") || "No preference"
+                        .join(" · ") || t("review.noPreference")
                     }
                     onEdit={() => goTo("Address")}
                   />
@@ -953,17 +967,17 @@ function BookPage() {
                     <div>
                       <p className="font-semibold text-destructive">
                         {reviewIssue.status === "OUTSIDE_SERVICE_AREA"
-                          ? "We don't serve that area yet"
-                          : "We need a bit more information"}
+                          ? t("review.outsideServiceArea")
+                          : t("review.needMoreInfo")}
                       </p>
                       <p className="mt-0.5 text-sm text-muted-foreground">
-                        {reviewIssue.notes ?? "Please review your details and try again."}
+                        {reviewIssue.notes ?? t("review.reviewAndRetry")}
                       </p>
                       <button
                         onClick={() => goTo("Address")}
                         className="mt-2 text-sm font-semibold text-primary hover:underline"
                       >
-                        Change address
+                        {t("review.changeAddress")}
                       </button>
                     </div>
                   </div>
@@ -978,30 +992,30 @@ function BookPage() {
                     style={{ backgroundImage: "var(--gradient-primary)" }}
                   >
                     {submitting && <Loader2 className="size-4 animate-spin" />}
-                    {submitting ? "Submitting..." : "Continue to Provider"}
+                    {submitting ? t("review.submitting") : t("review.continueToProvider")}
                   </button>
                 </StepFooter>
               </div>
 
               <div className="space-y-4">
                 <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
-                  <div className="flex items-center gap-2 font-semibold"><Tag className="size-4 text-primary" /> Pricing estimate</div>
+                  <div className="flex items-center gap-2 font-semibold"><Tag className="size-4 text-primary" /> {t("review.pricingEstimate")}</div>
                   {preferredProviderPrice != null ? (
                     <p className="mt-2 text-2xl font-bold text-primary">{fmtMoney(preferredProviderPrice)}</p>
                   ) : priceRange ? (
                     <p className="mt-2 text-2xl font-bold text-primary">{formatPriceRange(priceRange)}</p>
                   ) : (
-                    <p className="mt-2 text-sm text-muted-foreground">We'll show pricing once providers are matched.</p>
+                    <p className="mt-2 text-sm text-muted-foreground">{t("review.pricingPending")}</p>
                   )}
-                  <p className="mt-2 text-xs text-muted-foreground">Final amount depends on the provider you choose next.</p>
+                  <p className="mt-2 text-xs text-muted-foreground">{t("review.finalAmountNote")}</p>
                 </div>
                 <div className="rounded-2xl bg-primary/5 p-5">
-                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Booking path</p>
-                  <p className="mt-1 font-semibold text-primary">{path === "find-provider" ? "Find Provider First" : "Book Directly"}</p>
+                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("review.bookingPath")}</p>
+                  <p className="mt-1 font-semibold text-primary">{path === "find-provider" ? t("path.findProviderFirst") : t("path.bookDirectly")}</p>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {path === "find-provider"
-                      ? "We'll prioritize your chosen provider if they're available for this request."
-                      : "We'll match you with the best available provider next."}
+                      ? t("review.pathNoteFindProvider")
+                      : t("review.pathNoteDirect")}
                   </p>
                 </div>
               </div>
@@ -1011,9 +1025,9 @@ function BookPage() {
 
         {step === "Provider" && (
           <section className="animate-in fade-in slide-in-from-bottom-2">
-            <h2 className="text-lg font-semibold">Choose a provider</h2>
+            <h2 className="text-lg font-semibold">{t("provider.title")}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {matching ? "Finding the best-rated pros near you..." : `Real matches for ${selectedService?.name ?? "your request"}.`}
+              {matching ? t("provider.findingPros") : t("provider.realMatches", { service: selectedService?.name ?? t("provider.yourRequestFallback") })}
             </p>
 
             {matching ? (
@@ -1021,15 +1035,15 @@ function BookPage() {
                 <span className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Sparkles className="size-7 animate-pulse" />
                 </span>
-                <p className="mt-4 font-medium">Searching nearby providers...</p>
+                <p className="mt-4 font-medium">{t("provider.searching")}</p>
               </div>
             ) : matchOutcome === "NO_PROVIDER_AVAILABLE" ? (
               <div className="mt-6">
                 <EmptyState
                   icon={UserX}
-                  title="No providers available right now"
-                  description="We couldn't find a provider for this service in your area yet. Try again shortly or pick a different service."
-                  actionLabel="Choose a Different Service"
+                  title={t("provider.noProvidersTitle")}
+                  description={t("provider.noProvidersDesc")}
+                  actionLabel={t("provider.chooseDifferentService")}
                   onAction={() => {
                     setMatchOutcome(null);
                     setRequest(null);
@@ -1041,9 +1055,9 @@ function BookPage() {
               <div className="mt-6">
                 <EmptyState
                   icon={AlertTriangle}
-                  title="Something went wrong"
-                  description="We couldn't run matching for this request. Please try again."
-                  actionLabel="Retry"
+                  title={t("provider.errorTitle")}
+                  description={t("provider.errorDesc")}
+                  actionLabel={t("provider.retry")}
                   onAction={() => setMatchOutcome(null)}
                 />
               </div>
@@ -1053,26 +1067,26 @@ function BookPage() {
               <div className="mt-6">
                 <EmptyState
                   icon={UserX}
-                  title="No instant quotes yet"
-                  description="Matched providers haven't sent an estimate yet. Check back on My Bookings shortly."
-                  actionLabel="Back to Bookings"
+                  title={t("provider.noQuotesTitle")}
+                  description={t("provider.noQuotesDesc")}
+                  actionLabel={t("provider.backToBookings")}
                   actionTo="/bookings"
                 />
               </div>
             ) : (
               <>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  <MetricCard icon={Users} label="Providers Found" hint="Matched for this request" value={String(matches?.length ?? 0)} />
-                  <MetricCard icon={Star} label="Average Rating" hint="Across matched providers" value={avgMatchRating ? avgMatchRating.toFixed(1) : "—"} tone="amber" tintValue />
-                  <MetricCard icon={Gauge} label="Fastest Lead Time" hint="Quickest instant quote" value={fastestLeadDays != null ? `${fastestLeadDays}d` : "—"} tone="success" tintValue />
-                  <MetricCard icon={Tag} label="Starting From" hint="Lowest instant quote" value={lowestQuote != null ? fmtMoney(lowestQuote, quotes[0]?.currency) : "—"} />
+                  <MetricCard icon={Users} label={t("provider.metrics.providersFound")} hint={t("provider.metrics.providersFoundHint")} value={String(matches?.length ?? 0)} />
+                  <MetricCard icon={Star} label={t("provider.metrics.averageRating")} hint={t("provider.metrics.averageRatingHint")} value={avgMatchRating ? avgMatchRating.toFixed(1) : "—"} tone="amber" tintValue />
+                  <MetricCard icon={Gauge} label={t("provider.metrics.fastestLeadTime")} hint={t("provider.metrics.fastestLeadTimeHint")} value={fastestLeadDays != null ? t("provider.metrics.leadTimeValue", { count: fastestLeadDays }) : "—"} tone="success" tintValue />
+                  <MetricCard icon={Tag} label={t("provider.metrics.startingFrom")} hint={t("provider.metrics.startingFromHint")} value={lowestQuote != null ? fmtMoney(lowestQuote, quotes[0]?.currency) : "—"} />
                 </div>
 
                 {search.providerId && preferredProviderMatched === "unmatched" && (
                   <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
                     <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-600" />
                     <p className="text-sm text-muted-foreground">
-                      {search.providerName ?? "Your chosen provider"} wasn't matched for this request. Here are your matched providers instead.
+                      {t("provider.unmatchedNotice", { name: search.providerName ?? t("provider.yourChosenProvider") })}
                     </p>
                   </div>
                 )}
@@ -1080,7 +1094,7 @@ function BookPage() {
                   <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
                     <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-600" />
                     <p className="text-sm text-muted-foreground">
-                      {search.providerName ?? "Your chosen provider"} was matched but hasn't sent an instant quote yet. Choose another provider below, or check My Bookings shortly.
+                      {t("provider.matchedNoQuoteNotice", { name: search.providerName ?? t("provider.yourChosenProvider") })}
                     </p>
                   </div>
                 )}
@@ -1095,7 +1109,7 @@ function BookPage() {
                           providerSort === s ? "bg-card text-primary shadow-[var(--shadow-card)]" : "text-muted-foreground hover:text-foreground"
                         }`}
                       >
-                        {s}
+                        {t(`provider.sort.${SORT_LABEL_KEY[s]}`)}
                       </button>
                     ))}
                   </div>
@@ -1104,7 +1118,7 @@ function BookPage() {
                     disabled={acceptingQuoteId !== null}
                     className="flex items-center gap-2 rounded-xl border border-primary px-4 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5 disabled:opacity-60"
                   >
-                    <Sparkles className="size-4" /> Auto-Assign Now
+                    <Sparkles className="size-4" /> {t("provider.autoAssignNow")}
                   </button>
                 </div>
 
@@ -1127,7 +1141,7 @@ function BookPage() {
                                 <BadgeCheck className="size-4 text-primary" />
                                 {isPreferred && (
                                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                                    Your pick
+                                    {t("provider.yourPick")}
                                   </span>
                                 )}
                               </div>
@@ -1135,7 +1149,7 @@ function BookPage() {
                               <p className="mt-0.5 flex items-center gap-1 text-sm">
                                 <Star className="size-3.5 fill-current text-[#FFB800]" />
                                 {q.rating_avg}
-                                <span className="text-muted-foreground"> · {q.lead_time_days}d lead time</span>
+                                <span className="text-muted-foreground"> · {t("provider.leadTime", { count: q.lead_time_days })}</span>
                               </p>
                             </div>
                           </div>
@@ -1148,7 +1162,7 @@ function BookPage() {
                               style={{ backgroundImage: "var(--gradient-primary)" }}
                             >
                               {acceptingQuoteId === q.quote_id && <Loader2 className="size-4 animate-spin" />}
-                              Accept &amp; Continue
+                              {t("provider.acceptAndContinue")}
                             </button>
                           </div>
                         </div>
@@ -1208,14 +1222,15 @@ function DetailsSummary({
   preferredProviderPrice: number | null;
   providerId?: string | undefined;
 }) {
+  const { t } = useTranslation("booking");
   return (
     <div className="space-y-4">
       <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Your selection</p>
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("summary.yourSelection")}</p>
         <p className="mt-2 font-semibold">{selectedService?.name ?? categoryName ?? "—"}</p>
         {selectedService?.description && <p className="mt-1 text-sm text-muted-foreground">{selectedService.description}</p>}
         <div className="mt-4 border-t border-border pt-4">
-          <p className="text-xs text-muted-foreground">{providerId ? "Provider's price" : "Estimated price"}</p>
+          <p className="text-xs text-muted-foreground">{providerId ? t("summary.providersPrice") : t("summary.estimatedPrice")}</p>
           <p className="text-lg font-bold text-primary">
             {preferredProviderPrice != null
               ? fmtMoney(preferredProviderPrice)
@@ -1226,10 +1241,10 @@ function DetailsSummary({
         </div>
       </div>
       <div className="rounded-2xl bg-primary/5 p-5">
-        <h3 className="flex items-center gap-2 font-semibold text-primary"><MessageCircle className="size-4" /> Need help?</h3>
-        <p className="mt-1 text-sm text-muted-foreground">Not sure what to enter? Our support team is here for you.</p>
+        <h3 className="flex items-center gap-2 font-semibold text-primary"><MessageCircle className="size-4" /> {t("common.needHelp")}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{t("common.needHelpDesc")}</p>
         <a href="/help" className="mt-3 inline-flex items-center gap-2 rounded-xl border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/5">
-          <MessageCircle className="size-4" /> Chat with us
+          <MessageCircle className="size-4" /> {t("common.chatWithUs")}
         </a>
       </div>
     </div>
@@ -1255,6 +1270,7 @@ function PaymentStep({
   authorizing: boolean;
   onAuthorize: () => void;
 }) {
+  const { t } = useTranslation("booking");
   function methodIcon(type: string) {
     if (type === "mpesa") return Smartphone;
     if (type === "bank") return Landmark;
@@ -1268,32 +1284,32 @@ function PaymentStep({
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2">
-      <h2 className="text-lg font-semibold">Payment Authorization</h2>
-      <p className="mt-1 text-sm text-muted-foreground">Your booking is confirmed. Authorize payment to lock in your provider.</p>
+      <h2 className="text-lg font-semibold">{t("payment.title")}</h2>
+      <p className="mt-1 text-sm text-muted-foreground">{t("payment.subtitle")}</p>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
         <div className="min-w-0">
           <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground">Selected Provider</p>
+                <p className="text-xs text-muted-foreground">{t("payment.selectedProvider")}</p>
                 <p className="font-semibold">{booking.provider_name ?? "—"}</p>
               </div>
               <div className="text-right text-sm">
-                <p className="text-muted-foreground">Service</p>
+                <p className="text-muted-foreground">{t("payment.serviceLabel")}</p>
                 <p className="font-medium text-primary">{booking.service_name}</p>
               </div>
               <div className="text-right text-sm">
-                <p className="text-muted-foreground">Schedule</p>
+                <p className="text-muted-foreground">{t("payment.scheduleLabel")}</p>
                 <p className="font-medium">{booking.scheduled_date}{booking.time_window ? ` · ${booking.time_window}` : ""}</p>
               </div>
             </div>
           </div>
 
-          <h3 className="mt-6 text-sm font-semibold">Choose a payment method</h3>
+          <h3 className="mt-6 text-sm font-semibold">{t("payment.chooseMethod")}</h3>
           <div className="mt-3 space-y-3">
             <button
-              onClick={() => pick("WALLET", "FIXO Wallet")}
+              onClick={() => pick("WALLET", t("payment.fixoWallet"))}
               className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
                 selectedPaymentKey === "WALLET" ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
               }`}
@@ -1301,8 +1317,8 @@ function PaymentStep({
               <div className="flex items-center gap-3">
                 <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><WalletIcon className="size-5" /></span>
                 <div>
-                  <p className="font-semibold">FIXO Wallet</p>
-                  <p className="text-sm text-muted-foreground">Available Balance {wallet ? fmtMoney(wallet.balance, wallet.currency) : "—"}</p>
+                  <p className="font-semibold">{t("payment.fixoWallet")}</p>
+                  <p className="text-sm text-muted-foreground">{t("payment.availableBalance", { amount: wallet ? fmtMoney(wallet.balance, wallet.currency) : "—" })}</p>
                 </div>
               </div>
               <span className={`flex size-5 items-center justify-center rounded-full border-2 ${selectedPaymentKey === "WALLET" ? "border-primary bg-primary" : "border-border"}`}>
@@ -1329,7 +1345,7 @@ function PaymentStep({
                       <span className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon className="size-5" /></span>
                       <div>
                         <p className="font-semibold">{label}</p>
-                        {m.is_default && <p className="text-sm text-muted-foreground">Default</p>}
+                        {m.is_default && <p className="text-sm text-muted-foreground">{t("payment.default")}</p>}
                       </div>
                     </div>
                     <span className={`flex size-5 items-center justify-center rounded-full border-2 ${selectedPaymentKey === m.method_id ? "border-primary bg-primary" : "border-border"}`}>
@@ -1344,7 +1360,7 @@ function PaymentStep({
               href="/payments"
               className="flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-border py-4 text-sm font-medium text-muted-foreground hover:bg-muted/50"
             >
-              <Plus className="size-4" /> Add a payment method
+              <Plus className="size-4" /> {t("payment.addPaymentMethod")}
             </a>
           </div>
 
@@ -1357,23 +1373,23 @@ function PaymentStep({
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
               {authorizing ? <Loader2 className="size-4 animate-spin" /> : <Lock className="size-4" />}
-              {authorizing ? "Authorizing..." : "Confirm Booking"}
+              {authorizing ? t("payment.authorizing") : t("payment.confirmBooking")}
             </button>
           </StepFooter>
         </div>
 
         <div className="space-y-4">
           <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
-            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total Amount</p>
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("payment.totalAmount")}</p>
             <p className="mt-2 text-2xl font-bold text-primary">{fmtMoney(booking.agreed_amount, booking.currency)}</p>
-            <p className="mt-2 text-xs text-muted-foreground">This is the full amount for the job — no hidden fees.</p>
+            <p className="mt-2 text-xs text-muted-foreground">{t("payment.totalAmountNote")}</p>
           </div>
           <div className="flex items-start gap-3 rounded-2xl bg-primary/5 p-4">
             <ShieldCheck className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm font-semibold">Authorization Hold Only</p>
+              <p className="text-sm font-semibold">{t("payment.holdOnlyTitle")}</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                We reserve these funds now and charge them once the job is completed and confirmed.
+                {t("payment.holdOnlyDesc")}
               </p>
             </div>
           </div>
@@ -1384,10 +1400,10 @@ function PaymentStep({
 }
 
 const NEXT_STEPS = [
-  { key: "PAYMENT_AUTHORIZED", label: "Provider notified", desc: "Your provider has been notified of your request." },
-  { key: "ON_THE_WAY", label: "On the way", desc: "Your provider will arrive according to the scheduled time." },
-  { key: "STARTED", label: "Job in progress", desc: "We'll keep you updated every step of the way." },
-  { key: "CLOSED", label: "Job complete", desc: "Review the work, make payment and we're done!" },
+  { key: "PAYMENT_AUTHORIZED", labelKey: "paymentAuthorized" },
+  { key: "ON_THE_WAY", labelKey: "onTheWay" },
+  { key: "STARTED", labelKey: "started" },
+  { key: "CLOSED", labelKey: "closed" },
 ] as const;
 
 function DoneStep({
@@ -1417,46 +1433,47 @@ function DoneStep({
   onViewInvoices: () => void;
   onBookAnother: () => void;
 }) {
+  const { t } = useTranslation("booking");
   return (
     <section className="animate-in fade-in zoom-in-95">
       <div className="flex flex-col items-center py-4 text-center">
         <span className="flex size-20 items-center justify-center rounded-full bg-success-muted text-success-foreground">
           <CheckCircle2 className="size-10" />
         </span>
-        <h2 className="mt-5 text-xl font-bold">You're all set!</h2>
+        <h2 className="mt-5 text-xl font-bold">{t("done.title")}</h2>
         <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-          We've sent your booking details to {booking.provider_name}. They'll be on the way and keep you updated.
+          {t("done.subtitle", { provider: booking.provider_name })}
         </p>
       </div>
 
       <div className="mt-4 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
         <div className="space-y-3">
-          <SummaryLine icon={Tag} label="Booking ID" value={booking.booking_number} />
-          <SummaryLine icon={Wrench} label="Service" value={booking.service_name ?? "—"} />
-          <SummaryLine icon={Users} label="Assigned Provider" value={booking.provider_name ?? "—"} />
-          <SummaryLine icon={CalendarIcon} label="Scheduled Time" value={`${booking.scheduled_date}${booking.time_window ? ` · ${booking.time_window}` : ""}`} />
-          <SummaryLine icon={MapPin} label="Service Address" value={`${booking.address_street ?? ""}, ${booking.address_city ?? ""}`} />
+          <SummaryLine icon={Tag} label={t("done.bookingId")} value={booking.booking_number} />
+          <SummaryLine icon={Wrench} label={t("done.serviceLabel")} value={booking.service_name ?? "—"} />
+          <SummaryLine icon={Users} label={t("done.assignedProvider")} value={booking.provider_name ?? "—"} />
+          <SummaryLine icon={CalendarIcon} label={t("done.scheduledTime")} value={`${booking.scheduled_date}${booking.time_window ? ` · ${booking.time_window}` : ""}`} />
+          <SummaryLine icon={MapPin} label={t("done.serviceAddress")} value={`${booking.address_street ?? ""}, ${booking.address_city ?? ""}`} />
 
           {booking.arrival_code && (
             <div className="rounded-2xl border border-dashed border-border p-5 text-center">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">Arrival code</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">{t("done.arrivalCode")}</p>
               <div className="mt-1 flex items-center justify-center gap-2">
                 <p className="text-3xl font-bold tracking-[0.3em]">{booking.arrival_code}</p>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(booking.arrival_code ?? "");
-                    toast.success("Arrival code copied");
+                    toast.success(t("done.arrivalCodeCopied"));
                   }}
                   className="rounded-lg p-2 text-muted-foreground hover:bg-muted"
                 >
                   <Copy className="size-4" />
                 </button>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">Share this with {booking.provider_name} on arrival.</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t("done.shareArrivalCode", { provider: booking.provider_name })}</p>
             </div>
           )}
 
-          <h3 className="pt-2 text-sm font-semibold">What happens next?</h3>
+          <h3 className="pt-2 text-sm font-semibold">{t("done.whatsNext")}</h3>
           <div className="flex items-start overflow-x-auto pb-1">
             {NEXT_STEPS.map((s, i) => {
               const done = i === 0 && booking.payment?.status === "AUTHORIZED";
@@ -1469,8 +1486,8 @@ function DoneStep({
                     </span>
                     <div className={`h-px flex-1 ${i === NEXT_STEPS.length - 1 ? "opacity-0" : "bg-border"}`} />
                   </div>
-                  <p className="mt-2 text-sm font-semibold">{s.label}</p>
-                  <p className="mt-0.5 px-1 text-xs text-muted-foreground">{s.desc}</p>
+                  <p className="mt-2 text-sm font-semibold">{t(`done.nextSteps.${s.labelKey}.label`)}</p>
+                  <p className="mt-0.5 px-1 text-xs text-muted-foreground">{t(`done.nextSteps.${s.labelKey}.desc`)}</p>
                 </div>
               );
             })}
@@ -1482,32 +1499,32 @@ function DoneStep({
               className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-primary-foreground"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
-              <MapPin className="size-4" /> Track Booking
+              <MapPin className="size-4" /> {t("done.trackBooking")}
             </button>
             <button
               onClick={() => setShowMessageBox(!showMessageBox)}
               className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-sm font-medium transition-colors hover:bg-muted/50"
             >
-              <MessageCircle className="size-4" /> Message Provider
+              <MessageCircle className="size-4" /> {t("done.messageProvider")}
             </button>
             <button
               onClick={onViewInvoices}
               className="flex items-center gap-2 rounded-xl border border-border px-5 py-3 text-sm font-medium transition-colors hover:bg-muted/50"
             >
-              <Tag className="size-4" /> View Invoice / Receipt
+              <Tag className="size-4" /> {t("done.viewInvoice")}
             </button>
           </div>
 
           {showMessageBox && (
             <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-4">
               {messageSent ? (
-                <p className="flex items-center gap-2 text-sm font-medium text-success"><CheckCircle2 className="size-4" /> Message sent to {booking.provider_name}.</p>
+                <p className="flex items-center gap-2 text-sm font-medium text-success"><CheckCircle2 className="size-4" /> {t("done.messageSentTo", { provider: booking.provider_name })}</p>
               ) : (
                 <>
                   <Textarea
                     value={messageBody}
                     onChange={(e) => setMessageBody(e.target.value)}
-                    placeholder={`Send a message to ${booking.provider_name ?? "your provider"}...`}
+                    placeholder={t("done.messagePlaceholder", { provider: booking.provider_name ?? t("done.yourProviderFallback") })}
                     className="min-h-20 rounded-xl"
                     maxLength={500}
                   />
@@ -1518,7 +1535,7 @@ function DoneStep({
                     style={{ backgroundImage: "var(--gradient-primary)" }}
                   >
                     {sendingMessage ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-                    Send
+                    {t("done.send")}
                   </button>
                 </>
               )}
@@ -1529,29 +1546,29 @@ function DoneStep({
             onClick={onBookAnother}
             className="text-sm font-medium text-muted-foreground hover:underline"
           >
-            Book Another Service
+            {t("done.bookAnotherService")}
           </button>
         </div>
 
         <div className="space-y-4">
           <div className="rounded-2xl bg-card shadow-[var(--shadow-xs)] p-5">
             <div className="flex items-center justify-between">
-              <p className="font-semibold">Payment Status</p>
+              <p className="font-semibold">{t("done.paymentStatus")}</p>
               <span className="rounded-full bg-success-muted px-2.5 py-1 text-xs font-semibold text-success-foreground">
-                {booking.payment?.status === "AUTHORIZED" ? "Paid" : booking.payment?.status ?? "—"}
+                {booking.payment?.status === "AUTHORIZED" ? t("done.paid") : booking.payment?.status ?? "—"}
               </span>
             </div>
             <div className="mt-3 space-y-2 text-sm">
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">Amount</span><span className="font-semibold">{fmtMoney(booking.agreed_amount, booking.currency)}</span></div>
-              <div className="flex items-center justify-between"><span className="text-muted-foreground">Payment Method</span><span className="font-semibold">{paymentLabel ?? "—"}</span></div>
+              <div className="flex items-center justify-between"><span className="text-muted-foreground">{t("done.amountLabel")}</span><span className="font-semibold">{fmtMoney(booking.agreed_amount, booking.currency)}</span></div>
+              <div className="flex items-center justify-between"><span className="text-muted-foreground">{t("done.paymentMethod")}</span><span className="font-semibold">{paymentLabel ?? "—"}</span></div>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-2xl bg-primary/5 p-4">
             <MessageCircle className="mt-0.5 size-5 shrink-0 text-primary" />
             <div>
-              <p className="text-sm font-semibold">Need help?</p>
-              <p className="mt-1 text-xs text-muted-foreground">Our support team is here for you.</p>
-              <a href="/help" className="mt-2 inline-block text-xs font-semibold text-primary hover:underline">Chat with us</a>
+              <p className="text-sm font-semibold">{t("common.needHelp")}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{t("common.needHelpDesc")}</p>
+              <a href="/help" className="mt-2 inline-block text-xs font-semibold text-primary hover:underline">{t("common.chatWithUs")}</a>
             </div>
           </div>
         </div>
@@ -1573,6 +1590,7 @@ function SummaryLine({ icon: Icon, label, value }: { icon: LucideIcon; label: st
 }
 
 function Stepper({ current }: { current: number }) {
+  const { t } = useTranslation("booking");
   return (
     <div className="mt-6 flex items-center gap-1.5 overflow-x-auto pb-1">
       {STEPS.map((s, i) => (
@@ -1588,7 +1606,7 @@ function Stepper({ current }: { current: number }) {
             style={i === current ? { backgroundImage: "var(--gradient-primary)" } : undefined}
           >
             {i < current ? <Check className="size-3.5" /> : <span>{i + 1}</span>}
-            {s}
+            {t(`stepper.${s.toLowerCase()}`)}
           </div>
           {i < STEPS.length - 1 && (
             <div className={`h-px w-4 shrink-0 transition-colors duration-300 ${i < current ? "bg-primary/40" : "bg-border"}`} />
@@ -1604,17 +1622,19 @@ function StepFooter({ children }: { children: React.ReactNode }) {
 }
 
 function BackButton({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation("booking");
   return (
     <button
       onClick={onClick}
       className="flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted/50"
     >
-      Back
+      {t("common.back")}
     </button>
   );
 }
 
 function NextButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
+  const { t } = useTranslation("booking");
   return (
     <button
       onClick={onClick}
@@ -1622,12 +1642,13 @@ function NextButton({ onClick, disabled }: { onClick: () => void; disabled?: boo
       className="ml-auto flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lg)] disabled:opacity-40 disabled:hover:translate-y-0 disabled:hover:shadow-[var(--shadow-glow)]"
       style={{ backgroundImage: "var(--gradient-primary)" }}
     >
-      Continue
+      {t("common.continue")}
     </button>
   );
 }
 
 function ReviewRow({ label, value, onEdit }: { label: string; value: string; onEdit: () => void }) {
+  const { t } = useTranslation("booking");
   return (
     <div className="flex items-start justify-between gap-4 p-4">
       <div className="min-w-0">
@@ -1635,7 +1656,7 @@ function ReviewRow({ label, value, onEdit }: { label: string; value: string; onE
         <p className="mt-0.5 truncate text-sm font-medium">{value}</p>
       </div>
       <button onClick={onEdit} className="shrink-0 text-sm font-semibold text-primary hover:underline">
-        Edit
+        {t("common.edit")}
       </button>
     </div>
   );
