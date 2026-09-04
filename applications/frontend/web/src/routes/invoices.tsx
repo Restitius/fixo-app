@@ -38,6 +38,7 @@ import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type InvoiceDetail, type InvoiceRow, type PaymentMethod } from "@/lib/api-client";
 import { fmtDate, fmtDateTime, fmtMoney, humanize } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const title = "Invoices — FIXO";
 const description = "Review invoices issued for your completed bookings.";
@@ -107,6 +108,7 @@ function methodLabel(m: PaymentMethod | null) {
 }
 
 function InvoicesPage() {
+  const { t } = useTranslation("billing");
   const { access_token, loading, logout, customer } = useAuth();
   const [rows, setRows] = useState<InvoiceRow[] | null>(null);
   const [defaultMethod, setDefaultMethod] = useState<PaymentMethod | null>(null);
@@ -141,7 +143,7 @@ function InvoicesPage() {
   );
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return <div className="flex min-h-screen items-center justify-center">{t("invoices.loading")}</div>;
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
@@ -174,35 +176,35 @@ function InvoicesPage() {
 
   return (
     <PageShell
-      title="Invoices"
-      subtitle="Billing records for your completed jobs"
+      title={t("invoices.page.title")}
+      subtitle={t("invoices.page.subtitle")}
       userName={customer?.full_name}
       onLogout={logout}
     >
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={FileText} label="Total Invoices" hint="All time" value={String(totalInvoices)} />
-        <MetricCard icon={CheckCircle2} label="Paid Invoices" hint="Completed" value={String(paidCount)} tone="success" />
-        <MetricCard icon={Clock} label="Pending" hint="Awaiting payment" value={String(pendingCount)} tone="amber" />
-        <MetricCard icon={Receipt} label="Total Billed" hint="Across all invoices" value={fmtMoney(totalBilled, currency)} />
+        <MetricCard icon={FileText} label={t("invoices.metrics.totalInvoices")} hint={t("invoices.metrics.allTime")} value={String(totalInvoices)} />
+        <MetricCard icon={CheckCircle2} label={t("invoices.metrics.paidInvoices")} hint={t("invoices.metrics.completed")} value={String(paidCount)} tone="success" />
+        <MetricCard icon={Clock} label={t("invoices.metrics.pending")} hint={t("invoices.metrics.awaitingPayment")} value={String(pendingCount)} tone="amber" />
+        <MetricCard icon={Receipt} label={t("invoices.metrics.totalBilled")} hint={t("invoices.metrics.acrossAllInvoices")} value={fmtMoney(totalBilled, currency)} />
       </div>
 
       <div className="mt-6 flex min-h-0 flex-1 items-start gap-6">
         {/* Main column — squeezes left when the panel is open */}
         <div className="flex h-full min-w-0 flex-1 flex-col">
           <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
-            <h3 className="text-lg font-semibold">Recent invoices</h3>
+            <h3 className="text-lg font-semibold">{t("invoices.recentInvoices")}</h3>
             <div className="flex flex-wrap items-center gap-3">
               <div className="inline-flex gap-1 rounded-xl bg-muted p-1">
-                {TABS.map((t) => (
+                {TABS.map((filterTab) => (
                   <button
-                    key={t}
-                    onClick={() => { setTab(t); setPage(1); }}
+                    key={filterTab}
+                    onClick={() => { setTab(filterTab); setPage(1); }}
                     className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-                      tab === t ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      tab === filterTab ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                     }`}
-                    style={tab === t ? { backgroundImage: "var(--gradient-primary)" } : undefined}
+                    style={tab === filterTab ? { backgroundImage: "var(--gradient-primary)" } : undefined}
                   >
-                    {t}
+                    {t(`invoices.tabs.${filterTab.toLowerCase()}`)}
                   </button>
                 ))}
               </div>
@@ -210,7 +212,7 @@ function InvoicesPage() {
                 onClick={() => window.print()}
                 className="flex h-10 items-center gap-2 rounded-xl bg-muted px-4 text-sm font-medium hover:bg-muted/70"
               >
-                <Download className="size-4" /> Download all
+                <Download className="size-4" /> {t("invoices.downloadAll")}
               </button>
             </div>
           </div>
@@ -221,13 +223,13 @@ function InvoicesPage() {
             <div className="mt-6">
               <EmptyState
                 icon={FileText}
-                title={tab === "All" ? "No invoices yet" : `No ${tab.toLowerCase()} invoices`}
+                title={tab === "All" ? t("invoices.empty.titleAll") : t(`invoices.empty.titleFiltered${tab}`)}
                 description={
                   tab === "All"
-                    ? "An invoice is issued once a booking is completed and confirmed. Check back after your next job."
-                    : "Try a different tab to see other invoices."
+                    ? t("invoices.empty.descriptionAll")
+                    : t("invoices.empty.descriptionFiltered")
                 }
-                actionLabel="View My Bookings"
+                actionLabel={t("invoices.empty.viewMyBookings")}
                 actionTo="/bookings"
               />
             </div>
@@ -237,13 +239,13 @@ function InvoicesPage() {
                 <table className="w-full min-w-[920px] text-left text-sm">
                   <thead>
                     <tr className="border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      <th className="px-6 py-4 font-semibold">Service</th>
-                      <th className="px-4 py-4 font-semibold">Invoice #</th>
-                      <th className="px-4 py-4 font-semibold">Provider</th>
-                      <th className="px-4 py-4 font-semibold">Issue Date</th>
-                      <th className="px-4 py-4 font-semibold">Payment Method</th>
-                      <th className="px-4 py-4 font-semibold">Status</th>
-                      <th className="px-4 py-4 font-semibold">Amount</th>
+                      <th className="px-6 py-4 font-semibold">{t("invoices.table.service")}</th>
+                      <th className="px-4 py-4 font-semibold">{t("invoices.table.invoiceNumber")}</th>
+                      <th className="px-4 py-4 font-semibold">{t("invoices.table.provider")}</th>
+                      <th className="px-4 py-4 font-semibold">{t("invoices.table.issueDate")}</th>
+                      <th className="px-4 py-4 font-semibold">{t("invoices.table.paymentMethod")}</th>
+                      <th className="px-4 py-4 font-semibold">{t("invoices.table.status")}</th>
+                      <th className="px-4 py-4 font-semibold">{t("invoices.table.amount")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -264,7 +266,7 @@ function InvoicesPage() {
                               <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                                 <Icon className="size-5" />
                               </span>
-                              <p className="font-semibold">{inv.service_name ?? "Service"}</p>
+                              <p className="font-semibold">{inv.service_name ?? t("invoices.serviceFallback")}</p>
                             </div>
                           </td>
                           <td className="px-4 py-4 text-primary font-semibold">{inv.invoice_number}</td>
@@ -276,7 +278,7 @@ function InvoicesPage() {
                             </span>
                           </td>
                           <td className="px-4 py-4">
-                            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(status)}`}>{status}</span>
+                            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(status)}`}>{t(`invoices.tabs.${status.toLowerCase()}`)}</span>
                           </td>
                           <td className="px-4 py-4 font-semibold">{fmtMoney(inv.total_amount, inv.currency)}</td>
                         </tr>
@@ -288,7 +290,11 @@ function InvoicesPage() {
 
               <div className="mt-auto flex shrink-0 items-center justify-between border-t border-border px-6 py-4">
                 <p className="text-sm text-muted-foreground">
-                  Showing {(page - 1) * PAGE_SIZE + 1} to {Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length} invoices
+                  {t("invoices.pagination.showing", {
+                    count: filtered.length,
+                    from: (page - 1) * PAGE_SIZE + 1,
+                    to: Math.min(page * PAGE_SIZE, filtered.length),
+                  })}
                 </p>
                 <div className="flex items-center gap-2">
                   <button
@@ -362,12 +368,13 @@ function PendingInvoicePanel({
   onClose: () => void;
   onDownload: () => void;
 }) {
+  const { t } = useTranslation("billing");
   const navigate = useNavigate();
 
   return (
     <div className="w-[380px] shrink-0 animate-in fade-in slide-in-from-right-4 rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Invoice details</h3>
+        <h3 className="text-lg font-semibold">{t("invoices.panel.title")}</h3>
         <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted">
           <X className="size-4" />
         </button>
@@ -380,48 +387,48 @@ function PendingInvoicePanel({
       ) : (
         <div className="mt-4 space-y-5">
           <div>
-            <p className="text-lg font-semibold">{detail.service_name ?? "Service"}</p>
+            <p className="text-lg font-semibold">{detail.service_name ?? t("invoices.serviceFallback")}</p>
             <span className={`mt-1 inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(displayStatus(detail))}`}>
-              {displayStatus(detail)}
+              {t(`invoices.tabs.${displayStatus(detail).toLowerCase()}`)}
             </span>
           </div>
 
           <div className="space-y-3 text-sm">
-            <Field icon={Receipt} label="Invoice number" value={detail.invoice_number} />
-            <Field icon={FileText} label="Booking reference" value={detail.booking_number} />
-            <Field icon={User} label="Provider" value={detail.provider_name} />
-            <Field icon={Wrench} label="Category" value={detail.category_name ?? "—"} />
-            <Field icon={Calendar} label="Invoice date" value={fmtDate(detail.created_at)} />
-            <Field icon={Calendar} label="Due date" value={fmtDate(dueDate(detail).toISOString())} />
+            <Field icon={Receipt} label={t("invoices.fields.invoiceNumber")} value={detail.invoice_number} />
+            <Field icon={FileText} label={t("invoices.fields.bookingReference")} value={detail.booking_number} />
+            <Field icon={User} label={t("invoices.fields.provider")} value={detail.provider_name} />
+            <Field icon={Wrench} label={t("invoices.fields.category")} value={detail.category_name ?? "—"} />
+            <Field icon={Calendar} label={t("invoices.fields.invoiceDate")} value={fmtDate(detail.created_at)} />
+            <Field icon={Calendar} label={t("invoices.fields.dueDate")} value={fmtDate(dueDate(detail).toISOString())} />
             <Field
               icon={MapPin}
-              label="Location"
+              label={t("invoices.fields.location")}
               value={detail.address_city ? `${detail.address_city}${detail.address_region ? `, ${detail.address_region}` : ""}` : "—"}
             />
-            <Field icon={CreditCard} label="Payment method" value={methodLabel(defaultMethod)} />
+            <Field icon={CreditCard} label={t("invoices.fields.paymentMethod")} value={methodLabel(defaultMethod)} />
           </div>
 
           <div className="flex flex-col gap-1 rounded-2xl bg-muted/50 p-4 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Subtotal</span>
+              <span className="text-muted-foreground">{t("invoices.billing.subtotal")}</span>
               <span>{fmtMoney(detail.subtotal, detail.currency)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Platform fee</span>
+              <span className="text-muted-foreground">{t("invoices.billing.platformFee")}</span>
               <span>{fmtMoney(detail.tax_amount, detail.currency)}</span>
             </div>
             <div className="mt-1 flex justify-between border-t border-border pt-2 font-semibold">
-              <span>Total amount</span>
+              <span>{t("invoices.billing.totalAmount")}</span>
               <span>{fmtMoney(detail.total_amount, detail.currency)}</span>
             </div>
           </div>
 
           <div>
-            <h4 className="mb-3 text-sm font-semibold">Progress timeline</h4>
+            <h4 className="mb-3 text-sm font-semibold">{t("invoices.panel.progressTimeline")}</h4>
             <ol className="space-y-3">
-              <TimelineStep done label="Invoice Issued" value={detail.issued_at ? fmtDateTime(detail.issued_at) : fmtDateTime(detail.created_at)} />
-              <TimelineStep current label="Payment Pending" value={fmtDateTime(detail.created_at)} />
-              <TimelineStep label="Reminder Scheduled" value={fmtDateTime(dueDate(detail).toISOString())} />
+              <TimelineStep done label={t("invoices.timeline.invoiceIssued")} value={detail.issued_at ? fmtDateTime(detail.issued_at) : fmtDateTime(detail.created_at)} />
+              <TimelineStep current label={t("invoices.timeline.paymentPending")} value={fmtDateTime(detail.created_at)} />
+              <TimelineStep label={t("invoices.timeline.reminderScheduled")} value={fmtDateTime(dueDate(detail).toISOString())} />
             </ol>
           </div>
 
@@ -430,25 +437,25 @@ function PendingInvoicePanel({
               onClick={onDownload}
               className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
             >
-              <Download className="size-4" /> Download invoice
+              <Download className="size-4" /> {t("invoices.panel.downloadInvoice")}
             </button>
             <button
               onClick={() => navigate({ to: "/help" })}
               className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
             >
-              <MessageCircle className="size-4" /> Contact support
+              <MessageCircle className="size-4" /> {t("invoices.panel.contactSupport")}
             </button>
           </div>
 
           <button
             onClick={() => {
-              toast.info("Invoice payments aren't wired to a live gateway yet — head to Payments to manage funding.");
+              toast.info(t("invoices.panel.payNotWiredToast"));
               navigate({ to: "/payments" });
             }}
             className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
             style={{ backgroundImage: "var(--gradient-primary)" }}
           >
-            Pay now
+            {t("invoices.panel.payNow")}
           </button>
         </div>
       )}
@@ -487,6 +494,7 @@ function PaidInvoiceDialog({
   defaultMethod: PaymentMethod | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useTranslation("billing");
   const { customer } = useAuth();
   const [downloadedAt, setDownloadedAt] = useState<string | null>(null);
 
@@ -501,7 +509,11 @@ function PaidInvoiceDialog({
 
   async function shareReceipt() {
     if (!detail) return;
-    const text = `Invoice ${detail.invoice_number} — ${fmtMoney(detail.total_amount, detail.currency)} paid to ${detail.provider_name}`;
+    const text = t("invoices.dialog.shareText", {
+      invoiceNumber: detail.invoice_number,
+      amount: fmtMoney(detail.total_amount, detail.currency),
+      provider: detail.provider_name,
+    });
     if (navigator.share) {
       try {
         await navigator.share({ title: "FIXO Invoice", text });
@@ -510,7 +522,7 @@ function PaidInvoiceDialog({
       }
     } else {
       await navigator.clipboard.writeText(text);
-      toast.success("Receipt summary copied to clipboard");
+      toast.success(t("invoices.dialog.receiptCopied"));
     }
   }
 
@@ -518,7 +530,7 @@ function PaidInvoiceDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Invoice details</DialogTitle>
+          <DialogTitle>{t("invoices.panel.title")}</DialogTitle>
         </DialogHeader>
 
         {!detail ? (
@@ -536,45 +548,45 @@ function PaidInvoiceDialog({
                   })()}
                 </span>
                 <div>
-                  <p className="font-semibold">{detail.service_name ?? "Service"}</p>
+                  <p className="font-semibold">{detail.service_name ?? t("invoices.serviceFallback")}</p>
                   <p className="text-xs text-muted-foreground">{detail.invoice_number}</p>
                 </div>
               </div>
               <div className="text-right">
                 <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyle(displayStatus(detail))}`}>
-                  {displayStatus(detail)}
+                  {t(`invoices.tabs.${displayStatus(detail).toLowerCase()}`)}
                 </span>
                 <p className="mt-1 font-bold">{fmtMoney(detail.total_amount, detail.currency)}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-sm">
-              <Field icon={User} label="Provider" value={detail.provider_name} />
-              <Field icon={User} label="Customer" value={customer?.full_name ?? "—"} />
-              <Field icon={Calendar} label="Invoice date" value={fmtDate(detail.created_at)} />
-              <Field icon={Calendar} label="Due date" value={fmtDate(dueDate(detail).toISOString())} />
+              <Field icon={User} label={t("invoices.fields.provider")} value={detail.provider_name} />
+              <Field icon={User} label={t("invoices.fields.customer")} value={customer?.full_name ?? "—"} />
+              <Field icon={Calendar} label={t("invoices.fields.invoiceDate")} value={fmtDate(detail.created_at)} />
+              <Field icon={Calendar} label={t("invoices.fields.dueDate")} value={fmtDate(dueDate(detail).toISOString())} />
               <Field
                 icon={MapPin}
-                label="Location"
+                label={t("invoices.fields.location")}
                 value={detail.address_city ? `${detail.address_city}${detail.address_region ? `, ${detail.address_region}` : ""}` : "—"}
               />
-              <Field icon={CreditCard} label="Payment method" value={methodLabel(defaultMethod)} />
+              <Field icon={CreditCard} label={t("invoices.fields.paymentMethod")} value={methodLabel(defaultMethod)} />
             </div>
 
             <div>
-              <h4 className="mb-2 text-sm font-semibold">Billing breakdown</h4>
+              <h4 className="mb-2 text-sm font-semibold">{t("invoices.dialog.billingBreakdown")}</h4>
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Service charge</span>
+                  <span className="text-muted-foreground">{t("invoices.billing.serviceCharge")}</span>
                   <span>{fmtMoney(detail.subtotal, detail.currency)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Platform fee</span>
+                  <span className="text-muted-foreground">{t("invoices.billing.platformFee")}</span>
                   <span>{fmtMoney(detail.tax_amount, detail.currency)}</span>
                 </div>
               </div>
               <div className="mt-2 flex justify-between border-t border-border pt-2 font-semibold">
-                <span>Total amount</span>
+                <span>{t("invoices.billing.totalAmount")}</span>
                 <span>{fmtMoney(detail.total_amount, detail.currency)}</span>
               </div>
             </div>
@@ -583,25 +595,25 @@ function PaidInvoiceDialog({
 
             <div className="flex items-start gap-2 rounded-xl bg-primary/5 p-3 text-xs text-muted-foreground">
               <FileText className="mt-0.5 size-3.5 shrink-0 text-primary" />
-              This invoice is available as a downloadable receipt for your completed service.
+              {t("invoices.dialog.receiptNote")}
             </div>
 
             <div className="flex gap-2">
               <button onClick={() => onOpenChange(false)} className="flex-1 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted">
-                Close
+                {t("invoices.dialog.close")}
               </button>
               <button
                 onClick={() => void shareReceipt()}
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium hover:bg-muted"
               >
-                <Share2 className="size-4" /> Share receipt
+                <Share2 className="size-4" /> {t("invoices.dialog.shareReceipt")}
               </button>
               <button
                 onClick={downloadPdf}
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                <Printer className="size-4" /> Download PDF
+                <Printer className="size-4" /> {t("invoices.dialog.downloadPdf")}
               </button>
             </div>
           </div>
@@ -612,15 +624,16 @@ function PaidInvoiceDialog({
 }
 
 function ReceiptTimeline({ detail, downloadedAt }: { detail: InvoiceDetail; downloadedAt: string | null }) {
+  const { t } = useTranslation("billing");
   const steps: { label: string; at: string | null }[] = [
-    { label: "Issued", at: detail.issued_at ?? detail.created_at },
-    { label: "Paid", at: detail.paid_at ?? null },
-    { label: "Downloaded", at: downloadedAt },
+    { label: t("invoices.timeline.issued"), at: detail.issued_at ?? detail.created_at },
+    { label: t("invoices.timeline.paid"), at: detail.paid_at ?? null },
+    { label: t("invoices.timeline.downloaded"), at: downloadedAt },
   ];
 
   return (
     <div>
-      <h4 className="mb-3 text-sm font-semibold">Progress</h4>
+      <h4 className="mb-3 text-sm font-semibold">{t("invoices.dialog.progress")}</h4>
       <div className="flex items-start gap-1">
         {steps.map((s, i) => (
           <div key={s.label} className="flex min-w-0 flex-1 flex-col items-center text-center">

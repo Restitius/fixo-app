@@ -1,0 +1,251 @@
+{
+  "invoices": {
+    "loading": "Cargando…",
+    "page": {
+      "title": "Facturas",
+      "subtitle": "Registros de facturación de tus trabajos completados"
+    },
+    "metrics": {
+      "totalInvoices": "Total de Facturas",
+      "allTime": "Desde siempre",
+      "paidInvoices": "Facturas Pagadas",
+      "completed": "Completadas",
+      "pending": "Pendientes",
+      "awaitingPayment": "Esperando pago",
+      "totalBilled": "Total Facturado",
+      "acrossAllInvoices": "En todas las facturas"
+    },
+    "recentInvoices": "Facturas recientes",
+    "tabs": {
+      "all": "Todas",
+      "paid": "Pagadas",
+      "pending": "Pendientes",
+      "overdue": "Vencidas"
+    },
+    "downloadAll": "Descargar todo",
+    "empty": {
+      "titleAll": "Aún no hay facturas",
+      "titleFilteredPaid": "No hay facturas pagadas",
+      "titleFilteredPending": "No hay facturas pendientes",
+      "titleFilteredOverdue": "No hay facturas vencidas",
+      "descriptionAll": "Una factura se emite en cuanto una reserva se completa y confirma. Vuelve a consultar después de tu próximo trabajo.",
+      "descriptionFiltered": "Prueba con otra pestaña para ver otras facturas.",
+      "viewMyBookings": "Ver Mis Reservas"
+    },
+    "table": {
+      "service": "Servicio",
+      "invoiceNumber": "N.º de Factura",
+      "provider": "Proveedor",
+      "issueDate": "Fecha de Emisión",
+      "paymentMethod": "Método de Pago",
+      "status": "Estado",
+      "amount": "Importe"
+    },
+    "serviceFallback": "Servicio",
+    "pagination": {
+      "showing_one": "Mostrando {{from}} a {{to}} de {{count}} factura",
+      "showing_other": "Mostrando {{from}} a {{to}} de {{count}} facturas"
+    },
+    "fields": {
+      "invoiceNumber": "Número de factura",
+      "bookingReference": "Referencia de reserva",
+      "provider": "Proveedor",
+      "category": "Categoría",
+      "invoiceDate": "Fecha de factura",
+      "dueDate": "Fecha de vencimiento",
+      "location": "Ubicación",
+      "paymentMethod": "Método de pago",
+      "customer": "Cliente"
+    },
+    "billing": {
+      "subtotal": "Subtotal",
+      "platformFee": "Comisión de la plataforma",
+      "totalAmount": "Importe total",
+      "serviceCharge": "Cargo por servicio"
+    },
+    "panel": {
+      "title": "Detalles de la factura",
+      "progressTimeline": "Línea de tiempo",
+      "downloadInvoice": "Descargar factura",
+      "contactSupport": "Contactar soporte",
+      "payNotWiredToast": "Los pagos de facturas aún no están conectados a una pasarela en vivo — ve a Pagos para gestionar tus fondos.",
+      "payNow": "Pagar ahora"
+    },
+    "timeline": {
+      "invoiceIssued": "Factura Emitida",
+      "paymentPending": "Pago Pendiente",
+      "reminderScheduled": "Recordatorio Programado",
+      "issued": "Emitida",
+      "paid": "Pagada",
+      "downloaded": "Descargada"
+    },
+    "dialog": {
+      "receiptCopied": "Resumen del recibo copiado al portapapeles",
+      "billingBreakdown": "Desglose de facturación",
+      "receiptNote": "Esta factura está disponible como recibo descargable para tu servicio completado.",
+      "close": "Cerrar",
+      "shareReceipt": "Compartir recibo",
+      "downloadPdf": "Descargar PDF",
+      "progress": "Progreso",
+      "shareText": "Factura {{invoiceNumber}} — {{amount}} pagado a {{provider}}"
+    }
+  },
+  "payments": {
+    "loading": "Cargando…",
+    "page": {
+      "title": "Pagos",
+      "subtitle": "Gestiona tus métodos guardados y sigue tus cargos"
+    },
+    "toast": {
+      "defaultUpdated": "Método de pago predeterminado actualizado",
+      "methodRemoved": "Método de pago eliminado"
+    },
+    "metrics": {
+      "savedMethods": "Métodos Guardados",
+      "savedMethodsHint": "{{default}} predeterminado · {{backup}} de respaldo",
+      "noMethodsYet": "Aún no hay métodos",
+      "thisMonthCharges": "Cargos de Este Mes",
+      "acrossBookings_one": "En {{count}} reserva",
+      "acrossBookings_other": "En {{count}} reservas",
+      "pendingAuthorizations": "Autorizaciones Pendientes",
+      "authorizationCount_one": "{{count}} autorización",
+      "authorizationCount_other": "{{count}} autorizaciones"
+    },
+    "methods": {
+      "title": "Métodos de pago",
+      "subtitle": "Métodos guardados para pagos más rápidos y seguros",
+      "addMethod": "Añadir Método",
+      "searchPlaceholder": "Buscar métodos de pago...",
+      "filterType": "Tipo",
+      "filterAllTypes": "Todos los Tipos",
+      "filterCard": "Tarjeta",
+      "filterMobileMoney": "Dinero Móvil",
+      "filterBank": "Banco",
+      "emptyFilteredTitle": "No hay métodos coincidentes",
+      "emptyFilteredDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "emptyTitle": "Aún no hay métodos de pago",
+      "emptyDescription": "Añade una tarjeta, dinero móvil o cuenta bancaria para agilizar tus pagos.",
+      "addPaymentMethod": "Añadir Método de Pago",
+      "columns": {
+        "method": "Método",
+        "type": "Tipo",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "expires": "Caduca el {{date}}",
+      "default": "Predeterminado",
+      "backup": "Respaldo",
+      "setAsDefault": "Establecer como predeterminado",
+      "remove": "Eliminar",
+      "secureFooter": "Tus datos de pago están cifrados y solo se almacena información enmascarada."
+    },
+    "charges": {
+      "title": "Cargos Recientes",
+      "subtitle": "Últimos cargos y autorizaciones",
+      "searchPlaceholder": "Buscar cargos...",
+      "filterStatus": "Estado",
+      "filterAllStatuses": "Todos los Estados",
+      "filterAuthorized": "Autorizado",
+      "filterPaid": "Pagado",
+      "filterClosed": "Cerrado",
+      "emptyFilteredTitle": "No hay cargos coincidentes",
+      "emptyFilteredDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "emptyTitle": "Aún no hay cargos",
+      "emptyDescription": "En cuanto completes una reserva y autorices el pago, aparecerá aquí.",
+      "browseServices": "Explorar Servicios",
+      "columns": {
+        "service": "Servicio",
+        "bookingId": "ID de Reserva",
+        "date": "Fecha",
+        "provider": "Proveedor",
+        "status": "Estado",
+        "amount": "Importe"
+      },
+      "serviceFallback": "Servicio",
+      "itemLabel": "cargos"
+    },
+    "viewFullHistory": "Ver historial completo de pagos en Historial →",
+    "chargeDetailsTitle": "Detalles del cargo",
+    "dialog": {
+      "title": "Añadir método de pago",
+      "tabCard": "Tarjeta",
+      "tabMobileMoney": "Dinero Móvil",
+      "tabBank": "Banco",
+      "errors": {
+        "cardRequired": "Completa el nombre del titular, el número de tarjeta y la fecha de caducidad",
+        "invalidPhone": "Introduce un número de teléfono válido",
+        "bankRequired": "Introduce el nombre del banco y el número de cuenta"
+      },
+      "methodAdded": "Método de pago añadido",
+      "labels": {
+        "cardholderName": "Nombre del titular",
+        "cardNumber": "Número de tarjeta",
+        "expiryDate": "Fecha de caducidad",
+        "cvv": "CVV",
+        "provider": "Operador",
+        "billingPhone": "Teléfono de facturación",
+        "bankName": "Nombre del banco",
+        "accountNumber": "Número de cuenta"
+      },
+      "placeholders": {
+        "cardholderName": "p. ej. Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "MM / AA",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "p. ej. CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "Establecer como método de pago predeterminado",
+      "secureNote": "Tus datos de pago están cifrados y almacenados de forma segura.",
+      "cancel": "Cancelar",
+      "saving": "Guardando...",
+      "saveMethod": "Guardar Método"
+    }
+  },
+  "wallet": {
+    "loading": "Cargando…",
+    "page": {
+      "title": "Billetera",
+      "subtitle": "Tu billetera de servicios y su historial"
+    },
+    "errors": {
+      "positiveAmount": "Introduce un importe positivo"
+    },
+    "toast": {
+      "credited": "Acreditado {{amount}}",
+      "debited": "Debitado {{amount}}"
+    },
+    "metrics": {
+      "availableBalance": "Saldo Disponible",
+      "rightNow": "En este momento",
+      "totalCredited": "Total Acreditado",
+      "allTime": "Desde siempre",
+      "totalDebited": "Total Debitado"
+    },
+    "amountLabel": "Importe ({{currency}})",
+    "amountPlaceholder": "p. ej. 20000",
+    "creditButton": "Acreditar",
+    "debitButton": "Debitar",
+    "refresh": "Actualizar",
+    "searchPlaceholder": "Buscar transacciones...",
+    "filterType": "Tipo",
+    "filterAllTypes": "Todos los Tipos",
+    "filterCredit": "Crédito",
+    "filterDebit": "Débito",
+    "emptyFilteredTitle": "No hay transacciones coincidentes",
+    "emptyFilteredDescription": "Intenta ajustar tu búsqueda o filtros.",
+    "clearFilters": "Borrar Filtros",
+    "emptyTitle": "Aún no hay transacciones",
+    "emptyDescription": "Los créditos, débitos y retenciones de tu billetera aparecerán aquí.",
+    "columns": {
+      "type": "Tipo",
+      "date": "Fecha",
+      "amount": "Importe",
+      "balanceAfter": "Saldo Después"
+    },
+    "itemLabel": "transacciones"
+  }
+}
