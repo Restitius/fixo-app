@@ -1494,4 +1494,53 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/verification/provider_status.sql
+  PRV.SERVICE.CATALOG:
+    description: Active catalogue services a provider can configure (Provider Phase 6).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/services/catalog.sql
+  PRV.SERVICE.LIST:
+    description: The provider's configured services with catalogue context (Provider Phase 6).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/list.sql
+  PRV.SERVICE.GET:
+    description: One configured service with catalogue context (Provider Phase 6).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/get.sql
+  PRV.SERVICE.UPSERT:
+    description: Create/replace one service configuration; any edit resets approval to DRAFT (Provider Phase 6).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/upsert.sql
+  PRV.SERVICE.DELETE:
+    description: Archive a service configuration (soft delete; history preserved) (Provider Phase 6).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/delete.sql
+  PRV.SERVICE.SUBMIT:
+    description: Submit a DRAFT/REJECTED configuration for platform approval (Provider Phase 6).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/submit.sql
+  PRV.SERVICE.REVIEW:
+    description: Platform-side APPROVED/REJECTED decision on a submitted configuration (Provider Phase 6; admin module wires the guard).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/services/review.sql
 version: 1

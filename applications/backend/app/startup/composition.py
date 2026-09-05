@@ -33,6 +33,7 @@ class Composition:
         self.provider_profile_repository: Any = None
         self.provider_business_repository: Any = None
         self.provider_verification_repository: Any = None
+        self.provider_service_config_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -162,6 +163,13 @@ class Composition:
         )
 
         self.provider_verification_repository = ProviderVerificationSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_service_config_sql_adapter import (
+            ProviderServiceConfigSqlAdapter,
+        )
+
+        self.provider_service_config_repository = ProviderServiceConfigSqlAdapter(
             self.sql_query_manager
         )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
@@ -357,6 +365,18 @@ class Composition:
 
         return ProviderVerificationService(
             verification=self.provider_verification_repository,
+            events=EventManager() if _event_bus_available() else None,
+        )
+
+    def provider_service_config_service(self) -> Any:
+        """ProviderServiceConfigService — per-service configuration + approval gate (Phase 6)."""
+        from app.domains.providers.services.provider_service_config_service import (
+            ProviderServiceConfigService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderServiceConfigService(
+            services=self.provider_service_config_repository,
             events=EventManager() if _event_bus_available() else None,
         )
 
