@@ -231,11 +231,10 @@ class ProviderVerificationService:
         if self._events is None:
             return
         try:
-            await self._events.emit(
-                event_type,
-                {"provider_id": provider_id, **payload},
-                aggregate_type="PROVIDER",
-                aggregate_id=provider_id,
+            from app.events.event import make_event
+
+            await self._events.publish(
+                make_event(event_type, {"provider_id": provider_id, **payload})
             )
         except Exception:  # noqa: BLE001 — side effects must never break the command
             pass
