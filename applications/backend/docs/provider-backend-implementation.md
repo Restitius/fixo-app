@@ -26,9 +26,9 @@
 | PRV-0 | — | Roadmap + provider domain foundation (this doc) | ✅ |
 | PRV-1 | 1 | **Provider Public Entry & Registration** — auth: register, OTP verify, login, refresh, me | ✅ |
 | PRV-2 | 2 | **Provider Onboarding** — 7-step guided onboarding + auto-saved progress | ✅ |
-| PRV-3 | 3 | **Provider Profile** — public profile fields + preview | ⏳ next |
-| PRV-4 | 4 | **Business Profile** — company/logo/registration, business info | ⏳ |
-| PRV-5 | 5 | Identity & Provider Verification — documents + verification workflow | ⏳ |
+| PRV-3 | 3 | **Provider Profile** — public profile fields + preview | ✅ |
+| PRV-4 | 4 | **Business Profile** — company/logo/registration, business info | ✅ |
+| PRV-5 | 5 | Identity & Provider Verification — documents + verification workflow | ⏳ next |
 | PRV-6 | 6 | Service Category Setup — provider services + configuration | ⏳ |
 | PRV-7 | 7 | Provider Pricing — fixed/starting/hourly/inspection/custom + per-service | ⏳ |
 | PRV-8 | 8 | Service Area Management — areas/radius/travel fee | ⏳ |

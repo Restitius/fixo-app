@@ -1417,4 +1417,25 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/profile/public.sql
+  PRV.BUSINESS.GET:
+    description: Provider's own business profile, 1:1 (Provider Phase 4).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business/get.sql
+  PRV.BUSINESS.UPSERT:
+    description: Create or partially update the business profile (Provider Phase 4).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business/upsert.sql
+  PRV.BUSINESS.DELETE:
+    description: Remove the business profile (Provider Phase 4).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business/delete.sql
 version: 1
