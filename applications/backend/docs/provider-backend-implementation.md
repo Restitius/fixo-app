@@ -28,8 +28,8 @@
 | PRV-2 | 2 | **Provider Onboarding** — 7-step guided onboarding + auto-saved progress | ✅ |
 | PRV-3 | 3 | **Provider Profile** — public profile fields + preview | ✅ |
 | PRV-4 | 4 | **Business Profile** — company/logo/registration, business info | ✅ |
-| PRV-5 | 5 | Identity & Provider Verification — documents + verification workflow | ⏳ next |
-| PRV-6 | 6 | Service Category Setup — provider services + configuration | ⏳ |
+| PRV-5 | 5 | Identity & Provider Verification — documents + verification workflow | ✅ done (tag `provider-phase5-v1`) |
+| PRV-6 | 6 | Service Category Setup — provider services + configuration | ⏳ next |
 | PRV-7 | 7 | Provider Pricing — fixed/starting/hourly/inspection/custom + per-service | ⏳ |
 | PRV-8 | 8 | Service Area Management — areas/radius/travel fee | ⏳ |
 | PRV-9 | 9 | Availability & Working Hours — schedule, online toggle | ⏳ |
