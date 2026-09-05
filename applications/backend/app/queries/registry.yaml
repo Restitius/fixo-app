@@ -1438,4 +1438,60 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/business/delete.sql
+  PRV.VER.DOC.TYPES:
+    description: Acceptable verification documents catalogue (Provider Phase 5).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/verification/doc_types.sql
+  PRV.VER.DOCS.LIST:
+    description: Provider's own active verification documents (Provider Phase 5).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/list.sql
+  PRV.VER.DOC.ADD:
+    description: Upload one verification document (Provider Phase 5).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/add.sql
+  PRV.VER.DOC.DELETE:
+    description: Withdraw a not-yet-verified document (Provider Phase 5).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/delete.sql
+  PRV.VER.STATUS:
+    description: Verification progress aggregate for the dashboard (Provider Phase 5).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/status.sql
+  PRV.VER.SUBMIT:
+    description: Declare the verification package submitted (Provider Phase 5).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/submit.sql
+  PRV.VER.DOC.REVIEW:
+    description: Platform-side verification officer decision (Provider Phase 5; admin module wires the guard).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/verification/review.sql
+  PRV.VER.PROVIDER.STATUS.SET:
+    description: Platform-side provider verification_status transition (Provider Phase 5; admin module wires the guard).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/provider_status.sql
 version: 1

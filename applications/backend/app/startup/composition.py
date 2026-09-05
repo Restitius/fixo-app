@@ -32,6 +32,7 @@ class Composition:
         self.provider_onboarding_repository: Any = None
         self.provider_profile_repository: Any = None
         self.provider_business_repository: Any = None
+        self.provider_verification_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -154,6 +155,13 @@ class Composition:
         )
 
         self.provider_business_repository = ProviderBusinessSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_verification_sql_adapter import (
+            ProviderVerificationSqlAdapter,
+        )
+
+        self.provider_verification_repository = ProviderVerificationSqlAdapter(
             self.sql_query_manager
         )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
@@ -337,6 +345,18 @@ class Composition:
 
         return ProviderBusinessService(
             business=self.provider_business_repository,
+            events=EventManager() if _event_bus_available() else None,
+        )
+
+    def provider_verification_service(self) -> Any:
+        """ProviderVerificationService — identity docs + verification workflow (Requirement Phase 5)."""
+        from app.domains.providers.services.provider_verification_service import (
+            ProviderVerificationService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderVerificationService(
+            verification=self.provider_verification_repository,
             events=EventManager() if _event_bus_available() else None,
         )
 
