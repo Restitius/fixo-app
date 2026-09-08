@@ -1424,6 +1424,27 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/bookings/ack_status.sql
+  PROV.BOOKING.DETAILS:
+    description: Full operational screen for a provider booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/details.sql
+  PROV.BOOKING.TIMELINE:
+    description: Chronological trail of a provider booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/timeline.sql
+  PROV.BOOKING.MESSAGE_COUNT:
+    description: Unread/total messages for a booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/message_count.sql
   PROV.CALENDAR.RANGE:
     description: Provider's calendar events in a date range (Provider Phase 15).
     operation: read
