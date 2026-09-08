@@ -24,8 +24,9 @@ _OPERATION_HEADS: dict[str, tuple[str, ...]] = {
     "read": ("select", "with"),
     "update": ("update", "with"),
     # 'update' == soft-delete/archive convention; 'delete' allowed when the
-    # resource has no historical references (e.g. property rooms).
-    "delete": ("update", "delete"),
+    # resource has no historical references (e.g. property rooms). 'with'
+    # allowed: CTE-wrapped deletes keep write + downstream re-sync atomic.
+    "delete": ("update", "delete", "with"),
     "execute": ("call", "select", "insert", "update"),
 }
 
