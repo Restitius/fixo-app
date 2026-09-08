@@ -22,6 +22,7 @@ from app.api.v1.liabilities import router as liabilities_router
 from app.api.v1.locations import router as locations_router
 from app.api.v1.matching import router as matching_router
 from app.api.v1.messaging import router as messaging_router
+from app.domains.providers.api.messaging_router import router as provider_messaging_router
 from app.api.v1.notifications import router as notifications_router
 from app.api.v1.onboarding import router as onboarding_router
 from app.api.v1.properties import router as properties_router
@@ -101,6 +102,7 @@ api_v1_router.include_router(bookings_router)
 api_v1_router.include_router(change_requests_router)
 api_v1_router.include_router(invoices_router)
 api_v1_router.include_router(messaging_router)
+api_v1_router.include_router(provider_messaging_router)
 api_v1_router.include_router(tracking_router)
 api_v1_router.include_router(internal_router)
 api_v1_router.include_router(users_router)
