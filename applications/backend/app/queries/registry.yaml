@@ -1424,6 +1424,48 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/bookings/ack_status.sql
+  PROV.TRIP.START:
+    description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/start_trip.sql
+  PROV.TRIP.UPDATE_LOCATION:
+    description: Stream GPS position + ETA to the live booking snapshot (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/update_location.sql
+  PROV.TRIP.RECORD_LOCATION:
+    description: Append a GPS trace point to PROVIDER_LOCATIONS history (Provider Phase 18).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/tracking/record_location.sql
+  PROV.TRIP.END:
+    description: Provider arrives / stops sharing location (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/end_trip.sql
+  PROV.TRIP.GET_LOCATION:
+    description: Customer views provider's live position and ETA (Provider Phase 18).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/tracking/get_location.sql
+  PROV.TRIP.GET_NAV_INFO:
+    description: Provider views customer address + trip context for navigation (Provider Phase 18).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/get_nav_info.sql
   PROV.BOOKING.DETAILS:
     description: Full operational screen for a provider booking (Provider Phase 16).
     operation: read
