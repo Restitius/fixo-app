@@ -172,6 +172,13 @@ class Composition:
         self.provider_service_config_repository = ProviderServiceConfigSqlAdapter(
             self.sql_query_manager
         )
+        from app.adapters.persistence.provider_pricing_sql_adapter import (
+            ProviderServicePricingSqlAdapter,
+        )
+
+        self.provider_pricing_repository = ProviderServicePricingSqlAdapter(
+            self.sql_query_manager
+        )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
         self.public_content_repository = PublicContentSqlAdapter(self.sql_query_manager)
         self.search_manager = SearchManager(self.sql_query_manager)
@@ -376,6 +383,19 @@ class Composition:
         from app.platform.events.event_manager import EventManager
 
         return ProviderServiceConfigService(
+            services=self.provider_service_config_repository,
+            events=EventManager() if _event_bus_available() else None,
+        )
+
+    def provider_pricing_service(self) -> Any:
+        """ProviderServicePricingService — five pricing structures per service (Provider Req Phase 7)."""
+        from app.domains.providers.services.provider_pricing_service import (
+            ProviderServicePricingService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderServicePricingService(
+            pricing=self.provider_pricing_repository,
             services=self.provider_service_config_repository,
             events=EventManager() if _event_bus_available() else None,
         )
