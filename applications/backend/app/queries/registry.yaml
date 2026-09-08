@@ -1445,6 +1445,34 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/bookings/message_count.sql
+  PROV.MESSAGES.CONVERSATION.GET:
+    description: Open-or-fetch the booking's conversation (Provider Phase 17).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/upsert_conversation.sql
+  PROV.MESSAGES.LIST:
+    description: Chronological thread; marks customer messages read (Provider Phase 17).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/list_messages.sql
+  PROV.MESSAGES.SEND:
+    description: Provider posts to the booking's conversation (Provider Phase 17).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/send_message.sql
+  PROV.MESSAGES.UNREAD_COUNT:
+    description: Customer messages not yet read by the provider (Provider Phase 17).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/unread_count.sql
   PROV.CALENDAR.RANGE:
     description: Provider's calendar events in a date range (Provider Phase 15).
     operation: read
