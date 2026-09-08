@@ -78,15 +78,22 @@ class ProviderDashboardService:
         cancelled = int(data.get("cancelled_bookings") or 0)
         completed = int(data.get("completed_bookings") or 0)
         decided = total - cancelled
+        accepted = int(data.get("accepted_requests") or 0)
+        declined = int(data.get("declined_requests") or 0)
+        responded = accepted + declined
+        avg_response = data.get("avg_response_minutes")
         return {
             "total_bookings": total,
             "completed_bookings": completed,
             "cancelled_bookings": cancelled,
             "completion_rate": round(completed / decided, 4) if decided > 0 else None,
             "cancellation_rate": round(cancelled / total, 4) if total > 0 else None,
-            # Requires the provider-response ledger (Phase 11 incoming requests).
-            "acceptance_rate": None,
-            "response_time_minutes": None,
+            "accepted_requests": accepted,
+            "declined_requests": declined,
+            "acceptance_rate": round(accepted / responded, 4) if responded > 0 else None,
+            "response_time_minutes": (
+                round(float(avg_response), 1) if avg_response is not None else None
+            ),
         }
 
     # -- attention list ----------------------------------------------------------

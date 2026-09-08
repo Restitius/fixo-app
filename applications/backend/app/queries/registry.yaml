@@ -1732,4 +1732,46 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/dashboard/upcoming.sql
+  PRV.REQUESTS.FEED:
+    description: Incoming job requests awaiting this provider (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/feed.sql
+  PRV.REQUESTS.GET:
+    description: One incoming request's full detail (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/get.sql
+  PRV.REQUESTS.RESPOND:
+    description: Accept/decline/ask on a matched request (Provider Phase 11).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/respond.sql
+  PRV.REQUESTS.RESPONSES.LIST:
+    description: This provider's request-response ledger (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/responses_list.sql
+  PRV.REQUESTS.QUOTE.SUBMIT:
+    description: Submit this provider's quote for a matched request (Provider Phase 11).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/quote_submit.sql
+  PRV.REQUESTS.QUOTES.LIST:
+    description: This provider's submitted quotes (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/quotes_list.sql
 version: 1
