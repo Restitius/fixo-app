@@ -37,6 +37,7 @@ class Composition:
         self.provider_area_repository: Any = None
         self.provider_availability_repository: Any = None
         self.provider_dashboard_repository: Any = None
+        self.provider_request_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -201,6 +202,13 @@ class Composition:
         )
 
         self.provider_dashboard_repository = ProviderDashboardSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_request_sql_adapter import (
+            ProviderRequestSqlAdapter,
+        )
+
+        self.provider_request_repository = ProviderRequestSqlAdapter(
             self.sql_query_manager
         )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
@@ -455,6 +463,18 @@ class Composition:
         )
 
         return ProviderDashboardService(dashboard=self.provider_dashboard_repository)
+
+    def provider_request_service(self) -> Any:
+        """ProviderIncomingRequestService — incoming requests feed + actions (Req Phase 11)."""
+        from app.domains.providers.services.provider_request_service import (
+            ProviderIncomingRequestService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderIncomingRequestService(
+            requests=self.provider_request_repository,
+            events=EventManager() if _event_bus_available() else None,
+        )
 
     def public_service(self) -> Any:
         from app.domains.public_content.services.public_service import PublicContentService

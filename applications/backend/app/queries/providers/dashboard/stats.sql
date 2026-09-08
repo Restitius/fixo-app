@@ -10,7 +10,12 @@ SELECT p.rating_avg, p.rating_count, p.jobs_completed,
           AND r.status = 'VALID'
           AND NOT EXISTS (SELECT 1 FROM "QUOTATIONS" q
                            WHERE q.request_id = mc.request_id
-                             AND q.provider_id = mc.provider_id)) AS pending_requests,
+                             AND q.provider_id = mc.provider_id)
+          AND NOT EXISTS (SELECT 1 FROM "PROVIDER_REQUEST_RESPONSES" pr
+                           WHERE pr.provider_id = mc.provider_id
+                             AND pr.request_id = mc.request_id
+                             AND pr.response_type IN ('ACCEPTED', 'DECLINED'))
+       ) AS pending_requests,
        (SELECT count(*) FROM "BOOKINGS" b
          WHERE b.provider_id = p.provider_id
            AND b.status IN ('ON_THE_WAY', 'ARRIVED', 'STARTED',
