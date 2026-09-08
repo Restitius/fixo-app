@@ -30,7 +30,7 @@
 | PRV-4 | 4 | **Business Profile** — company/logo/registration, business info | ✅ |
 | PRV-5 | 5 | Identity & Provider Verification — documents + verification workflow | ✅ done (tag `provider-phase5-v1`) |
 | PRV-6 | 6 | Service Category Setup — provider services + configuration | ✅ done |
-| PRV-7 | 7 | Provider Pricing — fixed/starting/hourly/inspection/custom + per-service | ⏳ |
+| PRV-7 | 7 | Provider Pricing — fixed/starting/hourly/inspection/custom + per-service | ✅ done (tag `provider-phase7-v1`) |
 | PRV-8 | 8 | Service Area Management — areas/radius/travel fee | ⏳ |
 | PRV-9 | 9 | Availability & Working Hours — schedule, online toggle | ⏳ |
 | PRV-10 | 10 | Provider Dashboard — attention items, stats, quick actions | ⏳ |

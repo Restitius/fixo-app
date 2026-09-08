@@ -1543,4 +1543,32 @@ queries:
       ownership_filter_required: false
       requires_auth: true
     sql: providers/services/review.sql
+  PRV.PRICING.LIST:
+    description: Structured pricing for all of the provider's configured services (Provider Phase 7).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/list.sql
+  PRV.PRICING.GET:
+    description: One service's structured pricing (owner view) (Provider Phase 7).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/get.sql
+  PRV.PRICING.UPSERT:
+    description: Full replace of one service's structured pricing; atomically re-syncs the parent configuration (Provider Phase 7).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/upsert.sql
+  PRV.PRICING.CLEAR:
+    description: Remove a service's structured pricing and reset the parent configuration to quote-based (Provider Phase 7).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/clear.sql
 version: 1
