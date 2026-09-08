@@ -1774,4 +1774,25 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/requests/quotes_list.sql
+  PRV.MATCH.ELIGIBILITY:
+    description: Provider-facing matching eligibility signals (Provider Phase 12).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/matching/eligibility.sql
+  PRV.MATCH.INSIGHTS:
+    description: Provider match history with score/rank/reasons (Provider Phase 12).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/matching/insights.sql
+  PRV.MATCH.SUMMARY:
+    description: Match-opportunity counts for the provider (Provider Phase 12).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/matching/summary.sql
 version: 1
