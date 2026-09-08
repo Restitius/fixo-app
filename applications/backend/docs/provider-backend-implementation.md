@@ -35,7 +35,7 @@
 | PRV-9 | 9 | Availability & Working Hours — schedule, online toggle | ✅ done (tag `provider-phase9-v1`) |
 | PRV-10 | 10 | Provider Dashboard — attention items, stats, quick actions | ✅ done (tag `provider-phase10-v1`) |
 | PRV-11 | 11 | Incoming Job Requests — feed + accept/decline/quote/ask | ✅ done (tag `provider-phase11-v1`) |
-| PRV-12 | 12 | Matching Engine interaction — provider eligibility/ranking read | ⏳ |
+| PRV-12 | 12 | Matching Engine interaction — provider eligibility/ranking read | ✅ done (tag `provider-phase12-v1`) |
 | PRV-13 | 13 | Quotations / Offers — provider quote submit + statuses | ⏳ |
 | PRV-14 | 14 | Booking Confirmation — provider acknowledgement + handoff | ⏳ |
 | PRV-15 | 15 | Provider Calendar — schedule views + overlap prevention | ⏳ |

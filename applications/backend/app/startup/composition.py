@@ -38,6 +38,7 @@ class Composition:
         self.provider_availability_repository: Any = None
         self.provider_dashboard_repository: Any = None
         self.provider_request_repository: Any = None
+        self.provider_matching_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -209,6 +210,13 @@ class Composition:
         )
 
         self.provider_request_repository = ProviderRequestSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_matching_sql_adapter import (
+            ProviderMatchingSqlAdapter,
+        )
+
+        self.provider_matching_repository = ProviderMatchingSqlAdapter(
             self.sql_query_manager
         )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
@@ -475,6 +483,14 @@ class Composition:
             requests=self.provider_request_repository,
             events=EventManager() if _event_bus_available() else None,
         )
+
+    def provider_matching_service(self) -> Any:
+        """ProviderMatchingService — eligibility + match insights (Req Phase 12)."""
+        from app.domains.providers.services.provider_matching_service import (
+            ProviderMatchingService,
+        )
+
+        return ProviderMatchingService(matching=self.provider_matching_repository)
 
     def public_service(self) -> Any:
         from app.domains.public_content.services.public_service import PublicContentService
