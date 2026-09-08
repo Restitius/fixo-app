@@ -36,6 +36,7 @@ class Composition:
         self.provider_service_config_repository: Any = None
         self.provider_area_repository: Any = None
         self.provider_booking_repository: Any = None
+        self.provider_calendar_repository: Any = None
         self.provider_dashboard_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
@@ -162,6 +163,13 @@ class Composition:
         )
 
         self.provider_business_repository = ProviderBusinessSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_calendar_sql_adapter import (
+            ProviderCalendarSqlAdapter,
+        )
+
+        self.provider_calendar_repository = ProviderCalendarSqlAdapter(
             self.sql_query_manager
         )
         from app.adapters.persistence.provider_verification_sql_adapter import (
@@ -415,6 +423,14 @@ class Composition:
             business=self.provider_business_repository,
             events=EventManager() if _event_bus_available() else None,
         )
+
+    def provider_calendar_service(self) -> Any:
+        """ProviderCalendarService — calendar views + overlap check (Requirement Phase 15)."""
+        from app.domains.providers.services.provider_calendar_service import (
+            ProviderCalendarService,
+        )
+
+        return ProviderCalendarService(calendar=self.provider_calendar_repository)
 
     def provider_verification_service(self) -> Any:
         """ProviderVerificationService — identity docs + verification workflow (Requirement Phase 5)."""

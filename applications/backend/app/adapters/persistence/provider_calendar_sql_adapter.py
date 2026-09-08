@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+from datetime import date, datetime
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager
@@ -22,34 +23,41 @@ class ProviderCalendarSqlAdapter:
         self._sql = sql
 
     async def range(
-        self, provider_id: str, from_date: str, to_date: str
+        self, provider_id: str, from_date: str | date, to_date: str | date
     ) -> list[dict[str, Any]]:
         rows = await self._sql.execute(
             _RANGE,
-            {"user_id": provider_id, "from_date": from_date, "to_date": to_date},
+            {"user_id": provider_id, "from_date": _to_date(from_date), "to_date": _to_date(to_date)},
             fetch="all",
         ) or []
         return [_parse_event(r) for r in rows]
 
-    async def day(self, provider_id: str, date: str) -> list[dict[str, Any]]:
+    async def day(self, provider_id: str, date: str | date) -> list[dict[str, Any]]:
         rows = await self._sql.execute(
-            _DAY, {"user_id": provider_id, "date": date}, fetch="all"
+            _DAY, {"user_id": provider_id, "date": _to_date(date)}, fetch="all"
         ) or []
         return [_parse_event(r) for r in rows]
 
     async def overlap_check(
-        self, provider_id: str, scheduled_date: str, exclude_booking_id: str | None = None
+        self, provider_id: str, scheduled_date: str | date, exclude_booking_id: str | None = None
     ) -> list[dict[str, Any]]:
         rows = await self._sql.execute(
             _OVERLAP,
             {
                 "user_id": provider_id,
-                "scheduled_date": scheduled_date,
+                "scheduled_date": _to_date(scheduled_date),
                 "exclude_booking_id": exclude_booking_id,
             },
             fetch="all",
         ) or []
         return [dict(r) for r in rows]
+
+
+def _to_date(value: str | date) -> date:
+    """Convert a string to date if needed (SQL expects date objects for CAST AS date)."""
+    if isinstance(value, date):
+        return value
+    return datetime.strptime(value, "%Y-%m-%d").date()
 
 
 def _parse_event(row: dict[str, Any]) -> dict[str, Any]:
