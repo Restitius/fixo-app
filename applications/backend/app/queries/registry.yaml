@@ -1571,4 +1571,67 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/pricing/clear.sql
+  PRV.AREAS.SETTINGS.GET:
+    description: Provider travel policy + base location (Provider Phase 8).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/settings_get.sql
+  PRV.AREAS.SETTINGS.UPSERT:
+    description: Create or replace the travel/area policy (Provider Phase 8).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/settings_upsert.sql
+  PRV.AREAS.LIST:
+    description: All service-area entries of the provider (Provider Phase 8).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/list.sql
+  PRV.AREAS.ADD:
+    description: Add one service-area entry, LOCATION or RADIUS (Provider Phase 8).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/add.sql
+  PRV.AREAS.UPDATE:
+    description: Partially edit one owned service-area entry (Provider Phase 8).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/update.sql
+  PRV.AREAS.REMOVE:
+    description: Delete one owned service-area entry (Provider Phase 8).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/remove.sql
+  PRV.AREAS.EXCLUSIONS.LIST:
+    description: Areas the provider does not serve (Provider Phase 8).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/exclusions_list.sql
+  PRV.AREAS.EXCLUSIONS.ADD:
+    description: Add one excluded area (Provider Phase 8).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/exclusions_add.sql
+  PRV.AREAS.EXCLUSIONS.REMOVE:
+    description: Delete one owned exclusion (Provider Phase 8).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/exclusions_remove.sql
 version: 1
