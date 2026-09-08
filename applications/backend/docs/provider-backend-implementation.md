@@ -33,7 +33,7 @@
 | PRV-7 | 7 | Provider Pricing — fixed/starting/hourly/inspection/custom + per-service | ✅ done (tag `provider-phase7-v1`) |
 | PRV-8 | 8 | Service Area Management — areas/radius/travel fee | ✅ done (tag `provider-phase8-v1`) |
 | PRV-9 | 9 | Availability & Working Hours — schedule, online toggle | ✅ done (tag `provider-phase9-v1`) |
-| PRV-10 | 10 | Provider Dashboard — attention items, stats, quick actions | ⏳ |
+| PRV-10 | 10 | Provider Dashboard — attention items, stats, quick actions | ✅ done (tag `provider-phase10-v1`) |
 | PRV-11 | 11 | Incoming Job Requests — feed + accept/decline/quote/ask | ⏳ |
 | PRV-12 | 12 | Matching Engine interaction — provider eligibility/ranking read | ⏳ |
 | PRV-13 | 13 | Quotations / Offers — provider quote submit + statuses | ⏳ |

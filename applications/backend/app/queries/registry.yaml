@@ -1697,4 +1697,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/availability/summary.sql
+  PRV.DASH.STATS:
+    description: Dashboard primary statistics (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/stats.sql
+  PRV.DASH.SETUP:
+    description: Dashboard setup state for the attention list (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/setup.sql
+  PRV.DASH.EARNINGS:
+    description: Dashboard earnings snapshot, today/week/month (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/earnings.sql
+  PRV.DASH.PERFORMANCE:
+    description: Dashboard performance rates from booking history (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/performance.sql
+  PRV.DASH.UPCOMING:
+    description: Dashboard schedule, today plus 7 days (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/upcoming.sql
 version: 1
