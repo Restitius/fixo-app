@@ -35,6 +35,7 @@ class Composition:
         self.provider_verification_repository: Any = None
         self.provider_service_config_repository: Any = None
         self.provider_area_repository: Any = None
+        self.provider_availability_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -185,6 +186,13 @@ class Composition:
         )
 
         self.provider_area_repository = ProviderServiceAreaSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_availability_sql_adapter import (
+            ProviderAvailabilitySqlAdapter,
+        )
+
+        self.provider_availability_repository = ProviderAvailabilitySqlAdapter(
             self.sql_query_manager
         )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
@@ -417,6 +425,18 @@ class Composition:
 
         return ProviderServiceAreaService(
             areas=self.provider_area_repository,
+            events=EventManager() if _event_bus_available() else None,
+        )
+
+    def provider_availability_service(self) -> Any:
+        """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
+        from app.domains.providers.services.provider_availability_service import (
+            ProviderAvailabilityService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderAvailabilityService(
+            availability=self.provider_availability_repository,
             events=EventManager() if _event_bus_available() else None,
         )
 

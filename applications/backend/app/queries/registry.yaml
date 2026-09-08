@@ -1634,4 +1634,67 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/areas/exclusions_remove.sql
+  PRV.AVAIL.SETTINGS.GET:
+    description: Availability toggles + vacation window (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/settings_get.sql
+  PRV.AVAIL.SETTINGS.UPSERT:
+    description: Create or replace availability toggles (Provider Phase 9).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/settings_upsert.sql
+  PRV.AVAIL.HOURS.LIST:
+    description: Weekly recurring working-hours schedule (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/hours_list.sql
+  PRV.AVAIL.HOURS.SET:
+    description: Upsert one day's working window, 0=Monday..6=Sunday (Provider Phase 9).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/hours_set.sql
+  PRV.AVAIL.HOURS.DELETE:
+    description: Reset one day's working window (Provider Phase 9).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/hours_delete.sql
+  PRV.AVAIL.TIMEOFF.LIST:
+    description: Temporary unavailable periods (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/timeoff_list.sql
+  PRV.AVAIL.TIMEOFF.ADD:
+    description: Add one unavailable period (Provider Phase 9).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/timeoff_add.sql
+  PRV.AVAIL.TIMEOFF.REMOVE:
+    description: Delete one owned unavailable period (Provider Phase 9).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/timeoff_remove.sql
+  PRV.AVAIL.SUMMARY:
+    description: Effective availability snapshot for dashboard/matching (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/summary.sql
 version: 1
