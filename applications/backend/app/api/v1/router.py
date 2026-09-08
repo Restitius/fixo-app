@@ -46,6 +46,9 @@ from app.domains.providers.api.requests_router import (
 from app.domains.providers.api.matching_router import (
     router as provider_matching_router,
 )
+from app.domains.providers.api.quotations_router import (
+    router as provider_quotations_router,
+)
 from app.api.v1.quotations import router as quotations_router
 from app.api.v1.tracking import router as tracking_router
 from app.api.v1.public import router as public_router
@@ -92,6 +95,7 @@ api_v1_router.include_router(provider_availability_router)
 api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_requests_router)
 api_v1_router.include_router(provider_matching_router)
+api_v1_router.include_router(provider_quotations_router)
 api_v1_router.include_router(bookings_router)
 api_v1_router.include_router(change_requests_router)
 api_v1_router.include_router(invoices_router)

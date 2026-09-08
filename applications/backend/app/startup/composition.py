@@ -39,6 +39,7 @@ class Composition:
         self.provider_dashboard_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
+        self.provider_quotation_repository: Any = None
         self.onboarding_repository: Any = None
         self.public_content_repository: Any = None
         self.address_repository: Any = None
@@ -217,6 +218,13 @@ class Composition:
         )
 
         self.provider_matching_repository = ProviderMatchingSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_quotation_sql_adapter import (
+            ProviderQuotationSqlAdapter,
+        )
+
+        self.provider_quotation_repository = ProviderQuotationSqlAdapter(
             self.sql_query_manager
         )
         self.onboarding_repository = OnboardingSqlAdapter(self.sql_query_manager)
@@ -491,6 +499,18 @@ class Composition:
         )
 
         return ProviderMatchingService(matching=self.provider_matching_repository)
+
+    def provider_quotation_service(self) -> Any:
+        """ProviderQuotationService — professional quotations (Req Phase 13)."""
+        from app.domains.providers.services.provider_quotation_service import (
+            ProviderQuotationService,
+        )
+        from app.platform.events.event_manager import EventManager
+
+        return ProviderQuotationService(
+            quotations=self.provider_quotation_repository,
+            events=EventManager() if _event_bus_available() else None,
+        )
 
     def public_service(self) -> Any:
         from app.domains.public_content.services.public_service import PublicContentService
