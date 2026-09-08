@@ -1424,6 +1424,27 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/bookings/ack_status.sql
+  PROV.CALENDAR.RANGE:
+    description: Provider's calendar events in a date range (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/range.sql
+  PROV.CALENDAR.DAY:
+    description: Single-day calendar view with bookings + blocked + working hours (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/day.sql
+  PROV.CALENDAR.OVERLAP_CHECK:
+    description: Detect overlapping bookings on a given date (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/overlap_check.sql
   PRV.PROFILE.GET:
     description: Provider's own full profile, personal + professional (Provider Phase 3).
     operation: read

@@ -30,6 +30,7 @@ from app.domains.providers.api.auth_router import router as provider_auth_router
 from app.domains.providers.api.onboarding_router import router as provider_onboarding_router
 from app.domains.providers.api.profile_router import router as provider_profile_router
 from app.domains.providers.api.business_router import router as provider_business_router
+from app.domains.providers.api.calendar_router import router as provider_calendar_router
 from app.domains.providers.api.verification_router import router as provider_verification_router
 from app.domains.providers.api.service_config_router import router as provider_service_config_router
 from app.domains.providers.api.pricing_router import router as provider_pricing_router
@@ -87,6 +88,7 @@ api_v1_router.include_router(provider_auth_router)
 api_v1_router.include_router(provider_onboarding_router)
 api_v1_router.include_router(provider_profile_router)
 api_v1_router.include_router(provider_business_router)
+api_v1_router.include_router(provider_calendar_router)
 api_v1_router.include_router(provider_verification_router)
 api_v1_router.include_router(provider_service_config_router)
 api_v1_router.include_router(provider_pricing_router)
