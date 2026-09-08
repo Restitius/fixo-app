@@ -35,7 +35,7 @@ class Composition:
         self.provider_verification_repository: Any = None
         self.provider_service_config_repository: Any = None
         self.provider_area_repository: Any = None
-        self.provider_availability_repository: Any = None
+        self.provider_booking_repository: Any = None
         self.provider_dashboard_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
@@ -258,6 +258,11 @@ class Composition:
         self.quotation_repository = QuotationSqlAdapter(self.sql_query_manager)
         self.provider_read = ProviderReadAdapter(self.sql_query_manager)
         self.booking_repository = BookingSqlAdapter(self.sql_query_manager)
+        from app.adapters.persistence.provider_booking_sql_adapter import (
+            ProviderBookingSqlAdapter,
+        )
+
+        self.provider_booking_repository = ProviderBookingSqlAdapter(self.sql_query_manager)
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -459,6 +464,12 @@ class Composition:
             areas=self.provider_area_repository,
             events=EventManager() if _event_bus_available() else None,
         )
+
+    def provider_booking_service(self) -> Any:
+        """ProviderBookingService — provider-side booking views + ack (Phase 14)."""
+        from app.domains.providers.services.provider_booking_service import ProviderBookingService
+
+        return ProviderBookingService(bookings=self.provider_booking_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
