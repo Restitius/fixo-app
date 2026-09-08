@@ -60,3 +60,21 @@ class ProviderBookingService:
         if not row:
             raise NotFoundError(f"Booking {booking_id} not found")
         return row
+
+    async def details(self, provider_id: str, booking_id: str) -> dict[str, Any]:
+        """Full operational screen for a provider booking (customer, service, schedule, price, etc.)."""
+        row = await self._bookings.details(provider_id=provider_id, booking_id=booking_id)
+        if not row:
+            raise NotFoundError(f"Booking {booking_id} not found")
+        return row
+
+    async def timeline(self, provider_id: str, booking_id: str) -> list[dict[str, Any]]:
+        """Chronological trail of a provider booking."""
+        return await self._bookings.timeline(provider_id=provider_id, booking_id=booking_id)
+
+    async def message_count(self, provider_id: str, booking_id: str) -> dict[str, Any]:
+        """Unread/total messages for a booking."""
+        row = await self._bookings.message_count(provider_id=provider_id, booking_id=booking_id)
+        if not row:
+            raise NotFoundError(f"Booking {booking_id} not found")
+        return row
