@@ -1795,4 +1795,67 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/matching/summary.sql
+  PRV.QUOTE.SAVE:
+    description: Create a DRAFT or upgrade my quote with a professional breakdown (Provider Phase 13).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/save.sql
+  PRV.QUOTE.SUBMIT:
+    description: Publish a DRAFT quote into the marketplace (Provider Phase 13).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/submit.sql
+  PRV.QUOTE.WITHDRAW:
+    description: Withdraw a submitted quote (Provider Phase 13).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/withdraw.sql
+  PRV.QUOTE.EXPIRE:
+    description: Mark this provider's stale submitted quotes expired (Provider Phase 13).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/expire.sql
+  PRV.QUOTE.GET:
+    description: One of this provider's quotations with full breakdown (Provider Phase 13).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/get.sql
+  PRV.QUOTE.LIST:
+    description: This provider's quotations, newest first (Provider Phase 13).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/list.sql
+  PRV.QUOTE.ATTACHMENTS.LIST:
+    description: Photos/documents on one of my quotations (Provider Phase 13).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/attachments_list.sql
+  PRV.QUOTE.ATTACHMENTS.ADD:
+    description: Attach a photo/document to my own quote (Provider Phase 13).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/attachments_add.sql
+  PRV.QUOTE.ATTACHMENTS.REMOVE:
+    description: Delete one attachment from my own quote (Provider Phase 13).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/attachments_remove.sql
 version: 1
