@@ -42,6 +42,7 @@ class Composition:
         self.provider_job_checklist_repository: Any = None
         self.provider_job_evidence_repository: Any = None
         self.provider_change_request_repository: Any = None
+        self.provider_materials_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -306,6 +307,14 @@ class Composition:
         self.provider_change_request_repository = ProviderChangeRequestSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_materials_sql_adapter import (
+            ProviderMaterialsSqlAdapter,
+        )
+
+        self.provider_materials_repository = ProviderMaterialsSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -548,6 +557,14 @@ class Composition:
             changes=self.provider_change_request_repository,
             bookings=self.provider_booking_repository,
         )
+
+    def provider_materials_service(self) -> Any:
+        """ProviderMaterialsService — materials & expenses (Phase 24)."""
+        from app.domains.providers.services.provider_materials_service import (
+            ProviderMaterialsService,
+        )
+
+        return ProviderMaterialsService(materials=self.provider_materials_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
