@@ -53,8 +53,8 @@
 | PRV-21 | 21 | Job Checklist — templated task lists | ✅ done (tag `provider-phase21-v1`) |
 | PRV-22 | 22 | Evidence & Job Documentation — photos/videos/notes/measurements/instructions/parts on the booking | ✅ done (tag `provider-phase22-v1`) |
 | PRV-23 | 23 | Change Request — scope change + approval (provider submissions: reason/new work/labour/materials/time/price/photos; withdraw) | ✅ done (tag `provider-phase23-v1`) |
-| PRV-24 | 24 | Materials & Expenses | ⏳ next |
-| PRV-25 | 25 | Job Completion — completion notes + evidence | ⏳ |
+| PRV-24 | 24 | Materials & Expenses — booking material lines (item/qty/amount) + receipt/photo/invoice attachments, per-currency totals | ✅ done (tag `provider-phase24-v1`) |
+| PRV-25 | 25 | Job Completion — completion notes + evidence | ⏳ next |
 | PRV-26 | 26 | Customer Sign-Off | ⏳ |
 | PRV-27 | 27 | Final Billing | ⏳ |
 | PRV-28 | 28 | Provider Earnings | ⏳ |
