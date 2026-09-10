@@ -22,6 +22,7 @@ from app.api.v1.liabilities import router as liabilities_router
 from app.api.v1.locations import router as locations_router
 from app.api.v1.matching import router as matching_router
 from app.api.v1.messaging import router as messaging_router
+from app.domains.providers.api.messaging_router import router as provider_messaging_router
 from app.api.v1.notifications import router as notifications_router
 from app.api.v1.onboarding import router as onboarding_router
 from app.api.v1.properties import router as properties_router
@@ -30,10 +31,11 @@ from app.domains.providers.api.auth_router import router as provider_auth_router
 from app.domains.providers.api.onboarding_router import router as provider_onboarding_router
 from app.domains.providers.api.profile_router import router as provider_profile_router
 from app.domains.providers.api.business_router import router as provider_business_router
+from app.domains.providers.api.calendar_router import router as provider_calendar_router
 from app.domains.providers.api.verification_router import router as provider_verification_router
 from app.domains.providers.api.service_config_router import router as provider_service_config_router
 from app.domains.providers.api.pricing_router import router as provider_pricing_router
-from app.domains.providers.api.areas_router import router as provider_areas_router
+from app.domains.providers.api.booking_router import router as provider_booking_router
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
 )
@@ -87,11 +89,11 @@ api_v1_router.include_router(provider_auth_router)
 api_v1_router.include_router(provider_onboarding_router)
 api_v1_router.include_router(provider_profile_router)
 api_v1_router.include_router(provider_business_router)
+api_v1_router.include_router(provider_calendar_router)
 api_v1_router.include_router(provider_verification_router)
 api_v1_router.include_router(provider_service_config_router)
 api_v1_router.include_router(provider_pricing_router)
-api_v1_router.include_router(provider_areas_router)
-api_v1_router.include_router(provider_availability_router)
+api_v1_router.include_router(provider_booking_router)
 api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_requests_router)
 api_v1_router.include_router(provider_matching_router)
@@ -100,8 +102,8 @@ api_v1_router.include_router(bookings_router)
 api_v1_router.include_router(change_requests_router)
 api_v1_router.include_router(invoices_router)
 api_v1_router.include_router(messaging_router)
+api_v1_router.include_router(provider_messaging_router)
 api_v1_router.include_router(tracking_router)
-api_v1_router.include_router(notifications_router)
 api_v1_router.include_router(internal_router)
 api_v1_router.include_router(users_router)
 api_v1_router.include_router(assets_router)

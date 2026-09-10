@@ -1,0 +1,8 @@
+-- PROV.MESSAGES.SEND — provider posts to the booking's conversation.
+INSERT INTO "MESSAGES" (conversation_id, sender_role, sender_id, body)
+SELECT c.conversation_id, 'PROVIDER', CAST(:user_id AS uuid), :body
+  FROM "CONVERSATIONS" c
+  JOIN "BOOKINGS" b ON b.booking_id = c.booking_id
+ WHERE c.conversation_id = CAST(:conversation_id AS uuid)
+   AND b.provider_id = CAST(:user_id AS uuid)
+RETURNING message_id, conversation_id, sender_role, body, created_at;

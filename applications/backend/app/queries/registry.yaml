@@ -1396,6 +1396,146 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/onboarding/complete_step.sql
+  PROV.BOOKING.FEED:
+    description: Provider's booking list with optional status filter (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/feed.sql
+  PROV.BOOKING.GET:
+    description: Provider booking detail with customer, service, address, ack (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/get.sql
+  PROV.BOOKING.ACK:
+    description: Provider acknowledges a booking (idempotent upsert) (Provider Phase 14).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/ack.sql
+  PROV.BOOKING.ACK_STATUS:
+    description: Check whether a provider acknowledged a booking (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/ack_status.sql
+  PROV.TRIP.START:
+    description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/start_trip.sql
+  PROV.TRIP.UPDATE_LOCATION:
+    description: Stream GPS position + ETA to the live booking snapshot (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/update_location.sql
+  PROV.TRIP.RECORD_LOCATION:
+    description: Append a GPS trace point to PROVIDER_LOCATIONS history (Provider Phase 18).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/tracking/record_location.sql
+  PROV.TRIP.END:
+    description: Provider arrives / stops sharing location (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/end_trip.sql
+  PROV.TRIP.GET_LOCATION:
+    description: Customer views provider's live position and ETA (Provider Phase 18).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/tracking/get_location.sql
+  PROV.TRIP.GET_NAV_INFO:
+    description: Provider views customer address + trip context for navigation (Provider Phase 18).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/get_nav_info.sql
+  PROV.BOOKING.DETAILS:
+    description: Full operational screen for a provider booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/details.sql
+  PROV.BOOKING.TIMELINE:
+    description: Chronological trail of a provider booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/timeline.sql
+  PROV.BOOKING.MESSAGE_COUNT:
+    description: Unread/total messages for a booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/message_count.sql
+  PROV.MESSAGES.CONVERSATION.GET:
+    description: Open-or-fetch the booking's conversation (Provider Phase 17).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/upsert_conversation.sql
+  PROV.MESSAGES.LIST:
+    description: Chronological thread; marks customer messages read (Provider Phase 17).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/list_messages.sql
+  PROV.MESSAGES.SEND:
+    description: Provider posts to the booking's conversation (Provider Phase 17).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/send_message.sql
+  PROV.MESSAGES.UNREAD_COUNT:
+    description: Customer messages not yet read by the provider (Provider Phase 17).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/unread_count.sql
+  PROV.CALENDAR.RANGE:
+    description: Provider's calendar events in a date range (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/range.sql
+  PROV.CALENDAR.DAY:
+    description: Single-day calendar view with bookings + blocked + working hours (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/day.sql
+  PROV.CALENDAR.OVERLAP_CHECK:
+    description: Detect overlapping bookings on a given date (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/overlap_check.sql
   PRV.PROFILE.GET:
     description: Provider's own full profile, personal + professional (Provider Phase 3).
     operation: read

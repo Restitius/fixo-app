@@ -17,6 +17,12 @@
 > - Services depend only on ports; adapters own query IDs; side-effects via events.
 > - Provider auth is provider-scoped (`PROVIDER_AUTH_SESSIONS`, `PROVIDER_OTP_CODES`,
 >   `get_current_provider`), mirroring the customer auth without touching it.
+> - **Git flow (house structure):** one page branch per phase
+>   `page/provider-<slug>` (forked from `module/provider`) → merged into
+>   `module/provider` (`merge: page/provider-<slug> into module/provider`) →
+>   `module/provider` merged into `dev` (`merge: module/provider into dev
+>   (<short summary>)`). Tags `provider-phaseN-v1` sit on the phase's page
+>   branch; module-level tags periodically on `module/provider`.
 > - One implementation commit per phase; tags `provider-phaseN-v1`.
 
 ## Requirement phases → implementation phases
