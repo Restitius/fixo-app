@@ -2117,4 +2117,32 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/change_requests/withdraw.sql
+  PROV.MATERIALS.ADD:
+    description: Provider records a material used on a booking (item/qty/cost + receipt/photo/invoice attachment) (Provider Phase 24).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/add.sql
+  PROV.MATERIALS.LIST:
+    description: Material lines for one of the provider's bookings (Provider Phase 24).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/list.sql
+  PROV.MATERIALS.DELETE:
+    description: Provider removes one of its material lines (Provider Phase 24).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/delete.sql
+  PROV.MATERIALS.SUMMARY:
+    description: Material totals per currency for a booking (feeds the final invoice) (Provider Phase 24).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/summary.sql
 version: 1

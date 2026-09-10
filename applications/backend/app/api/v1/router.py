@@ -41,6 +41,7 @@ from app.domains.providers.api.evidence_router import router as provider_evidenc
 from app.domains.providers.api.change_request_router import (
     router as provider_change_request_router,
 )
+from app.domains.providers.api.materials_router import router as provider_materials_router
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
 )
@@ -102,6 +103,7 @@ api_v1_router.include_router(provider_booking_router)
 api_v1_router.include_router(provider_checklist_router)
 api_v1_router.include_router(provider_evidence_router)
 api_v1_router.include_router(provider_change_request_router)
+api_v1_router.include_router(provider_materials_router)
 api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_requests_router)
 api_v1_router.include_router(provider_matching_router)
