@@ -43,13 +43,13 @@
 | PRV-11 | 11 | Incoming Job Requests — feed + accept/decline/quote/ask | ✅ done (tag `provider-phase11-v1`) |
 | PRV-12 | 12 | Matching Engine interaction — provider eligibility/ranking read | ✅ done (tag `provider-phase12-v1`) |
 | PRV-13 | 13 | Quotations / Offers — provider quote submit + statuses | ✅ done (tag `provider-phase13-v1`) |
-| PRV-14 | 14 | Booking Confirmation — provider acknowledgement + handoff | ⏳ |
-| PRV-15 | 15 | Provider Calendar — schedule views + overlap prevention | ⏳ |
-| PRV-16 | 16 | Booking Details lifecycle — confirm→…→paid + ops screen | ⏳ |
-| PRV-17 | 17 | Customer Communication — booking-linked messaging | ⏳ |
-| PRV-18 | 18 | Navigation & Provider Tracking — trip + ETA | ⏳ |
-| PRV-19 | 19 | Arrival Verification — arrived + PIN/QR/OTP | ⏳ |
-| PRV-20 | 20 | Start Service — start job + timer | ⏳ |
+| PRV-14 | 14 | Booking Confirmation — provider acknowledgement + handoff | ✅ done (tag `provider-phase14-v1`) |
+| PRV-15 | 15 | Provider Calendar — schedule views + overlap prevention | ✅ done (tag `provider-phase15-v1`) |
+| PRV-16 | 16 | Booking Details lifecycle — confirm→…→paid + ops screen | ✅ done (tag `provider-phase16-v1`) |
+| PRV-17 | 17 | Customer Communication — booking-linked messaging | ✅ done (tag `provider-phase17-v1`) |
+| PRV-18 | 18 | Navigation & Provider Tracking — trip + ETA | ✅ done (tag `provider-phase18-v1`) |
+| PRV-19 | 19 | Arrival Verification — arrived + PIN/QR/OTP | ✅ done (tag `provider-phase19-v1`) |
+| PRV-20 | 20 | Start Service — start job + timer | ⏳ next |
 | PRV-21 | 21 | Job Checklist — templated task lists | ⏳ |
 | PRV-22 | 22 | Evidence & Job Documentation | ⏳ |
 | PRV-23 | 23 | Change Request — scope change + approval | ⏳ |
