@@ -37,6 +37,7 @@ class Composition:
         self.provider_area_repository: Any = None
         self.provider_booking_repository: Any = None
         self.provider_calendar_repository: Any = None
+        self.provider_messaging_repository: Any = None
         self.provider_dashboard_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
@@ -170,6 +171,13 @@ class Composition:
         )
 
         self.provider_calendar_repository = ProviderCalendarSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_messaging_sql_adapter import (
+            ProviderMessagingSqlAdapter,
+        )
+
+        self.provider_messaging_repository = ProviderMessagingSqlAdapter(
             self.sql_query_manager
         )
         from app.adapters.persistence.provider_verification_sql_adapter import (
