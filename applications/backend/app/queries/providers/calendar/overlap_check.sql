@@ -7,5 +7,5 @@ SELECT b.booking_id, b.booking_number, b.scheduled_date, b.time_window, b.status
  WHERE b.provider_id = CAST(:user_id AS uuid)
    AND b.scheduled_date = CAST(:scheduled_date AS date)
    AND b.status IN ('CONFIRMED', 'PREPARING', 'TRAVELING', 'ARRIVED', 'WORK_STARTED')
-   AND (:exclude_booking_id IS NULL OR b.booking_id != CAST(:exclude_booking_id AS uuid))
+   AND (CAST(:exclude_booking_id AS uuid) IS NULL OR b.booking_id != CAST(:exclude_booking_id AS uuid))
  ORDER BY b.scheduled_date;
