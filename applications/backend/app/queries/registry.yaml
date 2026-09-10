@@ -2089,4 +2089,32 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/evidence/summary.sql
+  PROV.CHANGE.SUBMIT:
+    description: Provider submits a change request (reason, new work, additional labour/materials/time/price, supporting photos) on an active booking (Provider Phase 23).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/submit.sql
+  PROV.CHANGE.LIST:
+    description: Change requests for one of the provider's bookings (Provider Phase 23).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/list.sql
+  PROV.CHANGE.GET:
+    description: One change request owned through the provider's booking (Provider Phase 23).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/get.sql
+  PROV.CHANGE.WITHDRAW:
+    description: Provider withdraws its own PROPOSED change request (audit kept) (Provider Phase 23).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/withdraw.sql
 version: 1
