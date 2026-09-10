@@ -41,6 +41,7 @@ class Composition:
         self.provider_dashboard_repository: Any = None
         self.provider_job_checklist_repository: Any = None
         self.provider_job_evidence_repository: Any = None
+        self.provider_change_request_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -297,6 +298,14 @@ class Composition:
         self.provider_job_evidence_repository = ProviderJobEvidenceSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_change_request_sql_adapter import (
+            ProviderChangeRequestSqlAdapter,
+        )
+
+        self.provider_change_request_repository = ProviderChangeRequestSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -528,6 +537,17 @@ class Composition:
         )
 
         return ProviderJobEvidenceService(evidence=self.provider_job_evidence_repository)
+
+    def provider_change_request_service(self) -> Any:
+        """ProviderChangeRequestService — scope-change submissions (Phase 23)."""
+        from app.domains.providers.services.provider_change_request_service import (
+            ProviderChangeRequestService,
+        )
+
+        return ProviderChangeRequestService(
+            changes=self.provider_change_request_repository,
+            bookings=self.provider_booking_repository,
+        )
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
