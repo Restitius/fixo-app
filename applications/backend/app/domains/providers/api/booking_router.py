@@ -64,3 +64,39 @@ async def ack_status(
         provider_id=str(provider["provider_id"]),
         booking_id=booking_id,
     )
+
+
+@router.get("/{booking_id}/details")
+async def details(
+    booking_id: str,
+    provider: dict = Depends(get_current_provider),
+):
+    svc = _service()
+    return await svc.details(
+        provider_id=str(provider["provider_id"]),
+        booking_id=booking_id,
+    )
+
+
+@router.get("/{booking_id}/timeline")
+async def timeline(
+    booking_id: str,
+    provider: dict = Depends(get_current_provider),
+):
+    svc = _service()
+    return await svc.timeline(
+        provider_id=str(provider["provider_id"]),
+        booking_id=booking_id,
+    )
+
+
+@router.get("/{booking_id}/messages/count")
+async def message_count(
+    booking_id: str,
+    provider: dict = Depends(get_current_provider),
+):
+    svc = _service()
+    return await svc.message_count(
+        provider_id=str(provider["provider_id"]),
+        booking_id=booking_id,
+    )
