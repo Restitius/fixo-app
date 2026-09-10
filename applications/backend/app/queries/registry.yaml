@@ -1396,6 +1396,34 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/onboarding/complete_step.sql
+  PROV.BOOKING.FEED:
+    description: Provider's booking list with optional status filter (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/feed.sql
+  PROV.BOOKING.GET:
+    description: Provider booking detail with customer, service, address, ack (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/get.sql
+  PROV.BOOKING.ACK:
+    description: Provider acknowledges a booking (idempotent upsert) (Provider Phase 14).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/ack.sql
+  PROV.BOOKING.ACK_STATUS:
+    description: Check whether a provider acknowledged a booking (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/ack_status.sql
   PRV.PROFILE.GET:
     description: Provider's own full profile, personal + professional (Provider Phase 3).
     operation: read
