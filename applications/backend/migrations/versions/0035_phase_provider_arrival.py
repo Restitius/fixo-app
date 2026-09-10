@@ -28,13 +28,18 @@ def upgrade() -> None:
     op.execute('ALTER TABLE "BOOKINGS" ADD COLUMN IF NOT EXISTS arrival_longitude NUMERIC(9,6)')
 
     # Expand status constraint to include provider-side booking statuses.
+    # NOTE: the list must remain a superset of the full lifecycle declared in
+    # 0011 (CLOSED, PAID, CUSTOMER_CONFIRMED, STARTED, ...) so the constraint
+    # validates against live rows.
     op.execute(
         'ALTER TABLE "BOOKINGS" DROP CONSTRAINT IF EXISTS "CK_BOOKING_STATUS"'
     )
     op.execute(
         'ALTER TABLE "BOOKINGS" ADD CONSTRAINT "CK_BOOKING_STATUS" CHECK (status IN '
-        "('CONFIRMED','PAYMENT_AUTHORIZED','PAYMENT_FAILED','CANCELLED',"
-        " 'ON_THE_WAY','ARRIVED','AT_LOCATION','WORK_STARTED','WORK_COMPLETED','COMPLETED'))"
+        "('CONFIRMED','PAYMENT_AUTHORIZED','ON_THE_WAY','ARRIVED','AT_LOCATION',"
+        " 'WORK_STARTED','WORK_COMPLETED','STARTED','IN_PROGRESS',"
+        " 'COMPLETION_REQUESTED','CUSTOMER_CONFIRMED','PAID','CLOSED',"
+        "'COMPLETED','PAYMENT_FAILED','CANCELLED'))"
     )
 
 
