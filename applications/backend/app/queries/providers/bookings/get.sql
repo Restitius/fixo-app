@@ -5,7 +5,7 @@ SELECT b.booking_id, b.booking_number, b.status, b.scheduled_date,
        c.full_name AS customer_name,
        c.phone AS customer_phone, c.email AS customer_email,
        s.name AS service_name, s.description AS service_description,
-       ca.street_address, ca.city, ca.region, ca.district,
+       ca.street_address, ca.city, ca.region,
        ack.acknowledged_at, ack.notes AS ack_notes
   FROM "BOOKINGS" b
   JOIN "CUSTOMERS" c ON c.customer_id = b.customer_id
