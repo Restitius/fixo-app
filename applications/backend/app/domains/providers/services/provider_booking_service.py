@@ -78,3 +78,42 @@ class ProviderBookingService:
         if not row:
             raise NotFoundError(f"Booking {booking_id} not found")
         return row
+
+    async def start_service(
+        self,
+        provider_id: str,
+        booking_id: str,
+        gps_lat: float | None = None,
+        gps_lng: float | None = None,
+    ) -> dict[str, Any]:
+        """Start the service — records actual start time, begins hourly timer (Phase 20)."""
+        row = await self._bookings.start_status(provider_id=provider_id, booking_id=booking_id)
+        if not row:
+            raise NotFoundError(f"Booking {booking_id} not found")
+        if row.get("status") == "IN_PROGRESS":
+            return row
+        if row.get("status") != "ARRIVED":
+            raise AuthorizationError(
+                f"Cannot start service in status {row.get('status')} — arrive first"
+            )
+        row = await self._bookings.start_service(
+            provider_id=provider_id,
+            booking_id=booking_id,
+            gps_lat=gps_lat,
+            gps_lng=gps_lng,
+        )
+        if not row:
+            raise NotFoundError(f"Booking {booking_id} not found")
+        if self._events:
+            await self._events.publish(
+                "provider.booking.started",
+                {"booking_id": booking_id, "provider_id": provider_id},
+            )
+        return row
+
+    async def start_status(self, provider_id: str, booking_id: str) -> dict[str, Any]:
+        """Start-service state for a booking (Phase 20)."""
+        row = await self._bookings.start_status(provider_id=provider_id, booking_id=booking_id)
+        if not row:
+            raise NotFoundError(f"Booking {booking_id} not found")
+        return row

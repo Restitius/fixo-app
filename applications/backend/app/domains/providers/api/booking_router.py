@@ -1,7 +1,9 @@
-"""Provider Booking Confirmation — API routes (Phase 14)."""
+"""Provider Booking Confirmation — API routes (Phases 14, 16, 20)."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
+
+from pydantic import BaseModel
 
 from app.api.deps.provider_auth import get_current_provider
 from app.domains.providers.services.provider_booking_service import ProviderBookingService
@@ -12,6 +14,11 @@ router = APIRouter(prefix="/providers/me/bookings", tags=["provider-bookings"])
 
 def _service() -> ProviderBookingService:
     return get_composition().provider_booking_service()
+
+
+class StartServiceBody(BaseModel):
+    gps_lat: float | None = None
+    gps_lng: float | None = None
 
 
 @router.get("")
@@ -97,6 +104,33 @@ async def message_count(
 ):
     svc = _service()
     return await svc.message_count(
+        provider_id=str(provider["provider_id"]),
+        booking_id=booking_id,
+    )
+
+
+@router.post("/{booking_id}/start")
+async def start_service(
+    booking_id: str,
+    provider: dict = Depends(get_current_provider),
+    body: StartServiceBody | None = None,
+):
+    svc = _service()
+    return await svc.start_service(
+        provider_id=str(provider["provider_id"]),
+        booking_id=booking_id,
+        gps_lat=(body.gps_lat if body else None),
+        gps_lng=(body.gps_lng if body else None),
+    )
+
+
+@router.get("/{booking_id}/start-status")
+async def start_status(
+    booking_id: str,
+    provider: dict = Depends(get_current_provider),
+):
+    svc = _service()
+    return await svc.start_status(
         provider_id=str(provider["provider_id"]),
         booking_id=booking_id,
     )
