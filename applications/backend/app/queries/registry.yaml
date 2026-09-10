@@ -2061,4 +2061,32 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/checklist/booking_progress.sql
+  PROV.EVIDENCE.ADD:
+    description: Provider attaches an evidence item (photo/video/note/measurement/instruction/part) to a booking (Provider Phase 22).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/add.sql
+  PROV.EVIDENCE.LIST:
+    description: Evidence items for one of the provider's bookings, optionally filtered by phase/kind (Provider Phase 22).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/list.sql
+  PROV.EVIDENCE.DELETE:
+    description: Provider removes one of its evidence items (Provider Phase 22).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/delete.sql
+  PROV.EVIDENCE.SUMMARY:
+    description: Evidence counts per phase/kind for a booking (Provider Phase 22).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/summary.sql
 version: 1
