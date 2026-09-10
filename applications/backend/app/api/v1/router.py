@@ -36,6 +36,7 @@ from app.domains.providers.api.verification_router import router as provider_ver
 from app.domains.providers.api.service_config_router import router as provider_service_config_router
 from app.domains.providers.api.pricing_router import router as provider_pricing_router
 from app.domains.providers.api.booking_router import router as provider_booking_router
+from app.domains.providers.api.checklist_router import router as provider_checklist_router
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
 )
@@ -94,6 +95,7 @@ api_v1_router.include_router(provider_verification_router)
 api_v1_router.include_router(provider_service_config_router)
 api_v1_router.include_router(provider_pricing_router)
 api_v1_router.include_router(provider_booking_router)
+api_v1_router.include_router(provider_checklist_router)
 api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_requests_router)
 api_v1_router.include_router(provider_matching_router)
