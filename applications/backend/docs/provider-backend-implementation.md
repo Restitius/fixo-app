@@ -50,9 +50,9 @@
 | PRV-18 | 18 | Navigation & Provider Tracking — trip + ETA | ✅ done (tag `provider-phase18-v1`) |
 | PRV-19 | 19 | Arrival Verification — arrived + PIN/QR/OTP | ✅ done (tag `provider-phase19-v1`) |
 | PRV-20 | 20 | Start Service — start job + timer | ✅ done (tag `provider-phase20-v1`) |
-| PRV-21 | 21 | Job Checklist — templated task lists | ⏳ next |
-| PRV-22 | 22 | Evidence & Job Documentation | ⏳ |
-| PRV-23 | 23 | Change Request — scope change + approval | ⏳ |
+| PRV-21 | 21 | Job Checklist — templated task lists | ✅ done (tag `provider-phase21-v1`) |
+| PRV-22 | 22 | Evidence & Job Documentation — photos/videos/notes/measurements/instructions/parts on the booking | ✅ done (tag `provider-phase22-v1`) |
+| PRV-23 | 23 | Change Request — scope change + approval | ⏳ next |
 | PRV-24 | 24 | Materials & Expenses | ⏳ |
 | PRV-25 | 25 | Job Completion — completion notes + evidence | ⏳ |
 | PRV-26 | 26 | Customer Sign-Off | ⏳ |
