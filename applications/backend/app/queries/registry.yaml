@@ -1424,6 +1424,20 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/bookings/ack_status.sql
+  PROV.BOOKING.START_SERVICE:
+    description: Provider starts the service — records start time, begins hourly timer, optional GPS (Provider Phase 20).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/start_service.sql
+  PROV.BOOKING.START_STATUS:
+    description: Start-service state for a provider booking (Provider Phase 20).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/start_status.sql
   PROV.TRIP.START:
     description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
     operation: update
