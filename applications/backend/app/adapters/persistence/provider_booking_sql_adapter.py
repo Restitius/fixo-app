@@ -11,6 +11,8 @@ class ProviderBookingQueryIds:
     GET = "PROV.BOOKING.GET"
     ACK = "PROV.BOOKING.ACK"
     ACK_STATUS = "PROV.BOOKING.ACK_STATUS"
+    START_SERVICE = "PROV.BOOKING.START_SERVICE"
+    START_STATUS = "PROV.BOOKING.START_STATUS"
     DETAILS = "PROV.BOOKING.DETAILS"
     TIMELINE = "PROV.BOOKING.TIMELINE"
     MESSAGE_COUNT = "PROV.BOOKING.MESSAGE_COUNT"
@@ -78,6 +80,33 @@ class ProviderBookingSqlAdapter:
     async def message_count(self, provider_id: str, booking_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             ProviderBookingQueryIds.MESSAGE_COUNT,
+            {"user_id": provider_id, "booking_id": booking_id},
+            fetch="one",
+        )
+
+    async def start_service(
+        self,
+        provider_id: str,
+        booking_id: str,
+        gps_lat: float | None = None,
+        gps_lng: float | None = None,
+    ) -> dict[str, Any] | None:
+        return await self._sql.execute(
+            ProviderBookingQueryIds.START_SERVICE,
+            {
+                "user_id": provider_id,
+                "booking_id": booking_id,
+                "gps_lat": gps_lat,
+                "gps_lng": gps_lng,
+            },
+            fetch="one",
+        )
+
+    async def start_status(
+        self, provider_id: str, booking_id: str
+    ) -> dict[str, Any] | None:
+        return await self._sql.execute(
+            ProviderBookingQueryIds.START_STATUS,
             {"user_id": provider_id, "booking_id": booking_id},
             fetch="one",
         )

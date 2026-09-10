@@ -33,3 +33,15 @@ class ProviderBookingRepository(Protocol):
     async def timeline(self, provider_id: str, booking_id: str) -> list[dict[str, Any]]: ...
 
     async def message_count(self, provider_id: str, booking_id: str) -> dict[str, Any] | None: ...
+
+    async def start_service(
+        self,
+        provider_id: str,
+        booking_id: str,
+        gps_lat: float | None = None,
+        gps_lng: float | None = None,
+    ) -> dict[str, Any] | None: ...
+
+    async def start_status(
+        self, provider_id: str, booking_id: str
+    ) -> dict[str, Any] | None: ...
