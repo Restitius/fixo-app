@@ -40,6 +40,7 @@ class Composition:
         self.provider_messaging_repository: Any = None
         self.provider_dashboard_repository: Any = None
         self.provider_job_checklist_repository: Any = None
+        self.provider_job_evidence_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -288,6 +289,14 @@ class Composition:
         self.provider_job_checklist_repository = ProviderJobChecklistSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_job_evidence_sql_adapter import (
+            ProviderJobEvidenceSqlAdapter,
+        )
+
+        self.provider_job_evidence_repository = ProviderJobEvidenceSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -511,6 +520,14 @@ class Composition:
         )
 
         return ProviderJobChecklistService(checklist=self.provider_job_checklist_repository)
+
+    def provider_job_evidence_service(self) -> Any:
+        """ProviderJobEvidenceService — evidence & job documentation (Phase 22)."""
+        from app.domains.providers.services.provider_job_evidence_service import (
+            ProviderJobEvidenceService,
+        )
+
+        return ProviderJobEvidenceService(evidence=self.provider_job_evidence_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
