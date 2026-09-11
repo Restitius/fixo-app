@@ -43,6 +43,8 @@ class Composition:
         self.provider_job_evidence_repository: Any = None
         self.provider_change_request_repository: Any = None
         self.provider_materials_repository: Any = None
+        self.provider_job_completion_repository: Any = None
+        self.provider_job_review_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -315,6 +317,18 @@ class Composition:
         self.provider_materials_repository = ProviderMaterialsSqlAdapter(
             self.sql_query_manager
         )
+        from app.adapters.persistence.provider_job_completion_sql_adapter import (
+            ProviderJobCompletionSqlAdapter,
+        )
+        self.provider_job_completion_repository = ProviderJobCompletionSqlAdapter(
+            self.sql_query_manager
+        )
+        from app.adapters.persistence.provider_job_review_sql_adapter import (
+            ProviderJobReviewSqlAdapter,
+        )
+        self.provider_job_review_repository = ProviderJobReviewSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -565,6 +579,24 @@ class Composition:
         )
 
         return ProviderMaterialsService(materials=self.provider_materials_repository)
+
+    def provider_job_completion_service(self) -> Any:
+        """ProviderJobCompletionService — job completion (Phase 25)."""
+        from app.domains.providers.services.provider_job_completion_service import (
+            ProviderJobCompletionService,
+        )
+        return ProviderJobCompletionService(
+            completions=self.provider_job_completion_repository,
+            bookings=self.provider_booking_repository,
+            notifications=self.notification_manager,
+        )
+
+    def provider_job_review_service(self) -> Any:
+        """ProviderJobReviewService — customer sign-off / approval evidence (Phase 26)."""
+        from app.domains.providers.services.provider_job_review_service import (
+            ProviderJobReviewService,
+        )
+        return ProviderJobReviewService(reviews=self.provider_job_review_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
