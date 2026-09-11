@@ -2215,4 +2215,25 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/earnings/transactions.sql
+  PROV.WALLET.GET_OR_CREATE:
+    description: Get-or-create the provider's wallet row (Provider Phase 29).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/wallet/get_or_create.sql
+  PROV.WALLET.SUMMARY:
+    description: Provider wallet overview - available/pending/reserved + withdrawals/refund deductions/bonuses/adjustments (Provider Phase 29).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/wallet/summary.sql
+  PROV.WALLET.LEDGER:
+    description: The provider's full wallet transaction history (newest first) (Provider Phase 29).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/wallet/ledger.sql
 version: 1
