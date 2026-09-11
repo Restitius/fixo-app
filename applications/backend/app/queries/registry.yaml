@@ -2187,4 +2187,18 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/reviews/delete.sql
+  PROV.BILLING.PREVIEW:
+    description: Provider view of the final bill — original price + approved additional work + logged materials (Provider Phase 27, read-only breakdown).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/billing/preview.sql
+  PROV.BILLING.CHANGES:
+    description: Approved change rows behind a provider bill (Provider Phase 27).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/billing/changes.sql
 version: 1
