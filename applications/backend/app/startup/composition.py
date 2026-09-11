@@ -46,6 +46,7 @@ class Composition:
         self.provider_job_completion_repository: Any = None
         self.provider_job_review_repository: Any = None
         self.provider_billing_repository: Any = None
+        self.provider_earnings_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -338,6 +339,14 @@ class Composition:
         self.provider_billing_repository = ProviderBillingSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_earnings_sql_adapter import (
+            ProviderEarningsSqlAdapter,
+        )
+
+        self.provider_earnings_repository = ProviderEarningsSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -617,6 +626,14 @@ class Composition:
             billing=self.provider_billing_repository,
             materials=self.provider_materials_repository,
         )
+
+    def provider_earnings_service(self) -> Any:
+        """ProviderEarningsService — earnings stats + ledger (Req Phase 28)."""
+        from app.domains.providers.services.provider_earnings_service import (
+            ProviderEarningsService,
+        )
+
+        return ProviderEarningsService(earnings=self.provider_earnings_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""

@@ -2201,4 +2201,18 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/billing/changes.sql
+  PROV.EARNINGS.SUMMARY:
+    description: Provider earnings statistics - available/pending/total/withdrawn + today/week/month/year views (Provider Phase 28).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/earnings/summary.sql
+  PROV.EARNINGS.TRANSACTIONS:
+    description: The provider's full earnings transaction ledger (invoice events, newest first) (Provider Phase 28).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/earnings/transactions.sql
 version: 1
