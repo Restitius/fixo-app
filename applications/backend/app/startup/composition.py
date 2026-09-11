@@ -45,6 +45,7 @@ class Composition:
         self.provider_materials_repository: Any = None
         self.provider_job_completion_repository: Any = None
         self.provider_job_review_repository: Any = None
+        self.provider_billing_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -329,6 +330,14 @@ class Composition:
         self.provider_job_review_repository = ProviderJobReviewSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_billing_sql_adapter import (
+            ProviderBillingSqlAdapter,
+        )
+
+        self.provider_billing_repository = ProviderBillingSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -597,6 +606,17 @@ class Composition:
             ProviderJobReviewService,
         )
         return ProviderJobReviewService(reviews=self.provider_job_review_repository)
+
+    def provider_billing_service(self) -> Any:
+        """ProviderBillingService — final bill preview (Req Phase 27)."""
+        from app.domains.providers.services.provider_billing_service import (
+            ProviderBillingService,
+        )
+
+        return ProviderBillingService(
+            billing=self.provider_billing_repository,
+            materials=self.provider_materials_repository,
+        )
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
