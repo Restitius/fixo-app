@@ -1,0 +1,99 @@
+{
+  "loading": "Loading…",
+  "itemLabel_one": "dispute",
+  "itemLabel_other": "disputes",
+  "page": {
+    "title": "Disputes",
+    "subtitle": "Track and manage disputes you've raised on your bookings"
+  },
+  "metrics": {
+    "total": "Total Disputes",
+    "totalHint_one": "{{count}} dispute filed",
+    "totalHint_other": "{{count}} disputes filed",
+    "open": "Open / Pending",
+    "openHint": "Awaiting resolution",
+    "closed": "Resolved",
+    "closedHint": "Resolved, closed or withdrawn"
+  },
+  "search": {
+    "placeholder": "Search by category, description or booking..."
+  },
+  "filters": {
+    "statusPlaceholder": "Status",
+    "all": "All statuses",
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "columns": {
+    "category": "Category",
+    "description": "Description",
+    "booking": "Booking",
+    "status": "Status",
+    "created": "Created"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "Service Quality",
+    "DAMAGE": "Damage",
+    "BILLING": "Billing",
+    "NO_SHOW": "No Show",
+    "OTHER": "Other"
+  },
+  "evidenceKinds": {
+    "PHOTO": "Photo",
+    "DOCUMENT": "Document",
+    "OTHER": "Other"
+  },
+  "empty": {
+    "title": "No disputes yet",
+    "description": "If something goes wrong with a booking, you can raise a dispute here and our team will step in.",
+    "filteredTitle": "No matching disputes",
+    "filteredDescription": "Try a different search term or status filter.",
+    "clearFilters": "Clear filters"
+  },
+  "newDispute": {
+    "trigger": "New Dispute",
+    "title": "Raise a New Dispute",
+    "subtitle": "Tell us what went wrong with a booking and we'll review it.",
+    "bookingLabel": "Booking",
+    "bookingPlaceholder": "Select a booking",
+    "noBookings": "You don't have any bookings to raise a dispute on yet.",
+    "serviceFallback": "Service",
+    "categoryLabel": "Category",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe what happened in at least 10 characters...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "Cancel",
+    "submit": "Submit Dispute",
+    "submitting": "Submitting...",
+    "opened": "Dispute opened — our team will review it",
+    "errors": {
+      "pickBooking": "Select a booking first",
+      "descriptionLength": "Description must be between 10 and 2000 characters"
+    }
+  },
+  "detail": {
+    "title": "Dispute Details",
+    "booking": "Booking",
+    "service": "Service",
+    "description": "Description",
+    "evidence": "Evidence",
+    "noEvidence": "No evidence attached yet.",
+    "withdraw": "Withdraw Dispute",
+    "withdrawing": "Withdrawing...",
+    "withdrawn": "Dispute withdrawn",
+    "alreadyClosed": "This dispute is already closed",
+    "withdrawConfirmTitle": "Withdraw this dispute?",
+    "withdrawConfirmDescription": "This will close the dispute and cannot be undone. Only withdraw if the issue has been resolved.",
+    "addEvidence": {
+      "title": "Add Evidence",
+      "urlPlaceholder": "https://... link to a photo or document",
+      "notePlaceholder": "Optional note",
+      "add": "Add Evidence",
+      "adding": "Adding...",
+      "added": "Evidence added",
+      "errors": {
+        "url": "Enter a valid URL (max 2000 characters)"
+      }
+    }
+  }
+}

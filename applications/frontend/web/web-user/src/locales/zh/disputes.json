@@ -1,0 +1,99 @@
+{
+  "loading": "加载中…",
+  "itemLabel_one": "起纠纷",
+  "itemLabel_other": "起纠纷",
+  "page": {
+    "title": "纠纷",
+    "subtitle": "查看并管理您在预约中提出的纠纷"
+  },
+  "metrics": {
+    "total": "纠纷总数",
+    "totalHint_one": "已提交 {{count}} 起纠纷",
+    "totalHint_other": "已提交 {{count}} 起纠纷",
+    "open": "待处理",
+    "openHint": "等待解决",
+    "closed": "已解决",
+    "closedHint": "已解决、已关闭或已撤回"
+  },
+  "search": {
+    "placeholder": "按类别、描述或预约搜索..."
+  },
+  "filters": {
+    "statusPlaceholder": "状态",
+    "all": "所有状态",
+    "open": "待处理",
+    "closed": "已关闭"
+  },
+  "columns": {
+    "category": "类别",
+    "description": "描述",
+    "booking": "预约",
+    "status": "状态",
+    "created": "创建时间"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "服务质量",
+    "DAMAGE": "损坏",
+    "BILLING": "账单问题",
+    "NO_SHOW": "未到场",
+    "OTHER": "其他"
+  },
+  "evidenceKinds": {
+    "PHOTO": "照片",
+    "DOCUMENT": "文档",
+    "OTHER": "其他"
+  },
+  "empty": {
+    "title": "暂无纠纷",
+    "description": "如果您的预约出现问题，可以在此提出纠纷，我们的团队将介入处理。",
+    "filteredTitle": "没有符合条件的纠纷",
+    "filteredDescription": "请尝试其他搜索词或状态筛选条件。",
+    "clearFilters": "清除筛选条件"
+  },
+  "newDispute": {
+    "trigger": "新建纠纷",
+    "title": "提出新纠纷",
+    "subtitle": "告诉我们预约中出现了什么问题，我们会进行审核。",
+    "bookingLabel": "预约",
+    "bookingPlaceholder": "选择预约",
+    "noBookings": "您目前还没有可提出纠纷的预约。",
+    "serviceFallback": "服务",
+    "categoryLabel": "类别",
+    "descriptionLabel": "描述",
+    "descriptionPlaceholder": "请描述发生的情况（至少10个字符）...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "取消",
+    "submit": "提交纠纷",
+    "submitting": "正在提交...",
+    "opened": "纠纷已提交 — 我们的团队将进行审核",
+    "errors": {
+      "pickBooking": "请先选择一个预约",
+      "descriptionLength": "描述长度必须在10到2000个字符之间"
+    }
+  },
+  "detail": {
+    "title": "纠纷详情",
+    "booking": "预约",
+    "service": "服务",
+    "description": "描述",
+    "evidence": "证据",
+    "noEvidence": "尚未附加任何证据。",
+    "withdraw": "撤回纠纷",
+    "withdrawing": "正在撤回...",
+    "withdrawn": "纠纷已撤回",
+    "alreadyClosed": "此纠纷已关闭",
+    "withdrawConfirmTitle": "确定要撤回此纠纷吗？",
+    "withdrawConfirmDescription": "此操作将关闭纠纷且无法撤销。仅在问题已解决时才应撤回。",
+    "addEvidence": {
+      "title": "添加证据",
+      "urlPlaceholder": "https://... 照片或文档的链接",
+      "notePlaceholder": "备注（可选）",
+      "add": "添加证据",
+      "adding": "正在添加...",
+      "added": "证据已添加",
+      "errors": {
+        "url": "请输入有效的链接（最多2000个字符）"
+      }
+    }
+  }
+}
