@@ -1,0 +1,89 @@
+{
+  "loading": "読み込み中…",
+  "page": {
+    "title": "メンテナンス",
+    "subtitle": "ご自宅の資産を対象とした定期メンテナンスプラン"
+  },
+  "metrics": {
+    "total": "プラン総数",
+    "totalHint": "累計",
+    "active": "有効なプラン",
+    "activeHint": "現在予定中",
+    "dueSoon": "まもなく期限",
+    "dueSoonHint_other": "{{count}}日以内",
+    "overdue": "期限超過",
+    "overdueHint": "対応が必要です"
+  },
+  "filterBar": {
+    "searchPlaceholder": "資産またはサービスで検索...",
+    "statusPlaceholder": "ステータス",
+    "allStatuses": "すべてのステータス",
+    "addPlan": "プランを追加"
+  },
+  "table": {
+    "asset": "資産",
+    "service": "サービス",
+    "interval": "頻度",
+    "nextDue": "次回期限",
+    "status": "ステータス",
+    "actions": "操作",
+    "intervalValue_other": "{{count}}日ごと"
+  },
+  "statuses": {
+    "ACTIVE": "有効",
+    "OVERDUE": "期限超過",
+    "CANCELLED": "キャンセル済み"
+  },
+  "assetFallback": "資産",
+  "serviceFallback": "サービス",
+  "actions": {
+    "markDone": "完了にする",
+    "markingDone": "更新中…",
+    "cancel": "キャンセル",
+    "cancelling": "キャンセル中…",
+    "cancelledNote": "プランはキャンセル済みです",
+    "markedDone": "「{{asset}}」を対応済みにしました"
+  },
+  "cancelConfirm": {
+    "title": "このメンテナンスプランをキャンセルしますか？",
+    "description": "「{{asset}}」— {{service}} の今後のリマインダーが停止します。この操作は元に戻せません。",
+    "keep": "プランを維持",
+    "confirm": "プランをキャンセル",
+    "cancelled": "メンテナンスプランをキャンセルしました"
+  },
+  "itemLabel": "件のメンテナンスプラン",
+  "empty": {
+    "title": "メンテナンスプランはまだありません",
+    "description": "定期プランを設定すると、資産のメンテナンスが遅れる前にお知らせします。",
+    "action": "プランを追加",
+    "filteredTitle": "一致するプランがありません",
+    "filteredDescription": "別の検索語句やステータスをお試しください。",
+    "clearFilters": "フィルターをクリア"
+  },
+  "addDialog": {
+    "title": "メンテナンスプランを追加",
+    "assetLabel": "資産",
+    "assetPlaceholder": "資産を選択",
+    "noAssetsHint": "資産がまだ登録されていません。",
+    "noAssetsCta": "資産を追加",
+    "categoryLabel": "カテゴリー",
+    "categoryPlaceholder": "カテゴリーを選択",
+    "serviceLabel": "サービス",
+    "servicePlaceholder": "サービスを選択",
+    "loadingServices": "サービスを読み込み中…",
+    "noServicesFound": "このカテゴリーにはサービスが見つかりません",
+    "intervalLabel": "繰り返し間隔（日数）",
+    "intervalHint": "1日から1095日の間",
+    "nextDueLabel": "次回期限（任意）",
+    "nextDueHint_other": "空欄の場合、今日から{{count}}日後が既定値になります",
+    "notesLabel": "メモ（任意）",
+    "notesPlaceholder": "このプランについて記録しておきたいこと",
+    "cancel": "キャンセル",
+    "save": "プランを追加",
+    "saving": "追加中…",
+    "selectAsset": "先に資産を選択してください。",
+    "selectService": "先にサービスを選択してください。",
+    "intervalRange": "頻度は1日から1095日の間で指定してください。",
+    "created": "メンテナンスプランを追加しました"
+  }
+}

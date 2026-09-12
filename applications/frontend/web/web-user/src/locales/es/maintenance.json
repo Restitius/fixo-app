@@ -1,0 +1,92 @@
+{
+  "loading": "Cargando…",
+  "page": {
+    "title": "Mantenimiento",
+    "subtitle": "Planes de mantenimiento recurrentes para los bienes de tu hogar"
+  },
+  "metrics": {
+    "total": "Total de Planes",
+    "totalHint": "Desde siempre",
+    "active": "Planes Activos",
+    "activeHint": "Programados actualmente",
+    "dueSoon": "Próximos a Vencer",
+    "dueSoonHint_one": "Dentro de {{count}} día",
+    "dueSoonHint_other": "Dentro de {{count}} días",
+    "overdue": "Vencidos",
+    "overdueHint": "Requieren atención"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Buscar por bien o servicio...",
+    "statusPlaceholder": "Estado",
+    "allStatuses": "Todos los Estados",
+    "addPlan": "Agregar Plan"
+  },
+  "table": {
+    "asset": "Bien",
+    "service": "Servicio",
+    "interval": "Intervalo",
+    "nextDue": "Próximo Vencimiento",
+    "status": "Estado",
+    "actions": "Acciones",
+    "intervalValue_one": "Cada {{count}} día",
+    "intervalValue_other": "Cada {{count}} días"
+  },
+  "statuses": {
+    "ACTIVE": "Activo",
+    "OVERDUE": "Vencido",
+    "CANCELLED": "Cancelado"
+  },
+  "assetFallback": "Bien",
+  "serviceFallback": "Servicio",
+  "actions": {
+    "markDone": "Marcar como Hecho",
+    "markingDone": "Registrando…",
+    "cancel": "Cancelar",
+    "cancelling": "Cancelando…",
+    "cancelledNote": "Plan cancelado",
+    "markedDone": "\"{{asset}}\" marcado como atendido"
+  },
+  "cancelConfirm": {
+    "title": "¿Cancelar este plan de mantenimiento?",
+    "description": "Esto detiene los próximos recordatorios de \"{{asset}}\" — {{service}}. Esta acción no se puede deshacer.",
+    "keep": "Mantener Plan",
+    "confirm": "Cancelar Plan",
+    "cancelled": "Plan de mantenimiento cancelado"
+  },
+  "itemLabel": "planes de mantenimiento",
+  "empty": {
+    "title": "Aún no hay planes de mantenimiento",
+    "description": "Configura un plan recurrente para que te avisemos antes de que un bien se atrase en su mantenimiento.",
+    "action": "Agregar un Plan",
+    "filteredTitle": "No hay planes coincidentes",
+    "filteredDescription": "Prueba con otro término de búsqueda o estado.",
+    "clearFilters": "Borrar Filtros"
+  },
+  "addDialog": {
+    "title": "Agregar un Plan de Mantenimiento",
+    "assetLabel": "Bien",
+    "assetPlaceholder": "Elige un bien",
+    "noAssetsHint": "Aún no tienes ningún bien.",
+    "noAssetsCta": "Agregar un bien",
+    "categoryLabel": "Categoría",
+    "categoryPlaceholder": "Elige una categoría",
+    "serviceLabel": "Servicio",
+    "servicePlaceholder": "Elige un servicio",
+    "loadingServices": "Cargando servicios…",
+    "noServicesFound": "No se encontraron servicios en esta categoría",
+    "intervalLabel": "Repetir cada (días)",
+    "intervalHint": "Entre 1 y 1095 días",
+    "nextDueLabel": "Próxima fecha (opcional)",
+    "nextDueHint_one": "Por defecto será {{count}} día a partir de hoy si se deja en blanco",
+    "nextDueHint_other": "Por defecto serán {{count}} días a partir de hoy si se deja en blanco",
+    "notesLabel": "Notas (opcional)",
+    "notesPlaceholder": "Cualquier detalle importante sobre este plan",
+    "cancel": "Cancelar",
+    "save": "Agregar Plan",
+    "saving": "Agregando…",
+    "selectAsset": "Elige un bien primero.",
+    "selectService": "Elige un servicio primero.",
+    "intervalRange": "El intervalo debe estar entre 1 y 1095 días.",
+    "created": "Plan de mantenimiento agregado"
+  }
+}
