@@ -12,7 +12,8 @@ class CreateAssetRequest(BaseSchema):
 
     name: str
     asset_type: str = "OTHER"
-    purchase_value: Decimal
+    property_id: str | None = None
+    purchase_value: Decimal = Decimal("0")
     currency: str = "USD"
     purchased_at: date | None = None
     notes: str | None = None

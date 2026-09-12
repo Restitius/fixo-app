@@ -31,9 +31,13 @@ class AssetService:
             "customer_id": dto.user_id,
             "name": dto.name,
             "asset_type": dto.asset_type,
+            "property_id": dto.property_id,
+            "brand": None,
+            "serial_number": None,
             "purchase_value": dto.purchase_value,
             "currency": dto.currency,
             "purchased_at": dto.purchased_at,
+            "warranty_until": None,
             "notes": dto.notes,
         })
         if self._events is not None and row:
