@@ -94,10 +94,11 @@
     "delete": "حذف الممتلكات",
     "addTitle": "إضافة ممتلكات منزلية",
     "editTitle": "تعديل الممتلكات",
-    "notLinkedNote": "الممتلكات غير مرتبطة بعد بعقار محدد — هذه قائمة موحّدة بأغراض المنزل التي تملكها في جميع عقاراتك.",
     "nameLabel": "اسم الممتلكات",
     "namePlaceholder": "مثال: سخان مياه، مكيف هواء",
     "typeLabel": "نوع الممتلكات",
+    "propertyLabel": "العقار",
+    "noProperty": "بلا عقار",
     "purchaseValueLabel": "قيمة الشراء",
     "currencyLabel": "العملة",
     "purchasedAtLabel": "تاريخ الشراء",
@@ -118,16 +119,20 @@
     "columns": {
       "name": "الاسم",
       "type": "النوع",
+      "property": "العقار",
       "purchaseValue": "قيمة الشراء",
       "purchasedAt": "تاريخ الشراء",
       "notes": "ملاحظات",
       "actions": "الإجراءات"
     },
     "types": {
-      "REAL_ESTATE": "عقار",
-      "VEHICLE": "مركبة",
-      "EQUIPMENT": "معدات",
-      "OTHER": "أخرى"
+      "appliance": "جهاز منزلي",
+      "hvac": "تكييف/تدفئة",
+      "plumbing": "سباكة",
+      "electrical": "كهرباء",
+      "furniture": "أثاث",
+      "security": "أمن",
+      "other": "أخرى"
     }
   }
 }

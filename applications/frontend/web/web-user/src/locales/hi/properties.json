@@ -82,10 +82,11 @@
     "delete": "सामान हटाएं",
     "addTitle": "घरेलू सामान जोड़ें",
     "editTitle": "सामान संपादित करें",
-    "notLinkedNote": "सामान अभी तक किसी विशेष संपत्ति से जुड़ा नहीं है — यह आपकी सभी संपत्तियों में मौजूद घरेलू सामान की एक सामान्य सूची है।",
     "nameLabel": "सामान का नाम",
     "namePlaceholder": "जैसे: वॉटर हीटर, एसी यूनिट",
     "typeLabel": "सामान का प्रकार",
+    "propertyLabel": "संपत्ति",
+    "noProperty": "कोई संपत्ति नहीं",
     "purchaseValueLabel": "खरीद मूल्य",
     "currencyLabel": "मुद्रा",
     "purchasedAtLabel": "खरीद की तारीख",
@@ -106,16 +107,20 @@
     "columns": {
       "name": "नाम",
       "type": "प्रकार",
+      "property": "संपत्ति",
       "purchaseValue": "खरीद मूल्य",
       "purchasedAt": "खरीद की तारीख",
       "notes": "टिप्पणियाँ",
       "actions": "कार्रवाइयाँ"
     },
     "types": {
-      "REAL_ESTATE": "अचल संपत्ति",
-      "VEHICLE": "वाहन",
-      "EQUIPMENT": "उपकरण",
-      "OTHER": "अन्य"
+      "appliance": "उपकरण (घरेलू)",
+      "hvac": "एसी/हीटिंग",
+      "plumbing": "प्लंबिंग",
+      "electrical": "बिजली",
+      "furniture": "फर्नीचर",
+      "security": "सुरक्षा",
+      "other": "अन्य"
     }
   }
 }

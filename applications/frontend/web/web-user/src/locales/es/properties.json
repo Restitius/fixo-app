@@ -82,10 +82,11 @@
     "delete": "Eliminar bien",
     "addTitle": "Agregar un Bien del Hogar",
     "editTitle": "Editar Bien",
-    "notLinkedNote": "Los bienes aún no están vinculados a una propiedad específica — esta es una lista general de los artículos del hogar que posees en todas tus propiedades.",
     "nameLabel": "Nombre del bien",
     "namePlaceholder": "ej. Calentador de agua, Aire acondicionado",
     "typeLabel": "Tipo de bien",
+    "propertyLabel": "Propiedad",
+    "noProperty": "Sin propiedad",
     "purchaseValueLabel": "Valor de compra",
     "currencyLabel": "Moneda",
     "purchasedAtLabel": "Fecha de compra",
@@ -106,16 +107,20 @@
     "columns": {
       "name": "Nombre",
       "type": "Tipo",
+      "property": "Propiedad",
       "purchaseValue": "Valor de Compra",
       "purchasedAt": "Fecha de Compra",
       "notes": "Notas",
       "actions": "Acciones"
     },
     "types": {
-      "REAL_ESTATE": "Bien Inmueble",
-      "VEHICLE": "Vehículo",
-      "EQUIPMENT": "Equipo",
-      "OTHER": "Otro"
+      "appliance": "Electrodoméstico",
+      "hvac": "Climatización",
+      "plumbing": "Plomería",
+      "electrical": "Eléctrico",
+      "furniture": "Mobiliario",
+      "security": "Seguridad",
+      "other": "Otro"
     }
   }
 }

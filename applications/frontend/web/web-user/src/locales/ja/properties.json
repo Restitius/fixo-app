@@ -79,10 +79,11 @@
     "delete": "資産を削除",
     "addTitle": "家庭用資産を追加",
     "editTitle": "資産を編集",
-    "notLinkedNote": "資産は特定の物件にはまだ紐付けられていません — これはすべての物件にまたがる、所有する家庭用品の一覧です。",
     "nameLabel": "資産名",
     "namePlaceholder": "例：給湯器、エアコン",
     "typeLabel": "資産の種類",
+    "propertyLabel": "物件",
+    "noProperty": "物件なし",
     "purchaseValueLabel": "購入価格",
     "currencyLabel": "通貨",
     "purchasedAtLabel": "購入日",
@@ -103,16 +104,20 @@
     "columns": {
       "name": "名前",
       "type": "種類",
+      "property": "物件",
       "purchaseValue": "購入価格",
       "purchasedAt": "購入日",
       "notes": "メモ",
       "actions": "操作"
     },
     "types": {
-      "REAL_ESTATE": "不動産",
-      "VEHICLE": "車両",
-      "EQUIPMENT": "設備",
-      "OTHER": "その他"
+      "appliance": "家電",
+      "hvac": "空調・暖房",
+      "plumbing": "配管",
+      "electrical": "電気設備",
+      "furniture": "家具",
+      "security": "防犯設備",
+      "other": "その他"
     }
   }
 }

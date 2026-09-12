@@ -82,10 +82,11 @@
     "delete": "Excluir item",
     "addTitle": "Adicionar um Item da Casa",
     "editTitle": "Editar Item",
-    "notLinkedNote": "Os itens ainda não estão vinculados a um imóvel específico — esta é uma lista única dos itens da casa que você possui em todos os seus imóveis.",
     "nameLabel": "Nome do item",
     "namePlaceholder": "ex.: Aquecedor de água, Ar-condicionado",
     "typeLabel": "Tipo de item",
+    "propertyLabel": "Imóvel",
+    "noProperty": "Nenhum imóvel",
     "purchaseValueLabel": "Valor de compra",
     "currencyLabel": "Moeda",
     "purchasedAtLabel": "Data de compra",
@@ -106,16 +107,20 @@
     "columns": {
       "name": "Nome",
       "type": "Tipo",
+      "property": "Imóvel",
       "purchaseValue": "Valor de Compra",
       "purchasedAt": "Data de Compra",
       "notes": "Observações",
       "actions": "Ações"
     },
     "types": {
-      "REAL_ESTATE": "Imóvel",
-      "VEHICLE": "Veículo",
-      "EQUIPMENT": "Equipamento",
-      "OTHER": "Outro"
+      "appliance": "Eletrodoméstico",
+      "hvac": "Ar-condicionado/Aquecimento",
+      "plumbing": "Encanamento",
+      "electrical": "Elétrica",
+      "furniture": "Móveis",
+      "security": "Segurança",
+      "other": "Outro"
     }
   }
 }
