@@ -2334,6 +2334,34 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/portfolio/update.sql
+  PROV.NOTIFICATIONS.LIST:
+    description: Provider notifications list, unread first then newest (Provider Phase 37).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/list.sql
+  PROV.NOTIFICATIONS.GET:
+    description: Single provider notification by id (Provider Phase 37).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/get.sql
+  PROV.NOTIFICATIONS.MARK_READ:
+    description: Mark a provider notification as read (idempotent) (Provider Phase 37).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/mark_read.sql
+  PROV.NOTIFICATIONS.UNREAD_COUNT:
+    description: Count of unread provider notifications (Provider Phase 37).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/unread_count.sql
   PROV.PORTFOLIO.DELETE:
     description: Remove a provider portfolio item (Provider Phase 36).
     operation: delete
