@@ -21,10 +21,8 @@ from app.startup.composition import get_composition
 router = APIRouter(prefix="/providers/me/kpis", tags=["provider-kpis"])
 
 
-def _service(
-    provider_id: str = Depends(get_current_provider),
-) -> ProviderKpisService:
-    return get_composition().provider_kpis_service(provider_id=provider_id)
+def _service() -> ProviderKpisService:
+    return get_composition().provider_kpis_service()
 
 
 @router.get("/")
@@ -32,15 +30,22 @@ async def list_kpis(
     period: str | None = Query(None, pattern="weekly|monthly|quarterly|yearly"),
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
-    svc: ProviderKpisService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> list[Any]:
     """List provider KPIs, optionally filtered by period."""
-    return await svc.list_kpis(period=period, limit=limit, offset=offset)
+    svc = _service()
+    return await svc.list_kpis(
+        provider_id=str(provider["provider_id"]),
+        period=period,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.get("/summary")
 async def get_summary(
-    svc: ProviderKpisService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> Any:
     """Return provider KPI totals across all periods."""
-    return await svc.get_summary()
+    svc = _service()
+    return await svc.get_summary(provider_id=str(provider["provider_id"]))
