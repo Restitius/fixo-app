@@ -1,0 +1,50 @@
+{
+  "loading": "加载中…",
+  "title": "欢迎使用 FIXO",
+  "subtitle": "几个简单步骤即可完成账户设置。",
+  "progress": "已完成 {{done}}/{{total}} 个步骤",
+  "required": "必需",
+  "optional": "可选",
+  "completed": "已完成",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "验证联系方式",
+      "description": "通过我们发送的验证码确认您的手机号或邮箱。",
+      "verifiedNote": "您的联系方式已验证。",
+      "unverifiedNote": "我们无法自动确认您的联系方式 — 请在个人资料中验证您的邮箱或手机号，然后返回此处。",
+      "markDone": "我已验证联系方式"
+    },
+    "SET_LOCATION": {
+      "title": "设置您的位置",
+      "description": "告诉我们您的住址，以便为您找到附近的服务商。",
+      "labelLabel": "标签",
+      "recipientNameLabel": "收件人姓名",
+      "phoneLabel": "电话",
+      "cityLabel": "城市",
+      "streetLabel": "街道地址",
+      "regionLabel": "地区（可选）",
+      "save": "保存位置",
+      "saving": "保存中…",
+      "fillRequired": "请填写收件人、电话、街道和城市。",
+      "saved": "位置已保存"
+    },
+    "ADD_PROPERTY": {
+      "title": "添加房产",
+      "description": "登记将要提供服务的住所或房产。",
+      "nameLabel": "房产名称",
+      "namePlaceholder": "例如：家、办公室",
+      "typeLabel": "房产类型",
+      "types": { "HOUSE": "住宅", "APARTMENT": "公寓", "CONDO": "共管公寓", "OFFICE": "办公室", "OTHER": "其他" },
+      "bedroomsLabel": "卧室数",
+      "bathroomsLabel": "浴室数",
+      "save": "添加房产",
+      "saving": "添加中…",
+      "skip": "暂时跳过",
+      "fillRequired": "请输入房产名称。",
+      "saved": "房产已添加"
+    }
+  },
+  "continueCta": "继续前往仪表盘",
+  "allDoneTitle": "一切就绪！",
+  "allDoneSubtitle": "您的账户已准备就绪。让我们为您找到一位出色的服务商。"
+}

@@ -5,10 +5,11 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Construction, HelpCircle, Home, RefreshCw, Sparkles, TrafficCone, Wrench } from "lucide-react";
 import { I18nextProvider } from "react-i18next";
 
@@ -17,6 +18,41 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
 import i18n from "@/lib/i18n";
 import { resolveInitialLanguage, adoptAccountLanguage, isRtl } from "@/lib/language";
+import { onboardingApi } from "@/lib/api-client";
+
+// Redirects to the one-time onboarding checklist (Module 03) once, if the
+// authenticated customer hasn't completed it yet. Skips auth-flow routes so
+// it never fights with login/register/verify-otp navigation.
+const SKIP_PATHS = new Set(["/login", "/register", "/verify-otp", "/onboarding"]);
+
+function OnboardingGate() {
+  const { access_token, customer } = useAuth();
+  const router = useRouter();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    setChecked(false);
+  }, [customer?.customer_id]);
+
+  useEffect(() => {
+    if (!access_token || !customer || checked || SKIP_PATHS.has(pathname)) return;
+    let cancelled = false;
+    void onboardingApi
+      .status()
+      .then((status) => {
+        if (cancelled) return;
+        setChecked(true);
+        if (!status.completed) router.navigate({ to: "/onboarding" });
+      })
+      .catch(() => setChecked(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [access_token, customer, checked, pathname, router]);
+
+  return null;
+}
 
 // Adopts the authenticated customer's preferred_language once it loads,
 // unless the user already made an explicit in-app choice (see lib/language.ts).
@@ -244,6 +280,7 @@ function RootComponent() {
         <AuthProvider>
           <DocumentLanguageSync />
           <LanguageAccountSync />
+          <OnboardingGate />
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
         </AuthProvider>

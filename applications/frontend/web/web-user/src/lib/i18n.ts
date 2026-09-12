@@ -10,7 +10,7 @@ import resourcesToBackend from 'i18next-resources-to-backend'
 export const SUPPORTED_LANGUAGES = ['en', 'sw', 'fr', 'ar', 'pt', 'es', 'de', 'zh', 'hi', 'ja'] as const
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]
 export const RTL_LANGUAGES: readonly LanguageCode[] = ['ar']
-export const NAMESPACES = ['auth', 'profile', 'home', 'booking', 'services', 'bookings', 'activity', 'billing', 'rewards', 'notifications', 'support'] as const
+export const NAMESPACES = ['auth', 'profile', 'home', 'booking', 'services', 'bookings', 'activity', 'billing', 'rewards', 'notifications', 'support', 'onboarding', 'properties', 'maintenance', 'warranties', 'recurring', 'disputes'] as const
 
 const localeModules = import.meta.glob<{ default: Record<string, unknown> }>('../locales/*/*.json')
 
