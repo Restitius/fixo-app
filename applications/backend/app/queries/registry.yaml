@@ -2298,6 +2298,20 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/kpis/list.sql
+  PROV.RANKING.GET:
+    description: Current ranking signals for a provider (Provider Phase 35).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/ranking/get.sql
+  PROV.RANKING.LEADERBOARD:
+    description: Public leaderboard of top providers by rank score (Provider Phase 35).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/ranking/leaderboard.sql
   PROV.KPIS.SUMMARY:
     description: Provider performance KPI totals across all periods (Provider Phase 34).
     operation: read
