@@ -49,6 +49,11 @@ class Composition:
         self.provider_earnings_repository: Any = None
         self.provider_wallet_repository: Any = None
         self.provider_payout_repository: Any = None
+        self.provider_commission_repository: Any = None
+        self.provider_invoices_repository: Any = None
+        self.provider_reviews_repository: Any = None
+        self.provider_kpis_repository: Any = None
+        self.provider_ranking_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -363,6 +368,46 @@ class Composition:
         )
 
         self.provider_payout_repository = ProviderPayoutSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_commission_sql_adapter import (
+            ProviderCommissionSqlAdapter,
+        )
+
+        self.provider_commission_repository = ProviderCommissionSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_invoices_sql_adapter import (
+            ProviderInvoicesSqlAdapter,
+        )
+
+        self.provider_invoices_repository = ProviderInvoicesSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_reviews_sql_adapter import (
+            ProviderReviewsSqlAdapter,
+        )
+
+        self.provider_reviews_repository = ProviderReviewsSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_kpis_sql_adapter import (
+            ProviderKpisSqlAdapter,
+        )
+
+        self.provider_kpis_repository = ProviderKpisSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_ranking_sql_adapter import (
+            ProviderRankingSqlAdapter,
+        )
+
+        self.provider_ranking_repository = ProviderRankingSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -704,6 +749,14 @@ class Composition:
         )
 
         return ProviderRankingService(ranking=self.provider_ranking_repository)
+
+    def provider_portfolio_service(self) -> Any:
+        """ProviderPortfolioService — portfolio CRUD (Req Phase 36)."""
+        from app.domains.providers.services.provider_portfolio_service import (
+            ProviderPortfolioService,
+        )
+
+        return ProviderPortfolioService(portfolio=self.provider_portfolio_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
