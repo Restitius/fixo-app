@@ -88,3 +88,29 @@
 Verification: `cd applications/backend && python -m pytest` stays green (new unit
 tests included per phase); each phase ships migration + queries + port/adapter +
 service + router + wiring + tests + its own commit/tag.
+
+## Phase 31 — Commission & Fees
+
+Phase 31 adds provider commission/fee visibility and application:
+
+- `PROVIDER_COMMISSION_RATES` — provider-scoped commission + tax rate
+  configuration per currency, with active/effective-date scoping.
+- `PROVIDER_COMMISSION_FEES` — audit-immutable commission/fee application
+  records: gross, commission, tax, net, currency, status, references,
+  timestamps.
+- Governed queries `PROV.COMMISSION.RATE`, `PROV.COMMISSION.FEES.APPLY`,
+  `PROV.COMMISSION.FEES.LIST`, `PROV.COMMISSION.FEES.SUMMARY`.
+- `ProviderCommissionService` with:
+  - current rate lookup,
+  - commission/fee application (`gross -> commission -> tax -> net`),
+  - provider fee history and totals.
+- Router prefix `/providers/me/commission`:
+  - `GET /rate`
+  - `POST /apply`
+  - `GET /fees`
+  - `GET /fees/summary`
+
+Commission is applied to the gross amount, tax is applied to the commission,
+and net is gross minus commission minus tax, all in the same currency per
+request. No background tasks are used in this phase — fee application is
+synchronous through the service layer.
