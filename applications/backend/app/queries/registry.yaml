@@ -2277,6 +2277,27 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/invoices/get.sql
+  PROV.REVIEWS.LIST:
+    description: Provider reviews list with optional filters (Provider Phase 33).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/list.sql
+  PROV.REVIEWS.DETAIL:
+    description: Single provider review by id (Provider Phase 33).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/detail.sql
+  PROV.REVIEWS.SUMMARY:
+    description: Provider review totals, average rating, star distribution (Provider Phase 33).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/summary.sql
   PROV.INVOICES.SUMMARY:
     description: Provider invoice totals and overdue count (Provider Phase 32).
     operation: read
