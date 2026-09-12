@@ -33,10 +33,10 @@
 |------|-----------|-------|--------|
 | USR-03 | Module 03 | Customer Onboarding — checklist (verify contact / set location / add property), gated in `__root.tsx` | ✅ done (commit `4452165`) |
 | USR-24 | Module 24 | Change Request Approval — approve/decline a provider-proposed change on a booking | ✅ done (commit `e502aae`) |
-| USR-06 | Module 06 | Properties — CRUD + room management | ⏳ next |
-| USR-32 | Module 32 | Property Assets — simplified UI against the generic `/assets` domain (no property linkage yet — disclosed) | ⏳ |
-| USR-33 | Module 33 | Maintenance — plans tied to an asset + service | ⏳ |
-| USR-29 | Module 29 | Warranty — list + claim | ⏳ |
-| USR-31 | Module 31 | Recurring Services — subscription create/list/pause/resume/cancel | ⏳ |
-| USR-39 | Module 39 | Disputes — list/get/evidence/withdraw (open already existed via `bookingApi.openDispute`) | ⏳ |
-| USR-43a | Module 43 | Profile field editing — wire "Edit Profile" to `PATCH /auth/me` (full_name, phone; date_of_birth needs a new migration) | ⏳ |
+| USR-06 | Module 06 | Properties — CRUD + room management | ✅ done (commit `e56f68b`) |
+| USR-32 | Module 32 | Property Assets — CRUD against the real `ASSETS` table (Phase 11), genuinely linked to a property via `property_id`, real `CK_ASSET_TYPE` categories | ✅ done (commits `e56f68b`, `caca93d`, `f0f7693`) |
+| USR-33 | Module 33 | Maintenance — plans tied to an asset + service | ✅ done (commit `efd76f1`) |
+| USR-29 | Module 29 | Warranty — list + claim | ✅ done (commit `3f95d8d`) |
+| USR-31 | Module 31 | Recurring Services — subscription create/list/pause/resume/cancel | ✅ done (commit `f6425ac`) |
+| USR-39 | Module 39 | Disputes — list/get/evidence/withdraw (open already existed via `bookingApi.openDispute`) | ✅ done (commit `63dd000`) |
+| USR-43a | Module 43 | Profile field editing — wire "Edit Profile" to `PATCH /auth/me` (full_name, phone; date_of_birth needs a new migration) | ⏳ next |
