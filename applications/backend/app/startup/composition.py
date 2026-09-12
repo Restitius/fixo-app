@@ -676,13 +676,12 @@ class Composition:
 
         return ProviderCommissionService(commissions=self.provider_commission_repository)
 
-    def provider_notifications_service(self) -> Any:
-        """ProviderNotificationsService — notifications history/read-state (Req Phase 32)."""
-        from app.domains.providers.services.provider_notifications_service import (
-            ProviderNotificationsService,
+    def provider_invoices_service(self) -> Any:
+        from app.domains.providers.services.provider_invoices_service import (
+            ProviderInvoicesService,
         )
 
-        return ProviderNotificationsService(notifications=self.provider_notifications_repository)
+        return ProviderInvoicesService(invoices=self.provider_invoices_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
