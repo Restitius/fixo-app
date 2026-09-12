@@ -22,34 +22,39 @@ from app.startup.composition import get_composition
 router = APIRouter(prefix="/providers/me/invoices", tags=["provider-invoices"])
 
 
-def _service(
-    provider_id: str = Depends(get_current_provider),
-) -> ProviderInvoicesService:
-    return get_composition().provider_invoices_service(provider_id=provider_id)
+def _service() -> ProviderInvoicesService:
+    return get_composition().provider_invoices_service()
 
 
 @router.get("/")
 async def list_invoices(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
-    svc: ProviderInvoicesService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> list[Any]:
     """List provider invoices, newest period first."""
-    return await svc.list_invoices(limit=limit, offset=offset)
+    svc = _service()
+    return await svc.list_invoices(
+        provider_id=str(provider["provider_id"]), limit=limit, offset=offset
+    )
 
 
 @router.get("/summary")
 async def get_summary(
-    svc: ProviderInvoicesService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> Any:
     """Return provider invoice totals and overdue count."""
-    return await svc.get_summary()
+    svc = _service()
+    return await svc.get_summary(provider_id=str(provider["provider_id"]))
 
 
 @router.get("/{invoice_id}")
 async def get_invoice(
     invoice_id: str,
-    svc: ProviderInvoicesService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> Any:
     """Return a single invoice by id (ownership-checked)."""
-    return await svc.get_invoice(invoice_id=invoice_id)
+    svc = _service()
+    return await svc.get_invoice(
+        provider_id=str(provider["provider_id"]), invoice_id=invoice_id
+    )

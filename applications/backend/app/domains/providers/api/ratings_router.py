@@ -22,10 +22,8 @@ from app.startup.composition import get_composition
 router = APIRouter(prefix="/providers/me/ratings", tags=["provider-ratings"])
 
 
-def _service(
-    provider_id: str = Depends(get_current_provider),
-) -> ProviderReviewsService:
-    return get_composition().provider_reviews_service(provider_id=provider_id)
+def _service() -> ProviderReviewsService:
+    return get_composition().provider_reviews_service()
 
 
 @router.get("/")
@@ -34,26 +32,35 @@ async def list_reviews(
     min_rating: int | None = Query(None, ge=1, le=5),
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
-    svc: ProviderReviewsService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> list[Any]:
     """List provider reviews with optional filters."""
+    svc = _service()
     return await svc.list_reviews(
-        status=status, min_rating=min_rating, limit=limit, offset=offset
+        provider_id=str(provider["provider_id"]),
+        status=status,
+        min_rating=min_rating,
+        limit=limit,
+        offset=offset,
     )
 
 
 @router.get("/summary")
 async def get_summary(
-    svc: ProviderReviewsService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> Any:
     """Return provider rating summary."""
-    return await svc.get_summary()
+    svc = _service()
+    return await svc.get_summary(provider_id=str(provider["provider_id"]))
 
 
 @router.get("/{review_id}")
 async def get_review(
     review_id: str,
-    svc: ProviderReviewsService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> Any:
     """Return a single review by id (ownership-checked)."""
-    return await svc.get_review(review_id=review_id)
+    svc = _service()
+    return await svc.get_review(
+        provider_id=str(provider["provider_id"]), review_id=review_id
+    )

@@ -21,18 +21,17 @@ from app.startup.composition import get_composition
 router = APIRouter(prefix="/providers/me/ranking", tags=["provider-ranking"])
 
 
-def _service(
-    provider_id: str = Depends(get_current_provider),
-) -> ProviderRankingService:
-    return get_composition().provider_ranking_service(provider_id=provider_id)
+def _service() -> ProviderRankingService:
+    return get_composition().provider_ranking_service()
 
 
 @router.get("/")
 async def get_ranking(
-    svc: ProviderRankingService = Depends(_service),
+    provider: dict = Depends(get_current_provider),
 ) -> Any:
     """Return the authenticated provider's current ranking signals."""
-    return await svc.get_ranking()
+    svc = _service()
+    return await svc.get_ranking(provider_id=str(provider["provider_id"]))
 
 
 @router.get("/leaderboard")
@@ -41,5 +40,5 @@ async def get_leaderboard(
     offset: int = Query(0, ge=0),
 ) -> Any:
     """Return the public leaderboard of top providers by rank score."""
-    svc = get_composition().provider_ranking_service(provider_id="")
+    svc = _service()
     return await svc.get_leaderboard(limit=limit, offset=offset)
