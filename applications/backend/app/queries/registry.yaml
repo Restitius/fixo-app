@@ -2236,4 +2236,52 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/wallet/ledger.sql
+  PROV.PAYOUT.METHODS.ADD:
+    sql: providers/payouts/method_add.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.METHODS.LIST:
+    sql: providers/payouts/methods_list.sql
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.METHODS.SET_DEFAULT:
+    sql: providers/payouts/method_set_default.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.METHODS.DELETE:
+    sql: providers/payouts/method_delete.sql
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.WITHDRAW:
+    sql: providers/payouts/withdraw.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.LIST:
+    sql: providers/payouts/list.sql
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.GET:
+    sql: providers/payouts/get.sql
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.CANCEL:
+    sql: providers/payouts/cancel.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
 version: 1
