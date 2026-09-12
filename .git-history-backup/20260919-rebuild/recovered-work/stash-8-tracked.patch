@@ -1,0 +1,627 @@
+diff --git a/applications/backend/app/api/v1/router.py b/applications/backend/app/api/v1/router.py
+index 736f503..1690cf3 100644
+--- a/applications/backend/app/api/v1/router.py
++++ b/applications/backend/app/api/v1/router.py
+@@ -48,6 +48,7 @@ from app.domains.providers.api.billing_router import router as provider_billing_
+ from app.domains.providers.api.earnings_router import router as provider_earnings_router
+ from app.domains.providers.api.wallet_router import router as provider_wallet_router
+ from app.domains.providers.api.payout_router import router as provider_payout_router
++from app.domains.providers.api.commission_router import router as provider_commission_router
+ 
+ from app.domains.providers.api.availability_router import (
+     router as provider_availability_router,
+@@ -115,6 +116,7 @@ api_v1_router.include_router(provider_completion_router)
+ api_v1_router.include_router(provider_reviews_router)
+ api_v1_router.include_router(provider_billing_router)
+ api_v1_router.include_router(provider_payout_router)
++api_v1_router.include_router(provider_commission_router)
+ api_v1_router.include_router(provider_dashboard_router)
+ api_v1_router.include_router(provider_earnings_router)
+ api_v1_router.include_router(provider_wallet_router)
+diff --git a/applications/backend/app/queries/registry.yaml b/applications/backend/app/queries/registry.yaml
+index b9f3f2e..c23f308 100644
+--- a/applications/backend/app/queries/registry.yaml
++++ b/applications/backend/app/queries/registry.yaml
+@@ -2236,6 +2236,34 @@ queries:
+       ownership_filter_required: true
+       requires_auth: true
+     sql: providers/wallet/ledger.sql
++  PROV.COMMISSION.RATE:
++    description: Current active commission + tax rate configuration for a provider (Provider Phase 31).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/commission/rate.sql
++  PROV.COMMISSION.FEES.APPLY:
++    description: Record a commission/fee application event for a provider (Provider Phase 31).
++    operation: create
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/commission/fees_apply.sql
++  PROV.COMMISSION.FEES.LIST:
++    description: Provider commission/fee application history, newest first (Provider Phase 31).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/commission/fees_list.sql
++  PROV.COMMISSION.FEES.SUMMARY:
++    description: Totals for a provider's commission/fee events (Provider Phase 31).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/commission/fees_summary.sql
+   PROV.PAYOUT.METHODS.ADD:
+     sql: providers/payouts/method_add.sql
+     operation: update
+diff --git a/applications/backend/app/startup/composition.py b/applications/backend/app/startup/composition.py
+index cd74e91..6106135 100644
+--- a/applications/backend/app/startup/composition.py
++++ b/applications/backend/app/startup/composition.py
+@@ -47,8 +47,8 @@ class Composition:
+         self.provider_job_review_repository: Any = None
+         self.provider_billing_repository: Any = None
+         self.provider_earnings_repository: Any = None
+-        self.provider_wallet_repository: Any = None
+         self.provider_payout_repository: Any = None
++        self.provider_commission_repository: Any = None
+         self.provider_request_repository: Any = None
+         self.provider_matching_repository: Any = None
+         self.provider_quotation_repository: Any = None
+@@ -362,9 +362,16 @@ class Composition:
+             ProviderPayoutSqlAdapter,
+         )
+ 
++        from app.adapters.persistence.provider_commission_sql_adapter import (
++            ProviderCommissionSqlAdapter,
++        )
++
+         self.provider_payout_repository = ProviderPayoutSqlAdapter(
+             self.sql_query_manager
+         )
++        self.provider_commission_repository = ProviderCommissionSqlAdapter(
++            self.sql_query_manager
++        )
+         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
+         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
+         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
+@@ -653,6 +660,29 @@ class Composition:
+ 
+         return ProviderEarningsService(earnings=self.provider_earnings_repository)
+ 
++    def provider_wallet_service(self) -> Any:
++        """ProviderWalletService — provider wallet (Req Phase 13)."""
++        from app.domains.providers.services.provider_wallet_service import (
++            ProviderWalletService,
++        )
++
++        return ProviderWalletService(wallet=self.provider_wallet_repository)
++
++    def provider_payout_service(self) -> Any:
++        """ProviderPayoutService — payout methods + withdrawal lifecycle (Req Phase 30)."""
++        from app.domains.providers.services.provider_payout_service import (
++            ProviderPayoutService,
++        )
++
++        return ProviderPayoutService(payouts=self.provider_payout_repository)
++
++    def provider_commission_service(self) -> Any:
++        from app.domains.providers.services.provider_commission_service import (
++            ProviderCommissionService,
++        )
++
++        return ProviderCommissionService(commissions=self.provider_commission_repository)
++
+     def provider_wallet_service(self) -> Any:
+         """ProviderWalletService — provider wallet (Req Phase 29)."""
+         from app.domains.providers.services.provider_wallet_service import (
+@@ -669,6 +699,46 @@ class Composition:
+ 
+         return ProviderPayoutService(payouts=self.provider_payout_repository)
+ 
++    def provider_wallet_service(self) -> Any:
++        """ProviderWalletService — wallet balances + full transaction history (Req Phase 29)."""
++        from app.domains.providers.services.provider_wallet_service import (
++            ProviderWalletService,
++        )
++
++        return ProviderWalletService(wallet=self.provider_wallet_repository)
++
++    def provider_payout_service(self) -> Any:
++        """ProviderPayoutService — payout methods + withdrawals (Req Phase 30)."""
++        from app.domains.providers.services.provider_payout_service import (
++            ProviderPayoutService,
++        )
++
++        return ProviderPayoutService(payouts=self.provider_payout_repository)
++
++    def provider_wallet_service(self) -> Any:
++        """ProviderWalletService — wallet balances + full transaction history (Req Phase 29)."""
++        from app.domains.providers.services.provider_wallet_service import (
++            ProviderWalletService,
++        )
++
++        return ProviderWalletService(wallet=self.provider_wallet_repository)
++
++    def provider_payout_service(self) -> Any:
++        """ProviderPayoutService — payout methods + withdrawals (Req Phase 30)."""
++        from app.domains.providers.services.provider_payout_service import (
++            ProviderPayoutService,
++        )
++
++        return ProviderPayoutService(payouts=self.provider_payout_repository)
++
++    def provider_payout_service(self) -> Any:
++        """ProviderPayoutService — payout methods + withdraw lifecycle (Req Phase 30)."""
++        from app.domains.providers.services.provider_payout_service import (
++            ProviderPayoutService,
++        )
++
++        return ProviderPayoutService(payouts=self.provider_payout_repository)
++
+     def provider_availability_service(self) -> Any:
+         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
+         from app.domains.providers.services.provider_availability_service import (
+diff --git a/applications/backend/docs/provider-backend-implementation.md b/applications/backend/docs/provider-backend-implementation.md
+index cc5856b..6803844 100644
+--- a/applications/backend/docs/provider-backend-implementation.md
++++ b/applications/backend/docs/provider-backend-implementation.md
+@@ -60,7 +60,7 @@
+ | PRV-28 | 28 | Provider Earnings | ✅ done (tag `provider-phase28-v1`) |
+ | PRV-29 | 29 | Provider Wallet | ✅ done (tag `provider-phase29-v1`) |
+ | PRV-30 | 30 | Payout Management — methods + withdrawals | ✅ done (tag `provider-phase30-v1`) |
+-| PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
++| PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ✅ done (tag `provider-phase31-v1`) |
+ | PRV-32 | 32 | Invoices & Statements | ⏳ |
+ | PRV-33 | 33 | Ratings & Reviews | ⏳ |
+ | PRV-34 | 34 | Provider Performance KPIs | ⏳ |
+@@ -87,4 +87,30 @@
+ 
+ Verification: `cd applications/backend && python -m pytest` stays green (new unit
+ tests included per phase); each phase ships migration + queries + port/adapter +
+-service + router + wiring + tests + its own commit/tag.
+\ No newline at end of file
++service + router + wiring + tests + its own commit/tag.
++
++## Phase 31 — Commission & Fees
++
++Phase 31 adds provider commission/fee visibility and application:
++
++- `PROVIDER_COMMISSION_RATES` — provider-scoped commission + tax rate
++  configuration per currency, with active/effective-date scoping.
++- `PROVIDER_COMMISSION_FEES` — audit-immutable commission/fee application
++  records: gross, commission, tax, net, currency, status, references,
++  timestamps.
++- Governed queries `PROV.COMMISSION.RATE`, `PROV.COMMISSION.FEES.APPLY`,
++  `PROV.COMMISSION.FEES.LIST`, `PROV.COMMISSION.FEES.SUMMARY`.
++- `ProviderCommissionService` with:
++  - current rate lookup,
++  - commission/fee application (`gross -> commission -> tax -> net`),
++  - provider fee history and totals.
++- Router prefix `/providers/me/commission`:
++  - `GET /rate`
++  - `POST /apply`
++  - `GET /fees`
++  - `GET /fees/summary`
++
++Commission is applied to the gross amount, tax is applied to the commission,
++and net is gross minus commission minus tax, all in the same currency per
++request. No background tasks are used in this phase — fee application is
++synchronous through the service layer.
+\ No newline at end of file
+diff --git a/applications/frontend/web/web-user/src/routeTree.gen.ts b/applications/frontend/web/web-user/src/routeTree.gen.ts
+index 9b51f6a..84348f0 100644
+--- a/applications/frontend/web/web-user/src/routeTree.gen.ts
++++ b/applications/frontend/web/web-user/src/routeTree.gen.ts
+@@ -15,6 +15,7 @@ import { Route as BookRouteImport } from './routes/book'
+ import { Route as BookingsRouteImport } from './routes/bookings'
+ import { Route as BookmarksRouteImport } from './routes/bookmarks'
+ import { Route as CalendarRouteImport } from './routes/calendar'
++import { Route as DisputesRouteImport } from './routes/disputes'
+ import { Route as FeedbackRouteImport } from './routes/feedback'
+ import { Route as HelpRouteImport } from './routes/help'
+ import { Route as HistoryRouteImport } from './routes/history'
+@@ -22,18 +23,22 @@ import { Route as InboxRouteImport } from './routes/inbox'
+ import { Route as InvoicesRouteImport } from './routes/invoices'
+ import { Route as LoginRouteImport } from './routes/login'
+ import { Route as LoyaltyRouteImport } from './routes/loyalty'
++import { Route as MaintenanceRouteImport } from './routes/maintenance'
+ import { Route as NotificationsRouteImport } from './routes/notifications'
+ import { Route as OnboardingRouteImport } from './routes/onboarding'
+ import { Route as PaymentsRouteImport } from './routes/payments'
+ import { Route as ProfileRouteImport } from './routes/profile'
+ import { Route as PromotionsRouteImport } from './routes/promotions'
++import { Route as PropertiesRouteImport } from './routes/properties'
+ import { Route as ProtectedRouteImport } from './routes/protected'
+ import { Route as ProvidersRouteImport } from './routes/providers'
++import { Route as RecurringRouteImport } from './routes/recurring'
+ import { Route as RegisterRouteImport } from './routes/register'
+ import { Route as SearchRouteImport } from './routes/search'
+ import { Route as ServicesRouteImport } from './routes/services'
+ import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
+ import { Route as WalletRouteImport } from './routes/wallet'
++import { Route as WarrantiesRouteImport } from './routes/warranties'
+ 
+ const IndexRoute = IndexRouteImport.update({
+   id: '/',
+@@ -65,6 +70,11 @@ const CalendarRoute = CalendarRouteImport.update({
+   path: '/calendar',
+   getParentRoute: () => rootRouteImport,
+ } as any)
++const DisputesRoute = DisputesRouteImport.update({
++  id: '/disputes',
++  path: '/disputes',
++  getParentRoute: () => rootRouteImport,
++} as any)
+ const FeedbackRoute = FeedbackRouteImport.update({
+   id: '/feedback',
+   path: '/feedback',
+@@ -100,6 +110,11 @@ const LoyaltyRoute = LoyaltyRouteImport.update({
+   path: '/loyalty',
+   getParentRoute: () => rootRouteImport,
+ } as any)
++const MaintenanceRoute = MaintenanceRouteImport.update({
++  id: '/maintenance',
++  path: '/maintenance',
++  getParentRoute: () => rootRouteImport,
++} as any)
+ const NotificationsRoute = NotificationsRouteImport.update({
+   id: '/notifications',
+   path: '/notifications',
+@@ -125,6 +140,11 @@ const PromotionsRoute = PromotionsRouteImport.update({
+   path: '/promotions',
+   getParentRoute: () => rootRouteImport,
+ } as any)
++const PropertiesRoute = PropertiesRouteImport.update({
++  id: '/properties',
++  path: '/properties',
++  getParentRoute: () => rootRouteImport,
++} as any)
+ const ProtectedRoute = ProtectedRouteImport.update({
+   id: '/protected',
+   path: '/protected',
+@@ -135,6 +155,11 @@ const ProvidersRoute = ProvidersRouteImport.update({
+   path: '/providers',
+   getParentRoute: () => rootRouteImport,
+ } as any)
++const RecurringRoute = RecurringRouteImport.update({
++  id: '/recurring',
++  path: '/recurring',
++  getParentRoute: () => rootRouteImport,
++} as any)
+ const RegisterRoute = RegisterRouteImport.update({
+   id: '/register',
+   path: '/register',
+@@ -160,6 +185,11 @@ const WalletRoute = WalletRouteImport.update({
+   path: '/wallet',
+   getParentRoute: () => rootRouteImport,
+ } as any)
++const WarrantiesRoute = WarrantiesRouteImport.update({
++  id: '/warranties',
++  path: '/warranties',
++  getParentRoute: () => rootRouteImport,
++} as any)
+ 
+ export interface FileRoutesByFullPath {
+   '/': typeof IndexRoute
+@@ -168,6 +198,7 @@ export interface FileRoutesByFullPath {
+   '/bookings': typeof BookingsRoute
+   '/bookmarks': typeof BookmarksRoute
+   '/calendar': typeof CalendarRoute
++  '/disputes': typeof DisputesRoute
+   '/feedback': typeof FeedbackRoute
+   '/help': typeof HelpRoute
+   '/history': typeof HistoryRoute
+@@ -175,18 +206,22 @@ export interface FileRoutesByFullPath {
+   '/invoices': typeof InvoicesRoute
+   '/login': typeof LoginRoute
+   '/loyalty': typeof LoyaltyRoute
++  '/maintenance': typeof MaintenanceRoute
+   '/notifications': typeof NotificationsRoute
+   '/onboarding': typeof OnboardingRoute
+   '/payments': typeof PaymentsRoute
+   '/profile': typeof ProfileRoute
+   '/promotions': typeof PromotionsRoute
++  '/properties': typeof PropertiesRoute
+   '/protected': typeof ProtectedRoute
+   '/providers': typeof ProvidersRoute
++  '/recurring': typeof RecurringRoute
+   '/register': typeof RegisterRoute
+   '/search': typeof SearchRoute
+   '/services': typeof ServicesRoute
+   '/verify-otp': typeof VerifyOtpRoute
+   '/wallet': typeof WalletRoute
++  '/warranties': typeof WarrantiesRoute
+ }
+ export interface FileRoutesByTo {
+   '/': typeof IndexRoute
+@@ -195,6 +230,7 @@ export interface FileRoutesByTo {
+   '/bookings': typeof BookingsRoute
+   '/bookmarks': typeof BookmarksRoute
+   '/calendar': typeof CalendarRoute
++  '/disputes': typeof DisputesRoute
+   '/feedback': typeof FeedbackRoute
+   '/help': typeof HelpRoute
+   '/history': typeof HistoryRoute
+@@ -202,18 +238,22 @@ export interface FileRoutesByTo {
+   '/invoices': typeof InvoicesRoute
+   '/login': typeof LoginRoute
+   '/loyalty': typeof LoyaltyRoute
++  '/maintenance': typeof MaintenanceRoute
+   '/notifications': typeof NotificationsRoute
+   '/onboarding': typeof OnboardingRoute
+   '/payments': typeof PaymentsRoute
+   '/profile': typeof ProfileRoute
+   '/promotions': typeof PromotionsRoute
++  '/properties': typeof PropertiesRoute
+   '/protected': typeof ProtectedRoute
+   '/providers': typeof ProvidersRoute
++  '/recurring': typeof RecurringRoute
+   '/register': typeof RegisterRoute
+   '/search': typeof SearchRoute
+   '/services': typeof ServicesRoute
+   '/verify-otp': typeof VerifyOtpRoute
+   '/wallet': typeof WalletRoute
++  '/warranties': typeof WarrantiesRoute
+ }
+ export interface FileRoutesById {
+   __root__: typeof rootRouteImport
+@@ -223,6 +263,7 @@ export interface FileRoutesById {
+   '/bookings': typeof BookingsRoute
+   '/bookmarks': typeof BookmarksRoute
+   '/calendar': typeof CalendarRoute
++  '/disputes': typeof DisputesRoute
+   '/feedback': typeof FeedbackRoute
+   '/help': typeof HelpRoute
+   '/history': typeof HistoryRoute
+@@ -230,18 +271,22 @@ export interface FileRoutesById {
+   '/invoices': typeof InvoicesRoute
+   '/login': typeof LoginRoute
+   '/loyalty': typeof LoyaltyRoute
++  '/maintenance': typeof MaintenanceRoute
+   '/notifications': typeof NotificationsRoute
+   '/onboarding': typeof OnboardingRoute
+   '/payments': typeof PaymentsRoute
+   '/profile': typeof ProfileRoute
+   '/promotions': typeof PromotionsRoute
++  '/properties': typeof PropertiesRoute
+   '/protected': typeof ProtectedRoute
+   '/providers': typeof ProvidersRoute
++  '/recurring': typeof RecurringRoute
+   '/register': typeof RegisterRoute
+   '/search': typeof SearchRoute
+   '/services': typeof ServicesRoute
+   '/verify-otp': typeof VerifyOtpRoute
+   '/wallet': typeof WalletRoute
++  '/warranties': typeof WarrantiesRoute
+ }
+ export interface FileRouteTypes {
+   fileRoutesByFullPath: FileRoutesByFullPath
+@@ -252,6 +297,7 @@ export interface FileRouteTypes {
+     | '/bookings'
+     | '/bookmarks'
+     | '/calendar'
++    | '/disputes'
+     | '/feedback'
+     | '/help'
+     | '/history'
+@@ -259,18 +305,22 @@ export interface FileRouteTypes {
+     | '/invoices'
+     | '/login'
+     | '/loyalty'
++    | '/maintenance'
+     | '/notifications'
+     | '/onboarding'
+     | '/payments'
+     | '/profile'
+     | '/promotions'
++    | '/properties'
+     | '/protected'
+     | '/providers'
++    | '/recurring'
+     | '/register'
+     | '/search'
+     | '/services'
+     | '/verify-otp'
+     | '/wallet'
++    | '/warranties'
+   fileRoutesByTo: FileRoutesByTo
+   to:
+     | '/'
+@@ -279,6 +329,7 @@ export interface FileRouteTypes {
+     | '/bookings'
+     | '/bookmarks'
+     | '/calendar'
++    | '/disputes'
+     | '/feedback'
+     | '/help'
+     | '/history'
+@@ -286,18 +337,22 @@ export interface FileRouteTypes {
+     | '/invoices'
+     | '/login'
+     | '/loyalty'
++    | '/maintenance'
+     | '/notifications'
+     | '/onboarding'
+     | '/payments'
+     | '/profile'
+     | '/promotions'
++    | '/properties'
+     | '/protected'
+     | '/providers'
++    | '/recurring'
+     | '/register'
+     | '/search'
+     | '/services'
+     | '/verify-otp'
+     | '/wallet'
++    | '/warranties'
+   id:
+     | '__root__'
+     | '/'
+@@ -306,6 +361,7 @@ export interface FileRouteTypes {
+     | '/bookings'
+     | '/bookmarks'
+     | '/calendar'
++    | '/disputes'
+     | '/feedback'
+     | '/help'
+     | '/history'
+@@ -313,18 +369,22 @@ export interface FileRouteTypes {
+     | '/invoices'
+     | '/login'
+     | '/loyalty'
++    | '/maintenance'
+     | '/notifications'
+     | '/onboarding'
+     | '/payments'
+     | '/profile'
+     | '/promotions'
++    | '/properties'
+     | '/protected'
+     | '/providers'
++    | '/recurring'
+     | '/register'
+     | '/search'
+     | '/services'
+     | '/verify-otp'
+     | '/wallet'
++    | '/warranties'
+   fileRoutesById: FileRoutesById
+ }
+ export interface RootRouteChildren {
+@@ -334,6 +394,7 @@ export interface RootRouteChildren {
+   BookingsRoute: typeof BookingsRoute
+   BookmarksRoute: typeof BookmarksRoute
+   CalendarRoute: typeof CalendarRoute
++  DisputesRoute: typeof DisputesRoute
+   FeedbackRoute: typeof FeedbackRoute
+   HelpRoute: typeof HelpRoute
+   HistoryRoute: typeof HistoryRoute
+@@ -341,18 +402,22 @@ export interface RootRouteChildren {
+   InvoicesRoute: typeof InvoicesRoute
+   LoginRoute: typeof LoginRoute
+   LoyaltyRoute: typeof LoyaltyRoute
++  MaintenanceRoute: typeof MaintenanceRoute
+   NotificationsRoute: typeof NotificationsRoute
+   OnboardingRoute: typeof OnboardingRoute
+   PaymentsRoute: typeof PaymentsRoute
+   ProfileRoute: typeof ProfileRoute
+   PromotionsRoute: typeof PromotionsRoute
++  PropertiesRoute: typeof PropertiesRoute
+   ProtectedRoute: typeof ProtectedRoute
+   ProvidersRoute: typeof ProvidersRoute
++  RecurringRoute: typeof RecurringRoute
+   RegisterRoute: typeof RegisterRoute
+   SearchRoute: typeof SearchRoute
+   ServicesRoute: typeof ServicesRoute
+   VerifyOtpRoute: typeof VerifyOtpRoute
+   WalletRoute: typeof WalletRoute
++  WarrantiesRoute: typeof WarrantiesRoute
+ }
+ 
+ declare module '@tanstack/react-router' {
+@@ -399,6 +464,13 @@ declare module '@tanstack/react-router' {
+       preLoaderRoute: typeof CalendarRouteImport
+       parentRoute: typeof rootRouteImport
+     }
++    '/disputes': {
++      id: '/disputes'
++      path: '/disputes'
++      fullPath: '/disputes'
++      preLoaderRoute: typeof DisputesRouteImport
++      parentRoute: typeof rootRouteImport
++    }
+     '/feedback': {
+       id: '/feedback'
+       path: '/feedback'
+@@ -448,6 +520,13 @@ declare module '@tanstack/react-router' {
+       preLoaderRoute: typeof LoyaltyRouteImport
+       parentRoute: typeof rootRouteImport
+     }
++    '/maintenance': {
++      id: '/maintenance'
++      path: '/maintenance'
++      fullPath: '/maintenance'
++      preLoaderRoute: typeof MaintenanceRouteImport
++      parentRoute: typeof rootRouteImport
++    }
+     '/notifications': {
+       id: '/notifications'
+       path: '/notifications'
+@@ -483,6 +562,13 @@ declare module '@tanstack/react-router' {
+       preLoaderRoute: typeof PromotionsRouteImport
+       parentRoute: typeof rootRouteImport
+     }
++    '/properties': {
++      id: '/properties'
++      path: '/properties'
++      fullPath: '/properties'
++      preLoaderRoute: typeof PropertiesRouteImport
++      parentRoute: typeof rootRouteImport
++    }
+     '/protected': {
+       id: '/protected'
+       path: '/protected'
+@@ -497,6 +583,13 @@ declare module '@tanstack/react-router' {
+       preLoaderRoute: typeof ProvidersRouteImport
+       parentRoute: typeof rootRouteImport
+     }
++    '/recurring': {
++      id: '/recurring'
++      path: '/recurring'
++      fullPath: '/recurring'
++      preLoaderRoute: typeof RecurringRouteImport
++      parentRoute: typeof rootRouteImport
++    }
+     '/register': {
+       id: '/register'
+       path: '/register'
+@@ -532,6 +625,13 @@ declare module '@tanstack/react-router' {
+       preLoaderRoute: typeof WalletRouteImport
+       parentRoute: typeof rootRouteImport
+     }
++    '/warranties': {
++      id: '/warranties'
++      path: '/warranties'
++      fullPath: '/warranties'
++      preLoaderRoute: typeof WarrantiesRouteImport
++      parentRoute: typeof rootRouteImport
++    }
+   }
+ }
+ 
+@@ -542,6 +642,7 @@ const rootRouteChildren: RootRouteChildren = {
+   BookingsRoute: BookingsRoute,
+   BookmarksRoute: BookmarksRoute,
+   CalendarRoute: CalendarRoute,
++  DisputesRoute: DisputesRoute,
+   FeedbackRoute: FeedbackRoute,
+   HelpRoute: HelpRoute,
+   HistoryRoute: HistoryRoute,
+@@ -549,18 +650,22 @@ const rootRouteChildren: RootRouteChildren = {
+   InvoicesRoute: InvoicesRoute,
+   LoginRoute: LoginRoute,
+   LoyaltyRoute: LoyaltyRoute,
++  MaintenanceRoute: MaintenanceRoute,
+   NotificationsRoute: NotificationsRoute,
+   OnboardingRoute: OnboardingRoute,
+   PaymentsRoute: PaymentsRoute,
+   ProfileRoute: ProfileRoute,
+   PromotionsRoute: PromotionsRoute,
++  PropertiesRoute: PropertiesRoute,
+   ProtectedRoute: ProtectedRoute,
+   ProvidersRoute: ProvidersRoute,
++  RecurringRoute: RecurringRoute,
+   RegisterRoute: RegisterRoute,
+   SearchRoute: SearchRoute,
+   ServicesRoute: ServicesRoute,
+   VerifyOtpRoute: VerifyOtpRoute,
+   WalletRoute: WalletRoute,
++  WarrantiesRoute: WarrantiesRoute,
+ }
+ export const routeTree = rootRouteImport
+   ._addFileChildren(rootRouteChildren)
