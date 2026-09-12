@@ -253,6 +253,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/bookings/timeline_list.sql
+  CUS.BOOKING.SET_SCOPE:
+    description: Apply an approved SCOPE change request's notes to the booking.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/set_scope_notes.sql
   CUS.BOOKING.UPDATE_AMOUNT:
     description: CUS.BOOKING.UPDATE_AMOUNT registered query.
     operation: update
