@@ -2263,6 +2263,27 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/commission/fees_list.sql
+  PROV.INVOICES.LIST:
+    description: Provider invoices list, newest period first (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/invoices/list.sql
+  PROV.INVOICES.GET:
+    description: Single provider invoice by id (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/invoices/get.sql
+  PROV.INVOICES.SUMMARY:
+    description: Provider invoice totals and overdue count (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/invoices/summary.sql
   PROV.COMMISSION.FEES.SUMMARY:
     description: Totals for a provider's commission/fee events (Provider Phase 31).
     operation: read

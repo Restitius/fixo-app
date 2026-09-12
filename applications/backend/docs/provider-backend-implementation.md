@@ -61,7 +61,7 @@
 | PRV-29 | 29 | Provider Wallet | ✅ done (tag `provider-phase29-v1`) |
 | PRV-30 | 30 | Payout Management — methods + withdrawals | ✅ done (tag `provider-phase30-v1`) |
 | PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
-| PRV-32 | 32 | Invoices & Statements | ⏳ |
+| PRV-32 | 32 | Invoices & Statements | ✅ |
 | PRV-33 | 33 | Ratings & Reviews | ⏳ |
 | PRV-34 | 34 | Provider Performance KPIs | ⏳ |
 | PRV-35 | 35 | Provider Ranking & Reputation | ⏳ |
@@ -117,9 +117,29 @@ and net is gross minus commission minus tax, all in the same currency per
 request. No background tasks are used in this phase — fee application is
 synchronous through the service layer.
 
-## Phase 32 — Provider Notifications
+## Phase 32 — Invoices & Statements
 
-Phase 32 adds provider-facing notification read state: history, unread count,
+Phase 32 adds provider-facing invoice management.
+
+- `PROVIDER_INVOICES` — provider-owned invoice rows with invoice_number,
+  period_start/end, gross/commission/tax/net amounts, currency, status
+  (issued/paid/overdue), issued_at, due_at, paid_at, timestamps.
+- Governed queries `PROV.INVOICES.LIST`, `PROV.INVOICES.GET`,
+  `PROV.INVOICES.SUMMARY`.
+- `ProviderInvoicesService` with:
+  - list (paginated, newest period first),
+  - single invoice fetch with ownership check,
+  - totals + overdue count summary.
+- Router prefix `/providers/me/invoices`:
+  - `GET /` — list invoices
+  - `GET /summary` — totals + overdue count
+  - `GET /{invoice_id}` — single invoice
+
+No generation or delivery in this phase — listing and reading only.
+
+## Phase 37 — Provider Notifications
+
+Phase 37 adds provider-facing notification read state: history, unread count,
 and idempotent mark-read.
 
 - `PROVIDER_NOTIFICATIONS` — provider-owned notification rows with channel,
@@ -137,4 +157,4 @@ and idempotent mark-read.
 
 No background delivery workers or queue infrastructure in this phase;
 notifications are managed synchronously through the service layer. Delivery
-of `channel`-based notifications is out of scope for Phase 32.
+of `channel`-based notifications is out of scope for Phase 37.
