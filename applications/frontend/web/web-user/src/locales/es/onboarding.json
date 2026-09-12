@@ -1,0 +1,50 @@
+{
+  "loading": "Cargando…",
+  "title": "Bienvenido a FIXO",
+  "subtitle": "Unos pasos rápidos para preparar tu cuenta.",
+  "progress": "{{done}} de {{total}} pasos completados",
+  "required": "Obligatorio",
+  "optional": "Opcional",
+  "completed": "Completado",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "Verificar contacto",
+      "description": "Confirma tu teléfono o correo electrónico con el código que enviamos.",
+      "verifiedNote": "Tus datos de contacto ya están verificados.",
+      "unverifiedNote": "No pudimos confirmar tus datos de contacto automáticamente — verifica tu correo o teléfono desde tu perfil y luego vuelve aquí.",
+      "markDone": "Ya verifiqué mis datos de contacto"
+    },
+    "SET_LOCATION": {
+      "title": "Configura tu ubicación",
+      "description": "Dinos dónde vives para encontrar proveedores cercanos.",
+      "labelLabel": "Etiqueta",
+      "recipientNameLabel": "Nombre del destinatario",
+      "phoneLabel": "Teléfono",
+      "cityLabel": "Ciudad",
+      "streetLabel": "Dirección",
+      "regionLabel": "Región (opcional)",
+      "save": "Guardar ubicación",
+      "saving": "Guardando…",
+      "fillRequired": "Completa destinatario, teléfono, calle y ciudad.",
+      "saved": "Ubicación guardada"
+    },
+    "ADD_PROPERTY": {
+      "title": "Agregar una propiedad",
+      "description": "Registra el hogar o propiedad donde se realizarán los servicios.",
+      "nameLabel": "Nombre de la propiedad",
+      "namePlaceholder": "ej. Casa, Oficina",
+      "typeLabel": "Tipo de propiedad",
+      "types": { "HOUSE": "Casa", "APARTMENT": "Apartamento", "CONDO": "Condominio", "OFFICE": "Oficina", "OTHER": "Otro" },
+      "bedroomsLabel": "Habitaciones",
+      "bathroomsLabel": "Baños",
+      "save": "Agregar propiedad",
+      "saving": "Agregando…",
+      "skip": "Omitir por ahora",
+      "fillRequired": "Ingresa un nombre de propiedad.",
+      "saved": "Propiedad agregada"
+    }
+  },
+  "continueCta": "Continuar al Panel",
+  "allDoneTitle": "¡Todo listo!",
+  "allDoneSubtitle": "Tu cuenta está lista. Busquemos un excelente proveedor para ti."
+}

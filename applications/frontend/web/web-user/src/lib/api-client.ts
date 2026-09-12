@@ -680,7 +680,42 @@ export const bookingApi = {
     apiClient
       .post<{ dispute_id: string }>("/disputes", { booking_id: bookingId, category, description })
       .then((r) => r.data),
+
+  // ---- Change requests (Module 24) — provider proposes, customer decides ----
+  listChangeRequests: (bookingId: string) =>
+    apiClient.get<ChangeRequestRow[]>(`/bookings/${bookingId}/change-requests`).then((r) => r.data),
+  proposeChangeRequest: (
+    bookingId: string,
+    payload: { change_type: "SCOPE" | "TIME" | "PRICE"; proposed_value: string; reason?: string },
+  ) =>
+    apiClient
+      .post<ChangeRequestRow>(`/bookings/${bookingId}/change-requests`, payload)
+      .then((r) => r.data),
+  decideChangeRequest: (bookingId: string, changeId: string, decision: "APPROVED" | "DECLINED") =>
+    apiClient
+      .post<ChangeRequestRow>(`/bookings/${bookingId}/change-requests/${changeId}/decide`, { decision })
+      .then((r) => r.data),
 };
+
+export interface ChangeRequestRow {
+  change_id: string;
+  booking_id: string;
+  requested_by: "CUSTOMER" | "PROVIDER";
+  change_type: "SCOPE" | "TIME" | "PRICE";
+  current_value: string;
+  proposed_value: string;
+  reason?: string | null;
+  status: "PROPOSED" | "APPROVED" | "DECLINED" | "WITHDRAWN";
+  decided_at?: string | null;
+  created_at: string;
+  new_work?: string | null;
+  additional_labour?: number | null;
+  additional_materials?: number | null;
+  additional_time_minutes?: number | null;
+  additional_price?: number | null;
+  currency?: string | null;
+  supporting_photos?: string[] | null;
+}
 
 export interface BookingMessage {
   message_id: string;
@@ -709,6 +744,218 @@ export const favoritesApi = {
     apiClient
       .post<{ is_favorite: boolean; favorites_count: number }>(`/favorites/${providerId}/toggle`)
       .then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Onboarding (Module 03)
+// ---------------------------------------------------------------------------
+
+export interface OnboardingStep {
+  step_id: number;
+  code: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  is_required: boolean;
+}
+
+export interface OnboardingStatusRow extends OnboardingStep {
+  completed: boolean;
+  completed_at?: string | null;
+}
+
+export interface OnboardingStatus {
+  steps: OnboardingStatusRow[];
+  completed: boolean;
+  progress: string;
+}
+
+export const onboardingApi = {
+  steps: () => apiClient.get<OnboardingStep[]>("/onboarding/steps").then((r) => r.data),
+  status: () => apiClient.get<OnboardingStatus>("/onboarding/status").then((r) => r.data),
+  completeStep: (stepCode: string) =>
+    apiClient
+      .post<{ step_code: string } & OnboardingStatus>(`/onboarding/steps/${stepCode}/complete`)
+      .then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Properties (Module 06) + generic Assets (Module 32, simplified — see plan)
+// ---------------------------------------------------------------------------
+
+export interface PropertyRoom {
+  room_id: string;
+  room_type: string;
+  name: string;
+  notes?: string | null;
+}
+
+export interface PropertyRow {
+  property_id: string;
+  name: string;
+  property_type: string;
+  address_id?: string | null;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+  year_built?: number | null;
+  notes?: string | null;
+  rooms?: PropertyRoom[];
+  created_at: string;
+}
+
+export const propertiesApi = {
+  list: () => apiClient.get<PropertyRow[]>("/properties").then((r) => r.data),
+  get: (propertyId: string) => apiClient.get<PropertyRow>(`/properties/${propertyId}`).then((r) => r.data),
+  create: (payload: {
+    name: string;
+    property_type?: string;
+    address_id?: string | null;
+    bedrooms?: number | null;
+    bathrooms?: number | null;
+    year_built?: number | null;
+    notes?: string | null;
+  }) => apiClient.post<PropertyRow>("/properties", payload).then((r) => r.data),
+  update: (propertyId: string, payload: Partial<Omit<PropertyRow, "property_id" | "created_at" | "rooms">>) =>
+    apiClient.patch<PropertyRow>(`/properties/${propertyId}`, payload).then((r) => r.data),
+  remove: (propertyId: string) => apiClient.delete(`/properties/${propertyId}`).then((r) => r.data),
+  addRoom: (propertyId: string, payload: { room_type: string; name: string; notes?: string }) =>
+    apiClient.post<PropertyRoom>(`/properties/${propertyId}/rooms`, payload).then((r) => r.data),
+  removeRoom: (roomId: string) => apiClient.delete(`/properties/rooms/${roomId}`).then((r) => r.data),
+};
+
+export interface AssetRow {
+  asset_id: number;
+  name: string;
+  asset_type: string;
+  status: string;
+  purchase_value: number;
+  current_value: number;
+  currency: string;
+  purchased_at?: string | null;
+  notes?: string | null;
+}
+
+// Backed by the generic /assets domain (no property linkage yet — see plan's
+// disclosed caveat). Sell/revalue endpoints exist but are intentionally not
+// exposed here; they're finance concepts that don't fit a home appliance.
+export const assetsApi = {
+  list: () => apiClient.get<AssetRow[]>("/assets").then((r) => r.data),
+  get: (assetId: number | string) => apiClient.get<AssetRow>(`/assets/${assetId}`).then((r) => r.data),
+  create: (payload: { name: string; asset_type?: string; purchase_value?: number; currency?: string; purchased_at?: string | null; notes?: string | null }) =>
+    apiClient.post<AssetRow>("/assets", payload).then((r) => r.data),
+  update: (assetId: number | string, payload: Partial<{ name: string; notes: string }>) =>
+    apiClient.patch<AssetRow>(`/assets/${assetId}`, payload).then((r) => r.data),
+  remove: (assetId: number | string) => apiClient.delete(`/assets/${assetId}`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Maintenance (Module 33)
+// ---------------------------------------------------------------------------
+
+export interface MaintenancePlanRow {
+  plan_id: string;
+  asset_id: string;
+  service_id: string;
+  interval_days: number;
+  next_due_date?: string | null;
+  notes?: string | null;
+  status: string;
+  created_at: string;
+}
+
+export const maintenanceApi = {
+  listPlans: (page = 1, limit = 20) =>
+    apiClient.get<MaintenancePlanRow[]>(`/maintenance/plans${qs({ page, limit })}`).then((r) => r.data),
+  getPlan: (planId: string) => apiClient.get<MaintenancePlanRow>(`/maintenance/plans/${planId}`).then((r) => r.data),
+  createPlan: (payload: { asset_id: string; service_id: string; interval_days?: number; next_due_date?: string | null; notes?: string }) =>
+    apiClient.post<MaintenancePlanRow>("/maintenance/plans", payload).then((r) => r.data),
+  markDone: (planId: string) =>
+    apiClient.post<MaintenancePlanRow>(`/maintenance/plans/${planId}/done`).then((r) => r.data),
+  cancelPlan: (planId: string) => apiClient.delete(`/maintenance/plans/${planId}`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Warranties (Module 29)
+// ---------------------------------------------------------------------------
+
+export interface WarrantyRow {
+  warranty_id: string;
+  booking_id?: string;
+  service_name?: string;
+  provider_name?: string;
+  starts_at?: string;
+  expires_at?: string;
+  status: string;
+  claim_status?: string | null;
+}
+
+export const warrantiesApi = {
+  list: (page = 1, limit = 10) =>
+    apiClient.get<WarrantyRow[]>(`/warranties${qs({ page, limit })}`).then((r) => r.data),
+  get: (warrantyId: string) => apiClient.get<WarrantyRow>(`/warranties/${warrantyId}`).then((r) => r.data),
+  claim: (warrantyId: string, description: string) =>
+    apiClient.post<WarrantyRow>(`/warranties/${warrantyId}/claim`, { description }).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Recurring Services (Module 31)
+// ---------------------------------------------------------------------------
+
+export interface RecurringRow {
+  recurring_id: string;
+  service_id: string;
+  service_name?: string;
+  address_id?: string | null;
+  frequency: "WEEKLY" | "BIWEEKLY" | "MONTHLY" | "QUARTERLY";
+  next_run_date?: string | null;
+  time_window?: string | null;
+  instructions?: string | null;
+  status: "ACTIVE" | "PAUSED" | "CANCELLED";
+  created_at: string;
+}
+
+export const recurringApi = {
+  list: (page = 1, limit = 10) =>
+    apiClient.get<RecurringRow[]>(`/recurring${qs({ page, limit })}`).then((r) => r.data),
+  get: (recurringId: string) => apiClient.get<RecurringRow>(`/recurring/${recurringId}`).then((r) => r.data),
+  create: (payload: { service_id: string; address_id?: string | null; frequency: RecurringRow["frequency"]; next_run_date?: string | null; time_window?: string; instructions?: string }) =>
+    apiClient.post<RecurringRow>("/recurring", payload).then((r) => r.data),
+  pause: (recurringId: string) => apiClient.post<RecurringRow>(`/recurring/${recurringId}/pause`).then((r) => r.data),
+  resume: (recurringId: string) => apiClient.post<RecurringRow>(`/recurring/${recurringId}/resume`).then((r) => r.data),
+  cancel: (recurringId: string) => apiClient.delete(`/recurring/${recurringId}`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Disputes (Module 39) — bookingApi.openDispute() creates one; the rest of
+// the lifecycle lives here.
+// ---------------------------------------------------------------------------
+
+export interface DisputeRow {
+  dispute_id: string;
+  booking_id: string;
+  category: string;
+  description: string;
+  status: string;
+  created_at: string;
+}
+
+export interface DisputeEvidenceRow {
+  evidence_id: string;
+  kind: string;
+  url: string;
+  note?: string | null;
+  created_at: string;
+}
+
+export const disputesApi = {
+  list: (limit = 20, offset = 0) =>
+    apiClient.get<DisputeRow[]>(`/disputes${qs({ limit, offset })}`).then((r) => r.data),
+  get: (disputeId: string) => apiClient.get<DisputeRow>(`/disputes/${disputeId}`).then((r) => r.data),
+  addEvidence: (disputeId: string, payload: { kind: string; url: string; note?: string }) =>
+    apiClient.post<DisputeEvidenceRow>(`/disputes/${disputeId}/evidence`, payload).then((r) => r.data),
+  listEvidence: (disputeId: string) =>
+    apiClient.get<DisputeEvidenceRow[]>(`/disputes/${disputeId}/evidence`).then((r) => r.data),
+  withdraw: (disputeId: string) => apiClient.post<DisputeRow>(`/disputes/${disputeId}/withdraw`).then((r) => r.data),
 };
 
 export const apiClientInstance = apiClient;
