@@ -1,0 +1,42 @@
+[
+  {
+    "commit": "316a77413e40f75f4edb9d23a82b8f3696a48b61",
+    "message": "chore(repo): restore repository governance and infrastructure",
+    "files": 39
+  },
+  {
+    "commit": "029d2881dc3adf38ef3a9e2f2b73628a179039ee",
+    "message": "feat(backend): restore backend implementation and migrations",
+    "files": 1752
+  },
+  {
+    "commit": "51d3fd13c0b30ffa65f2d7241dece5a452067a50",
+    "message": "test(backend): restore tests and architecture documentation",
+    "files": 46
+  },
+  {
+    "commit": "439758de8477f7428a689cdead8827a487df00cc",
+    "message": "feat(web-user): restore customer web application",
+    "files": 291
+  },
+  {
+    "commit": "d78d36074f5511daaca9630d0d7a47b8bf5239b0",
+    "message": "feat(web-provider): restore provider web application",
+    "files": 120
+  },
+  {
+    "commit": "74fc17cd1473e76645931f52fbb70f2c579b7424",
+    "message": "feat(user-app): restore customer mobile application",
+    "files": 160
+  },
+  {
+    "commit": "1e45118d1d08357d9a06a83e9e75821990b65563",
+    "message": "feat(provider-app): restore provider mobile application",
+    "files": 86
+  },
+  {
+    "commit": "3f52e670a01baf6a467932b2e7e6356e01f4783b",
+    "message": "docs(monorepo): restore shared application documentation",
+    "files": 1
+  }
+]
