@@ -1,0 +1,121 @@
+{
+  "loading": "लोड हो रहा है…",
+  "page": {
+    "title": "संपत्तियाँ",
+    "subtitle": "अपनी संपत्तियों, कमरों और घरेलू सामान का प्रबंधन करें"
+  },
+  "metrics": {
+    "totalProperties": "कुल संपत्तियाँ",
+    "onFile": "दर्ज की गई",
+    "totalRooms": "कुल कमरे",
+    "acrossProperties": "सभी संपत्तियों में",
+    "totalAssets": "कुल संपत्ति-सामान",
+    "homeItems": "ट्रैक किए गए घरेलू सामान"
+  },
+  "tabs": {
+    "properties": "संपत्तियाँ",
+    "assets": "संपत्ति का सामान"
+  },
+  "properties": {
+    "add": "संपत्ति जोड़ें",
+    "edit": "संपत्ति संपादित करें",
+    "delete": "संपत्ति हटाएं",
+    "addTitle": "संपत्ति जोड़ें",
+    "editTitle": "संपत्ति संपादित करें",
+    "nameLabel": "संपत्ति का नाम",
+    "namePlaceholder": "जैसे: घर, समुद्र तट वाला घर",
+    "typeLabel": "संपत्ति का प्रकार",
+    "yearBuiltLabel": "निर्माण वर्ष",
+    "yearBuiltPlaceholder": "जैसे: 2015",
+    "bedroomsLabel": "बेडरूम",
+    "bathroomsLabel": "बाथरूम",
+    "notesLabel": "टिप्पणियाँ",
+    "notesPlaceholder": "इस संपत्ति के बारे में कोई भी उपयोगी जानकारी",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "saving": "सहेजा जा रहा है…",
+    "fillRequired": "पहले संपत्ति को एक नाम दें।",
+    "created": "संपत्ति जोड़ी गई",
+    "updated": "संपत्ति अपडेट की गई",
+    "deleted": "संपत्ति हटाई गई",
+    "deleteConfirmTitle": "क्या इस संपत्ति को हटाना है?",
+    "deleteConfirmDescription": "इससे \"{{name}}\" और उसके सभी कमरे हट जाएंगे। इसे पूर्ववत नहीं किया जा सकता।",
+    "emptyTitle": "अभी तक कोई संपत्ति नहीं",
+    "emptyDescription": "अपनी पहली संपत्ति जोड़कर उसके कमरों और विवरण को ट्रैक करना शुरू करें।",
+    "bedroomsCount_one": "{{count}} बेडरूम",
+    "bedroomsCount_other": "{{count}} बेडरूम",
+    "bathroomsCount_one": "{{count}} बाथरूम",
+    "bathroomsCount_other": "{{count}} बाथरूम",
+    "roomCount_one": "{{count}} कमरा",
+    "roomCount_other": "{{count}} कमरे",
+    "types": {
+      "HOUSE": "घर",
+      "APARTMENT": "अपार्टमेंट",
+      "CONDO": "कोंडो",
+      "OFFICE": "कार्यालय",
+      "OTHER": "अन्य"
+    }
+  },
+  "rooms": {
+    "title": "कमरे",
+    "emptyDescription": "अभी तक कोई कमरा नहीं जोड़ा गया। नीचे एक जोड़ें।",
+    "nameLabel": "कमरे का नाम",
+    "namePlaceholder": "जैसे: मुख्य बेडरूम",
+    "typeLabel": "कमरे का प्रकार",
+    "add": "जोड़ें",
+    "adding": "जोड़ा जा रहा है…",
+    "remove": "कमरा हटाएं",
+    "fillRequired": "पहले कमरे को एक नाम दें।",
+    "added": "कमरा जोड़ा गया",
+    "removed": "कमरा हटाया गया",
+    "types": {
+      "BEDROOM": "बेडरूम",
+      "BATHROOM": "बाथरूम",
+      "KITCHEN": "रसोई",
+      "LIVING_ROOM": "लिविंग रूम",
+      "OTHER": "अन्य"
+    }
+  },
+  "assets": {
+    "add": "सामान जोड़ें",
+    "edit": "सामान संपादित करें",
+    "delete": "सामान हटाएं",
+    "addTitle": "घरेलू सामान जोड़ें",
+    "editTitle": "सामान संपादित करें",
+    "notLinkedNote": "सामान अभी तक किसी विशेष संपत्ति से जुड़ा नहीं है — यह आपकी सभी संपत्तियों में मौजूद घरेलू सामान की एक सामान्य सूची है।",
+    "nameLabel": "सामान का नाम",
+    "namePlaceholder": "जैसे: वॉटर हीटर, एसी यूनिट",
+    "typeLabel": "सामान का प्रकार",
+    "purchaseValueLabel": "खरीद मूल्य",
+    "currencyLabel": "मुद्रा",
+    "purchasedAtLabel": "खरीद की तारीख",
+    "notesLabel": "टिप्पणियाँ",
+    "notesPlaceholder": "मॉडल, सीरियल नंबर, वारंटी जानकारी, आदि।",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "saving": "सहेजा जा रहा है…",
+    "fillRequired": "पहले सामान को एक नाम दें।",
+    "created": "सामान जोड़ा गया",
+    "updated": "सामान अपडेट किया गया",
+    "deleted": "सामान हटाया गया",
+    "editLimitedNote": "सामान जोड़ने के बाद केवल नाम और टिप्पणियाँ ही संपादित की जा सकती हैं।",
+    "deleteConfirmTitle": "क्या इस सामान को हटाना है?",
+    "deleteConfirmDescription": "इससे \"{{name}}\" आपके सामान से हट जाएगा। इसे पूर्ववत नहीं किया जा सकता।",
+    "emptyTitle": "अभी तक कोई सामान नहीं",
+    "emptyDescription": "अपने उपकरण या सामान जोड़ें ताकि आप उन्हें ट्रैक कर सकें।",
+    "columns": {
+      "name": "नाम",
+      "type": "प्रकार",
+      "purchaseValue": "खरीद मूल्य",
+      "purchasedAt": "खरीद की तारीख",
+      "notes": "टिप्पणियाँ",
+      "actions": "कार्रवाइयाँ"
+    },
+    "types": {
+      "REAL_ESTATE": "अचल संपत्ति",
+      "VEHICLE": "वाहन",
+      "EQUIPMENT": "उपकरण",
+      "OTHER": "अन्य"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "loading": "Inapakia…",
+  "page": {
+    "title": "Mali",
+    "subtitle": "Simamia mali zako, vyumba, na vifaa vya nyumbani"
+  },
+  "metrics": {
+    "totalProperties": "Jumla ya Mali",
+    "onFile": "Zilizosajiliwa",
+    "totalRooms": "Jumla ya Vyumba",
+    "acrossProperties": "Katika mali zote",
+    "totalAssets": "Jumla ya Vifaa",
+    "homeItems": "Vifaa vya nyumbani vinavyofuatiliwa"
+  },
+  "tabs": {
+    "properties": "Mali",
+    "assets": "Vifaa vya Mali"
+  },
+  "properties": {
+    "add": "Ongeza Mali",
+    "edit": "Hariri mali",
+    "delete": "Futa mali",
+    "addTitle": "Ongeza Mali",
+    "editTitle": "Hariri Mali",
+    "nameLabel": "Jina la mali",
+    "namePlaceholder": "mfano: Nyumbani, Nyumba ya Pwani",
+    "typeLabel": "Aina ya mali",
+    "yearBuiltLabel": "Mwaka ilijengwa",
+    "yearBuiltPlaceholder": "mfano: 2015",
+    "bedroomsLabel": "Vyumba vya kulala",
+    "bathroomsLabel": "Vyoo",
+    "notesLabel": "Maelezo",
+    "notesPlaceholder": "Chochote muhimu kuhusu mali hii",
+    "cancel": "Ghairi",
+    "save": "Hifadhi",
+    "saving": "Inahifadhi…",
+    "fillRequired": "Ingiza jina la mali kwanza.",
+    "created": "Mali imeongezwa",
+    "updated": "Mali imesasishwa",
+    "deleted": "Mali imefutwa",
+    "deleteConfirmTitle": "Ufute mali hii?",
+    "deleteConfirmDescription": "Hatua hii itaondoa \"{{name}}\" pamoja na vyumba vyake vyote. Haiwezi kutenduliwa.",
+    "emptyTitle": "Hakuna mali bado",
+    "emptyDescription": "Ongeza mali yako ya kwanza ili uanze kufuatilia vyumba na maelezo yake.",
+    "bedroomsCount_one": "chumba {{count}} cha kulala",
+    "bedroomsCount_other": "vyumba {{count}} vya kulala",
+    "bathroomsCount_one": "choo {{count}}",
+    "bathroomsCount_other": "vyoo {{count}}",
+    "roomCount_one": "chumba {{count}}",
+    "roomCount_other": "vyumba {{count}}",
+    "types": {
+      "HOUSE": "Nyumba",
+      "APARTMENT": "Ghorofa",
+      "CONDO": "Kondomiu",
+      "OFFICE": "Ofisi",
+      "OTHER": "Nyingine"
+    }
+  },
+  "rooms": {
+    "title": "Vyumba",
+    "emptyDescription": "Hakuna vyumba vilivyoongezwa bado. Ongeza kimoja hapa chini.",
+    "nameLabel": "Jina la chumba",
+    "namePlaceholder": "mfano: Chumba Kikuu cha Kulala",
+    "typeLabel": "Aina ya chumba",
+    "add": "Ongeza",
+    "adding": "Inaongeza…",
+    "remove": "Ondoa chumba",
+    "fillRequired": "Ingiza jina la chumba kwanza.",
+    "added": "Chumba kimeongezwa",
+    "removed": "Chumba kimeondolewa",
+    "types": {
+      "BEDROOM": "Chumba cha Kulala",
+      "BATHROOM": "Choo",
+      "KITCHEN": "Jiko",
+      "LIVING_ROOM": "Sebule",
+      "OTHER": "Nyingine"
+    }
+  },
+  "assets": {
+    "add": "Ongeza Kifaa",
+    "edit": "Hariri kifaa",
+    "delete": "Futa kifaa",
+    "addTitle": "Ongeza Kifaa cha Nyumbani",
+    "editTitle": "Hariri Kifaa",
+    "notLinkedNote": "Vifaa bado havijaunganishwa na mali maalum — hii ni orodha ya jumla ya vifaa vya nyumbani unavyomiliki katika mali zako zote.",
+    "nameLabel": "Jina la kifaa",
+    "namePlaceholder": "mfano: Hita ya Maji, Kiyoyozi",
+    "typeLabel": "Aina ya kifaa",
+    "purchaseValueLabel": "Thamani ya ununuzi",
+    "currencyLabel": "Sarafu",
+    "purchasedAtLabel": "Tarehe ya ununuzi",
+    "notesLabel": "Maelezo",
+    "notesPlaceholder": "Modeli, namba ya serial, taarifa za dhamana, n.k.",
+    "cancel": "Ghairi",
+    "save": "Hifadhi",
+    "saving": "Inahifadhi…",
+    "fillRequired": "Ingiza jina la kifaa kwanza.",
+    "created": "Kifaa kimeongezwa",
+    "updated": "Kifaa kimesasishwa",
+    "deleted": "Kifaa kimefutwa",
+    "editLimitedNote": "Jina na maelezo pekee ndiyo yanayoweza kuhaririwa baada ya kifaa kuongezwa.",
+    "deleteConfirmTitle": "Ufute kifaa hiki?",
+    "deleteConfirmDescription": "Hatua hii itaondoa \"{{name}}\" kutoka kwenye vifaa vyako. Haiwezi kutenduliwa.",
+    "emptyTitle": "Hakuna vifaa bado",
+    "emptyDescription": "Ongeza vifaa au vyombo unavyomiliki ili uweze kuvifuatilia.",
+    "columns": {
+      "name": "Jina",
+      "type": "Aina",
+      "purchaseValue": "Thamani ya Ununuzi",
+      "purchasedAt": "Tarehe ya Ununuzi",
+      "notes": "Maelezo",
+      "actions": "Vitendo"
+    },
+    "types": {
+      "REAL_ESTATE": "Mali Isiyohamishika",
+      "VEHICLE": "Gari",
+      "EQUIPMENT": "Vifaa",
+      "OTHER": "Nyingine"
+    }
+  }
+}

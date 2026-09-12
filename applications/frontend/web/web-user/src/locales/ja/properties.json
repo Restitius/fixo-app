@@ -1,0 +1,118 @@
+{
+  "loading": "読み込み中…",
+  "page": {
+    "title": "物件",
+    "subtitle": "物件、部屋、家庭内の資産を管理します"
+  },
+  "metrics": {
+    "totalProperties": "物件数",
+    "onFile": "登録済み",
+    "totalRooms": "部屋数",
+    "acrossProperties": "全物件の合計",
+    "totalAssets": "資産数",
+    "homeItems": "追跡中の家庭用品"
+  },
+  "tabs": {
+    "properties": "物件",
+    "assets": "物件の資産"
+  },
+  "properties": {
+    "add": "物件を追加",
+    "edit": "物件を編集",
+    "delete": "物件を削除",
+    "addTitle": "物件を追加",
+    "editTitle": "物件を編集",
+    "nameLabel": "物件名",
+    "namePlaceholder": "例：自宅、別荘",
+    "typeLabel": "物件タイプ",
+    "yearBuiltLabel": "築年",
+    "yearBuiltPlaceholder": "例：2015",
+    "bedroomsLabel": "寝室数",
+    "bathroomsLabel": "浴室数",
+    "notesLabel": "メモ",
+    "notesPlaceholder": "この物件について記録しておきたいこと",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中…",
+    "fillRequired": "先に物件名を入力してください。",
+    "created": "物件を追加しました",
+    "updated": "物件を更新しました",
+    "deleted": "物件を削除しました",
+    "deleteConfirmTitle": "この物件を削除しますか？",
+    "deleteConfirmDescription": "「{{name}}」とそのすべての部屋が削除されます。この操作は元に戻せません。",
+    "emptyTitle": "物件はまだありません",
+    "emptyDescription": "最初の物件を追加して、部屋や詳細情報の管理を始めましょう。",
+    "bedroomsCount_other": "寝室{{count}}室",
+    "bathroomsCount_other": "浴室{{count}}室",
+    "roomCount_other": "{{count}}部屋",
+    "types": {
+      "HOUSE": "一戸建て",
+      "APARTMENT": "アパート",
+      "CONDO": "分譲マンション",
+      "OFFICE": "オフィス",
+      "OTHER": "その他"
+    }
+  },
+  "rooms": {
+    "title": "部屋",
+    "emptyDescription": "まだ部屋が追加されていません。下から追加してください。",
+    "nameLabel": "部屋の名前",
+    "namePlaceholder": "例：主寝室",
+    "typeLabel": "部屋の種類",
+    "add": "追加",
+    "adding": "追加中…",
+    "remove": "部屋を削除",
+    "fillRequired": "先に部屋の名前を入力してください。",
+    "added": "部屋を追加しました",
+    "removed": "部屋を削除しました",
+    "types": {
+      "BEDROOM": "寝室",
+      "BATHROOM": "浴室",
+      "KITCHEN": "キッチン",
+      "LIVING_ROOM": "リビング",
+      "OTHER": "その他"
+    }
+  },
+  "assets": {
+    "add": "資産を追加",
+    "edit": "資産を編集",
+    "delete": "資産を削除",
+    "addTitle": "家庭用資産を追加",
+    "editTitle": "資産を編集",
+    "notLinkedNote": "資産は特定の物件にはまだ紐付けられていません — これはすべての物件にまたがる、所有する家庭用品の一覧です。",
+    "nameLabel": "資産名",
+    "namePlaceholder": "例：給湯器、エアコン",
+    "typeLabel": "資産の種類",
+    "purchaseValueLabel": "購入価格",
+    "currencyLabel": "通貨",
+    "purchasedAtLabel": "購入日",
+    "notesLabel": "メモ",
+    "notesPlaceholder": "型番、シリアル番号、保証情報など",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中…",
+    "fillRequired": "先に資産名を入力してください。",
+    "created": "資産を追加しました",
+    "updated": "資産を更新しました",
+    "deleted": "資産を削除しました",
+    "editLimitedNote": "資産の追加後は、名前とメモのみ編集できます。",
+    "deleteConfirmTitle": "この資産を削除しますか？",
+    "deleteConfirmDescription": "「{{name}}」が資産一覧から削除されます。この操作は元に戻せません。",
+    "emptyTitle": "資産はまだありません",
+    "emptyDescription": "所有している家電や設備を追加して管理しましょう。",
+    "columns": {
+      "name": "名前",
+      "type": "種類",
+      "purchaseValue": "購入価格",
+      "purchasedAt": "購入日",
+      "notes": "メモ",
+      "actions": "操作"
+    },
+    "types": {
+      "REAL_ESTATE": "不動産",
+      "VEHICLE": "車両",
+      "EQUIPMENT": "設備",
+      "OTHER": "その他"
+    }
+  }
+}

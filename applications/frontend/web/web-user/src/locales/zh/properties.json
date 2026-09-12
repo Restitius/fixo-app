@@ -1,0 +1,118 @@
+{
+  "loading": "加载中…",
+  "page": {
+    "title": "房产",
+    "subtitle": "管理您的房产、房间和家庭资产"
+  },
+  "metrics": {
+    "totalProperties": "房产总数",
+    "onFile": "已登记",
+    "totalRooms": "房间总数",
+    "acrossProperties": "覆盖所有房产",
+    "totalAssets": "资产总数",
+    "homeItems": "已追踪的家庭物品"
+  },
+  "tabs": {
+    "properties": "房产",
+    "assets": "房产资产"
+  },
+  "properties": {
+    "add": "添加房产",
+    "edit": "编辑房产",
+    "delete": "删除房产",
+    "addTitle": "添加房产",
+    "editTitle": "编辑房产",
+    "nameLabel": "房产名称",
+    "namePlaceholder": "例如：我家、海边度假屋",
+    "typeLabel": "房产类型",
+    "yearBuiltLabel": "建成年份",
+    "yearBuiltPlaceholder": "例如：2015",
+    "bedroomsLabel": "卧室数",
+    "bathroomsLabel": "浴室数",
+    "notesLabel": "备注",
+    "notesPlaceholder": "关于此房产的任何值得记录的信息",
+    "cancel": "取消",
+    "save": "保存",
+    "saving": "保存中…",
+    "fillRequired": "请先填写房产名称。",
+    "created": "房产已添加",
+    "updated": "房产已更新",
+    "deleted": "房产已删除",
+    "deleteConfirmTitle": "删除此房产？",
+    "deleteConfirmDescription": "此操作将删除“{{name}}”及其所有房间，且无法撤销。",
+    "emptyTitle": "暂无房产",
+    "emptyDescription": "添加您的第一处房产，开始追踪其房间和详细信息。",
+    "bedroomsCount_other": "{{count}} 间卧室",
+    "bathroomsCount_other": "{{count}} 间浴室",
+    "roomCount_other": "{{count}} 个房间",
+    "types": {
+      "HOUSE": "住宅",
+      "APARTMENT": "公寓",
+      "CONDO": "共管公寓",
+      "OFFICE": "办公室",
+      "OTHER": "其他"
+    }
+  },
+  "rooms": {
+    "title": "房间",
+    "emptyDescription": "尚未添加任何房间。请在下方添加一个。",
+    "nameLabel": "房间名称",
+    "namePlaceholder": "例如：主卧",
+    "typeLabel": "房间类型",
+    "add": "添加",
+    "adding": "添加中…",
+    "remove": "移除房间",
+    "fillRequired": "请先填写房间名称。",
+    "added": "房间已添加",
+    "removed": "房间已移除",
+    "types": {
+      "BEDROOM": "卧室",
+      "BATHROOM": "浴室",
+      "KITCHEN": "厨房",
+      "LIVING_ROOM": "客厅",
+      "OTHER": "其他"
+    }
+  },
+  "assets": {
+    "add": "添加资产",
+    "edit": "编辑资产",
+    "delete": "删除资产",
+    "addTitle": "添加家庭资产",
+    "editTitle": "编辑资产",
+    "notLinkedNote": "资产目前尚未关联到具体房产 — 这是您在所有房产中拥有的家庭物品的统一列表。",
+    "nameLabel": "资产名称",
+    "namePlaceholder": "例如：热水器、空调",
+    "typeLabel": "资产类型",
+    "purchaseValueLabel": "购买价值",
+    "currencyLabel": "货币",
+    "purchasedAtLabel": "购买日期",
+    "notesLabel": "备注",
+    "notesPlaceholder": "型号、序列号、保修信息等",
+    "cancel": "取消",
+    "save": "保存",
+    "saving": "保存中…",
+    "fillRequired": "请先填写资产名称。",
+    "created": "资产已添加",
+    "updated": "资产已更新",
+    "deleted": "资产已删除",
+    "editLimitedNote": "资产添加后仅可编辑名称和备注。",
+    "deleteConfirmTitle": "删除此资产？",
+    "deleteConfirmDescription": "此操作将从您的资产中删除“{{name}}”，且无法撤销。",
+    "emptyTitle": "暂无资产",
+    "emptyDescription": "添加您拥有的电器或设备，以便追踪管理。",
+    "columns": {
+      "name": "名称",
+      "type": "类型",
+      "purchaseValue": "购买价值",
+      "purchasedAt": "购买日期",
+      "notes": "备注",
+      "actions": "操作"
+    },
+    "types": {
+      "REAL_ESTATE": "不动产",
+      "VEHICLE": "车辆",
+      "EQUIPMENT": "设备",
+      "OTHER": "其他"
+    }
+  }
+}
