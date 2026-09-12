@@ -1,0 +1,50 @@
+{
+  "loading": "Inapakia…",
+  "title": "Karibu FIXO",
+  "subtitle": "Hatua chache za haraka ili kuandaa akaunti yako.",
+  "progress": "Hatua {{done}} kati ya {{total}} zimekamilika",
+  "required": "Inahitajika",
+  "optional": "Si lazima",
+  "completed": "Imekamilika",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "Thibitisha mawasiliano",
+      "description": "Thibitisha nambari yako ya simu au barua pepe kwa kutumia msimbo tuliokutumia.",
+      "verifiedNote": "Taarifa zako za mawasiliano tayari zimethibitishwa.",
+      "unverifiedNote": "Hatukuweza kuthibitisha taarifa zako za mawasiliano kiotomatiki — thibitisha barua pepe au simu yako kutoka wasifu wako, kisha rudi hapa.",
+      "markDone": "Nimethibitisha taarifa zangu za mawasiliano"
+    },
+    "SET_LOCATION": {
+      "title": "Weka eneo lako",
+      "description": "Tuambie unaishi wapi ili tuweze kupata watoa huduma walio karibu.",
+      "labelLabel": "Lebo",
+      "recipientNameLabel": "Jina la mpokeaji",
+      "phoneLabel": "Simu",
+      "cityLabel": "Jiji",
+      "streetLabel": "Anwani ya mtaa",
+      "regionLabel": "Mkoa (si lazima)",
+      "save": "Hifadhi eneo",
+      "saving": "Inahifadhi…",
+      "fillRequired": "Jaza mpokeaji, simu, mtaa na jiji.",
+      "saved": "Eneo limehifadhiwa"
+    },
+    "ADD_PROPERTY": {
+      "title": "Ongeza mali",
+      "description": "Sajili nyumba au mali ambapo huduma zitafanyika.",
+      "nameLabel": "Jina la mali",
+      "namePlaceholder": "mfano: Nyumbani, Ofisini",
+      "typeLabel": "Aina ya mali",
+      "types": { "HOUSE": "Nyumba", "APARTMENT": "Ghorofa", "CONDO": "Kondomiu", "OFFICE": "Ofisi", "OTHER": "Nyingine" },
+      "bedroomsLabel": "Vyumba vya kulala",
+      "bathroomsLabel": "Vyoo",
+      "save": "Ongeza mali",
+      "saving": "Inaongeza…",
+      "skip": "Ruka kwa sasa",
+      "fillRequired": "Ingiza jina la mali.",
+      "saved": "Mali imeongezwa"
+    }
+  },
+  "continueCta": "Endelea kwenye Dashibodi",
+  "allDoneTitle": "Umekamilisha!",
+  "allDoneSubtitle": "Akaunti yako iko tayari. Hebu tukupatie mtoa huduma bora."
+}

@@ -23,6 +23,7 @@ import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PromotionsRouteImport } from './routes/promotions'
@@ -104,6 +105,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaymentsRoute = PaymentsRouteImport.update({
   id: '/payments',
   path: '/payments',
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/loyalty'
     | '/notifications'
+    | '/onboarding'
     | '/payments'
     | '/profile'
     | '/promotions'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/loyalty'
     | '/notifications'
+    | '/onboarding'
     | '/payments'
     | '/profile'
     | '/promotions'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/loyalty'
     | '/notifications'
+    | '/onboarding'
     | '/payments'
     | '/profile'
     | '/promotions'
@@ -330,6 +342,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   LoyaltyRoute: typeof LoyaltyRoute
   NotificationsRoute: typeof NotificationsRoute
+  OnboardingRoute: typeof OnboardingRoute
   PaymentsRoute: typeof PaymentsRoute
   ProfileRoute: typeof ProfileRoute
   PromotionsRoute: typeof PromotionsRoute
@@ -442,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotificationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payments': {
       id: '/payments'
       path: '/payments'
@@ -530,6 +550,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   LoyaltyRoute: LoyaltyRoute,
   NotificationsRoute: NotificationsRoute,
+  OnboardingRoute: OnboardingRoute,
   PaymentsRoute: PaymentsRoute,
   ProfileRoute: ProfileRoute,
   PromotionsRoute: PromotionsRoute,

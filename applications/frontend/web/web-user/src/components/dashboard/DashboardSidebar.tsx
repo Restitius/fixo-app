@@ -19,6 +19,11 @@ import {
   Calendar,
   MessageCircle,
   X,
+  Home,
+  Hammer,
+  ShieldCheck,
+  Repeat,
+  Scale,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 
@@ -35,12 +40,21 @@ const groups = [
     ],
   },
   {
+    label: "Property",
+    items: [
+      { title: "Properties", icon: Home, to: "/properties" },
+      { title: "Maintenance", icon: Hammer, to: "/maintenance" },
+      { title: "Warranties", icon: ShieldCheck, to: "/warranties" },
+    ],
+  },
+  {
     label: "Financial",
     items: [
       { title: "Wallet", icon: Wallet, to: "/wallet" },
       { title: "Payments", icon: Receipt, to: "/payments" },
       { title: "Invoices", icon: FileText, to: "/invoices" },
       { title: "History", icon: History, to: "/history" },
+      { title: "Recurring Services", icon: Repeat, to: "/recurring" },
     ],
   },
   {
@@ -56,6 +70,7 @@ const groups = [
       { title: "Inbox", icon: MessageCircle, to: "/inbox" },
       { title: "Notifications", icon: Bell, to: "/notifications" },
       { title: "Activity", icon: Activity, to: "/activity" },
+      { title: "Disputes", icon: Scale, to: "/disputes" },
       { title: "Settings", icon: Settings, to: "/profile" },
       { title: "Feedback", icon: MessageSquareHeart, to: "/feedback" },
       { title: "Help", icon: HelpCircle, to: "/help" },
