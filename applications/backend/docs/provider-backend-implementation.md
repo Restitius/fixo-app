@@ -64,7 +64,7 @@
 | PRV-32 | 32 | Invoices & Statements | ✅ |
 | PRV-33 | 33 | Ratings & Reviews | ✅ |
 | PRV-34 | 34 | Provider Performance KPIs | ✅ |
-| PRV-35 | 35 | Provider Ranking & Reputation | ⏳ |
+| PRV-35 | 35 | Provider Ranking & Reputation | ✅ |
 | PRV-36 | 36 | Portfolio | ⏳ |
 | PRV-37 | 37 | Provider Notifications | ⏳ |
 | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
@@ -171,6 +171,24 @@ Phase 34 adds provider-facing performance KPI visibility.
   - `GET /summary` — KPI totals
 
 Read-only in this phase — no KPI calculation or ingestion.
+
+## Phase 35 — Provider Ranking & Reputation
+
+Phase 35 adds provider-facing ranking visibility.
+
+- `PROVIDER_RANKING` — provider-owned ranking row with rank_score,
+  rank_level (bronze/silver/gold/platinum), badges (jsonb), completed_jobs,
+  recurring_customers, referrals, avg_completion_rate, avg_on_time_rate,
+  avg_rating, last_computed_at, timestamps.
+- Governed queries `PROV.RANKING.GET`, `PROV.RANKING.LEADERBOARD`.
+- `ProviderRankingService` with:
+  - current provider ranking signals (ownership-checked),
+  - public leaderboard of top providers by rank score.
+- Router prefix `/providers/me/ranking`:
+  - `GET /` — current provider ranking
+  - `GET /leaderboard` — public top providers
+
+Read-only in this phase — no rank computation or ingestion.
 
 ## Phase 37 — Provider Notifications
 
