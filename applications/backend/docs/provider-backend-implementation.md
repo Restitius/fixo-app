@@ -58,8 +58,8 @@
 | PRV-26 | 26 | Customer Sign-Off | ✅ done (commit `d0872e0`) |
 | PRV-27 | 27 | Final Billing | ⏳ next |
 | PRV-28 | 28 | Provider Earnings | ⏳ |
-| PRV-29 | 29 | Provider Wallet | ⏳ |
-| PRV-30 | 30 | Payout Management — methods + withdrawals | ⏳ |
+| PRV-29 | 29 | Provider Wallet | ✅ `provider-phase29-v1` |
+| PRV-30 | 30 | Payout Management — methods + withdrawals | ✅ `provider-phase30-v1` |
 | PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
 | PRV-32 | 32 | Invoices & Statements | ⏳ |
 | PRV-33 | 33 | Ratings & Reviews | ⏳ |
