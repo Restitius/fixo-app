@@ -1,0 +1,99 @@
+{
+  "loading": "Wird geladen…",
+  "itemLabel_one": "Streitfall",
+  "itemLabel_other": "Streitfälle",
+  "page": {
+    "title": "Streitfälle",
+    "subtitle": "Verfolge und verwalte Streitfälle zu deinen Buchungen"
+  },
+  "metrics": {
+    "total": "Streitfälle insgesamt",
+    "totalHint_one": "{{count}} Streitfall eingereicht",
+    "totalHint_other": "{{count}} Streitfälle eingereicht",
+    "open": "Offen / Ausstehend",
+    "openHint": "Wartet auf Lösung",
+    "closed": "Gelöst",
+    "closedHint": "Gelöst, geschlossen oder zurückgezogen"
+  },
+  "search": {
+    "placeholder": "Suche nach Kategorie, Beschreibung oder Buchung..."
+  },
+  "filters": {
+    "statusPlaceholder": "Status",
+    "all": "Alle Status",
+    "open": "Offen",
+    "closed": "Geschlossen"
+  },
+  "columns": {
+    "category": "Kategorie",
+    "description": "Beschreibung",
+    "booking": "Buchung",
+    "status": "Status",
+    "created": "Erstellt"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "Servicequalität",
+    "DAMAGE": "Schaden",
+    "BILLING": "Abrechnung",
+    "NO_SHOW": "Nichterscheinen",
+    "OTHER": "Sonstiges"
+  },
+  "evidenceKinds": {
+    "PHOTO": "Foto",
+    "DOCUMENT": "Dokument",
+    "OTHER": "Sonstiges"
+  },
+  "empty": {
+    "title": "Noch keine Streitfälle",
+    "description": "Wenn bei einer Buchung etwas schiefgeht, kannst du hier einen Streitfall melden und unser Team wird sich darum kümmern.",
+    "filteredTitle": "Keine passenden Streitfälle",
+    "filteredDescription": "Versuche einen anderen Suchbegriff oder Statusfilter.",
+    "clearFilters": "Filter zurücksetzen"
+  },
+  "newDispute": {
+    "trigger": "Neuer Streitfall",
+    "title": "Neuen Streitfall melden",
+    "subtitle": "Teile uns mit, was bei einer Buchung schiefgelaufen ist, und wir prüfen es.",
+    "bookingLabel": "Buchung",
+    "bookingPlaceholder": "Buchung auswählen",
+    "noBookings": "Du hast noch keine Buchungen, für die du einen Streitfall melden kannst.",
+    "serviceFallback": "Dienstleistung",
+    "categoryLabel": "Kategorie",
+    "descriptionLabel": "Beschreibung",
+    "descriptionPlaceholder": "Beschreibe, was passiert ist (mindestens 10 Zeichen)...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "Abbrechen",
+    "submit": "Streitfall einreichen",
+    "submitting": "Wird eingereicht...",
+    "opened": "Streitfall eröffnet — unser Team wird ihn prüfen",
+    "errors": {
+      "pickBooking": "Wähle zuerst eine Buchung aus",
+      "descriptionLength": "Die Beschreibung muss zwischen 10 und 2000 Zeichen lang sein"
+    }
+  },
+  "detail": {
+    "title": "Details zum Streitfall",
+    "booking": "Buchung",
+    "service": "Dienstleistung",
+    "description": "Beschreibung",
+    "evidence": "Nachweise",
+    "noEvidence": "Noch keine Nachweise angehängt.",
+    "withdraw": "Streitfall zurückziehen",
+    "withdrawing": "Wird zurückgezogen...",
+    "withdrawn": "Streitfall zurückgezogen",
+    "alreadyClosed": "Dieser Streitfall ist bereits geschlossen",
+    "withdrawConfirmTitle": "Diesen Streitfall zurückziehen?",
+    "withdrawConfirmDescription": "Dadurch wird der Streitfall geschlossen und kann nicht rückgängig gemacht werden. Ziehe ihn nur zurück, wenn das Problem gelöst wurde.",
+    "addEvidence": {
+      "title": "Nachweis hinzufügen",
+      "urlPlaceholder": "https://... Link zu einem Foto oder Dokument",
+      "notePlaceholder": "Optionale Notiz",
+      "add": "Nachweis hinzufügen",
+      "adding": "Wird hinzugefügt...",
+      "added": "Nachweis hinzugefügt",
+      "errors": {
+        "url": "Gib eine gültige URL ein (max. 2000 Zeichen)"
+      }
+    }
+  }
+}
