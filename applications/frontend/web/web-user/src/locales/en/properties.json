@@ -1,0 +1,121 @@
+{
+  "loading": "Loading…",
+  "page": {
+    "title": "Properties",
+    "subtitle": "Manage your properties, rooms, and home assets"
+  },
+  "metrics": {
+    "totalProperties": "Total Properties",
+    "onFile": "On file",
+    "totalRooms": "Total Rooms",
+    "acrossProperties": "Across all properties",
+    "totalAssets": "Total Assets",
+    "homeItems": "Home items tracked"
+  },
+  "tabs": {
+    "properties": "Properties",
+    "assets": "Property Assets"
+  },
+  "properties": {
+    "add": "Add Property",
+    "edit": "Edit property",
+    "delete": "Delete property",
+    "addTitle": "Add a Property",
+    "editTitle": "Edit Property",
+    "nameLabel": "Property name",
+    "namePlaceholder": "e.g. Home, Beach House",
+    "typeLabel": "Property type",
+    "yearBuiltLabel": "Year built",
+    "yearBuiltPlaceholder": "e.g. 2015",
+    "bedroomsLabel": "Bedrooms",
+    "bathroomsLabel": "Bathrooms",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Anything worth remembering about this property",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "fillRequired": "Give the property a name first.",
+    "created": "Property added",
+    "updated": "Property updated",
+    "deleted": "Property deleted",
+    "deleteConfirmTitle": "Delete this property?",
+    "deleteConfirmDescription": "This removes \"{{name}}\" and all of its rooms. This can't be undone.",
+    "emptyTitle": "No properties yet",
+    "emptyDescription": "Add your first property to start tracking its rooms and details.",
+    "bedroomsCount_one": "{{count}} bed",
+    "bedroomsCount_other": "{{count}} beds",
+    "bathroomsCount_one": "{{count}} bath",
+    "bathroomsCount_other": "{{count}} baths",
+    "roomCount_one": "{{count}} room",
+    "roomCount_other": "{{count}} rooms",
+    "types": {
+      "HOUSE": "House",
+      "APARTMENT": "Apartment",
+      "CONDO": "Condo",
+      "OFFICE": "Office",
+      "OTHER": "Other"
+    }
+  },
+  "rooms": {
+    "title": "Rooms",
+    "emptyDescription": "No rooms added yet. Add one below.",
+    "nameLabel": "Room name",
+    "namePlaceholder": "e.g. Master Bedroom",
+    "typeLabel": "Room type",
+    "add": "Add",
+    "adding": "Adding…",
+    "remove": "Remove room",
+    "fillRequired": "Give the room a name first.",
+    "added": "Room added",
+    "removed": "Room removed",
+    "types": {
+      "BEDROOM": "Bedroom",
+      "BATHROOM": "Bathroom",
+      "KITCHEN": "Kitchen",
+      "LIVING_ROOM": "Living Room",
+      "OTHER": "Other"
+    }
+  },
+  "assets": {
+    "add": "Add Asset",
+    "edit": "Edit asset",
+    "delete": "Delete asset",
+    "addTitle": "Add a Home Asset",
+    "editTitle": "Edit Asset",
+    "notLinkedNote": "Assets aren't linked to a specific property yet — this is a flat list of home items you own across all your properties.",
+    "nameLabel": "Asset name",
+    "namePlaceholder": "e.g. Water Heater, AC Unit",
+    "typeLabel": "Asset type",
+    "purchaseValueLabel": "Purchase value",
+    "currencyLabel": "Currency",
+    "purchasedAtLabel": "Purchase date",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Model, serial number, warranty info, etc.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…",
+    "fillRequired": "Give the asset a name first.",
+    "created": "Asset added",
+    "updated": "Asset updated",
+    "deleted": "Asset deleted",
+    "editLimitedNote": "Only the name and notes can be edited once an asset is added.",
+    "deleteConfirmTitle": "Delete this asset?",
+    "deleteConfirmDescription": "This removes \"{{name}}\" from your assets. This can't be undone.",
+    "emptyTitle": "No assets yet",
+    "emptyDescription": "Add appliances or equipment you own so you can keep track of them.",
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "purchaseValue": "Purchase Value",
+      "purchasedAt": "Purchased",
+      "notes": "Notes",
+      "actions": "Actions"
+    },
+    "types": {
+      "REAL_ESTATE": "Real Estate",
+      "VEHICLE": "Vehicle",
+      "EQUIPMENT": "Equipment",
+      "OTHER": "Other"
+    }
+  }
+}

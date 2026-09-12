@@ -1,0 +1,52 @@
+{
+  "loading": "Wird geladen…",
+  "page": {
+    "title": "Garantien",
+    "subtitle": "Garantien für deine abgeschlossenen Aufträge und alle eingereichten Ansprüche"
+  },
+  "metrics": {
+    "total": "Garantien insgesamt",
+    "totalHint": "Insgesamt",
+    "active": "Aktive Garantien",
+    "activeHint": "Derzeit gültig",
+    "expiringSoon": "Läuft bald ab",
+    "expiringSoonHint_one": "Innerhalb von {{count}} Tag",
+    "expiringSoonHint_other": "Innerhalb von {{count}} Tagen",
+    "claimsSubmitted": "Eingereichte Ansprüche",
+    "claimsSubmittedHint_one": "{{count}} Anspruch eingereicht",
+    "claimsSubmittedHint_other": "{{count}} Ansprüche eingereicht"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Nach Dienstleistung oder Anbieter suchen..."
+  },
+  "table": {
+    "service": "Dienstleistung",
+    "provider": "Anbieter",
+    "expires": "Läuft ab",
+    "status": "Status",
+    "claim": "Anspruch",
+    "actions": "Aktionen"
+  },
+  "serviceFallback": "Dienstleistung",
+  "fileClaim": "Anspruch einreichen",
+  "claimAlreadyFiled": "Anspruch eingereicht",
+  "itemLabel": "Garantien",
+  "empty": {
+    "title": "Noch keine Garantien",
+    "description": "Garantien werden hier automatisch angezeigt, sobald eine Buchung abgeschlossen ist.",
+    "action": "Meine Buchungen ansehen",
+    "filteredTitle": "Keine passenden Garantien",
+    "filteredDescription": "Versuche einen anderen Suchbegriff.",
+    "clearFilters": "Suche zurücksetzen"
+  },
+  "claimDialog": {
+    "title": "Garantieanspruch einreichen",
+    "placeholder": "Beschreibe das Problem mit diesem Auftrag im Detail...",
+    "hint": "{{count}}/2000 Zeichen (mindestens 10)",
+    "tooShort": "Bitte beschreibe das Problem mit mindestens 10 Zeichen.",
+    "cancel": "Abbrechen",
+    "submit": "Anspruch einreichen",
+    "submitting": "Wird eingereicht...",
+    "submitted": "Dein Anspruch wurde eingereicht"
+  }
+}
