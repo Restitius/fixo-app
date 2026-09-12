@@ -1,0 +1,99 @@
+{
+  "loading": "Carregando…",
+  "itemLabel_one": "disputa",
+  "itemLabel_other": "disputas",
+  "page": {
+    "title": "Disputas",
+    "subtitle": "Acompanhe e gerencie as disputas que você abriu em suas reservas"
+  },
+  "metrics": {
+    "total": "Total de disputas",
+    "totalHint_one": "{{count}} disputa registrada",
+    "totalHint_other": "{{count}} disputas registradas",
+    "open": "Abertas / Pendentes",
+    "openHint": "Aguardando resolução",
+    "closed": "Resolvidas",
+    "closedHint": "Resolvidas, encerradas ou retiradas"
+  },
+  "search": {
+    "placeholder": "Buscar por categoria, descrição ou reserva..."
+  },
+  "filters": {
+    "statusPlaceholder": "Status",
+    "all": "Todos os status",
+    "open": "Aberta",
+    "closed": "Encerrada"
+  },
+  "columns": {
+    "category": "Categoria",
+    "description": "Descrição",
+    "booking": "Reserva",
+    "status": "Status",
+    "created": "Criada em"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "Qualidade do serviço",
+    "DAMAGE": "Dano",
+    "BILLING": "Cobrança",
+    "NO_SHOW": "Não comparecimento",
+    "OTHER": "Outro"
+  },
+  "evidenceKinds": {
+    "PHOTO": "Foto",
+    "DOCUMENT": "Documento",
+    "OTHER": "Outro"
+  },
+  "empty": {
+    "title": "Ainda não há disputas",
+    "description": "Se algo der errado em uma reserva, você pode abrir uma disputa aqui e nossa equipe vai intervir.",
+    "filteredTitle": "Nenhuma disputa encontrada",
+    "filteredDescription": "Tente outro termo de busca ou filtro de status.",
+    "clearFilters": "Limpar filtros"
+  },
+  "newDispute": {
+    "trigger": "Nova disputa",
+    "title": "Abrir uma nova disputa",
+    "subtitle": "Conte-nos o que deu errado em uma reserva e vamos analisar.",
+    "bookingLabel": "Reserva",
+    "bookingPlaceholder": "Selecione uma reserva",
+    "noBookings": "Você ainda não tem reservas para abrir uma disputa.",
+    "serviceFallback": "Serviço",
+    "categoryLabel": "Categoria",
+    "descriptionLabel": "Descrição",
+    "descriptionPlaceholder": "Descreva o que aconteceu com no mínimo 10 caracteres...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "Cancelar",
+    "submit": "Enviar disputa",
+    "submitting": "Enviando...",
+    "opened": "Disputa aberta — nossa equipe vai analisá-la",
+    "errors": {
+      "pickBooking": "Selecione uma reserva primeiro",
+      "descriptionLength": "A descrição deve ter entre 10 e 2000 caracteres"
+    }
+  },
+  "detail": {
+    "title": "Detalhes da disputa",
+    "booking": "Reserva",
+    "service": "Serviço",
+    "description": "Descrição",
+    "evidence": "Evidências",
+    "noEvidence": "Nenhuma evidência anexada ainda.",
+    "withdraw": "Retirar disputa",
+    "withdrawing": "Retirando...",
+    "withdrawn": "Disputa retirada",
+    "alreadyClosed": "Esta disputa já está encerrada",
+    "withdrawConfirmTitle": "Retirar esta disputa?",
+    "withdrawConfirmDescription": "Isso encerrará a disputa e não pode ser desfeito. Retire apenas se o problema já tiver sido resolvido.",
+    "addEvidence": {
+      "title": "Adicionar evidência",
+      "urlPlaceholder": "https://... link para uma foto ou documento",
+      "notePlaceholder": "Nota opcional",
+      "add": "Adicionar evidência",
+      "adding": "Adicionando...",
+      "added": "Evidência adicionada",
+      "errors": {
+        "url": "Informe uma URL válida (máx. 2000 caracteres)"
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "loading": "Chargement…",
+  "itemLabel_one": "litige",
+  "itemLabel_other": "litiges",
+  "page": {
+    "title": "Litiges",
+    "subtitle": "Suivez et gérez les litiges que vous avez signalés sur vos réservations"
+  },
+  "metrics": {
+    "total": "Litiges au total",
+    "totalHint_one": "{{count}} litige déposé",
+    "totalHint_other": "{{count}} litiges déposés",
+    "open": "Ouverts / En attente",
+    "openHint": "En attente de résolution",
+    "closed": "Résolus",
+    "closedHint": "Résolus, clôturés ou retirés"
+  },
+  "search": {
+    "placeholder": "Rechercher par catégorie, description ou réservation..."
+  },
+  "filters": {
+    "statusPlaceholder": "Statut",
+    "all": "Tous les statuts",
+    "open": "Ouvert",
+    "closed": "Clôturé"
+  },
+  "columns": {
+    "category": "Catégorie",
+    "description": "Description",
+    "booking": "Réservation",
+    "status": "Statut",
+    "created": "Créé le"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "Qualité du service",
+    "DAMAGE": "Dommage",
+    "BILLING": "Facturation",
+    "NO_SHOW": "Absence du prestataire",
+    "OTHER": "Autre"
+  },
+  "evidenceKinds": {
+    "PHOTO": "Photo",
+    "DOCUMENT": "Document",
+    "OTHER": "Autre"
+  },
+  "empty": {
+    "title": "Aucun litige pour le moment",
+    "description": "Si un problème survient avec une réservation, vous pouvez signaler un litige ici et notre équipe interviendra.",
+    "filteredTitle": "Aucun litige correspondant",
+    "filteredDescription": "Essayez un autre terme de recherche ou filtre de statut.",
+    "clearFilters": "Effacer les filtres"
+  },
+  "newDispute": {
+    "trigger": "Nouveau litige",
+    "title": "Signaler un nouveau litige",
+    "subtitle": "Dites-nous ce qui s'est mal passé avec une réservation et nous l'examinerons.",
+    "bookingLabel": "Réservation",
+    "bookingPlaceholder": "Sélectionner une réservation",
+    "noBookings": "Vous n'avez encore aucune réservation pour laquelle signaler un litige.",
+    "serviceFallback": "Service",
+    "categoryLabel": "Catégorie",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Décrivez ce qui s'est passé (10 caractères minimum)...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "Annuler",
+    "submit": "Soumettre le litige",
+    "submitting": "Envoi en cours...",
+    "opened": "Litige ouvert — notre équipe va l'examiner",
+    "errors": {
+      "pickBooking": "Sélectionnez d'abord une réservation",
+      "descriptionLength": "La description doit contenir entre 10 et 2000 caractères"
+    }
+  },
+  "detail": {
+    "title": "Détails du litige",
+    "booking": "Réservation",
+    "service": "Service",
+    "description": "Description",
+    "evidence": "Preuves",
+    "noEvidence": "Aucune preuve jointe pour le moment.",
+    "withdraw": "Retirer le litige",
+    "withdrawing": "Retrait en cours...",
+    "withdrawn": "Litige retiré",
+    "alreadyClosed": "Ce litige est déjà clôturé",
+    "withdrawConfirmTitle": "Retirer ce litige ?",
+    "withdrawConfirmDescription": "Cette action clôturera le litige et ne peut pas être annulée. Ne le retirez que si le problème a été résolu.",
+    "addEvidence": {
+      "title": "Ajouter une preuve",
+      "urlPlaceholder": "https://... lien vers une photo ou un document",
+      "notePlaceholder": "Note facultative",
+      "add": "Ajouter la preuve",
+      "adding": "Ajout en cours...",
+      "added": "Preuve ajoutée",
+      "errors": {
+        "url": "Saisissez une URL valide (2000 caractères max)"
+      }
+    }
+  }
+}
