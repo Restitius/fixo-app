@@ -43,6 +43,8 @@ class ChangeRequestService:
             raise ValidationError("proposed_value is required")
 
         booking = await self._bookings.get(customer_id, booking_id)
+        if not booking:
+            raise NotFoundError("Booking not found")
         if booking["status"] not in ACTIVE_STATUSES:
             raise ValidationError(
                 f"Changes can only be proposed while work is active "
@@ -74,7 +76,9 @@ class ChangeRequestService:
     async def list_for_booking(
         self, customer_id: str, booking_id: str
     ) -> list[dict[str, Any]]:
-        await self._bookings.get(customer_id, booking_id)
+        booking = await self._bookings.get(customer_id, booking_id)
+        if not booking:
+            raise NotFoundError("Booking not found")
         return await self._changes.list_for_booking(customer_id, booking_id)
 
     async def decide(
