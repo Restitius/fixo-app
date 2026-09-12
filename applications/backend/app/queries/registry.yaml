@@ -2291,6 +2291,20 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/reviews/detail.sql
+  PROV.KPIS.LIST:
+    providerformance KPIs list by period (Provider Phase 34).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/kpis/list.sql
+  PROV.KPIS.SUMMARY:
+    description: Provider performance KPI totals across all periods (Provider Phase 34).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/kpis/summary.sql
   PROV.REVIEWS.SUMMARY:
     description: Provider review totals, average rating, star distribution (Provider Phase 33).
     operation: read
