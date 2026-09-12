@@ -1,0 +1,121 @@
+{
+  "loading": "Chargement…",
+  "page": {
+    "title": "Biens",
+    "subtitle": "Gérez vos biens, leurs pièces et les équipements du foyer"
+  },
+  "metrics": {
+    "totalProperties": "Total des Biens",
+    "onFile": "Enregistrés",
+    "totalRooms": "Total des Pièces",
+    "acrossProperties": "Sur l'ensemble des biens",
+    "totalAssets": "Total des Équipements",
+    "homeItems": "Objets du foyer suivis"
+  },
+  "tabs": {
+    "properties": "Biens",
+    "assets": "Équipements du Bien"
+  },
+  "properties": {
+    "add": "Ajouter un Bien",
+    "edit": "Modifier le bien",
+    "delete": "Supprimer le bien",
+    "addTitle": "Ajouter un Bien",
+    "editTitle": "Modifier le Bien",
+    "nameLabel": "Nom du bien",
+    "namePlaceholder": "ex. Maison, Résidence secondaire",
+    "typeLabel": "Type de bien",
+    "yearBuiltLabel": "Année de construction",
+    "yearBuiltPlaceholder": "ex. 2015",
+    "bedroomsLabel": "Chambres",
+    "bathroomsLabel": "Salles de bain",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Toute information utile sur ce bien",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "fillRequired": "Donnez d'abord un nom au bien.",
+    "created": "Bien ajouté",
+    "updated": "Bien mis à jour",
+    "deleted": "Bien supprimé",
+    "deleteConfirmTitle": "Supprimer ce bien ?",
+    "deleteConfirmDescription": "Cette action supprime « {{name}} » ainsi que toutes ses pièces. Cette action est irréversible.",
+    "emptyTitle": "Aucun bien pour l'instant",
+    "emptyDescription": "Ajoutez votre premier bien pour commencer à suivre ses pièces et ses détails.",
+    "bedroomsCount_one": "{{count}} chambre",
+    "bedroomsCount_other": "{{count}} chambres",
+    "bathroomsCount_one": "{{count}} salle de bain",
+    "bathroomsCount_other": "{{count}} salles de bain",
+    "roomCount_one": "{{count}} pièce",
+    "roomCount_other": "{{count}} pièces",
+    "types": {
+      "HOUSE": "Maison",
+      "APARTMENT": "Appartement",
+      "CONDO": "Copropriété",
+      "OFFICE": "Bureau",
+      "OTHER": "Autre"
+    }
+  },
+  "rooms": {
+    "title": "Pièces",
+    "emptyDescription": "Aucune pièce ajoutée pour l'instant. Ajoutez-en une ci-dessous.",
+    "nameLabel": "Nom de la pièce",
+    "namePlaceholder": "ex. Chambre principale",
+    "typeLabel": "Type de pièce",
+    "add": "Ajouter",
+    "adding": "Ajout…",
+    "remove": "Supprimer la pièce",
+    "fillRequired": "Donnez d'abord un nom à la pièce.",
+    "added": "Pièce ajoutée",
+    "removed": "Pièce supprimée",
+    "types": {
+      "BEDROOM": "Chambre",
+      "BATHROOM": "Salle de bain",
+      "KITCHEN": "Cuisine",
+      "LIVING_ROOM": "Salon",
+      "OTHER": "Autre"
+    }
+  },
+  "assets": {
+    "add": "Ajouter un Équipement",
+    "edit": "Modifier l'équipement",
+    "delete": "Supprimer l'équipement",
+    "addTitle": "Ajouter un Équipement du Foyer",
+    "editTitle": "Modifier l'Équipement",
+    "notLinkedNote": "Les équipements ne sont pas encore rattachés à un bien précis — il s'agit d'une liste unique des objets du foyer que vous possédez, tous biens confondus.",
+    "nameLabel": "Nom de l'équipement",
+    "namePlaceholder": "ex. Chauffe-eau, Climatiseur",
+    "typeLabel": "Type d'équipement",
+    "purchaseValueLabel": "Valeur d'achat",
+    "currencyLabel": "Devise",
+    "purchasedAtLabel": "Date d'achat",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Modèle, numéro de série, informations de garantie, etc.",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "fillRequired": "Donnez d'abord un nom à l'équipement.",
+    "created": "Équipement ajouté",
+    "updated": "Équipement mis à jour",
+    "deleted": "Équipement supprimé",
+    "editLimitedNote": "Seuls le nom et les notes peuvent être modifiés une fois l'équipement ajouté.",
+    "deleteConfirmTitle": "Supprimer cet équipement ?",
+    "deleteConfirmDescription": "Cette action supprime « {{name}} » de vos équipements. Cette action est irréversible.",
+    "emptyTitle": "Aucun équipement pour l'instant",
+    "emptyDescription": "Ajoutez les appareils ou équipements que vous possédez pour en garder la trace.",
+    "columns": {
+      "name": "Nom",
+      "type": "Type",
+      "purchaseValue": "Valeur d'Achat",
+      "purchasedAt": "Date d'Achat",
+      "notes": "Notes",
+      "actions": "Actions"
+    },
+    "types": {
+      "REAL_ESTATE": "Bien Immobilier",
+      "VEHICLE": "Véhicule",
+      "EQUIPMENT": "Équipement",
+      "OTHER": "Autre"
+    }
+  }
+}

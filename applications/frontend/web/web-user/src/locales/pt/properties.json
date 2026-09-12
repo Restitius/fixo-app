@@ -1,0 +1,121 @@
+{
+  "loading": "Carregando…",
+  "page": {
+    "title": "Imóveis",
+    "subtitle": "Gerencie seus imóveis, cômodos e itens da casa"
+  },
+  "metrics": {
+    "totalProperties": "Total de Imóveis",
+    "onFile": "Cadastrados",
+    "totalRooms": "Total de Cômodos",
+    "acrossProperties": "Em todos os imóveis",
+    "totalAssets": "Total de Itens",
+    "homeItems": "Itens da casa acompanhados"
+  },
+  "tabs": {
+    "properties": "Imóveis",
+    "assets": "Itens do Imóvel"
+  },
+  "properties": {
+    "add": "Adicionar Imóvel",
+    "edit": "Editar imóvel",
+    "delete": "Excluir imóvel",
+    "addTitle": "Adicionar um Imóvel",
+    "editTitle": "Editar Imóvel",
+    "nameLabel": "Nome do imóvel",
+    "namePlaceholder": "ex.: Casa, Casa de praia",
+    "typeLabel": "Tipo de imóvel",
+    "yearBuiltLabel": "Ano de construção",
+    "yearBuiltPlaceholder": "ex.: 2015",
+    "bedroomsLabel": "Quartos",
+    "bathroomsLabel": "Banheiros",
+    "notesLabel": "Observações",
+    "notesPlaceholder": "Qualquer coisa importante sobre este imóvel",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "fillRequired": "Dê um nome ao imóvel primeiro.",
+    "created": "Imóvel adicionado",
+    "updated": "Imóvel atualizado",
+    "deleted": "Imóvel excluído",
+    "deleteConfirmTitle": "Excluir este imóvel?",
+    "deleteConfirmDescription": "Isso remove \"{{name}}\" e todos os seus cômodos. Essa ação não pode ser desfeita.",
+    "emptyTitle": "Nenhum imóvel ainda",
+    "emptyDescription": "Adicione seu primeiro imóvel para começar a acompanhar seus cômodos e detalhes.",
+    "bedroomsCount_one": "{{count}} quarto",
+    "bedroomsCount_other": "{{count}} quartos",
+    "bathroomsCount_one": "{{count}} banheiro",
+    "bathroomsCount_other": "{{count}} banheiros",
+    "roomCount_one": "{{count}} cômodo",
+    "roomCount_other": "{{count}} cômodos",
+    "types": {
+      "HOUSE": "Casa",
+      "APARTMENT": "Apartamento",
+      "CONDO": "Condomínio",
+      "OFFICE": "Escritório",
+      "OTHER": "Outro"
+    }
+  },
+  "rooms": {
+    "title": "Cômodos",
+    "emptyDescription": "Nenhum cômodo adicionado ainda. Adicione um abaixo.",
+    "nameLabel": "Nome do cômodo",
+    "namePlaceholder": "ex.: Quarto principal",
+    "typeLabel": "Tipo de cômodo",
+    "add": "Adicionar",
+    "adding": "Adicionando…",
+    "remove": "Remover cômodo",
+    "fillRequired": "Dê um nome ao cômodo primeiro.",
+    "added": "Cômodo adicionado",
+    "removed": "Cômodo removido",
+    "types": {
+      "BEDROOM": "Quarto",
+      "BATHROOM": "Banheiro",
+      "KITCHEN": "Cozinha",
+      "LIVING_ROOM": "Sala de Estar",
+      "OTHER": "Outro"
+    }
+  },
+  "assets": {
+    "add": "Adicionar Item",
+    "edit": "Editar item",
+    "delete": "Excluir item",
+    "addTitle": "Adicionar um Item da Casa",
+    "editTitle": "Editar Item",
+    "notLinkedNote": "Os itens ainda não estão vinculados a um imóvel específico — esta é uma lista única dos itens da casa que você possui em todos os seus imóveis.",
+    "nameLabel": "Nome do item",
+    "namePlaceholder": "ex.: Aquecedor de água, Ar-condicionado",
+    "typeLabel": "Tipo de item",
+    "purchaseValueLabel": "Valor de compra",
+    "currencyLabel": "Moeda",
+    "purchasedAtLabel": "Data de compra",
+    "notesLabel": "Observações",
+    "notesPlaceholder": "Modelo, número de série, informações de garantia, etc.",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "fillRequired": "Dê um nome ao item primeiro.",
+    "created": "Item adicionado",
+    "updated": "Item atualizado",
+    "deleted": "Item excluído",
+    "editLimitedNote": "Somente o nome e as observações podem ser editados depois que o item é adicionado.",
+    "deleteConfirmTitle": "Excluir este item?",
+    "deleteConfirmDescription": "Isso remove \"{{name}}\" dos seus itens. Essa ação não pode ser desfeita.",
+    "emptyTitle": "Nenhum item ainda",
+    "emptyDescription": "Adicione eletrodomésticos ou equipamentos que você possui para acompanhá-los.",
+    "columns": {
+      "name": "Nome",
+      "type": "Tipo",
+      "purchaseValue": "Valor de Compra",
+      "purchasedAt": "Data de Compra",
+      "notes": "Observações",
+      "actions": "Ações"
+    },
+    "types": {
+      "REAL_ESTATE": "Imóvel",
+      "VEHICLE": "Veículo",
+      "EQUIPMENT": "Equipamento",
+      "OTHER": "Outro"
+    }
+  }
+}
