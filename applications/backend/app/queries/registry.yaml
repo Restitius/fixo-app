@@ -2312,4 +2312,25 @@ queries:
     security:
       ownership_filter_required: true
       requires_auth: true
+  PROV.NOTIFICATIONS.LIST:
+    description: Provider notifications history (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/list.sql
+  PROV.NOTIFICATIONS.MARK_READ:
+    description: Mark a provider notification as read (Provider Phase 32).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/mark_read.sql
+  PROV.NOTIFICATIONS.UNREAD_COUNT:
+    description: Unread notifications count for a provider (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/unread_count.sql
 version: 1

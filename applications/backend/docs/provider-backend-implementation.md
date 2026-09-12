@@ -84,6 +84,8 @@
 | PRV-52 | 52 | Subscription / Provider Plans | ⏳ |
 | PRV-53 | 53 | Account Restrictions & Status | ⏳ |
 | PRV-54 | 54 | Account Closure | ⏳ |
+| PRV-31 | 31 | Commission & Fees | ✅ |
+| PRV-32 | 32 | Provider Notifications | ✅ |
 
 Verification: `cd applications/backend && python -m pytest` stays green (new unit
 tests included per phase); each phase ships migration + queries + port/adapter +
@@ -114,3 +116,25 @@ Commission is applied to the gross amount, tax is applied to the commission,
 and net is gross minus commission minus tax, all in the same currency per
 request. No background tasks are used in this phase — fee application is
 synchronous through the service layer.
+
+## Phase 32 — Provider Notifications
+
+Phase 32 adds provider-facing notification read state: history, unread count,
+and idempotent mark-read.
+
+- `PROVIDER_NOTIFICATIONS` — provider-owned notification rows with channel,
+  category, title, body, is_read, reference_type, reference_id, timestamps.
+- Governed queries `PROV.NOTIFICATIONS.LIST`, `PROV.NOTIFICATIONS.MARK_READ`,
+  `PROV.NOTIFICATIONS.UNREAD_COUNT`.
+- `ProviderNotificationsService` with:
+  - list (optional filter by `status` = unread\|read\|all and `category`),
+  - unread count,
+  - idempotent mark-read.
+- Router prefix `/providers/me/notifications`:
+  - `GET /` — list notifications
+  - `GET /unread-count` — unread count
+  - `PATCH /{notification_id}/read` — mark a notification as read
+
+No background delivery workers or queue infrastructure in this phase;
+notifications are managed synchronously through the service layer. Delivery
+of `channel`-based notifications is out of scope for Phase 32.
