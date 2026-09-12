@@ -2,13 +2,8 @@
 
 Prefix: /providers/me/kpis
 
-<<<<<<< HEAD
-- GET /        — list KPIs (optional period filter: weekly/monthly/quarterly/yearly)
-- GET /summary — KPI totals across all periods
-=======
 - GET /        list KPIs (optional period filter: weekly/monthly/quarterly/yearly)
 - GET /summary KPI totals across all periods
->>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
 """
 
 from __future__ import annotations
@@ -36,11 +31,7 @@ async def list_kpis(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
     provider: dict = Depends(get_current_provider),
-<<<<<<< HEAD
-) -> list[Any]:
-=======
 ) -> dict[str, Any]:
->>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
     """List provider KPIs, optionally filtered by period."""
     svc = _service()
     return await svc.list_kpis(
@@ -54,14 +45,7 @@ async def list_kpis(
 @router.get("/summary")
 async def get_summary(
     provider: dict = Depends(get_current_provider),
-<<<<<<< HEAD
-) -> Any:
-    """Return provider KPI totals across all periods."""
-    svc = _service()
-    return await svc.get_summary(provider_id=str(provider["provider_id"]))
-=======
 ) -> dict[str, Any]:
     """Return provider KPI totals across all periods."""
     svc = _service()
     return await svc.get_summary(provider_id=str(provider["provider_id"]))
->>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
