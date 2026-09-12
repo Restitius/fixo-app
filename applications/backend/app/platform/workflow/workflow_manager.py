@@ -10,6 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from app.shared.exceptions.hierarchy import ConflictError
+
 
 @dataclass
 class WorkflowDefinition:
@@ -19,8 +21,15 @@ class WorkflowDefinition:
     terminal: set[str] = field(default_factory=set)
 
 
-class WorkflowError(Exception):
-    """Raised when a transition is not part of the registered machine."""
+class WorkflowError(ConflictError):
+    """Raised when a transition is not part of the registered machine.
+
+    Subclasses ConflictError (HTTP 409) rather than a bare Exception so a
+    disallowed transition (e.g. re-deciding an already-decided change
+    request) reaches the client as a clean 409, not an unhandled 500.
+    """
+
+    default_code = "WORKFLOW.INVALID_TRANSITION"
 
 
 class WorkflowManager:

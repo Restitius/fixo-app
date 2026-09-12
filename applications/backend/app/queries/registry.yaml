@@ -253,6 +253,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/bookings/timeline_list.sql
+  CUS.BOOKING.SET_SCOPE:
+    description: Apply an approved SCOPE change request's notes to the booking.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/set_scope_notes.sql
   CUS.BOOKING.UPDATE_AMOUNT:
     description: CUS.BOOKING.UPDATE_AMOUNT registered query.
     operation: update
@@ -990,15 +997,15 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/ratings/submit.sql
-  CUS.REBOOK.CREATE.V1:
+  CUS.REBOOK.CREATE:
     description: Prefills service/address from the booking; description notes the origin.
     operation: create
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/rebook/create.sql
-  CUS.REBOOK.PREVIEW.V1:
-    description: CUS.REBOOK.PREVIEW.V1 registered query.
+  CUS.REBOOK.PREVIEW:
+    description: Preview of a rebook's prefilled service/address before creating it.
     operation: read
     security:
       ownership_filter_required: true
@@ -1123,29 +1130,29 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/service_requests/update_request.sql
-  CUS.REVIEW.CREATE.V1:
+  CUS.REVIEW.CREATE:
     description: One review per booking (UNIQUE); re-submitting refreshes rating/comment.
     operation: create
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/reviews/create.sql
-  CUS.REVIEW.LIST.V1:
-    description: CUS.REVIEW.LIST.V1 registered query.
+  CUS.REVIEW.LIST:
+    description: Paginated list of the customer's own submitted reviews.
     operation: read
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/reviews/list.sql
-  CUS.REVIEW.SERVICE_LIST.V1:
-    description: CUS.REVIEW.SERVICE_LIST.V1 registered query.
+  CUS.REVIEW.SERVICE_LIST:
+    description: Public reviews for a given provider/service.
     operation: read
     security:
       ownership_filter_required: false
       requires_auth: true
     sql: customers/reviews/service_list.sql
-  CUS.REVIEW.STATS.V1:
-    description: CUS.REVIEW.STATS.V1 registered query.
+  CUS.REVIEW.STATS:
+    description: Aggregate rating stats for a given provider/service.
     operation: read
     security:
       ownership_filter_required: false
@@ -1263,29 +1270,29 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/wallet/list_transactions.sql
-  CUS.WARRANTY.CLAIM.V1:
+  CUS.WARRANTY.CLAIM:
     description: Marks the warranty CLAIMED and opens the claim row atomically.
     operation: update
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/warranties/claim.sql
-  CUS.WARRANTY.CREATE.V1:
+  CUS.WARRANTY.CREATE:
     description: Normally invoked by TR_BOOKING_WARRANTY; kept registered for backfills/support.
     operation: create
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/warranties/create.sql
-  CUS.WARRANTY.GET.V1:
-    description: CUS.WARRANTY.GET.V1 registered query.
+  CUS.WARRANTY.GET:
+    description: Single owned warranty by id.
     operation: read
     security:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/warranties/get.sql
-  CUS.WARRANTY.LIST.V1:
-    description: CUS.WARRANTY.LIST.V1 registered query.
+  CUS.WARRANTY.LIST:
+    description: Paginated list of the customer's warranties.
     operation: read
     security:
       ownership_filter_required: true

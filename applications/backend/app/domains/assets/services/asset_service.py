@@ -40,6 +40,9 @@ class AssetService:
             "warranty_until": None,
             "notes": dto.notes,
         })
+        if not row:
+            from app.shared.exceptions.hierarchy import ValidationError
+            raise ValidationError("Asset could not be created — check the property belongs to you")
         if self._events is not None and row:
             from app.events.event import make_event
             await self._events.publish(
