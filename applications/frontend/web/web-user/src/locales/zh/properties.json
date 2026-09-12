@@ -79,10 +79,11 @@
     "delete": "删除资产",
     "addTitle": "添加家庭资产",
     "editTitle": "编辑资产",
-    "notLinkedNote": "资产目前尚未关联到具体房产 — 这是您在所有房产中拥有的家庭物品的统一列表。",
     "nameLabel": "资产名称",
     "namePlaceholder": "例如：热水器、空调",
     "typeLabel": "资产类型",
+    "propertyLabel": "房产",
+    "noProperty": "未关联房产",
     "purchaseValueLabel": "购买价值",
     "currencyLabel": "货币",
     "purchasedAtLabel": "购买日期",
@@ -103,16 +104,20 @@
     "columns": {
       "name": "名称",
       "type": "类型",
+      "property": "房产",
       "purchaseValue": "购买价值",
       "purchasedAt": "购买日期",
       "notes": "备注",
       "actions": "操作"
     },
     "types": {
-      "REAL_ESTATE": "不动产",
-      "VEHICLE": "车辆",
-      "EQUIPMENT": "设备",
-      "OTHER": "其他"
+      "appliance": "家电",
+      "hvac": "空调/暖气",
+      "plumbing": "管道",
+      "electrical": "电气",
+      "furniture": "家具",
+      "security": "安防",
+      "other": "其他"
     }
   }
 }

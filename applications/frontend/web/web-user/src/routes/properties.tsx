@@ -1,8 +1,8 @@
-// Properties (Module 06) + Property Assets tab (Module 32, simplified).
-// Assets are backed by the generic /assets domain, which has no property_id
-// linkage and also exposes finance concepts (sell/revalue) that don't apply
-// to a home appliance — both are disclosed honestly in the UI rather than
-// hidden, per the product decision for this module.
+// Properties (Module 06) + Property Assets tab (Module 32).
+// Assets are backed by the real ASSETS table (Phase 11) and are genuinely
+// linked to a property via property_id. Sell/revalue endpoints exist but
+// stay hidden here — they're finance concepts that don't fit a home
+// appliance, not something this UI needs to expose.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,10 +13,8 @@ import {
   Boxes,
   Building2,
   Calendar,
-  Car,
   DoorOpen,
   Home as HomeIcon,
-  Info,
   Landmark,
   Pencil,
   Plus,
@@ -58,7 +56,9 @@ export const Route = createFileRoute("/properties")({
 
 const PROPERTY_TYPES = ["HOUSE", "APARTMENT", "CONDO", "OFFICE", "OTHER"] as const;
 const ROOM_TYPES = ["BEDROOM", "BATHROOM", "KITCHEN", "LIVING_ROOM", "OTHER"] as const;
-const ASSET_TYPES = ["REAL_ESTATE", "VEHICLE", "EQUIPMENT", "OTHER"] as const;
+// Matches the ASSETS table's real CK_ASSET_TYPE constraint (Phase 11) — not
+// the unrelated finance-style AssetType enum found elsewhere in the backend.
+const ASSET_TYPES = ["appliance", "hvac", "plumbing", "electrical", "furniture", "security", "other"] as const;
 const CURRENCIES = ["TZS", "USD", "KES", "EUR"] as const;
 
 function propertyTypeIcon(type: string) {
@@ -92,12 +92,18 @@ function roomTypeIcon(type: string) {
 
 function assetTypeIcon(type: string) {
   switch (type) {
-    case "REAL_ESTATE":
-      return HomeIcon;
-    case "VEHICLE":
-      return Car;
-    case "EQUIPMENT":
+    case "hvac":
       return Wrench;
+    case "plumbing":
+      return Wrench;
+    case "electrical":
+      return Wrench;
+    case "furniture":
+      return Sofa;
+    case "security":
+      return Landmark;
+    case "appliance":
+      return Boxes;
     default:
       return Boxes;
   }
@@ -274,12 +280,7 @@ function PropertiesPage() {
         </TabsContent>
 
         <TabsContent value="assets">
-          <div className="mt-4 flex items-start gap-2 rounded-2xl bg-primary/5 p-3 text-xs text-muted-foreground">
-            <Info className="mt-0.5 size-3.5 shrink-0 text-primary" />
-            {t("assets.notLinkedNote")}
-          </div>
-
-          <div className="mt-3 flex items-center justify-end">
+          <div className="mt-4 flex items-center justify-end">
             <Button className="gap-2" onClick={() => setAddAssetOpen(true)}>
               <Plus className="size-4" /> {t("assets.add")}
             </Button>
@@ -304,6 +305,7 @@ function PropertiesPage() {
                   columns={[
                     t("assets.columns.name"),
                     t("assets.columns.type"),
+                    t("assets.columns.property"),
                     t("assets.columns.purchaseValue"),
                     t("assets.columns.purchasedAt"),
                     t("assets.columns.notes"),
@@ -324,6 +326,7 @@ function PropertiesPage() {
                           </div>
                         </td>
                         <td className="px-4 py-4 text-muted-foreground">{t(`assets.types.${a.asset_type}`, { defaultValue: a.asset_type })}</td>
+                        <td className="px-4 py-4 text-muted-foreground">{a.property_name || t("assets.noProperty")}</td>
                         <td className="px-4 py-4">{fmtMoney(a.purchase_value, a.currency)}</td>
                         <td className="px-4 py-4 text-muted-foreground">{a.purchased_at ? fmtDate(a.purchased_at) : "—"}</td>
                         <td className="max-w-[220px] truncate px-4 py-4 text-muted-foreground">{a.notes || "—"}</td>
@@ -394,11 +397,12 @@ function PropertiesPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <AssetFormDialog open={addAssetOpen} onOpenChange={setAddAssetOpen} onSaved={loadAssets} />
+      <AssetFormDialog open={addAssetOpen} onOpenChange={setAddAssetOpen} properties={properties ?? []} onSaved={loadAssets} />
       <AssetFormDialog
         open={!!editingAsset}
         onOpenChange={(v) => !v && setEditingAsset(null)}
         asset={editingAsset}
+        properties={properties ?? []}
         onSaved={() => {
           loadAssets();
           setEditingAsset(null);
@@ -688,17 +692,20 @@ function AssetFormDialog({
   open,
   onOpenChange,
   asset,
+  properties,
   onSaved,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   asset?: AssetRow | null;
+  properties: PropertyRow[];
   onSaved: () => void;
 }) {
   const { t } = useTranslation("properties");
   const isEdit = !!asset;
   const [name, setName] = useState("");
-  const [assetType, setAssetType] = useState<string>("EQUIPMENT");
+  const [assetType, setAssetType] = useState<string>("appliance");
+  const [propertyId, setPropertyId] = useState<string>("none");
   const [purchaseValue, setPurchaseValue] = useState("");
   const [currency, setCurrency] = useState<string>("TZS");
   const [purchasedAt, setPurchasedAt] = useState("");
@@ -708,7 +715,8 @@ function AssetFormDialog({
   useEffect(() => {
     if (open) {
       setName(asset?.name ?? "");
-      setAssetType(asset?.asset_type ?? "EQUIPMENT");
+      setAssetType(asset?.asset_type ?? "appliance");
+      setPropertyId(asset?.property_id ?? "none");
       setPurchaseValue(asset?.purchase_value != null ? String(asset.purchase_value) : "");
       setCurrency(asset?.currency ?? "TZS");
       setPurchasedAt(asset?.purchased_at ? asset.purchased_at.slice(0, 10) : "");
@@ -734,6 +742,7 @@ function AssetFormDialog({
         await assetsApi.create({
           name: name.trim(),
           asset_type: assetType,
+          property_id: propertyId === "none" ? null : propertyId,
           ...(purchaseValue.trim() ? { purchase_value: Number(purchaseValue) } : {}),
           currency,
           purchased_at: purchasedAt || null,
@@ -768,6 +777,18 @@ function AssetFormDialog({
               <SelectContent>
                 {ASSET_TYPES.map((v) => (
                   <SelectItem key={v} value={v}>{t(`assets.types.${v}`)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1.5">
+            <Label>{t("assets.propertyLabel")}</Label>
+            <Select value={propertyId} onValueChange={setPropertyId} disabled={isEdit}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">{t("assets.noProperty")}</SelectItem>
+                {properties.map((p) => (
+                  <SelectItem key={p.property_id} value={p.property_id}>{p.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
