@@ -15,6 +15,7 @@ class CreateAssetDTO(BaseDTO):
     user_id: str
     name: str
     asset_type: str = "OTHER"
+    property_id: str | None = None
     purchase_value: Decimal = Decimal("0")
     currency: str = "USD"
     purchased_at: date | None = None
