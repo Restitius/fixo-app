@@ -48,6 +48,7 @@ class Composition:
         self.provider_billing_repository: Any = None
         self.provider_earnings_repository: Any = None
         self.provider_wallet_repository: Any = None
+        self.provider_payout_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -356,6 +357,14 @@ class Composition:
         self.provider_wallet_repository = ProviderWalletSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_payout_sql_adapter import (
+            ProviderPayoutSqlAdapter,
+        )
+
+        self.provider_payout_repository = ProviderPayoutSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -651,6 +660,14 @@ class Composition:
         )
 
         return ProviderWalletService(wallet=self.provider_wallet_repository)
+
+    def provider_payout_service(self) -> Any:
+        """ProviderPayoutService — payout methods + withdrawals (Req Phase 30)."""
+        from app.domains.providers.services.provider_payout_service import (
+            ProviderPayoutService,
+        )
+
+        return ProviderPayoutService(payouts=self.provider_payout_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
