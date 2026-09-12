@@ -2,9 +2,15 @@
 
 Prefix: /providers/me/ratings
 
+<<<<<<< HEAD
 - GET /        — list reviews (optional status and min_rating filters)
 - GET /summary — rating summary (total, average, star distribution, this-month)
 - GET /{review_id} — single review
+=======
+- GET /        list reviews (optional status and min_rating filters)
+- GET /summary rating summary (total, average, star distribution, this-month)
+- GET /{review_id} single review
+>>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
 """
 
 from __future__ import annotations
@@ -33,7 +39,11 @@ async def list_reviews(
     limit: int = Query(50, ge=1, le=100),
     offset: int = Query(0, ge=0),
     provider: dict = Depends(get_current_provider),
+<<<<<<< HEAD
 ) -> list[Any]:
+=======
+) -> dict[str, Any]:
+>>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
     """List provider reviews with optional filters."""
     svc = _service()
     return await svc.list_reviews(
@@ -48,7 +58,11 @@ async def list_reviews(
 @router.get("/summary")
 async def get_summary(
     provider: dict = Depends(get_current_provider),
+<<<<<<< HEAD
 ) -> Any:
+=======
+) -> dict[str, Any]:
+>>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
     """Return provider rating summary."""
     svc = _service()
     return await svc.get_summary(provider_id=str(provider["provider_id"]))
@@ -58,9 +72,17 @@ async def get_summary(
 async def get_review(
     review_id: str,
     provider: dict = Depends(get_current_provider),
+<<<<<<< HEAD
 ) -> Any:
+=======
+) -> dict[str, Any]:
+>>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
     """Return a single review by id (ownership-checked)."""
     svc = _service()
     return await svc.get_review(
         provider_id=str(provider["provider_id"]), review_id=review_id
+<<<<<<< HEAD
     )
+=======
+    )
+>>>>>>> refs/rewritten/Merge-module-provider-into-dev-Phase-36-
