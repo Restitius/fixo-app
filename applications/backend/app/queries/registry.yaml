@@ -2242,6 +2242,34 @@ queries:
     security:
       ownership_filter_required: true
       requires_auth: true
+  PROV.COMMISSION.RATE:
+    description: Current active commission + tax rate configuration for a provider (Provider Phase 31).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/rate.sql
+  PROV.COMMISSION.FEES.APPLY:
+    description: Record a commission/fee application event for a provider (Provider Phase 31).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/fees_apply.sql
+  PROV.COMMISSION.FEES.LIST:
+    description: Provider commission/fee application history, newest first (Provider Phase 31).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/fees_list.sql
+  PROV.COMMISSION.FEES.SUMMARY:
+    description: Totals for a provider's commission/fee events (Provider Phase 31).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/fees_summary.sql
   PROV.PAYOUT.METHODS.LIST:
     sql: providers/payouts/methods_list.sql
     operation: read

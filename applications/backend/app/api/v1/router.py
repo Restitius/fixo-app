@@ -48,6 +48,7 @@ from app.domains.providers.api.billing_router import router as provider_billing_
 from app.domains.providers.api.earnings_router import router as provider_earnings_router
 from app.domains.providers.api.wallet_router import router as provider_wallet_router
 from app.domains.providers.api.payout_router import router as provider_payout_router
+from app.domains.providers.api.commission_router import router as provider_commission_router
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -115,6 +116,7 @@ api_v1_router.include_router(provider_completion_router)
 api_v1_router.include_router(provider_reviews_router)
 api_v1_router.include_router(provider_billing_router)
 api_v1_router.include_router(provider_payout_router)
+api_v1_router.include_router(provider_commission_router)
 api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
