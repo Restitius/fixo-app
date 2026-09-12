@@ -2237,6 +2237,7 @@ queries:
       requires_auth: true
     sql: providers/wallet/ledger.sql
   PROV.PAYOUT.METHODS.ADD:
+    description: Register a payout method for a provider (Provider Phase 30).
     sql: providers/payouts/method_add.sql
     operation: update
     security:
@@ -2292,7 +2293,7 @@ queries:
       requires_auth: true
     sql: providers/reviews/detail.sql
   PROV.KPIS.LIST:
-    providerformance KPIs list by period (Provider Phase 34).
+    description: Provider performance KPIs list by period (Provider Phase 34).
     operation: read
     security:
       ownership_filter_required: true
@@ -2341,42 +2342,49 @@ queries:
       requires_auth: true
     sql: providers/commission/fees_summary.sql
   PROV.PAYOUT.METHODS.LIST:
+    description: List provider payout methods (Provider Phase 30).
     sql: providers/payouts/methods_list.sql
     operation: read
     security:
       ownership_filter_required: true
       requires_auth: true
   PROV.PAYOUT.METHODS.SET_DEFAULT:
+    description: Set the default payout method (Provider Phase 30).
     sql: providers/payouts/method_set_default.sql
     operation: update
     security:
       ownership_filter_required: true
       requires_auth: true
   PROV.PAYOUT.METHODS.DELETE:
+    description: Remove a payout method (Provider Phase 30).
     sql: providers/payouts/method_delete.sql
     operation: delete
     security:
       ownership_filter_required: true
       requires_auth: true
   PROV.PAYOUT.WITHDRAW:
+    description: Request a wallet withdrawal (Provider Phase 30).
     sql: providers/payouts/withdraw.sql
     operation: update
     security:
       ownership_filter_required: true
       requires_auth: true
   PROV.PAYOUT.LIST:
+    description: Provider payout history (Provider Phase 30).
     sql: providers/payouts/list.sql
     operation: read
     security:
       ownership_filter_required: true
       requires_auth: true
   PROV.PAYOUT.GET:
+    description: Single payout by id (Provider Phase 30).
     sql: providers/payouts/get.sql
     operation: read
     security:
       ownership_filter_required: true
       requires_auth: true
   PROV.PAYOUT.CANCEL:
+    description: Cancel a requested payout (Provider Phase 30).
     sql: providers/payouts/cancel.sql
     operation: update
     security:
