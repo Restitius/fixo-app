@@ -53,6 +53,7 @@ from app.domains.providers.api.invoices_router import router as provider_invoice
 from app.domains.providers.api.ratings_router import router as provider_ratings_router
 from app.domains.providers.api.kpis_router import router as provider_kpis_router
 from app.domains.providers.api.ranking_router import router as provider_ranking_router
+from app.domains.providers.api.portfolio_router import router as provider_portfolio_router
 from app.domains.providers.api.notifications_router import router as provider_notifications_router
 
 from app.domains.providers.api.availability_router import (
@@ -126,6 +127,7 @@ api_v1_router.include_router(provider_invoices_router)
 api_v1_router.include_router(provider_ratings_router)
 api_v1_router.include_router(provider_kpis_router)
 api_v1_router.include_router(provider_ranking_router)
+api_v1_router.include_router(provider_portfolio_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_dashboard_router)

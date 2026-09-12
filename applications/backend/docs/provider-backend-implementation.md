@@ -65,7 +65,7 @@
 | PRV-33 | 33 | Ratings & Reviews | ✅ |
 | PRV-34 | 34 | Provider Performance KPIs | ✅ |
 | PRV-35 | 35 | Provider Ranking & Reputation | ✅ |
-| PRV-36 | 36 | Portfolio | ⏳ |
+| PRV-36 | 36 | Portfolio | ✅ |
 | PRV-37 | 37 | Provider Notifications | ⏳ |
 | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
 | PRV-39 | 39 | Disputes | ⏳ |
@@ -189,6 +189,33 @@ Phase 35 adds provider-facing ranking visibility.
   - `GET /leaderboard` — public top providers
 
 Read-only in this phase — no rank computation or ingestion.
+
+## Phase 36 — Portfolio
+
+Phase 36 adds provider portfolio CRUD — completed job showcases with title,
+description, service category, before/after image references, completion date,
+featured flag, and status.
+
+- `PROVIDER_PORTFOLIO` — provider-owned portfolio rows with title, description,
+  service_category, before_image_url, after_image_url, completed_on,
+  is_featured, status (published/draft/archived), timestamps.
+- Governed queries `PROV.PORTFOLIO.LIST`, `PROV.PORTFOLIO.GET`,
+  `PROV.PORTFOLIO.ADD`, `PROV.PORTFOLIO.UPDATE`, `PROV.PORTFOLIO.DELETE`.
+- `ProviderPortfolioService` with:
+  - list (optional status filter, featured first then newest),
+  - single item fetch with ownership check,
+  - add with validation (title required, max length, status enum),
+  - update with validation (COALESCE behavior, partial updates),
+  - delete with ownership check.
+- Router prefix `/providers/me/portfolio`:
+  - `GET /` — list portfolio items
+  - `GET /{item_id}` — single item
+  - `POST /` — add item
+  - `PATCH /{item_id}` — update item
+  - `DELETE /{item_id}` — remove item
+
+Validation enforced server-side: title required (max 256), status must be
+published/draft/archived. Featured items pinned to top of listings.
 
 ## Phase 37 — Provider Notifications
 

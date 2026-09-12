@@ -2306,6 +2306,41 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/ranking/get.sql
+  PROV.PORTFOLIO.LIST:
+    description: Provider portfolio items, featured first then newest (Provider Phase 36).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/list.sql
+  PROV.PORTFOLIO.GET:
+    description: Single provider portfolio item by id (Provider Phase 36).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/get.sql
+  PROV.PORTFOLIO.ADD:
+    description: Add a portfolio item for a provider (Provider Phase 36).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/add.sql
+  PROV.PORTFOLIO.UPDATE:
+    description: Update a provider portfolio item (Provider Phase 36).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/update.sql
+  PROV.PORTFOLIO.DELETE:
+    description: Remove a provider portfolio item (Provider Phase 36).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/delete.sql
   PROV.RANKING.LEADERBOARD:
     description: Public leaderboard of top providers by rank score (Provider Phase 35).
     operation: read
