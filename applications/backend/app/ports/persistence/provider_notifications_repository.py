@@ -1,29 +1,35 @@
-"""ProviderNotificationsRepository — persistence port for provider notifications.
+"""ProviderNotificationsRepository — provider notifications (Requirement Phase 37).
 
-PROV.NOTIFICATIONS.* IDs live only in ProviderNotificationsSqlAdapter.
-Phase 32 exposes provider-facing notification history/list + read state:
-list (optionally filtered by status/category), unread count, and idempotent
-mark-read.
+Manages provider-facing notification rows: list with filters, fetch single,
+mark read (idempotent), and count unread.
+
+Channels: in_app, email, sms.
+Categories: booking, payout, review, system, etc.
 """
+
 from __future__ import annotations
 
-from typing import Any, Protocol, runtime_checkable
+from abc import abstractmethod
+from typing import Any, Protocol
 
 
-@runtime_checkable
 class ProviderNotificationsRepository(Protocol):
+    @abstractmethod
     async def list(
         self,
         provider_id: str,
         *,
         status: str | None = None,
         category: str | None = None,
-        limit: int = 20,
+        limit: int = 50,
         offset: int = 0,
-    ) -> list[dict[str, Any]]: ...
+    ) -> list[Any]: ...
 
+    @abstractmethod
+    async def get(self, provider_id: str, *, notification_id: str) -> Any | None: ...
+
+    @abstractmethod
+    async def mark_read(self, provider_id: str, *, notification_id: str) -> Any | None: ...
+
+    @abstractmethod
     async def unread_count(self, provider_id: str) -> int: ...
-
-    async def mark_read(
-        self, provider_id: str, notification_id: str
-    ) -> dict[str, Any] | None: ...

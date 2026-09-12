@@ -1,21 +1,11 @@
---name: notifications_list
---description: Provider notifications history, filtered by provider + optional status/category, ordered by created_at desc (Provider Phase 32).
---params: provider_id (uuid), status (text|null), category (text|null), limit (int), offset (int)
-SELECT
-    id,
-    provider_id,
-    channel,
-    category,
-    title,
-    body,
-    is_read,
-    reference_type,
-    reference_id,
-    created_at,
-    updated_at
+-- PROV.NOTIFICATIONS.LIST — provider notifications, newest first.
+-- Optional filters: status (unread|all), category.
+SELECT "id", "provider_id", "channel", "category", "title", "body",
+       "is_read", "reference_type", "reference_id", "created_at", "updated_at"
 FROM "PROVIDER_NOTIFICATIONS"
-WHERE provider_id = :provider_id
-  AND (:category::text IS NULL OR category = :category::text)
-  AND (:status::text IS NULL OR (:status = 'unread' AND is_read = false) OR (:status = 'read' AND is_read = true))
-ORDER BY created_at DESC
+WHERE "provider_id" = :user_id
+  AND (CAST(:status AS varchar) IS NULL OR :status = 'all'
+       OR (:status = 'unread' AND "is_read" = false))
+  AND (CAST(:category AS varchar) IS NULL OR "category" = :category)
+ORDER BY "is_read" ASC, "created_at" DESC
 LIMIT :limit OFFSET :offset;

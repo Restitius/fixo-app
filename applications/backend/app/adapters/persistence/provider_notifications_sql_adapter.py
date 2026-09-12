@@ -1,21 +1,22 @@
-"""ProviderNotificationsSqlAdapter — implemented via governed queries (Phase 32).
+"""ProviderNotificationsSqlAdapter — SQL-backed implementation of ProviderNotificationsRepository.
 
-The only code that knows PROV.NOTIFICATIONS.* query ids.
+Routes operations through governed queries:
+- PROV.NOTIFICATIONS.LIST         — provider notification listing
+- PROV.NOTIFICATIONS.GET          — single item fetch (ownership-scoped)
+- PROV.NOTIFICATIONS.MARK_READ    — mark as read (idempotent)
+- PROV.NOTIFICATIONS.UNREAD_COUNT — count unread
 """
+
 from __future__ import annotations
 
 from typing import Any
 
-
-class ProviderNotificationsQueryIds:
-    LIST = "PROV.NOTIFICATIONS.LIST"
-    UNREAD_COUNT = "PROV.NOTIFICATIONS.UNREAD_COUNT"
-    MARK_READ = "PROV.NOTIFICATIONS.MARK_READ"
+from app.ports.persistence.provider_notifications_repository import ProviderNotificationsRepository
 
 
-class ProviderNotificationsSqlAdapter:
-    def __init__(self, sql_query_manager: Any) -> None:
-        self._sql = sql_query_manager
+class ProviderNotificationsSqlAdapter(ProviderNotificationsRepository):
+    def __init__(self, queries: Any) -> None:
+        self._queries = queries
 
     async def list(
         self,
@@ -23,35 +24,43 @@ class ProviderNotificationsSqlAdapter:
         *,
         status: str | None = None,
         category: str | None = None,
-        limit: int = 20,
+        limit: int = 50,
         offset: int = 0,
-    ) -> list[dict[str, Any]]:
-        rows = await self._sql.execute(
-            ProviderNotificationsQueryIds.LIST,
+    ) -> list[Any]:
+        """List provider notifications, newest first."""
+        return await self._queries.execute(
+            "PROV.NOTIFICATIONS.LIST",
             {
-                "provider_id": provider_id,
+                "user_id": provider_id,
                 "status": status,
                 "category": category,
                 "limit": limit,
                 "offset": offset,
             },
-            fetch="all",
         )
-        return list(rows or [])
+
+    async def get(self, provider_id: str, *, notification_id: str) -> Any | None:
+        """Fetch a single notification by id (ownership-scoped)."""
+        rows = await self._queries.execute(
+            "PROV.NOTIFICATIONS.GET",
+            {"user_id": provider_id, "notification_id": notification_id},
+        )
+        return rows[0] if rows else None
+
+    async def mark_read(self, provider_id: str, *, notification_id: str) -> Any | None:
+        """Mark a notification as read (idempotent)."""
+        rows = await self._queries.execute(
+            "PROV.NOTIFICATIONS.MARK_READ",
+            {"user_id": provider_id, "notification_id": notification_id},
+        )
+        return rows[0] if rows else None
 
     async def unread_count(self, provider_id: str) -> int:
-        row = await self._sql.execute(
-            ProviderNotificationsQueryIds.UNREAD_COUNT,
-            {"provider_id": provider_id},
-            fetch="one",
+        """Return the count of unread notifications for a provider."""
+        rows = await self._queries.execute(
+            "PROV.NOTIFICATIONS.UNREAD_COUNT",
+            {"user_id": provider_id},
         )
-        return int(row.get("unread_count") or 0) if row else 0
-
-    async def mark_read(
-        self, provider_id: str, notification_id: str
-    ) -> dict[str, Any] | None:
-        return await self._sql.execute(
-            ProviderNotificationsQueryIds.MARK_READ,
-            {"provider_id": provider_id, "notification_id": notification_id},
-            fetch="one",
-        )
+        if rows and rows[0]:
+            return int(rows[0].get("unread_count", 0))
+        return 0
