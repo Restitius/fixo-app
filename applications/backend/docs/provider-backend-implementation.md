@@ -63,7 +63,7 @@
 | PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
 | PRV-32 | 32 | Invoices & Statements | ✅ |
 | PRV-33 | 33 | Ratings & Reviews | ✅ |
-| PRV-34 | 34 | Provider Performance KPIs | ⏳ |
+| PRV-34 | 34 | Provider Performance KPIs | ✅ |
 | PRV-35 | 35 | Provider Ranking & Reputation | ⏳ |
 | PRV-36 | 36 | Portfolio | ⏳ |
 | PRV-37 | 37 | Provider Notifications | ⏳ |
@@ -154,6 +154,23 @@ Phase 33 adds provider-facing review visibility.
   - `GET /{review_id}` — single review
 
 Read-only in this phase — no review submission or response.
+
+## Phase 34 — Provider Performance KPIs
+
+Phase 34 adds provider-facing performance KPI visibility.
+
+- `PROVIDER_KPIS` — provider-owned KPI rows by period (weekly/monthly/quarterly/yearly)
+  with completion_rate, on_time_rate, avg_rating, response_time_minutes,
+  jobs_completed, jobs_cancelled, revenue, timestamps.
+- Governed queries `PROV.KPIS.LIST`, `PROV.KPIS.SUMMARY`.
+- `ProviderKpisService` with:
+  - list (optional period filter),
+  - summary: averages and totals across all periods.
+- Router prefix `/providers/me/kpis`:
+  - `GET /` — list KPIs
+  - `GET /summary` — KPI totals
+
+Read-only in this phase — no KPI calculation or ingestion.
 
 ## Phase 37 — Provider Notifications
 
