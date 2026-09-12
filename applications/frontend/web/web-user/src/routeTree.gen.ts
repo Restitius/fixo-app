@@ -15,6 +15,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as DisputesRouteImport } from './routes/disputes'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as HistoryRouteImport } from './routes/history'
@@ -22,17 +23,22 @@ import { Route as InboxRouteImport } from './routes/inbox'
 import { Route as InvoicesRouteImport } from './routes/invoices'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PaymentsRouteImport } from './routes/payments'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PromotionsRouteImport } from './routes/promotions'
+import { Route as PropertiesRouteImport } from './routes/properties'
 import { Route as ProtectedRouteImport } from './routes/protected'
 import { Route as ProvidersRouteImport } from './routes/providers'
+import { Route as RecurringRouteImport } from './routes/recurring'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
 import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as WarrantiesRouteImport } from './routes/warranties'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -62,6 +68,11 @@ const BookmarksRoute = BookmarksRouteImport.update({
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisputesRoute = DisputesRouteImport.update({
+  id: '/disputes',
+  path: '/disputes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedbackRoute = FeedbackRouteImport.update({
@@ -99,9 +110,19 @@ const LoyaltyRoute = LoyaltyRouteImport.update({
   path: '/loyalty',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentsRoute = PaymentsRouteImport.update({
@@ -119,6 +140,11 @@ const PromotionsRoute = PromotionsRouteImport.update({
   path: '/promotions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PropertiesRoute = PropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/protected',
   path: '/protected',
@@ -127,6 +153,11 @@ const ProtectedRoute = ProtectedRouteImport.update({
 const ProvidersRoute = ProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecurringRoute = RecurringRouteImport.update({
+  id: '/recurring',
+  path: '/recurring',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -154,6 +185,11 @@ const WalletRoute = WalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WarrantiesRoute = WarrantiesRouteImport.update({
+  id: '/warranties',
+  path: '/warranties',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -162,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/bookings': typeof BookingsRoute
   '/bookmarks': typeof BookmarksRoute
   '/calendar': typeof CalendarRoute
+  '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
@@ -169,17 +206,22 @@ export interface FileRoutesByFullPath {
   '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
+  '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
+  '/properties': typeof PropertiesRoute
   '/protected': typeof ProtectedRoute
   '/providers': typeof ProvidersRoute
+  '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
+  '/warranties': typeof WarrantiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -188,6 +230,7 @@ export interface FileRoutesByTo {
   '/bookings': typeof BookingsRoute
   '/bookmarks': typeof BookmarksRoute
   '/calendar': typeof CalendarRoute
+  '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
@@ -195,17 +238,22 @@ export interface FileRoutesByTo {
   '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
+  '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
+  '/properties': typeof PropertiesRoute
   '/protected': typeof ProtectedRoute
   '/providers': typeof ProvidersRoute
+  '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
+  '/warranties': typeof WarrantiesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -215,6 +263,7 @@ export interface FileRoutesById {
   '/bookings': typeof BookingsRoute
   '/bookmarks': typeof BookmarksRoute
   '/calendar': typeof CalendarRoute
+  '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
@@ -222,17 +271,22 @@ export interface FileRoutesById {
   '/invoices': typeof InvoicesRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
+  '/maintenance': typeof MaintenanceRoute
   '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
+  '/properties': typeof PropertiesRoute
   '/protected': typeof ProtectedRoute
   '/providers': typeof ProvidersRoute
+  '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
+  '/warranties': typeof WarrantiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -243,6 +297,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/bookmarks'
     | '/calendar'
+    | '/disputes'
     | '/feedback'
     | '/help'
     | '/history'
@@ -250,17 +305,22 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/login'
     | '/loyalty'
+    | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/payments'
     | '/profile'
     | '/promotions'
+    | '/properties'
     | '/protected'
     | '/providers'
+    | '/recurring'
     | '/register'
     | '/search'
     | '/services'
     | '/verify-otp'
     | '/wallet'
+    | '/warranties'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -269,6 +329,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/bookmarks'
     | '/calendar'
+    | '/disputes'
     | '/feedback'
     | '/help'
     | '/history'
@@ -276,17 +337,22 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/login'
     | '/loyalty'
+    | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/payments'
     | '/profile'
     | '/promotions'
+    | '/properties'
     | '/protected'
     | '/providers'
+    | '/recurring'
     | '/register'
     | '/search'
     | '/services'
     | '/verify-otp'
     | '/wallet'
+    | '/warranties'
   id:
     | '__root__'
     | '/'
@@ -295,6 +361,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/bookmarks'
     | '/calendar'
+    | '/disputes'
     | '/feedback'
     | '/help'
     | '/history'
@@ -302,17 +369,22 @@ export interface FileRouteTypes {
     | '/invoices'
     | '/login'
     | '/loyalty'
+    | '/maintenance'
     | '/notifications'
+    | '/onboarding'
     | '/payments'
     | '/profile'
     | '/promotions'
+    | '/properties'
     | '/protected'
     | '/providers'
+    | '/recurring'
     | '/register'
     | '/search'
     | '/services'
     | '/verify-otp'
     | '/wallet'
+    | '/warranties'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -322,6 +394,7 @@ export interface RootRouteChildren {
   BookingsRoute: typeof BookingsRoute
   BookmarksRoute: typeof BookmarksRoute
   CalendarRoute: typeof CalendarRoute
+  DisputesRoute: typeof DisputesRoute
   FeedbackRoute: typeof FeedbackRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
@@ -329,17 +402,22 @@ export interface RootRouteChildren {
   InvoicesRoute: typeof InvoicesRoute
   LoginRoute: typeof LoginRoute
   LoyaltyRoute: typeof LoyaltyRoute
+  MaintenanceRoute: typeof MaintenanceRoute
   NotificationsRoute: typeof NotificationsRoute
+  OnboardingRoute: typeof OnboardingRoute
   PaymentsRoute: typeof PaymentsRoute
   ProfileRoute: typeof ProfileRoute
   PromotionsRoute: typeof PromotionsRoute
+  PropertiesRoute: typeof PropertiesRoute
   ProtectedRoute: typeof ProtectedRoute
   ProvidersRoute: typeof ProvidersRoute
+  RecurringRoute: typeof RecurringRoute
   RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
   ServicesRoute: typeof ServicesRoute
   VerifyOtpRoute: typeof VerifyOtpRoute
   WalletRoute: typeof WalletRoute
+  WarrantiesRoute: typeof WarrantiesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -384,6 +462,13 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/calendar'
       preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disputes': {
+      id: '/disputes'
+      path: '/disputes'
+      fullPath: '/disputes'
+      preLoaderRoute: typeof DisputesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feedback': {
@@ -435,11 +520,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoyaltyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payments': {
@@ -463,6 +562,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PromotionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/properties': {
+      id: '/properties'
+      path: '/properties'
+      fullPath: '/properties'
+      preLoaderRoute: typeof PropertiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/protected': {
       id: '/protected'
       path: '/protected'
@@ -475,6 +581,13 @@ declare module '@tanstack/react-router' {
       path: '/providers'
       fullPath: '/providers'
       preLoaderRoute: typeof ProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recurring': {
+      id: '/recurring'
+      path: '/recurring'
+      fullPath: '/recurring'
+      preLoaderRoute: typeof RecurringRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -512,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/warranties': {
+      id: '/warranties'
+      path: '/warranties'
+      fullPath: '/warranties'
+      preLoaderRoute: typeof WarrantiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -522,6 +642,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookingsRoute: BookingsRoute,
   BookmarksRoute: BookmarksRoute,
   CalendarRoute: CalendarRoute,
+  DisputesRoute: DisputesRoute,
   FeedbackRoute: FeedbackRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
@@ -529,17 +650,22 @@ const rootRouteChildren: RootRouteChildren = {
   InvoicesRoute: InvoicesRoute,
   LoginRoute: LoginRoute,
   LoyaltyRoute: LoyaltyRoute,
+  MaintenanceRoute: MaintenanceRoute,
   NotificationsRoute: NotificationsRoute,
+  OnboardingRoute: OnboardingRoute,
   PaymentsRoute: PaymentsRoute,
   ProfileRoute: ProfileRoute,
   PromotionsRoute: PromotionsRoute,
+  PropertiesRoute: PropertiesRoute,
   ProtectedRoute: ProtectedRoute,
   ProvidersRoute: ProvidersRoute,
+  RecurringRoute: RecurringRoute,
   RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
   ServicesRoute: ServicesRoute,
   VerifyOtpRoute: VerifyOtpRoute,
   WalletRoute: WalletRoute,
+  WarrantiesRoute: WarrantiesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

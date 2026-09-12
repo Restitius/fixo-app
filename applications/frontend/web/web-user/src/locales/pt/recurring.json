@@ -1,0 +1,101 @@
+{
+  "loading": "Carregando…",
+  "page": {
+    "title": "Serviços Recorrentes",
+    "subtitle": "Configure reservas recorrentes e deixe que cuidamos da agenda"
+  },
+  "metrics": {
+    "total": {
+      "label": "Total de Assinaturas",
+      "hint": "Em todos os serviços"
+    },
+    "active": {
+      "label": "Ativas",
+      "hint_one": "{{count}} assinatura em andamento",
+      "hint_other": "{{count}} assinaturas em andamento"
+    },
+    "paused": {
+      "label": "Pausadas",
+      "hint_one": "{{count}} assinatura em pausa",
+      "hint_other": "{{count}} assinaturas em pausa"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "Semanal",
+    "BIWEEKLY": "A cada 2 semanas",
+    "MONTHLY": "Mensal",
+    "QUARTERLY": "Trimestral"
+  },
+  "status": {
+    "ACTIVE": "Ativa",
+    "PAUSED": "Pausada",
+    "CANCELLED": "Cancelada"
+  },
+  "timeWindow": {
+    "MORNING": "Manhã",
+    "AFTERNOON": "Tarde",
+    "EVENING": "Noite"
+  },
+  "newSubscription": "Nova Assinatura",
+  "searchPlaceholder": "Buscar por serviço...",
+  "filterStatus": "Status",
+  "filterAllStatuses": "Todos os status",
+  "columns": {
+    "service": "Serviço",
+    "frequency": "Frequência",
+    "nextRun": "Próxima Execução",
+    "details": "Detalhes",
+    "status": "Status",
+    "actions": "Ações"
+  },
+  "noneSet": "—",
+  "pause": "Pausar",
+  "resume": "Retomar",
+  "cancelPlan": "Cancelar",
+  "pausedToast": "Assinatura pausada",
+  "resumedToast": "Assinatura retomada",
+  "cancelledToast": "Assinatura cancelada",
+  "itemLabel_one": "assinatura",
+  "itemLabel_other": "assinaturas",
+  "empty": {
+    "title": "Nenhuma assinatura recorrente ainda",
+    "description": "Configure uma reserva recorrente, como uma limpeza a cada 2 semanas, e cuidaremos da agenda.",
+    "action": "Nova Assinatura"
+  },
+  "emptyFiltered": {
+    "title": "Nenhuma assinatura encontrada",
+    "description": "Tente outro termo de busca ou outro filtro de status.",
+    "action": "Limpar filtros"
+  },
+  "cancelDialog": {
+    "title": "Cancelar esta assinatura?",
+    "description": "Isso interromperá as próximas reservas de {{service}}. Esta ação não pode ser desfeita.",
+    "keep": "Manter",
+    "confirm": "Cancelar assinatura"
+  },
+  "dialog": {
+    "title": "Nova Assinatura",
+    "subtitle": "Configure uma reserva recorrente em uma agenda que funcione para você.",
+    "categoryLabel": "Categoria",
+    "categoryPlaceholder": "Selecione uma categoria",
+    "serviceLabel": "Serviço",
+    "servicePlaceholder": "Selecione um serviço",
+    "servicePlaceholderNoCategory": "Escolha uma categoria primeiro",
+    "addressLabel": "Endereço",
+    "addressPlaceholder": "Selecione um endereço",
+    "addressNone": "Sem endereço específico",
+    "frequencyLabel": "Frequência",
+    "nextRunDateLabel": "Data da próxima execução",
+    "nextRunDateHint": "Opcional — deixe em branco para que o prestador agende a primeira visita",
+    "timeWindowLabel": "Horário preferido",
+    "timeWindowNone": "Qualquer horário",
+    "instructionsLabel": "Instruções",
+    "instructionsPlaceholder": "ex.: Use a porta dos fundos, foque na cozinha e nos banheiros",
+    "instructionsHint": "{{count}}/500 caracteres",
+    "cancel": "Cancelar",
+    "create": "Criar Assinatura",
+    "creating": "Criando…",
+    "selectServiceError": "Selecione um serviço para continuar",
+    "createdToast": "Assinatura criada"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "loading": "جارٍ التحميل…",
+  "itemLabel_zero": "نزاع",
+  "itemLabel_one": "نزاع",
+  "itemLabel_two": "نزاعان",
+  "itemLabel_few": "نزاعات",
+  "itemLabel_many": "نزاعًا",
+  "itemLabel_other": "نزاع",
+  "page": {
+    "title": "النزاعات",
+    "subtitle": "تتبع وإدارة النزاعات التي رفعتها على حجوزاتك"
+  },
+  "metrics": {
+    "total": "إجمالي النزاعات",
+    "totalHint_zero": "لم يتم تقديم أي نزاع",
+    "totalHint_one": "تم تقديم نزاع واحد",
+    "totalHint_two": "تم تقديم نزاعين",
+    "totalHint_few": "تم تقديم {{count}} نزاعات",
+    "totalHint_many": "تم تقديم {{count}} نزاعًا",
+    "totalHint_other": "تم تقديم {{count}} نزاع",
+    "open": "مفتوحة / معلّقة",
+    "openHint": "بانتظار الحل",
+    "closed": "تم حلها",
+    "closedHint": "تم حلها أو إغلاقها أو سحبها"
+  },
+  "search": {
+    "placeholder": "ابحث حسب الفئة أو الوصف أو الحجز..."
+  },
+  "filters": {
+    "statusPlaceholder": "الحالة",
+    "all": "جميع الحالات",
+    "open": "مفتوح",
+    "closed": "مغلق"
+  },
+  "columns": {
+    "category": "الفئة",
+    "description": "الوصف",
+    "booking": "الحجز",
+    "status": "الحالة",
+    "created": "تاريخ الإنشاء"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "جودة الخدمة",
+    "DAMAGE": "ضرر",
+    "BILLING": "الفوترة",
+    "NO_SHOW": "عدم الحضور",
+    "OTHER": "أخرى"
+  },
+  "evidenceKinds": {
+    "PHOTO": "صورة",
+    "DOCUMENT": "مستند",
+    "OTHER": "أخرى"
+  },
+  "empty": {
+    "title": "لا توجد نزاعات بعد",
+    "description": "إذا حدث خطأ ما في أحد حجوزاتك، يمكنك رفع نزاع هنا وسيتدخل فريقنا.",
+    "filteredTitle": "لا توجد نزاعات مطابقة",
+    "filteredDescription": "جرّب كلمة بحث أخرى أو غيّر فلتر الحالة.",
+    "clearFilters": "مسح الفلاتر"
+  },
+  "newDispute": {
+    "trigger": "نزاع جديد",
+    "title": "رفع نزاع جديد",
+    "subtitle": "أخبرنا بما حدث خطأ في أحد حجوزاتك وسنقوم بمراجعته.",
+    "bookingLabel": "الحجز",
+    "bookingPlaceholder": "اختر حجزًا",
+    "noBookings": "ليس لديك أي حجوزات بعد لرفع نزاع بشأنها.",
+    "serviceFallback": "الخدمة",
+    "categoryLabel": "الفئة",
+    "descriptionLabel": "الوصف",
+    "descriptionPlaceholder": "صف ما حدث في 10 أحرف على الأقل...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "إلغاء",
+    "submit": "إرسال النزاع",
+    "submitting": "جارٍ الإرسال...",
+    "opened": "تم فتح النزاع — سيقوم فريقنا بمراجعته",
+    "errors": {
+      "pickBooking": "اختر حجزًا أولاً",
+      "descriptionLength": "يجب أن يكون الوصف بين 10 و2000 حرف"
+    }
+  },
+  "detail": {
+    "title": "تفاصيل النزاع",
+    "booking": "الحجز",
+    "service": "الخدمة",
+    "description": "الوصف",
+    "evidence": "الأدلة",
+    "noEvidence": "لم يتم إرفاق أي دليل بعد.",
+    "withdraw": "سحب النزاع",
+    "withdrawing": "جارٍ السحب...",
+    "withdrawn": "تم سحب النزاع",
+    "alreadyClosed": "هذا النزاع مغلق بالفعل",
+    "withdrawConfirmTitle": "هل تريد سحب هذا النزاع؟",
+    "withdrawConfirmDescription": "سيؤدي هذا إلى إغلاق النزاع ولا يمكن التراجع عنه. اسحبه فقط إذا تم حل المشكلة.",
+    "addEvidence": {
+      "title": "إضافة دليل",
+      "urlPlaceholder": "https://... رابط لصورة أو مستند",
+      "notePlaceholder": "ملاحظة اختيارية",
+      "add": "إضافة الدليل",
+      "adding": "جارٍ الإضافة...",
+      "added": "تمت إضافة الدليل",
+      "errors": {
+        "url": "أدخل رابطًا صحيحًا (2000 حرف كحد أقصى)"
+      }
+    }
+  }
+}

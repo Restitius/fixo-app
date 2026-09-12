@@ -1,0 +1,52 @@
+{
+  "loading": "Carregando…",
+  "page": {
+    "title": "Garantias",
+    "subtitle": "Garantias sobre seus trabalhos concluídos, e quaisquer reclamações que você tenha enviado"
+  },
+  "metrics": {
+    "total": "Total de Garantias",
+    "totalHint": "Desde o início",
+    "active": "Garantias Ativas",
+    "activeHint": "Atualmente em vigor",
+    "expiringSoon": "Expirando em Breve",
+    "expiringSoonHint_one": "Dentro de {{count}} dia",
+    "expiringSoonHint_other": "Dentro de {{count}} dias",
+    "claimsSubmitted": "Reclamações Enviadas",
+    "claimsSubmittedHint_one": "{{count}} reclamação registrada",
+    "claimsSubmittedHint_other": "{{count}} reclamações registradas"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Pesquisar por serviço ou prestador..."
+  },
+  "table": {
+    "service": "Serviço",
+    "provider": "Prestador",
+    "expires": "Expira",
+    "status": "Status",
+    "claim": "Reclamação",
+    "actions": "Ações"
+  },
+  "serviceFallback": "Serviço",
+  "fileClaim": "Enviar Reclamação",
+  "claimAlreadyFiled": "Reclamação enviada",
+  "itemLabel": "garantias",
+  "empty": {
+    "title": "Nenhuma garantia ainda",
+    "description": "As garantias aparecem aqui automaticamente assim que uma reserva é concluída.",
+    "action": "Ver Minhas Reservas",
+    "filteredTitle": "Nenhuma garantia correspondente",
+    "filteredDescription": "Tente um termo de pesquisa diferente.",
+    "clearFilters": "Limpar Pesquisa"
+  },
+  "claimDialog": {
+    "title": "Enviar Reclamação de Garantia",
+    "placeholder": "Descreva o problema com este trabalho em detalhes...",
+    "hint": "{{count}}/2000 caracteres (mínimo de 10)",
+    "tooShort": "Descreva o problema em pelo menos 10 caracteres.",
+    "cancel": "Cancelar",
+    "submit": "Enviar Reclamação",
+    "submitting": "Enviando...",
+    "submitted": "Sua reclamação foi enviada"
+  }
+}

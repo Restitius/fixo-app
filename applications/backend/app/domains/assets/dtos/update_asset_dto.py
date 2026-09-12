@@ -12,7 +12,7 @@ from app.shared.dtos.base import BaseDTO
 class UpdateAssetDTO(BaseDTO):
     """update input DTO moving between controller and service."""
 
-    asset_id: int
+    asset_id: str
     user_id: str
     name: str | None = None
     asset_type: str | None = None

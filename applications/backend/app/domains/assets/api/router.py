@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from app.api.deps.auth import CurrentCustomer
 from app.api.deps.pagination import PaginationDep
-from app.api.deps.request_context import GetRequestContext
 from app.domains.assets.api.controller import AssetController
 from app.domains.assets.requests.create_asset import CreateAssetRequest
 from app.domains.assets.requests.revalue_asset import RevalueAssetRequest
@@ -15,44 +15,44 @@ router = APIRouter(prefix="/assets", tags=["assets"])
 
 
 @router.post("", status_code=201)
-async def create_asset(payload: CreateAssetRequest, ctx=GetRequestContext) -> dict:
+async def create_asset(payload: CreateAssetRequest, customer: CurrentCustomer) -> dict:
     """SCR-AST-001 -> POST /api/v1/assets -> AssetController.create."""
-    return await AssetController.create(ctx, payload)
+    return await AssetController.create(str(customer["customer_id"]), payload)
 
 
 @router.get("")
-async def list_assets(ctx=GetRequestContext, pagination: PaginationDep = None) -> dict:
+async def list_assets(customer: CurrentCustomer, pagination: PaginationDep = None) -> dict:
     """SCR-AST-001 -> GET /api/v1/assets -> AssetController.list."""
-    return await AssetController.list(ctx, pagination)
+    return await AssetController.list(str(customer["customer_id"]), pagination)
 
 
 @router.get("/summary")
-async def asset_summary(ctx=GetRequestContext) -> dict:
+async def asset_summary(customer: CurrentCustomer) -> dict:
     """Portfolio totals for the authenticated owner."""
-    return await AssetController.summary(ctx)
+    return await AssetController.summary(str(customer["customer_id"]))
 
 
 @router.get("/{asset_id}")
-async def get_asset(asset_id: int, ctx=GetRequestContext) -> dict:
+async def get_asset(asset_id: str, customer: CurrentCustomer) -> dict:
     """SCR-AST-002 -> GET /api/v1/assets/{id} -> AssetController.get."""
-    return await AssetController.get(ctx, asset_id)
+    return await AssetController.get(str(customer["customer_id"]), asset_id)
 
 
 @router.patch("/{asset_id}")
-async def update_asset(asset_id: int, payload: UpdateAssetRequest, ctx=GetRequestContext) -> dict:
-    return await AssetController.update(ctx, asset_id, payload)
+async def update_asset(asset_id: str, payload: UpdateAssetRequest, customer: CurrentCustomer) -> dict:
+    return await AssetController.update(str(customer["customer_id"]), asset_id, payload)
 
 
 @router.post("/{asset_id}/sell")
-async def sell_asset(asset_id: int, payload: SellAssetRequest, ctx=GetRequestContext) -> dict:
-    return await AssetController.sell(ctx, asset_id, payload)
+async def sell_asset(asset_id: str, payload: SellAssetRequest, customer: CurrentCustomer) -> dict:
+    return await AssetController.sell(str(customer["customer_id"]), asset_id, payload)
 
 
 @router.post("/{asset_id}/revalue")
-async def revalue_asset(asset_id: int, payload: RevalueAssetRequest, ctx=GetRequestContext) -> dict:
-    return await AssetController.revalue(ctx, asset_id, payload)
+async def revalue_asset(asset_id: str, payload: RevalueAssetRequest, customer: CurrentCustomer) -> dict:
+    return await AssetController.revalue(str(customer["customer_id"]), asset_id, payload)
 
 
 @router.delete("/{asset_id}", status_code=200)
-async def archive_asset(asset_id: int, ctx=GetRequestContext) -> dict:
-    return await AssetController.archive(ctx, asset_id)
+async def archive_asset(asset_id: str, customer: CurrentCustomer) -> dict:
+    return await AssetController.archive(str(customer["customer_id"]), asset_id)

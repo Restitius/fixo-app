@@ -1,0 +1,101 @@
+{
+  "loading": "Wird geladen…",
+  "page": {
+    "title": "Wiederkehrende Leistungen",
+    "subtitle": "Richte wiederkehrende Buchungen ein — wir übernehmen die Terminplanung"
+  },
+  "metrics": {
+    "total": {
+      "label": "Abonnements insgesamt",
+      "hint": "Über alle Leistungen hinweg"
+    },
+    "active": {
+      "label": "Aktiv",
+      "hint_one": "{{count}} laufendes Abo",
+      "hint_other": "{{count}} laufende Abos"
+    },
+    "paused": {
+      "label": "Pausiert",
+      "hint_one": "{{count}} pausiertes Abo",
+      "hint_other": "{{count}} pausierte Abos"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "Wöchentlich",
+    "BIWEEKLY": "Alle 2 Wochen",
+    "MONTHLY": "Monatlich",
+    "QUARTERLY": "Vierteljährlich"
+  },
+  "status": {
+    "ACTIVE": "Aktiv",
+    "PAUSED": "Pausiert",
+    "CANCELLED": "Gekündigt"
+  },
+  "timeWindow": {
+    "MORNING": "Vormittag",
+    "AFTERNOON": "Nachmittag",
+    "EVENING": "Abend"
+  },
+  "newSubscription": "Neues Abo",
+  "searchPlaceholder": "Nach Leistung suchen...",
+  "filterStatus": "Status",
+  "filterAllStatuses": "Alle Status",
+  "columns": {
+    "service": "Leistung",
+    "frequency": "Häufigkeit",
+    "nextRun": "Nächster Termin",
+    "details": "Details",
+    "status": "Status",
+    "actions": "Aktionen"
+  },
+  "noneSet": "—",
+  "pause": "Pausieren",
+  "resume": "Fortsetzen",
+  "cancelPlan": "Kündigen",
+  "pausedToast": "Abo pausiert",
+  "resumedToast": "Abo fortgesetzt",
+  "cancelledToast": "Abo gekündigt",
+  "itemLabel_one": "Abo",
+  "itemLabel_other": "Abos",
+  "empty": {
+    "title": "Noch keine wiederkehrenden Abos",
+    "description": "Richte eine wiederkehrende Buchung ein, z. B. Reinigung alle 2 Wochen, und wir übernehmen die Terminplanung.",
+    "action": "Neues Abo"
+  },
+  "emptyFiltered": {
+    "title": "Keine passenden Abos",
+    "description": "Versuche einen anderen Suchbegriff oder Statusfilter.",
+    "action": "Filter zurücksetzen"
+  },
+  "cancelDialog": {
+    "title": "Dieses Abo kündigen?",
+    "description": "Dadurch werden künftige Buchungen für {{service}} gestoppt. Dies kann nicht rückgängig gemacht werden.",
+    "keep": "Beibehalten",
+    "confirm": "Abo kündigen"
+  },
+  "dialog": {
+    "title": "Neues Abo",
+    "subtitle": "Richte eine wiederkehrende Buchung mit einem Zeitplan ein, der für dich passt.",
+    "categoryLabel": "Kategorie",
+    "categoryPlaceholder": "Kategorie auswählen",
+    "serviceLabel": "Leistung",
+    "servicePlaceholder": "Leistung auswählen",
+    "servicePlaceholderNoCategory": "Wähle zuerst eine Kategorie",
+    "addressLabel": "Adresse",
+    "addressPlaceholder": "Adresse auswählen",
+    "addressNone": "Keine bestimmte Adresse",
+    "frequencyLabel": "Häufigkeit",
+    "nextRunDateLabel": "Datum des nächsten Termins",
+    "nextRunDateHint": "Optional — leer lassen, damit der Anbieter den ersten Termin plant",
+    "timeWindowLabel": "Bevorzugte Uhrzeit",
+    "timeWindowNone": "Jederzeit",
+    "instructionsLabel": "Hinweise",
+    "instructionsPlaceholder": "z. B. Hintertür benutzen, Fokus auf Küche und Badezimmer",
+    "instructionsHint": "{{count}}/500 Zeichen",
+    "cancel": "Abbrechen",
+    "create": "Abo erstellen",
+    "creating": "Wird erstellt…",
+    "selectServiceError": "Wähle eine Leistung, um fortzufahren",
+    "createdToast": "Abo erstellt"
+  }
+}

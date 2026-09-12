@@ -1,0 +1,89 @@
+{
+  "loading": "加载中…",
+  "page": {
+    "title": "维护",
+    "subtitle": "为您的家庭资产制定定期维护计划"
+  },
+  "metrics": {
+    "total": "计划总数",
+    "totalHint": "累计",
+    "active": "进行中的计划",
+    "activeHint": "当前已安排",
+    "dueSoon": "即将到期",
+    "dueSoonHint_other": "{{count}} 天内",
+    "overdue": "已逾期",
+    "overdueHint": "需要处理"
+  },
+  "filterBar": {
+    "searchPlaceholder": "按资产或服务搜索...",
+    "statusPlaceholder": "状态",
+    "allStatuses": "所有状态",
+    "addPlan": "添加计划"
+  },
+  "table": {
+    "asset": "资产",
+    "service": "服务",
+    "interval": "周期",
+    "nextDue": "下次到期",
+    "status": "状态",
+    "actions": "操作",
+    "intervalValue_other": "每 {{count}} 天"
+  },
+  "statuses": {
+    "ACTIVE": "进行中",
+    "OVERDUE": "已逾期",
+    "CANCELLED": "已取消"
+  },
+  "assetFallback": "资产",
+  "serviceFallback": "服务",
+  "actions": {
+    "markDone": "标记为已完成",
+    "markingDone": "正在标记…",
+    "cancel": "取消",
+    "cancelling": "取消中…",
+    "cancelledNote": "计划已取消",
+    "markedDone": "已将“{{asset}}”标记为已维护"
+  },
+  "cancelConfirm": {
+    "title": "要取消此维护计划吗？",
+    "description": "这将停止对“{{asset}}” — {{service}} 的后续提醒，且无法撤销。",
+    "keep": "保留计划",
+    "confirm": "取消计划",
+    "cancelled": "维护计划已取消"
+  },
+  "itemLabel": "个维护计划",
+  "empty": {
+    "title": "暂无维护计划",
+    "description": "设置一个定期计划，以便在资产维护逾期前提醒您。",
+    "action": "添加计划",
+    "filteredTitle": "没有匹配的计划",
+    "filteredDescription": "请尝试其他搜索词或状态。",
+    "clearFilters": "清除筛选条件"
+  },
+  "addDialog": {
+    "title": "添加维护计划",
+    "assetLabel": "资产",
+    "assetPlaceholder": "选择资产",
+    "noAssetsHint": "您还没有任何资产。",
+    "noAssetsCta": "添加资产",
+    "categoryLabel": "类别",
+    "categoryPlaceholder": "选择类别",
+    "serviceLabel": "服务",
+    "servicePlaceholder": "选择服务",
+    "loadingServices": "正在加载服务…",
+    "noServicesFound": "该类别下未找到服务",
+    "intervalLabel": "重复周期（天）",
+    "intervalHint": "介于 1 到 1095 天之间",
+    "nextDueLabel": "下次到期日期（可选）",
+    "nextDueHint_other": "留空则默认为从今天起 {{count}} 天后",
+    "notesLabel": "备注（可选）",
+    "notesPlaceholder": "关于此计划的任何值得记录的信息",
+    "cancel": "取消",
+    "save": "添加计划",
+    "saving": "添加中…",
+    "selectAsset": "请先选择资产。",
+    "selectService": "请先选择服务。",
+    "intervalRange": "周期必须介于 1 到 1095 天之间。",
+    "created": "维护计划已添加"
+  }
+}

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   AlertTriangle,
   Calendar,
+  Check,
   Droplets,
   Loader2,
   MapPin,
@@ -13,6 +14,7 @@ import {
   Printer,
   User,
   Wrench,
+  X,
 } from "lucide-react";
 
 import {
@@ -22,7 +24,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import { bookingApi, fixoSdk, type BookingRow, type TimelineEvent } from "@/lib/api-client";
+import { bookingApi, fixoSdk, type BookingRow, type ChangeRequestRow, type TimelineEvent } from "@/lib/api-client";
 import { fmtDate, fmtDateTime, fmtMoney, humanize } from "@/lib/format";
 import { toast } from "sonner";
 
@@ -49,16 +51,22 @@ interface BookingDetailSheetProps {
 export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" }: BookingDetailSheetProps) {
   const [booking, setBooking] = useState<BookingRow | null>(null);
   const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
+  const [changeRequests, setChangeRequests] = useState<ChangeRequestRow[]>([]);
   const [showMessage, setShowMessage] = useState(false);
   const [showDispute, setShowDispute] = useState(false);
   const [messageBody, setMessageBody] = useState("");
   const [disputeBody, setDisputeBody] = useState("");
   const [sending, setSending] = useState(false);
+  const [decidingId, setDecidingId] = useState<string | null>(null);
+
+  const loadChangeRequests = (id: string) =>
+    bookingApi.listChangeRequests(id).then(setChangeRequests).catch(() => setChangeRequests([]));
 
   useEffect(() => {
     if (!bookingId) {
       setBooking(null);
       setTimeline(null);
+      setChangeRequests([]);
       setShowMessage(false);
       setShowDispute(false);
       setMessageBody("");
@@ -71,10 +79,28 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
       setBooking(b);
       setTimeline(t);
     });
+    void loadChangeRequests(bookingId);
     return () => {
       cancelled = true;
     };
   }, [bookingId]);
+
+  async function decideChangeRequest(changeId: string, decision: "APPROVED" | "DECLINED") {
+    if (!bookingId) return;
+    setDecidingId(changeId);
+    try {
+      await bookingApi.decideChangeRequest(bookingId, changeId, decision);
+      toast.success(decision === "APPROVED" ? "Change approved" : "Change declined");
+      await loadChangeRequests(bookingId);
+      if (decision === "APPROVED") {
+        bookingApi.getBooking(bookingId).then(setBooking).catch(() => {});
+      }
+    } catch {
+      // toast emitted by client
+    } finally {
+      setDecidingId(null);
+    }
+  }
 
   async function sendMessage() {
     if (!bookingId || !messageBody.trim()) return;
@@ -168,6 +194,53 @@ export function BookingDetailSheet({ bookingId, onOpenChange, title = "Details" 
                 {fmtMoney(booking.agreed_amount, booking.currency)}
               </span>
             </div>
+
+            {changeRequests.filter((c) => c.requested_by === "PROVIDER" && c.status === "PROPOSED").length > 0 && (
+              <div className="space-y-3">
+                <h4 className="text-sm font-semibold">Requested Changes</h4>
+                {changeRequests
+                  .filter((c) => c.requested_by === "PROVIDER" && c.status === "PROPOSED")
+                  .map((c) => (
+                    <div key={c.change_id} className="space-y-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold">{humanize(c.change_type)} change</span>
+                        <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-semibold text-amber-600">Pending your approval</span>
+                      </div>
+                      <p className="text-sm">
+                        <span className="text-muted-foreground">From </span>
+                        <span className="font-medium">{c.current_value}</span>
+                        <span className="text-muted-foreground"> to </span>
+                        <span className="font-medium">{c.proposed_value}</span>
+                      </p>
+                      {c.new_work && <p className="text-xs text-muted-foreground">New work: {c.new_work}</p>}
+                      {(c.additional_labour || c.additional_materials || c.additional_price) && (
+                        <p className="text-xs text-muted-foreground">
+                          {c.additional_labour ? `Labour +${fmtMoney(c.additional_labour, c.currency ?? booking.currency)} ` : ""}
+                          {c.additional_materials ? `Materials +${fmtMoney(c.additional_materials, c.currency ?? booking.currency)} ` : ""}
+                          {c.additional_price ? `Total +${fmtMoney(c.additional_price, c.currency ?? booking.currency)}` : ""}
+                        </p>
+                      )}
+                      {c.reason && <p className="text-xs italic text-muted-foreground">"{c.reason}"</p>}
+                      <div className="flex gap-2 pt-1">
+                        <button
+                          onClick={() => void decideChangeRequest(c.change_id, "APPROVED")}
+                          disabled={decidingId === c.change_id}
+                          className="flex items-center gap-1 rounded-lg bg-success px-3 py-1.5 text-xs font-semibold text-success-foreground disabled:opacity-60"
+                        >
+                          <Check className="size-3.5" /> Approve
+                        </button>
+                        <button
+                          onClick={() => void decideChangeRequest(c.change_id, "DECLINED")}
+                          disabled={decidingId === c.change_id}
+                          className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted disabled:opacity-60"
+                        >
+                          <X className="size-3.5" /> Decline
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
 
             <div>
               <h4 className="mb-3 text-sm font-semibold">Timeline</h4>

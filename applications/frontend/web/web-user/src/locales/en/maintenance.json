@@ -1,0 +1,92 @@
+{
+  "loading": "Loading…",
+  "page": {
+    "title": "Maintenance",
+    "subtitle": "Recurring upkeep plans for your home assets"
+  },
+  "metrics": {
+    "total": "Total Plans",
+    "totalHint": "All time",
+    "active": "Active Plans",
+    "activeHint": "Currently scheduled",
+    "dueSoon": "Due Soon",
+    "dueSoonHint_one": "Within {{count}} day",
+    "dueSoonHint_other": "Within {{count}} days",
+    "overdue": "Overdue",
+    "overdueHint": "Needs attention"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Search by asset or service...",
+    "statusPlaceholder": "Status",
+    "allStatuses": "All Statuses",
+    "addPlan": "Add Plan"
+  },
+  "table": {
+    "asset": "Asset",
+    "service": "Service",
+    "interval": "Interval",
+    "nextDue": "Next Due",
+    "status": "Status",
+    "actions": "Actions",
+    "intervalValue_one": "Every {{count}} day",
+    "intervalValue_other": "Every {{count}} days"
+  },
+  "statuses": {
+    "ACTIVE": "Active",
+    "OVERDUE": "Overdue",
+    "CANCELLED": "Cancelled"
+  },
+  "assetFallback": "Asset",
+  "serviceFallback": "Service",
+  "actions": {
+    "markDone": "Mark Done",
+    "markingDone": "Marking…",
+    "cancel": "Cancel",
+    "cancelling": "Cancelling…",
+    "cancelledNote": "Plan cancelled",
+    "markedDone": "Marked \"{{asset}}\" as serviced"
+  },
+  "cancelConfirm": {
+    "title": "Cancel this maintenance plan?",
+    "description": "This stops future reminders for \"{{asset}}\" — {{service}}. This can't be undone.",
+    "keep": "Keep Plan",
+    "confirm": "Cancel Plan",
+    "cancelled": "Maintenance plan cancelled"
+  },
+  "itemLabel": "maintenance plans",
+  "empty": {
+    "title": "No maintenance plans yet",
+    "description": "Set up a recurring plan so we can remind you before an asset falls behind on upkeep.",
+    "action": "Add a Plan",
+    "filteredTitle": "No matching plans",
+    "filteredDescription": "Try a different search term or status.",
+    "clearFilters": "Clear Filters"
+  },
+  "addDialog": {
+    "title": "Add a Maintenance Plan",
+    "assetLabel": "Asset",
+    "assetPlaceholder": "Choose an asset",
+    "noAssetsHint": "You don't have any assets yet.",
+    "noAssetsCta": "Add an asset",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Choose a category",
+    "serviceLabel": "Service",
+    "servicePlaceholder": "Choose a service",
+    "loadingServices": "Loading services…",
+    "noServicesFound": "No services found in this category",
+    "intervalLabel": "Repeat every (days)",
+    "intervalHint": "Between 1 and 1095 days",
+    "nextDueLabel": "Next due date (optional)",
+    "nextDueHint_one": "Defaults to {{count}} day from today if left blank",
+    "nextDueHint_other": "Defaults to {{count}} days from today if left blank",
+    "notesLabel": "Notes (optional)",
+    "notesPlaceholder": "Anything worth remembering about this plan",
+    "cancel": "Cancel",
+    "save": "Add Plan",
+    "saving": "Adding…",
+    "selectAsset": "Choose an asset first.",
+    "selectService": "Choose a service first.",
+    "intervalRange": "Interval must be between 1 and 1095 days.",
+    "created": "Maintenance plan added"
+  }
+}

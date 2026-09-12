@@ -1,0 +1,50 @@
+{
+  "loading": "Wird geladen…",
+  "title": "Willkommen bei FIXO",
+  "subtitle": "Ein paar schnelle Schritte, um dein Konto einzurichten.",
+  "progress": "{{done}} von {{total}} Schritten abgeschlossen",
+  "required": "Erforderlich",
+  "optional": "Optional",
+  "completed": "Abgeschlossen",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "Kontaktdaten bestätigen",
+      "description": "Bestätige deine Telefonnummer oder E-Mail mit dem gesendeten Code.",
+      "verifiedNote": "Deine Kontaktdaten sind bereits verifiziert.",
+      "unverifiedNote": "Wir konnten deine Kontaktdaten nicht automatisch bestätigen — verifiziere deine E-Mail oder Telefonnummer in deinem Profil und komm dann hierher zurück.",
+      "markDone": "Ich habe meine Kontaktdaten verifiziert"
+    },
+    "SET_LOCATION": {
+      "title": "Standort festlegen",
+      "description": "Sag uns, wo du wohnst, damit wir Anbieter in deiner Nähe finden können.",
+      "labelLabel": "Bezeichnung",
+      "recipientNameLabel": "Empfängername",
+      "phoneLabel": "Telefon",
+      "cityLabel": "Stadt",
+      "streetLabel": "Straße",
+      "regionLabel": "Region (optional)",
+      "save": "Standort speichern",
+      "saving": "Wird gespeichert…",
+      "fillRequired": "Gib Empfänger, Telefon, Straße und Stadt ein.",
+      "saved": "Standort gespeichert"
+    },
+    "ADD_PROPERTY": {
+      "title": "Immobilie hinzufügen",
+      "description": "Registriere die Immobilie, an der Dienstleistungen erbracht werden.",
+      "nameLabel": "Name der Immobilie",
+      "namePlaceholder": "z. B. Zuhause, Büro",
+      "typeLabel": "Immobilientyp",
+      "types": { "HOUSE": "Haus", "APARTMENT": "Wohnung", "CONDO": "Eigentumswohnung", "OFFICE": "Büro", "OTHER": "Sonstiges" },
+      "bedroomsLabel": "Schlafzimmer",
+      "bathroomsLabel": "Badezimmer",
+      "save": "Immobilie hinzufügen",
+      "saving": "Wird hinzugefügt…",
+      "skip": "Vorerst überspringen",
+      "fillRequired": "Gib einen Namen für die Immobilie ein.",
+      "saved": "Immobilie hinzugefügt"
+    }
+  },
+  "continueCta": "Weiter zum Dashboard",
+  "allDoneTitle": "Alles bereit!",
+  "allDoneSubtitle": "Dein Konto ist fertig eingerichtet. Lass uns einen großartigen Anbieter für dich finden."
+}
