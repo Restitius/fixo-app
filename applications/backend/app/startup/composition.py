@@ -683,6 +683,13 @@ class Composition:
 
         return ProviderInvoicesService(invoices=self.provider_invoices_repository)
 
+    def provider_reviews_service(self) -> Any:
+        from app.domains.providers.services.provider_reviews_service import (
+            ProviderReviewsService,
+        )
+
+        return ProviderReviewsService(reviews=self.provider_reviews_repository)
+
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
         from app.domains.providers.services.provider_availability_service import (
