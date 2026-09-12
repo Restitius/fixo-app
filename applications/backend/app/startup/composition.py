@@ -669,6 +669,13 @@ class Composition:
 
         return ProviderPayoutService(payouts=self.provider_payout_repository)
 
+    def provider_commission_service(self) -> Any:
+        from app.domains.providers.services.provider_commission_service import (
+            ProviderCommissionService,
+        )
+
+        return ProviderCommissionService(commissions=self.provider_commission_repository)
+
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
         from app.domains.providers.services.provider_availability_service import (
