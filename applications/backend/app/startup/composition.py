@@ -758,6 +758,14 @@ class Composition:
 
         return ProviderPortfolioService(portfolio=self.provider_portfolio_repository)
 
+    def provider_notifications_service(self) -> Any:
+        """ProviderNotificationsService — notifications read/mark-read (Req Phase 37)."""
+        from app.domains.providers.services.provider_notifications_service import (
+            ProviderNotificationsService,
+        )
+
+        return ProviderNotificationsService(notifications=self.provider_notifications_repository)
+
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
         from app.domains.providers.services.provider_availability_service import (

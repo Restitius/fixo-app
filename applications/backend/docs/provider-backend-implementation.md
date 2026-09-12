@@ -66,7 +66,7 @@
 | PRV-34 | 34 | Provider Performance KPIs | ✅ |
 | PRV-35 | 35 | Provider Ranking & Reputation | ✅ |
 | PRV-36 | 36 | Portfolio | ✅ |
-| PRV-37 | 37 | Provider Notifications | ⏳ |
+| PRV-37 | 37 | Provider Notifications | ✅ |
 | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
 | PRV-39 | 39 | Disputes | ⏳ |
 | PRV-40 | 40 | Provider Support | ⏳ |
@@ -219,22 +219,23 @@ published/draft/archived. Featured items pinned to top of listings.
 
 ## Phase 37 — Provider Notifications
 
-Phase 37 adds provider-facing notification read state: history, unread count,
-and idempotent mark-read.
+Phase 37 adds provider-facing notification management.
 
-- `PROVIDER_NOTIFICATIONS` — provider-owned notification rows with channel,
-  category, title, body, is_read, reference_type, reference_id, timestamps.
-- Governed queries `PROV.NOTIFICATIONS.LIST`, `PROV.NOTIFICATIONS.MARK_READ`,
-  `PROV.NOTIFICATIONS.UNREAD_COUNT`.
+- `PROVIDER_NOTIFICATIONS` — provider-owned notification rows with channel
+  (in_app/email/sms), category, title, body, is_read, reference_type,
+  reference_id, timestamps.
+- Governed queries `PROV.NOTIFICATIONS.LIST`, `PROV.NOTIFICATIONS.GET`,
+  `PROV.NOTIFICATIONS.MARK_READ`, `PROV.NOTIFICATIONS.UNREAD_COUNT`.
 - `ProviderNotificationsService` with:
-  - list (optional filter by `status` = unread\|read\|all and `category`),
-  - unread count,
-  - idempotent mark-read.
+  - list (optional status and category filters, unread first then newest),
+  - single notification fetch with ownership check,
+  - idempotent mark-read,
+  - unread count.
 - Router prefix `/providers/me/notifications`:
   - `GET /` — list notifications
+  - `GET /{notification_id}` — single notification
+  - `PATCH /{notification_id}/read` — mark as read
   - `GET /unread-count` — unread count
-  - `PATCH /{notification_id}/read` — mark a notification as read
 
-No background delivery workers or queue infrastructure in this phase;
-notifications are managed synchronously through the service layer. Delivery
-of `channel`-based notifications is out of scope for Phase 37.
+No delivery workers in this phase — notifications are managed synchronously
+through the service layer.
