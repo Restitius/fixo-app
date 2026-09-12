@@ -1,0 +1,101 @@
+{
+  "loading": "लोड हो रहा है…",
+  "page": {
+    "title": "आवर्ती सेवाएं",
+    "subtitle": "बार-बार होने वाली बुकिंग सेट करें, शेड्यूल हम संभालेंगे"
+  },
+  "metrics": {
+    "total": {
+      "label": "कुल सदस्यताएं",
+      "hint": "सभी सेवाओं में"
+    },
+    "active": {
+      "label": "सक्रिय",
+      "hint_one": "{{count}} योजना चल रही है",
+      "hint_other": "{{count}} योजनाएं चल रही हैं"
+    },
+    "paused": {
+      "label": "रोकी गई",
+      "hint_one": "{{count}} योजना रोकी गई",
+      "hint_other": "{{count}} योजनाएं रोकी गई"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "साप्ताहिक",
+    "BIWEEKLY": "हर 2 सप्ताह में",
+    "MONTHLY": "मासिक",
+    "QUARTERLY": "त्रैमासिक"
+  },
+  "status": {
+    "ACTIVE": "सक्रिय",
+    "PAUSED": "रोकी गई",
+    "CANCELLED": "रद्द"
+  },
+  "timeWindow": {
+    "MORNING": "सुबह",
+    "AFTERNOON": "दोपहर",
+    "EVENING": "शाम"
+  },
+  "newSubscription": "नई सदस्यता",
+  "searchPlaceholder": "सेवा के अनुसार खोजें...",
+  "filterStatus": "स्थिति",
+  "filterAllStatuses": "सभी स्थितियां",
+  "columns": {
+    "service": "सेवा",
+    "frequency": "आवृत्ति",
+    "nextRun": "अगली तारीख",
+    "details": "विवरण",
+    "status": "स्थिति",
+    "actions": "कार्रवाइयां"
+  },
+  "noneSet": "—",
+  "pause": "रोकें",
+  "resume": "फिर शुरू करें",
+  "cancelPlan": "रद्द करें",
+  "pausedToast": "सदस्यता रोक दी गई",
+  "resumedToast": "सदस्यता फिर शुरू हुई",
+  "cancelledToast": "सदस्यता रद्द कर दी गई",
+  "itemLabel_one": "सदस्यता",
+  "itemLabel_other": "सदस्यताएं",
+  "empty": {
+    "title": "अभी तक कोई आवर्ती सदस्यता नहीं है",
+    "description": "हर 2 सप्ताह में सफाई जैसी बार-बार होने वाली बुकिंग सेट करें, शेड्यूल हम संभाल लेंगे।",
+    "action": "नई सदस्यता"
+  },
+  "emptyFiltered": {
+    "title": "कोई मिलती-जुलती सदस्यता नहीं मिली",
+    "description": "कोई अलग खोज शब्द या स्थिति फ़िल्टर आज़माएं।",
+    "action": "फ़िल्टर हटाएं"
+  },
+  "cancelDialog": {
+    "title": "क्या इस सदस्यता को रद्द करना है?",
+    "description": "इससे {{service}} की आगामी बुकिंग रुक जाएंगी। यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "keep": "इसे रहने दें",
+    "confirm": "सदस्यता रद्द करें"
+  },
+  "dialog": {
+    "title": "नई सदस्यता",
+    "subtitle": "अपने अनुकूल शेड्यूल पर बार-बार होने वाली बुकिंग सेट करें।",
+    "categoryLabel": "श्रेणी",
+    "categoryPlaceholder": "एक श्रेणी चुनें",
+    "serviceLabel": "सेवा",
+    "servicePlaceholder": "एक सेवा चुनें",
+    "servicePlaceholderNoCategory": "पहले एक श्रेणी चुनें",
+    "addressLabel": "पता",
+    "addressPlaceholder": "एक पता चुनें",
+    "addressNone": "कोई विशेष पता नहीं",
+    "frequencyLabel": "आवृत्ति",
+    "nextRunDateLabel": "अगली तारीख",
+    "nextRunDateHint": "वैकल्पिक — पहली विज़िट शेड्यूल करने के लिए इसे खाली छोड़ें, प्रदाता तय करेगा",
+    "timeWindowLabel": "पसंदीदा समय",
+    "timeWindowNone": "कोई भी समय",
+    "instructionsLabel": "निर्देश",
+    "instructionsPlaceholder": "जैसे: पिछले दरवाज़े का उपयोग करें, रसोई और बाथरूम पर ध्यान दें",
+    "instructionsHint": "{{count}}/500 अक्षर",
+    "cancel": "रद्द करें",
+    "create": "सदस्यता बनाएं",
+    "creating": "बनाया जा रहा है…",
+    "selectServiceError": "जारी रखने के लिए एक सेवा चुनें",
+    "createdToast": "सदस्यता बना दी गई"
+  }
+}

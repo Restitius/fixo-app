@@ -1,0 +1,101 @@
+{
+  "loading": "Inapakia…",
+  "page": {
+    "title": "Huduma za Kujirudia",
+    "subtitle": "Panga huduma zinazojirudia na tutashughulikia ratiba"
+  },
+  "metrics": {
+    "total": {
+      "label": "Jumla ya Usajili",
+      "hint": "Katika huduma zote"
+    },
+    "active": {
+      "label": "Zinazoendelea",
+      "hint_one": "mpango {{count}} unaoendelea",
+      "hint_other": "mipango {{count}} inayoendelea"
+    },
+    "paused": {
+      "label": "Zilizosimamishwa",
+      "hint_one": "mpango {{count}} uliosimamishwa",
+      "hint_other": "mipango {{count}} iliyosimamishwa"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "Kila wiki",
+    "BIWEEKLY": "Kila wiki 2",
+    "MONTHLY": "Kila mwezi",
+    "QUARTERLY": "Kila robo mwaka"
+  },
+  "status": {
+    "ACTIVE": "Inaendelea",
+    "PAUSED": "Imesimamishwa",
+    "CANCELLED": "Imeghairiwa"
+  },
+  "timeWindow": {
+    "MORNING": "Asubuhi",
+    "AFTERNOON": "Mchana",
+    "EVENING": "Jioni"
+  },
+  "newSubscription": "Usajili Mpya",
+  "searchPlaceholder": "Tafuta kwa huduma...",
+  "filterStatus": "Hali",
+  "filterAllStatuses": "Hali zote",
+  "columns": {
+    "service": "Huduma",
+    "frequency": "Marudio",
+    "nextRun": "Muda Ujao",
+    "details": "Maelezo",
+    "status": "Hali",
+    "actions": "Vitendo"
+  },
+  "noneSet": "—",
+  "pause": "Simamisha",
+  "resume": "Endelea",
+  "cancelPlan": "Ghairi",
+  "pausedToast": "Usajili umesimamishwa",
+  "resumedToast": "Usajili umeendelea",
+  "cancelledToast": "Usajili umeghairiwa",
+  "itemLabel_one": "usajili",
+  "itemLabel_other": "usajili",
+  "empty": {
+    "title": "Hakuna usajili wa kujirudia bado",
+    "description": "Panga huduma inayojirudia, kama kusafisha kila wiki 2, nasi tutashughulikia ratiba.",
+    "action": "Usajili Mpya"
+  },
+  "emptyFiltered": {
+    "title": "Hakuna usajili unaolingana",
+    "description": "Jaribu neno tofauti la utafutaji au kichujio kingine cha hali.",
+    "action": "Futa vichujio"
+  },
+  "cancelDialog": {
+    "title": "Ghairi usajili huu?",
+    "description": "Hatua hii itasitisha huduma zijazo za {{service}}. Haiwezi kutenduliwa.",
+    "keep": "Acha uendelee",
+    "confirm": "Ghairi usajili"
+  },
+  "dialog": {
+    "title": "Usajili Mpya",
+    "subtitle": "Panga huduma inayojirudia kwa ratiba inayokufaa.",
+    "categoryLabel": "Kategoria",
+    "categoryPlaceholder": "Chagua kategoria",
+    "serviceLabel": "Huduma",
+    "servicePlaceholder": "Chagua huduma",
+    "servicePlaceholderNoCategory": "Chagua kategoria kwanza",
+    "addressLabel": "Anwani",
+    "addressPlaceholder": "Chagua anwani",
+    "addressNone": "Hakuna anwani mahususi",
+    "frequencyLabel": "Marudio",
+    "nextRunDateLabel": "Tarehe ya ujao",
+    "nextRunDateHint": "Si lazima — acha wazi ili mtoa huduma apange ziara ya kwanza",
+    "timeWindowLabel": "Muda unaopendelewa",
+    "timeWindowNone": "Muda wowote",
+    "instructionsLabel": "Maelekezo",
+    "instructionsPlaceholder": "mfano: Tumia mlango wa nyuma, zingatia jikoni na vyoo",
+    "instructionsHint": "herufi {{count}}/500",
+    "cancel": "Ghairi",
+    "create": "Unda Usajili",
+    "creating": "Inaunda…",
+    "selectServiceError": "Chagua huduma ili kuendelea",
+    "createdToast": "Usajili umeundwa"
+  }
+}
