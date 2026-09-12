@@ -1,0 +1,98 @@
+{
+  "loading": "加载中…",
+  "page": {
+    "title": "定期服务",
+    "subtitle": "设置重复预订，日程安排交给我们"
+  },
+  "metrics": {
+    "total": {
+      "label": "订阅总数",
+      "hint": "覆盖所有服务"
+    },
+    "active": {
+      "label": "进行中",
+      "hint_other": "{{count}} 个订阅正在进行"
+    },
+    "paused": {
+      "label": "已暂停",
+      "hint_other": "{{count}} 个订阅已暂停"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "每周",
+    "BIWEEKLY": "每两周",
+    "MONTHLY": "每月",
+    "QUARTERLY": "每季度"
+  },
+  "status": {
+    "ACTIVE": "进行中",
+    "PAUSED": "已暂停",
+    "CANCELLED": "已取消"
+  },
+  "timeWindow": {
+    "MORNING": "上午",
+    "AFTERNOON": "下午",
+    "EVENING": "晚上"
+  },
+  "newSubscription": "新建订阅",
+  "searchPlaceholder": "按服务搜索...",
+  "filterStatus": "状态",
+  "filterAllStatuses": "所有状态",
+  "columns": {
+    "service": "服务",
+    "frequency": "频率",
+    "nextRun": "下次时间",
+    "details": "详情",
+    "status": "状态",
+    "actions": "操作"
+  },
+  "noneSet": "—",
+  "pause": "暂停",
+  "resume": "恢复",
+  "cancelPlan": "取消",
+  "pausedToast": "订阅已暂停",
+  "resumedToast": "订阅已恢复",
+  "cancelledToast": "订阅已取消",
+  "itemLabel_other": "个订阅",
+  "empty": {
+    "title": "暂无定期订阅",
+    "description": "设置一个重复预订，例如每两周清洁一次，我们会为您安排好日程。",
+    "action": "新建订阅"
+  },
+  "emptyFiltered": {
+    "title": "没有匹配的订阅",
+    "description": "请尝试其他搜索词或状态筛选条件。",
+    "action": "清除筛选条件"
+  },
+  "cancelDialog": {
+    "title": "要取消此订阅吗？",
+    "description": "这将停止{{service}}的后续预订，且无法撤销。",
+    "keep": "保留订阅",
+    "confirm": "取消订阅"
+  },
+  "dialog": {
+    "title": "新建订阅",
+    "subtitle": "按照适合您的日程设置重复预订。",
+    "categoryLabel": "类别",
+    "categoryPlaceholder": "选择类别",
+    "serviceLabel": "服务",
+    "servicePlaceholder": "选择服务",
+    "servicePlaceholderNoCategory": "请先选择类别",
+    "addressLabel": "地址",
+    "addressPlaceholder": "选择地址",
+    "addressNone": "不指定地址",
+    "frequencyLabel": "频率",
+    "nextRunDateLabel": "下次执行日期",
+    "nextRunDateHint": "可选 — 留空则由服务商安排首次上门时间",
+    "timeWindowLabel": "首选时间段",
+    "timeWindowNone": "任意时间",
+    "instructionsLabel": "备注说明",
+    "instructionsPlaceholder": "例如：请走后门，重点清洁厨房和卫生间",
+    "instructionsHint": "{{count}}/500 字",
+    "cancel": "取消",
+    "create": "创建订阅",
+    "creating": "创建中…",
+    "selectServiceError": "请先选择服务",
+    "createdToast": "订阅已创建"
+  }
+}
