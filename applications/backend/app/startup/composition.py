@@ -697,6 +697,14 @@ class Composition:
 
         return ProviderKpisService(kpis=self.provider_kpis_repository)
 
+    def provider_ranking_service(self) -> Any:
+        """ProviderRankingService — ranking & reputation (Req Phase 35)."""
+        from app.domains.providers.services.provider_ranking_service import (
+            ProviderRankingService,
+        )
+
+        return ProviderRankingService(ranking=self.provider_ranking_repository)
+
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
         from app.domains.providers.services.provider_availability_service import (
