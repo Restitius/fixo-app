@@ -1,0 +1,52 @@
+{
+  "loading": "Chargement…",
+  "page": {
+    "title": "Garanties",
+    "subtitle": "Garanties sur vos travaux terminés, et toute réclamation que vous avez soumise"
+  },
+  "metrics": {
+    "total": "Total des garanties",
+    "totalHint": "Depuis toujours",
+    "active": "Garanties actives",
+    "activeHint": "Actuellement en vigueur",
+    "expiringSoon": "Expirent bientôt",
+    "expiringSoonHint_one": "Dans {{count}} jour",
+    "expiringSoonHint_other": "Dans {{count}} jours",
+    "claimsSubmitted": "Réclamations soumises",
+    "claimsSubmittedHint_one": "{{count}} réclamation enregistrée",
+    "claimsSubmittedHint_other": "{{count}} réclamations enregistrées"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Rechercher par service ou prestataire..."
+  },
+  "table": {
+    "service": "Service",
+    "provider": "Prestataire",
+    "expires": "Expire",
+    "status": "Statut",
+    "claim": "Réclamation",
+    "actions": "Actions"
+  },
+  "serviceFallback": "Service",
+  "fileClaim": "Soumettre une réclamation",
+  "claimAlreadyFiled": "Réclamation soumise",
+  "itemLabel": "garanties",
+  "empty": {
+    "title": "Aucune garantie pour le moment",
+    "description": "Les garanties apparaissent ici automatiquement dès qu'une réservation est terminée.",
+    "action": "Voir mes réservations",
+    "filteredTitle": "Aucune garantie correspondante",
+    "filteredDescription": "Essayez un autre terme de recherche.",
+    "clearFilters": "Effacer la recherche"
+  },
+  "claimDialog": {
+    "title": "Soumettre une réclamation de garantie",
+    "placeholder": "Décrivez le problème rencontré avec ce travail en détail...",
+    "hint": "{{count}}/2000 caractères (minimum 10)",
+    "tooShort": "Veuillez décrire le problème en au moins 10 caractères.",
+    "cancel": "Annuler",
+    "submit": "Soumettre la réclamation",
+    "submitting": "Envoi en cours...",
+    "submitted": "Votre réclamation a été soumise"
+  }
+}

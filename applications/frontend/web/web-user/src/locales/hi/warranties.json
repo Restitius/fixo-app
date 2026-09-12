@@ -1,0 +1,52 @@
+{
+  "loading": "लोड हो रहा है…",
+  "page": {
+    "title": "वारंटी",
+    "subtitle": "आपके पूर्ण किए गए कार्यों की वारंटी, और आपके द्वारा दर्ज किए गए किसी भी दावे"
+  },
+  "metrics": {
+    "total": "कुल वारंटी",
+    "totalHint": "अब तक",
+    "active": "सक्रिय वारंटी",
+    "activeHint": "वर्तमान में लागू",
+    "expiringSoon": "जल्द समाप्त होने वाली",
+    "expiringSoonHint_one": "{{count}} दिन के भीतर",
+    "expiringSoonHint_other": "{{count}} दिनों के भीतर",
+    "claimsSubmitted": "दर्ज किए गए दावे",
+    "claimsSubmittedHint_one": "{{count}} दावा दर्ज किया गया",
+    "claimsSubmittedHint_other": "{{count}} दावे दर्ज किए गए"
+  },
+  "filterBar": {
+    "searchPlaceholder": "सेवा या प्रदाता के अनुसार खोजें..."
+  },
+  "table": {
+    "service": "सेवा",
+    "provider": "प्रदाता",
+    "expires": "समाप्ति तिथि",
+    "status": "स्थिति",
+    "claim": "दावा",
+    "actions": "कार्रवाइयाँ"
+  },
+  "serviceFallback": "सेवा",
+  "fileClaim": "दावा दर्ज करें",
+  "claimAlreadyFiled": "दावा दर्ज हो चुका है",
+  "itemLabel": "वारंटी",
+  "empty": {
+    "title": "अभी तक कोई वारंटी नहीं",
+    "description": "बुकिंग पूरी होते ही वारंटी यहाँ अपने आप दिखाई देने लगती है।",
+    "action": "मेरी बुकिंग देखें",
+    "filteredTitle": "कोई मिलती-जुलती वारंटी नहीं",
+    "filteredDescription": "कोई दूसरा खोज शब्द आज़माएँ।",
+    "clearFilters": "खोज साफ़ करें"
+  },
+  "claimDialog": {
+    "title": "वारंटी दावा दर्ज करें",
+    "placeholder": "इस कार्य से जुड़ी समस्या का विस्तार से वर्णन करें...",
+    "hint": "{{count}}/2000 अक्षर (न्यूनतम 10)",
+    "tooShort": "कृपया समस्या को कम से कम 10 अक्षरों में बताएँ।",
+    "cancel": "रद्द करें",
+    "submit": "दावा जमा करें",
+    "submitting": "जमा किया जा रहा है...",
+    "submitted": "आपका दावा जमा कर दिया गया है"
+  }
+}

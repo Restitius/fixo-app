@@ -1,0 +1,52 @@
+{
+  "loading": "Loading…",
+  "page": {
+    "title": "Warranties",
+    "subtitle": "Warranties on your completed jobs, and any claims you've filed"
+  },
+  "metrics": {
+    "total": "Total Warranties",
+    "totalHint": "All time",
+    "active": "Active Warranties",
+    "activeHint": "Currently in effect",
+    "expiringSoon": "Expiring Soon",
+    "expiringSoonHint_one": "Within {{count}} day",
+    "expiringSoonHint_other": "Within {{count}} days",
+    "claimsSubmitted": "Claims Submitted",
+    "claimsSubmittedHint_one": "{{count}} claim on file",
+    "claimsSubmittedHint_other": "{{count}} claims on file"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Search by service or provider..."
+  },
+  "table": {
+    "service": "Service",
+    "provider": "Provider",
+    "expires": "Expires",
+    "status": "Status",
+    "claim": "Claim",
+    "actions": "Actions"
+  },
+  "serviceFallback": "Service",
+  "fileClaim": "File a Claim",
+  "claimAlreadyFiled": "Claim filed",
+  "itemLabel": "warranties",
+  "empty": {
+    "title": "No warranties yet",
+    "description": "Warranties appear here automatically once a booking is completed.",
+    "action": "View My Bookings",
+    "filteredTitle": "No matching warranties",
+    "filteredDescription": "Try a different search term.",
+    "clearFilters": "Clear Search"
+  },
+  "claimDialog": {
+    "title": "File a Warranty Claim",
+    "placeholder": "Describe the issue with this job in detail...",
+    "hint": "{{count}}/2000 characters (minimum 10)",
+    "tooShort": "Please describe the issue in at least 10 characters.",
+    "cancel": "Cancel",
+    "submit": "Submit Claim",
+    "submitting": "Submitting...",
+    "submitted": "Your claim has been submitted"
+  }
+}
