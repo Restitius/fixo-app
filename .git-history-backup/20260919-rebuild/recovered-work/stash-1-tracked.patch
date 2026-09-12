@@ -1,0 +1,1614 @@
+diff --git a/applications/backend/app/adapters/persistence/booking_sql_adapter.py b/applications/backend/app/adapters/persistence/booking_sql_adapter.py
+index 1f15f86..4723c28 100644
+--- a/applications/backend/app/adapters/persistence/booking_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/booking_sql_adapter.py
+@@ -160,4 +160,11 @@ class BookingSqlAdapter:
+             "CUS.BOOKING.SET_SCHEDULE",
+             {"booking_id": booking_id, "scheduled_date": scheduled_date},
+             fetch="one",
++        )
++
++    async def set_scope_notes(self, booking_id: str, scope_notes: str) -> dict[str, Any] | None:
++        return await self._sql.execute(
++            "CUS.BOOKING.SET_SCOPE",
++            {"booking_id": booking_id, "scope_notes": scope_notes},
++            fetch="one",
+         )
+\ No newline at end of file
+diff --git a/applications/backend/app/adapters/persistence/provider_disputes_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_disputes_sql_adapter.py
+index d485df5..97b6169 100644
+--- a/applications/backend/app/adapters/persistence/provider_disputes_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_disputes_sql_adapter.py
+@@ -8,6 +8,8 @@ Routes operations through governed queries:
+ - PROV.DISPUTE.RESPONSES.LIST  — responses given for a dispute
+ """
+ 
++from __future__ import annotations
++
+ from typing import Any
+ 
+ from app.ports.persistence.provider_disputes_repository import ProviderDisputesRepository
+diff --git a/applications/backend/app/adapters/persistence/provider_invoices_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_invoices_sql_adapter.py
+index f6fa474..e638167 100644
+--- a/applications/backend/app/adapters/persistence/provider_invoices_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_invoices_sql_adapter.py
+@@ -1,3 +1,5 @@
++
++from __future__ import annotations
+ from typing import Any
+ 
+ from app.ports.persistence.provider_invoices_repository import ProviderInvoicesRepository
+diff --git a/applications/backend/app/adapters/persistence/provider_kpis_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_kpis_sql_adapter.py
+index 54dde44..e76cdb8 100644
+--- a/applications/backend/app/adapters/persistence/provider_kpis_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_kpis_sql_adapter.py
+@@ -1,3 +1,5 @@
++
++from __future__ import annotations
+ from typing import Any
+ 
+ from app.ports.persistence.provider_kpis_repository import ProviderKpisRepository
+diff --git a/applications/backend/app/adapters/persistence/provider_notifications_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_notifications_sql_adapter.py
+index 276ca22..3af8e9d 100644
+--- a/applications/backend/app/adapters/persistence/provider_notifications_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_notifications_sql_adapter.py
+@@ -7,6 +7,8 @@ Routes operations through governed queries:
+ - PROV.NOTIFICATIONS.UNREAD_COUNT — count unread
+ """
+ 
++from __future__ import annotations
++
+ from typing import Any
+ 
+ from app.ports.persistence.provider_notifications_repository import ProviderNotificationsRepository
+diff --git a/applications/backend/app/adapters/persistence/provider_portfolio_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_portfolio_sql_adapter.py
+index 61e9bbd..cfb0ea9 100644
+--- a/applications/backend/app/adapters/persistence/provider_portfolio_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_portfolio_sql_adapter.py
+@@ -8,6 +8,8 @@ Routes operations through governed queries:
+ - PROV.PORTFOLIO.DELETE — remove item (ownership-scoped)
+ """
+ 
++from __future__ import annotations
++
+ from typing import Any
+ 
+ from app.ports.persistence.provider_portfolio_repository import ProviderPortfolioRepository
+diff --git a/applications/backend/app/adapters/persistence/provider_reviews_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_reviews_sql_adapter.py
+index 88bad47..f159e2e 100644
+--- a/applications/backend/app/adapters/persistence/provider_reviews_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_reviews_sql_adapter.py
+@@ -1,3 +1,5 @@
++
++from __future__ import annotations
+ from typing import Any
+ 
+ from app.ports.persistence.provider_reviews_repository import ProviderReviewsRepository
+diff --git a/applications/backend/app/adapters/persistence/provider_safety_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_safety_sql_adapter.py
+new file mode 100644
+index 0000000..45129b8
+--- /dev/null
++++ b/applications/backend/app/adapters/persistence/provider_safety_sql_adapter.py
+@@ -0,0 +1,121 @@
++from __future__ import annotations
++
++from typing import Any
++
++from app.adapters.persistence.base import BaseRepositoryAdapter
++from app.ports.persistence.provider_safety_repository import (
++    ProviderSafetyRepositoryPort,
++)
++from app.queries.registry import query
++
++
++class ProviderSafetySqlAdapter(BaseRepositoryAdapter, ProviderSafetyRepositoryPort):
++    """PostgreSQL adapter for provider safety reports (PRV-41)."""
++
++    async def _row_to_report(self, row: dict[str, Any]) -> dict[str, Any]:
++        return {
++            'id': row.get('id'),
++            'provider_id': row.get('provider_id'),
++            'category': row.get('category'),
++            'title': row.get('title'),
++            'description': row.get('description'),
++            'is_serious': bool(row.get('is_serious', False)),
++            'status': row.get('status'),
++            'escalated_to_platform': bool(row.get('escalated_to_platform', False)),
++            'escalated_at': row.get('escalated_at'),
++            'created_at': row.get('created_at'),
++            'updated_at': row.get('updated_at'),
++        }
++
++    async def create_report(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        category: str,
++        title: str | None,
++        description: str | None,
++        is_serious: bool,
++    ) -> dict:
++        sql = query('PROV.SAFETY.REPORTS.CREATE')
++        row = await self.db.fetch_one(
++            sql=sql,
++            params={
++                'provider_id': provider_id,
++                'category': category,
++                'title': title,
++                'description': description,
++                'is_serious': is_serious,
++                'escalated_to_platform': is_serious,
++            },
++        )
++        if row is None:
++            raise RuntimeError('Failed to create safety report')
++        return self._row_to_report(dict(row))
++
++    async def list_reports(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        category: str | None = None,
++        status: str | None = None,
++        search: str | None = None,
++        limit: int = 20,
++        offset: int = 0,
++    ) -> list[dict]:
++        sql = query('PROV.SAFETY.REPORTS.LIST')
++        rows = await self.db.fetch_all(
++            sql=sql,
++            params={
++                'provider_id': provider_id,
++                'category': category,
++                'status': status,
++                'search': self._ilike(search) if search else None,
++                'limit': max(1, min(limit, 100)),
++                'offset': max(0, offset),
++            },
++        )
++        return [self._row_to_report(dict(row)) for row in rows]
++
++    async def get_report(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        report_id: str,
++    ) -> dict | None:
++        sql = query('PROV.SAFETY.REPORTS.GET')
++        row = await self.db.fetch_one(
++            sql=sql,
++            params={
++                'provider_id': provider_id,
++                'id': report_id,
++            },
++        )
++        if row is None:
++            return None
++        return self._row_to_report(dict(row))
++
++    async def escalate_report(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        report_id: str,
++    ) -> dict:
++        sql = query('PROV.SAFETY.REPORTS.ESCALATE')
++        row = await self.db.fetch_one(
++            sql=sql,
++            params={
++                'provider_id': provider_id,
++                'id': report_id,
++            },
++        )
++        if row is None:
++            raise RuntimeError('Failed to escalate safety report')
++        return self._row_to_report(dict(row))
++
++    @staticmethod
++    def _ilike(value: str) -> str:
++        return f'%{value}%'
+diff --git a/applications/backend/app/adapters/persistence/provider_tracking_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_tracking_sql_adapter.py
+index 2d82c4f..87af3b1 100644
+--- a/applications/backend/app/adapters/persistence/provider_tracking_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_tracking_sql_adapter.py
+@@ -47,11 +47,16 @@ class ProviderTrackingSqlAdapter:
+         )
+ 
+     async def record_location(
+-        self, booking_id: str, latitude: float, longitude: float
++        self, provider_id: str, booking_id: str, latitude: float, longitude: float
+     ) -> dict[str, Any] | None:
+         return await self._sql.execute(
+             ProviderTripQueryIds.RECORD_LOCATION,
+-            {"booking_id": booking_id, "latitude": latitude, "longitude": longitude},
++            {
++                "user_id": provider_id,
++                "booking_id": booking_id,
++                "latitude": latitude,
++                "longitude": longitude,
++            },
+             fetch="one",
+         )
+ 
+@@ -62,9 +67,11 @@ class ProviderTrackingSqlAdapter:
+             fetch="one",
+         )
+ 
+-    async def get_location(self, booking_id: str) -> dict[str, Any] | None:
++    async def get_location(self, booking_id: str, customer_id: str) -> dict[str, Any] | None:
+         return await self._sql.execute(
+-            ProviderTripQueryIds.GET_LOCATION, {"booking_id": booking_id}, fetch="one"
++            ProviderTripQueryIds.GET_LOCATION,
++            {"booking_id": booking_id, "customer_id": customer_id},
++            fetch="one",
+         )
+ 
+     async def get_nav_info(self, provider_id: str, booking_id: str) -> dict[str, Any] | None:
+diff --git a/applications/backend/app/api/v1/router.py b/applications/backend/app/api/v1/router.py
+index 08f987d..fd6bece 100644
+--- a/applications/backend/app/api/v1/router.py
++++ b/applications/backend/app/api/v1/router.py
+@@ -35,7 +35,10 @@ from app.domains.providers.api.calendar_router import router as provider_calenda
+ from app.domains.providers.api.verification_router import router as provider_verification_router
+ from app.domains.providers.api.service_config_router import router as provider_service_config_router
+ from app.domains.providers.api.pricing_router import router as provider_pricing_router
++from app.domains.providers.api.areas_router import router as provider_areas_router
+ from app.domains.providers.api.booking_router import router as provider_booking_router
++from app.domains.providers.api.arrival_router import router as provider_arrival_router
++from app.domains.providers.api.tracking_router import router as provider_tracking_router
+ from app.domains.providers.api.checklist_router import router as provider_checklist_router
+ from app.domains.providers.api.evidence_router import router as provider_evidence_router
+ from app.domains.providers.api.change_request_router import (
+@@ -57,6 +60,11 @@ from app.domains.providers.api.portfolio_router import router as provider_portfo
+ from app.domains.providers.api.notifications_router import router as provider_notifications_router
+ from app.domains.providers.api.dsl_requests_router import router as provider_dsl_requests_router
+ from app.domains.providers.api.disputes_router import router as provider_disputes_router
++# TEMP STOPGAP: provider_safety_router's service imports a nonexistent
++# app.domains.providers.services.base_provider_service — the feature (Phase
++# 41, safety/incident reporting) is still mid-implementation elsewhere.
++# Re-enable once that module exists.
++# from app.domains.providers.api.safety_router import router as provider_safety_router
+ 
+ from app.domains.providers.api.availability_router import (
+     router as provider_availability_router,
+@@ -115,7 +123,10 @@ api_v1_router.include_router(provider_calendar_router)
+ api_v1_router.include_router(provider_verification_router)
+ api_v1_router.include_router(provider_service_config_router)
+ api_v1_router.include_router(provider_pricing_router)
++api_v1_router.include_router(provider_areas_router)
+ api_v1_router.include_router(provider_booking_router)
++api_v1_router.include_router(provider_arrival_router)
++api_v1_router.include_router(provider_tracking_router)
+ api_v1_router.include_router(provider_checklist_router)
+ api_v1_router.include_router(provider_evidence_router)
+ api_v1_router.include_router(provider_change_request_router)
+@@ -133,10 +144,11 @@ api_v1_router.include_router(provider_portfolio_router)
+ api_v1_router.include_router(provider_notifications_router)
+ api_v1_router.include_router(provider_dsl_requests_router)
+ api_v1_router.include_router(provider_disputes_router)
++
++# api_v1_router.include_router(provider_safety_router)  # see TEMP STOPGAP above
+ api_v1_router.include_router(provider_dashboard_router)
+ api_v1_router.include_router(provider_earnings_router)
+ api_v1_router.include_router(provider_wallet_router)
+-api_v1_router.include_router(provider_dashboard_router)
+ api_v1_router.include_router(provider_requests_router)
+ api_v1_router.include_router(provider_matching_router)
+ api_v1_router.include_router(provider_quotations_router)
+diff --git a/applications/backend/app/domains/change_requests/services/change_request_service.py b/applications/backend/app/domains/change_requests/services/change_request_service.py
+index be66984..4f6e901 100644
+--- a/applications/backend/app/domains/change_requests/services/change_request_service.py
++++ b/applications/backend/app/domains/change_requests/services/change_request_service.py
+@@ -7,6 +7,7 @@ the internal channel). Applies approved effects to the booking aggregate.
+ from __future__ import annotations
+ 
+ import logging
++from datetime import date
+ from typing import Any
+ 
+ from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
+@@ -43,6 +44,8 @@ class ChangeRequestService:
+             raise ValidationError("proposed_value is required")
+ 
+         booking = await self._bookings.get(customer_id, booking_id)
++        if not booking:
++            raise NotFoundError("Booking not found")
+         if booking["status"] not in ACTIVE_STATUSES:
+             raise ValidationError(
+                 f"Changes can only be proposed while work is active "
+@@ -52,7 +55,7 @@ class ChangeRequestService:
+         current = {
+             "TIME": str(booking.get("scheduled_date") or ""),
+             "PRICE": f"{booking['agreed_amount']} {booking['currency']}",
+-            "SCOPE": "current scope",
++            "SCOPE": str(booking.get("scope_notes") or "Original agreed scope"),
+         }[change_type]
+ 
+         row = await self._changes.create(customer_id, booking_id, {
+@@ -74,7 +77,9 @@ class ChangeRequestService:
+     async def list_for_booking(
+         self, customer_id: str, booking_id: str
+     ) -> list[dict[str, Any]]:
+-        await self._bookings.get(customer_id, booking_id)
++        booking = await self._bookings.get(customer_id, booking_id)
++        if not booking:
++            raise NotFoundError("Booking not found")
+         return await self._changes.list_for_booking(customer_id, booking_id)
+ 
+     async def decide(
+@@ -92,6 +97,14 @@ class ChangeRequestService:
+                 "Customer decisions apply to provider-proposed changes"
+             )
+ 
++        # Validate the effect BEFORE any state changes commit. decide() and
++        # _apply_effect() are separate, non-transactional writes (each query
++        # commits on its own) — validating first means a bad proposed_value
++        # 422s here instead of leaving the change permanently stuck APPROVED
++        # with its effect never applied.
++        if decision == "APPROVED":
++            effect = self._validate_effect(change["change_type"], change["proposed_value"])
++
+         wf_decision = await self._workflows.transition(
+             workflow_id="WF.CHANGE_REQUEST.V1",
+             from_state=change["status"], to_state=decision,
+@@ -104,7 +117,7 @@ class ChangeRequestService:
+ 
+         booking_id = str(row["booking_id"])
+         if decision == "APPROVED":
+-            await self._apply_effect(customer_id, booking_id, row)
++            await self._apply_effect(booking_id, row["change_type"], effect)
+ 
+         detail = f"{row['change_type']} {decision}: {row['proposed_value']}"
+         await self._bookings.add_timeline(customer_id, booking_id,
+@@ -112,17 +125,26 @@ class ChangeRequestService:
+         logger.info("change %s %s", change_id, decision)
+         return {**row, "decision": decision}
+ 
+-    async def _apply_effect(
+-        self, customer_id: str, booking_id: str, decided: dict[str, Any]
+-    ) -> None:
+-        ctype = decided["change_type"]
+-        value = decided["proposed_value"]
+-        if ctype == "PRICE":
++    @staticmethod
++    def _validate_effect(change_type: str, value: str) -> Any:
++        """Parse+validate a proposed_value without writing anything."""
++        if change_type == "PRICE":
+             try:
+-                amount = float(value)
++                return float(value)
+             except ValueError as exc:
+                 raise ValidationError("Approved price is not numeric") from exc
+-            await self._bookings.update_amount(booking_id, amount)
+-        elif ctype == "TIME":
+-            # Date-only values; validated loosely — bad values just no-op.
+-            await self._bookings.set_scheduled_date(booking_id, value)
+\ No newline at end of file
++        if change_type == "TIME":
++            try:
++                return date.fromisoformat(value).isoformat()
++            except ValueError as exc:
++                raise ValidationError("Approved date must be YYYY-MM-DD") from exc
++        # SCOPE: any non-empty text is valid (already enforced at propose time).
++        return value
++
++    async def _apply_effect(self, booking_id: str, change_type: str, value: Any) -> None:
++        if change_type == "PRICE":
++            await self._bookings.update_amount(booking_id, value)
++        elif change_type == "TIME":
++            await self._bookings.set_scheduled_date(booking_id, value)
++        elif change_type == "SCOPE":
++            await self._bookings.set_scope_notes(booking_id, value)
+diff --git a/applications/backend/app/domains/customers/services/auth_service.py b/applications/backend/app/domains/customers/services/auth_service.py
+index 775f0fc..24256e6 100644
+--- a/applications/backend/app/domains/customers/services/auth_service.py
++++ b/applications/backend/app/domains/customers/services/auth_service.py
+@@ -10,6 +10,7 @@ import logging
+ import secrets
+ from typing import Any
+ 
++from app.config import get_settings
+ from app.security.jwt import JwtService
+ from app.security.password import PasswordHasher
+ from app.shared.exceptions.hierarchy import (
+@@ -21,7 +22,17 @@ from app.shared.exceptions.hierarchy import (
+ 
+ logger = logging.getLogger(__name__)
+ 
+-DEV_MODE = True  # surfaces OTP codes in responses until SMS/email adapters land
++
++def _dev_mode() -> bool:
++    """Surface OTP codes in responses only outside production.
++
++    Until real SMS/email adapters land, this is how a developer or tester
++    obtains the code at all — but it must never be reachable in production,
++    where it would let anyone take over any account by requesting an OTP for
++    the victim's email/phone and reading the code straight out of the
++    response body.
++    """
++    return get_settings().environment != "production"
+ 
+ 
+ def _hash_code(code: str) -> str:
+@@ -68,7 +79,7 @@ class AuthService:
+ 
+         code = await self._issue_otp(row["customer_id"], "VERIFY_EMAIL")
+         await self._publish("EVT.CUSTOMER.REGISTERED", row)
+-        return {**row, **({"otp_code": code} if DEV_MODE else {})}
++        return {**row, **({"otp_code": code} if _dev_mode() else {})}
+ 
+     async def request_otp(self, email: str) -> dict[str, Any]:
+         customer = await self._customers.get_by_email(email.strip().lower())
+@@ -76,7 +87,7 @@ class AuthService:
+             # Do not reveal account existence.
+             return {"sent": True}
+         code = await self._issue_otp(customer["customer_id"], "VERIFY_EMAIL")
+-        return {"sent": True, **({"otp_code": code} if DEV_MODE else {})}
++        return {"sent": True, **({"otp_code": code} if _dev_mode() else {})}
+ 
+     async def request_password_reset(self, email: str) -> dict[str, Any]:
+         customer = await self._customers.get_by_email(email.strip().lower())
+@@ -84,7 +95,7 @@ class AuthService:
+             # Do not reveal account existence.
+             return {"sent": True}
+         code = await self._issue_otp(customer["customer_id"], "PASSWORD_RESET")
+-        return {"sent": True, **({"otp_code": code} if DEV_MODE else {})}
++        return {"sent": True, **({"otp_code": code} if _dev_mode() else {})}
+ 
+     async def reset_password(self, email: str, code: str, new_password: str) -> dict[str, Any]:
+         if len(new_password) < 8:
+diff --git a/applications/backend/app/domains/providers/api/safety_router.py b/applications/backend/app/domains/providers/api/safety_router.py
+new file mode 100644
+index 0000000..b8c1f62
+--- /dev/null
++++ b/applications/backend/app/domains/providers/api/safety_router.py
+@@ -0,0 +1,94 @@
++"""Provider safety & incident reporting router (PRV-41).
++
++Prefix: /providers/me/safety
++
++- POST   /                 create a safety/incident report
++- GET    /                 list provider's safety reports
++- GET    /{report_id}      get one report
++- POST   /{report_id}/escalate  escalate a serious incident to platform admins
++"""
++from __future__ import annotations
++
++from typing import Any
++
++from fastapi import APIRouter, Depends, Path, Query
++from pydantic import BaseModel, Field
++
++from app.api.deps.provider_auth import get_current_provider
++from app.domains.providers.services.provider_safety_service import (
++    ProviderSafetyService,
++)
++from app.startup.composition import get_composition
++
++router = APIRouter(prefix="/providers/me/safety", tags=["provider-safety"])
++
++
++def _service() -> ProviderSafetyService:
++    return get_composition().provider_safety_service()
++
++
++class SafetyReportCreateBody(BaseModel):
++    category: str = Field(..., min_length=1, max_length=40)
++    title: str | None = Field(None, max_length=200)
++    description: str | None = Field(None, max_length=2000)
++    is_serious: bool = Field(False)
++
++
++class SafetyReportQueryParams(BaseModel):
++    category: str | None = Field(None, max_length=40)
++    status: str | None = Field(None, max_length=20)
++    search: str | None = Field(None, max_length=200)
++    limit: int = Field(20, ge=1, le=100)
++    offset: int = Field(0, ge=0)
++
++
++@router.post("", status_code=201)
++async def create_report(
++    body: SafetyReportCreateBody,
++    provider: dict = Depends(get_current_provider),
++) -> dict[str, Any]:
++    return await _service().create_report(
++        provider_id=str(provider["provider_id"]),
++        category=body.category,
++        title=body.title,
++        description=body.description,
++        is_serious=body.is_serious,
++    )
++
++
++@router.get("")
++async def list_reports(
++    params: SafetyReportQueryParams = Query(),
++    provider: dict = Depends(get_current_provider),
++) -> dict[str, Any]:
++    return await _service().list_reports(
++        provider_id=str(provider["provider_id"]),
++        category=params.category,
++        status=params.status,
++        search=params.search,
++        limit=params.limit,
++        offset=params.offset,
++    )
++
++
++@router.get("/{report_id}")
++async def get_report(
++    report_id: str = Path(...),
++    provider: dict = Depends(get_current_provider),
++) -> dict[str, Any]:
++    return await _service().get_report(
++        provider_id=str(provider["provider_id"]),
++        report_id=report_id,
++    )
++
++
++@router.post("/{report_id}/escalate", status_code=200)
++async def escalate_report(
++    report_id: str = Path(...),
++    provider: dict = Depends(get_current_provider),
++) -> dict[str, Any]:
++    return await _service().escalate_report(
++        provider_id=str(provider["provider_id"]),
++        report_id=report_id,
++    )
++
+diff --git a/applications/backend/app/domains/providers/api/tracking_router.py b/applications/backend/app/domains/providers/api/tracking_router.py
+index 104be97..9359c1e 100644
+--- a/applications/backend/app/domains/providers/api/tracking_router.py
++++ b/applications/backend/app/domains/providers/api/tracking_router.py
+@@ -7,6 +7,7 @@ from __future__ import annotations
+ 
+ from fastapi import APIRouter, Depends
+ 
++from app.api.deps.auth import CurrentCustomer
+ from app.api.deps.provider_auth import get_current_provider
+ from app.domains.providers.services.provider_tracking_service import ProviderTrackingService
+ from app.startup.composition import get_composition
+@@ -51,7 +52,7 @@ async def record_location(
+     provider: dict = Depends(get_current_provider),
+     svc: ProviderTrackingService = Depends(_service),
+ ) -> dict:
+-    result = await svc.record_location(booking_id, latitude, longitude)
++    result = await svc.record_location(str(provider["provider_id"]), booking_id, latitude, longitude)
+     return {"status": "ok", "trace": result}
+ 
+ 
+@@ -78,8 +79,9 @@ async def get_nav_info(
+ @router.get("/bookings/{booking_id}/location")
+ async def get_location(
+     booking_id: str,
++    customer: CurrentCustomer,
+     svc: ProviderTrackingService = Depends(_service),
+ ) -> dict:
+     """Customer views provider's live position (status must be ON_THE_WAY)."""
+-    result = await svc.get_location(booking_id)
++    result = await svc.get_location(booking_id, customer_id=str(customer["customer_id"]))
+     return {"status": "ok", "tracking": result}
+diff --git a/applications/backend/app/domains/providers/services/provider_auth_service.py b/applications/backend/app/domains/providers/services/provider_auth_service.py
+index 61d774f..f845eed 100644
+--- a/applications/backend/app/domains/providers/services/provider_auth_service.py
++++ b/applications/backend/app/domains/providers/services/provider_auth_service.py
+@@ -10,6 +10,7 @@ import logging
+ import secrets
+ from typing import Any
+ 
++from app.config import get_settings
+ from app.security.jwt import JwtService
+ from app.security.password import PasswordHasher
+ from app.shared.exceptions.hierarchy import (
+@@ -21,7 +22,17 @@ from app.shared.exceptions.hierarchy import (
+ 
+ logger = logging.getLogger(__name__)
+ 
+-DEV_MODE = True  # surfaces OTP codes in responses until SMS/email adapters land
++
++def _dev_mode() -> bool:
++    """Surface OTP codes in responses only outside production.
++
++    Until real SMS/email adapters land, this is how a developer or tester
++    obtains the code at all — but it must never be reachable in production,
++    where it would let anyone take over any account by requesting an OTP for
++    the victim's email/phone and reading the code straight out of the
++    response body.
++    """
++    return get_settings().environment != "production"
+ 
+ 
+ def _hash_code(code: str) -> str:
+@@ -95,21 +106,21 @@ class ProviderAuthService:
+ 
+         code = await self._issue_otp(created["provider_id"], "VERIFY_EMAIL")
+         await self._publish("EVT.PROVIDER.REGISTERED", created)
+-        return {**created, **( {"otp_code": code} if DEV_MODE else {})}
++        return {**created, **( {"otp_code": code} if _dev_mode() else {})}
+ 
+     async def request_otp(self, email: str) -> dict[str, Any]:
+         provider = await self._providers.get_by_email(email.strip().lower())
+         if not provider:
+             return {"sent": True}  # do not reveal account existence
+         code = await self._issue_otp(str(provider["provider_id"]), "VERIFY_EMAIL")
+-        return {"sent": True, **( {"otp_code": code} if DEV_MODE else {})}
++        return {"sent": True, **( {"otp_code": code} if _dev_mode() else {})}
+ 
+     async def request_password_reset(self, email: str) -> dict[str, Any]:
+         provider = await self._providers.get_by_email(email.strip().lower())
+         if not provider:
+             return {"sent": True}
+         code = await self._issue_otp(str(provider["provider_id"]), "PASSWORD_RESET")
+-        return {"sent": True, **( {"otp_code": code} if DEV_MODE else {})}
++        return {"sent": True, **( {"otp_code": code} if _dev_mode() else {})}
+ 
+     async def reset_password(self, email: str, code: str, new_password: str) -> dict[str, Any]:
+         if len(new_password) < 8:
+diff --git a/applications/backend/app/domains/providers/services/provider_calendar_service.py b/applications/backend/app/domains/providers/services/provider_calendar_service.py
+index e0e5a7d..322e1e0 100644
+--- a/applications/backend/app/domains/providers/services/provider_calendar_service.py
++++ b/applications/backend/app/domains/providers/services/provider_calendar_service.py
+@@ -27,10 +27,10 @@ class ProviderCalendarService:
+         return await self._calendar.day(provider_id, date)
+ 
+     async def week(
+-        self, provider_id: str, date: str
++        self, provider_id: str, week_of: str
+     ) -> dict[str, list[dict[str, Any]]]:
+-        """Week view: 7 day buckets starting from the week containing `date`."""
+-        base = date.fromisoformat(date)
++        """Week view: 7 day buckets starting from the week containing `week_of`."""
++        base = date.fromisoformat(week_of)
+         start = base - timedelta(days=base.weekday())  # Monday
+         days = []
+         for i in range(7):
+@@ -54,12 +54,12 @@ class ProviderCalendarService:
+         self, provider_id: str, from_date: str, limit: int = 20
+     ) -> list[dict[str, Any]]:
+         """Agenda view: upcoming events in chronological order."""
+-        events = await self._calendar.range(
+-            provider_id, from_date, date.today().isoformat()
+-        )
+-        # For agenda, fetch a wider range and sort
+-        future = [e for e in events if e.get("start_at") >= from_date]
+-        return future[:limit]
++        # Bounding the query at `from_date` alone would return nothing (the
++        # range needs an end); look far enough ahead to catch anything a
++        # provider would reasonably need to see, then trim to `limit`.
++        horizon = (date.fromisoformat(from_date) + timedelta(days=180)).isoformat()
++        events = await self._calendar.range(provider_id, from_date, horizon)
++        return sorted(events, key=lambda e: e.get("start_at") or "")[:limit]
+ 
+     async def check_overlap(
+         self,
+diff --git a/applications/backend/app/domains/providers/services/provider_safety_service.py b/applications/backend/app/domains/providers/services/provider_safety_service.py
+new file mode 100644
+index 0000000..e4d9f06
+--- /dev/null
++++ b/applications/backend/app/domains/providers/services/provider_safety_service.py
+@@ -0,0 +1,114 @@
++from __future__ import annotations
++
++from typing import Any
++
++from app.shared.exceptions.hierarchy import ValidationError, NotFoundError
++from app.domains.providers.services.base_provider_service import BaseProviderService
++from app.ports.persistence.provider_safety_repository import (
++    ProviderSafetyRepositoryPort,
++)
++
++
++class ProviderSafetyService(BaseProviderService):
++    """Provider safety & incident reporting service (PRV-41).
++
++    Serious incidents can be escalated to platform administrators.
++    """
++
++    def __init__(self, *, safety: ProviderSafetyRepositoryPort, **kwargs: Any) -> None:
++        super().__init__(**kwargs)
++        self._safety = safety
++
++    @property
++    def safety(self) -> ProviderSafetyRepositoryPort:
++        return self._safety
++
++    ALLOWED_CATEGORIES = {
++        "threatening_customer",
++        "unsafe_property",
++        "hazardous_environment",
++        "fraud",
++        "harassment",
++        "accident",
++        "injury",
++        "other",
++    }
++
++    ALLOWED_STATUSES = {"open", "under_review", "closed"}
++
++    async def create_report(
++        self,
++        *,
++        provider_id: str,
++        category: str,
++        title: str | None = None,
++        description: str | None = None,
++        is_serious: bool = False,
++    ) -> dict[str, Any]:
++        if category not in self.ALLOWED_CATEGORIES:
++            raise ValidationError(f"Invalid safety category: {category}")
++
++        return await self.safety.create_report(
++            provider_id=provider_id,
++            category=category,
++            title=title or None,
++            description=description or None,
++            is_serious=is_serious,
++        )
++
++    async def list_reports(
++        self,
++        *,
++        provider_id: str,
++        category: str | None = None,
++        status: str | None = None,
++        search: str | None = None,
++        limit: int = 20,
++        offset: int = 0,
++    ) -> dict[str, Any]:
++        if category is not None and category not in self.ALLOWED_CATEGORIES:
++            raise ValidationError(f"Invalid safety category: {category}")
++
++        if status is not None and status not in self.ALLOWED_STATUSES:
++            raise ValidationError(f"Invalid status filter: {status}")
++
++        rows = await self.safety.list_reports(
++            provider_id=provider_id,
++            category=category,
++            status=status,
++            search=search,
++            limit=limit,
++            offset=offset,
++        )
++
++        return {
++            "items": rows,
++            "limit": limit,
++            "offset": offset,
++        }
++
++    async def get_report(
++        self,
++        *,
++        provider_id: str,
++        report_id: str,
++    ) -> dict[str, Any]:
++        row = await self.safety.get_report(
++            provider_id=provider_id,
++            report_id=report_id,
++        )
++        if row is None:
++            raise NotFoundError("Safety report not found")
++        return row
++
++    async def escalate_report(
++        self,
++        *,
++        provider_id: str,
++        report_id: str,
++    ) -> dict[str, Any]:
++        return await self.safety.escalate_report(
++            provider_id=provider_id,
++            report_id=report_id,
++        )
++
+diff --git a/applications/backend/app/domains/providers/services/provider_tracking_service.py b/applications/backend/app/domains/providers/services/provider_tracking_service.py
+index 3e79d7a..19ea7bc 100644
+--- a/applications/backend/app/domains/providers/services/provider_tracking_service.py
++++ b/applications/backend/app/domains/providers/services/provider_tracking_service.py
+@@ -47,9 +47,9 @@ class ProviderTrackingService:
+         }
+ 
+     async def record_location(
+-        self, booking_id: str, latitude: float, longitude: float
++        self, provider_id: str, booking_id: str, latitude: float, longitude: float
+     ) -> dict[str, Any]:
+-        row = await self._tracking.record_location(booking_id, latitude, longitude)
++        row = await self._tracking.record_location(provider_id, booking_id, latitude, longitude)
+         if not row:
+             raise ValidationError("Could not record the position ping")
+         return {"location_id": row["location_id"], "recorded_at": row["recorded_at"]}
+@@ -61,8 +61,8 @@ class ProviderTrackingService:
+         logger.info("provider %s ended trip for booking %s", provider_id, booking_id)
+         return {"booking_id": row["booking_id"], "trip_ended_at": row["trip_ended_at"]}
+ 
+-    async def get_location(self, booking_id: str) -> dict[str, Any]:
+-        row = await self._tracking.get_location(booking_id)
++    async def get_location(self, booking_id: str, customer_id: str) -> dict[str, Any]:
++        row = await self._tracking.get_location(booking_id, customer_id)
+         if not row:
+             raise NotFoundError("No active trip found for this booking")
+         return {
+diff --git a/applications/backend/app/platform/workflow/workflow_manager.py b/applications/backend/app/platform/workflow/workflow_manager.py
+index 667a09e..d580635 100644
+--- a/applications/backend/app/platform/workflow/workflow_manager.py
++++ b/applications/backend/app/platform/workflow/workflow_manager.py
+@@ -10,6 +10,8 @@ from __future__ import annotations
+ from dataclasses import dataclass, field
+ from typing import Any
+ 
++from app.shared.exceptions.hierarchy import ConflictError
++
+ 
+ @dataclass
+ class WorkflowDefinition:
+@@ -19,8 +21,15 @@ class WorkflowDefinition:
+     terminal: set[str] = field(default_factory=set)
+ 
+ 
+-class WorkflowError(Exception):
+-    """Raised when a transition is not part of the registered machine."""
++class WorkflowError(ConflictError):
++    """Raised when a transition is not part of the registered machine.
++
++    Subclasses ConflictError (HTTP 409) rather than a bare Exception so a
++    disallowed transition (e.g. re-deciding an already-decided change
++    request) reaches the client as a clean 409, not an unhandled 500.
++    """
++
++    default_code = "WORKFLOW.INVALID_TRANSITION"
+ 
+ 
+ class WorkflowManager:
+diff --git a/applications/backend/app/ports/persistence/provider_disputes_repository.py b/applications/backend/app/ports/persistence/provider_disputes_repository.py
+index 870ba6a..5fe45f1 100644
+--- a/applications/backend/app/ports/persistence/provider_disputes_repository.py
++++ b/applications/backend/app/ports/persistence/provider_disputes_repository.py
+@@ -8,6 +8,7 @@ Dispute resolution stays platform/admin-side in this phase; the provider can
+ see the dispute, its evidence, and respond (kind: acknowledgment /
+ explanation / refund_offer).
+ """
++from __future__ import annotations
+ 
+ from abc import abstractmethod
+ from typing import Any, Protocol
+diff --git a/applications/backend/app/ports/persistence/provider_dsl_requests_repository.py b/applications/backend/app/ports/persistence/provider_dsl_requests_repository.py
+index 45dd59d..f8e618b 100644
+--- a/applications/backend/app/ports/persistence/provider_dsl_requests_repository.py
++++ b/applications/backend/app/ports/persistence/provider_dsl_requests_repository.py
+@@ -8,6 +8,7 @@ DSL kinds: cancellation, reschedule.
+ Statuses: open, escalated, closed, canceled.
+ Priorities: low, medium, high, urgent.
+ """
++from __future__ import annotations
+ 
+ from abc import abstractmethod
+ from typing import Any, Protocol
+diff --git a/applications/backend/app/ports/persistence/provider_invoices_repository.py b/applications/backend/app/ports/persistence/provider_invoices_repository.py
+index b9f1589..a6d9ed2 100644
+--- a/applications/backend/app/ports/persistence/provider_invoices_repository.py
++++ b/applications/backend/app/ports/persistence/provider_invoices_repository.py
+@@ -1,3 +1,5 @@
++
++from __future__ import annotations
+ from abc import abstractmethod
+ from typing import Any, Protocol
+ 
+diff --git a/applications/backend/app/ports/persistence/provider_kpis_repository.py b/applications/backend/app/ports/persistence/provider_kpis_repository.py
+index 03dc1d2..df8faad 100644
+--- a/applications/backend/app/ports/persistence/provider_kpis_repository.py
++++ b/applications/backend/app/ports/persistence/provider_kpis_repository.py
+@@ -1,3 +1,5 @@
++
++from __future__ import annotations
+ from abc import abstractmethod
+ from typing import Any, Protocol
+ 
+diff --git a/applications/backend/app/ports/persistence/provider_notifications_repository.py b/applications/backend/app/ports/persistence/provider_notifications_repository.py
+index 0def865..e9aaa08 100644
+--- a/applications/backend/app/ports/persistence/provider_notifications_repository.py
++++ b/applications/backend/app/ports/persistence/provider_notifications_repository.py
+@@ -7,6 +7,8 @@ Channels: in_app, email, sms.
+ Categories: booking, payout, review, system, etc.
+ """
+ 
++from __future__ import annotations
++
+ from abc import abstractmethod
+ from typing import Any, Protocol
+ 
+diff --git a/applications/backend/app/ports/persistence/provider_portfolio_repository.py b/applications/backend/app/ports/persistence/provider_portfolio_repository.py
+index 8ebeaea..ae1873d 100644
+--- a/applications/backend/app/ports/persistence/provider_portfolio_repository.py
++++ b/applications/backend/app/ports/persistence/provider_portfolio_repository.py
+@@ -11,6 +11,8 @@ The repository exposes CRUD operations:
+ - delete: remove an item (ownership-scoped)
+ """
+ 
++from __future__ import annotations
++
+ from abc import abstractmethod
+ from typing import Any, Protocol
+ 
+diff --git a/applications/backend/app/ports/persistence/provider_reviews_repository.py b/applications/backend/app/ports/persistence/provider_reviews_repository.py
+index 679add7..af4b463 100644
+--- a/applications/backend/app/ports/persistence/provider_reviews_repository.py
++++ b/applications/backend/app/ports/persistence/provider_reviews_repository.py
+@@ -1,3 +1,5 @@
++
++from __future__ import annotations
+ from abc import abstractmethod
+ from typing import Any, Protocol
+ 
+diff --git a/applications/backend/app/ports/persistence/provider_safety_repository.py b/applications/backend/app/ports/persistence/provider_safety_repository.py
+new file mode 100644
+index 0000000..c1d38ae
+--- /dev/null
++++ b/applications/backend/app/ports/persistence/provider_safety_repository.py
+@@ -0,0 +1,52 @@
++from __future__ import annotations
++
++from typing import Any
++
++from app.ports.persistence.base import BaseRepositoryPort
++
++
++class ProviderSafetyRepositoryPort(BaseRepositoryPort):
++    """Repository port for provider safety / incident reports (PRV-41)."""
++
++    async def create_report(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        category: str,
++        title: str | None,
++        description: str | None,
++        is_serious: bool,
++    ) -> dict:
++        ...
++
++    async def list_reports(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        category: str | None = None,
++        status: str | None = None,
++        search: str | None = None,
++        limit: int = 20,
++        offset: int = 0,
++    ) -> list[dict]:
++        ...
++
++    async def get_report(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        report_id: str,
++    ) -> dict | None:
++        ...
++
++    async def escalate_report(
++        self,
++        ctx: Any,
++        *,
++        provider_id: str,
++        report_id: str,
++    ) -> dict:
++        ...
+diff --git a/applications/backend/app/queries/customers/bookings/set_scope_notes.sql b/applications/backend/app/queries/customers/bookings/set_scope_notes.sql
+new file mode 100644
+index 0000000..3f40a64
+--- /dev/null
++++ b/applications/backend/app/queries/customers/bookings/set_scope_notes.sql
+@@ -0,0 +1,6 @@
++-- CUS.BOOKING.SET_SCOPE — apply an approved SCOPE change.
++UPDATE "BOOKINGS"
++   SET scope_notes = :scope_notes,
++       updated_at = now()
++ WHERE booking_id = CAST(:booking_id AS uuid)
++RETURNING booking_id, scope_notes;
+diff --git a/applications/backend/app/queries/customers/providers/list_by_category.sql b/applications/backend/app/queries/customers/providers/list_by_category.sql
+index d025fc7..c84b5fd 100644
+--- a/applications/backend/app/queries/customers/providers/list_by_category.sql
++++ b/applications/backend/app/queries/customers/providers/list_by_category.sql
+@@ -6,6 +6,7 @@ SELECT p.provider_id, p.display_name, p.headline, p.city, p.region,
+   JOIN "PROVIDER_SERVICES" ps ON ps.provider_id = p.provider_id
+   JOIN "SERVICES" s ON s.service_id = ps.service_id
+  WHERE p.is_active
++   AND p.verification_status = 'VERIFIED'
+    AND s.category_id = CAST(:category_id AS uuid)
+  GROUP BY p.provider_id, p.display_name, p.headline, p.city, p.region,
+           p.rating_avg, p.rating_count, p.jobs_completed
+diff --git a/applications/backend/app/queries/customers/providers/list_by_service.sql b/applications/backend/app/queries/customers/providers/list_by_service.sql
+index 910b0ef..d3187b9 100644
+--- a/applications/backend/app/queries/customers/providers/list_by_service.sql
++++ b/applications/backend/app/queries/customers/providers/list_by_service.sql
+@@ -5,5 +5,6 @@ SELECT DISTINCT p.provider_id, p.display_name, p.headline, p.city, p.region,
+   JOIN "PROVIDER_SERVICES" ps ON ps.provider_id = p.provider_id
+   JOIN "SERVICES" s ON s.service_id = ps.service_id
+  WHERE p.is_active
++   AND p.verification_status = 'VERIFIED'
+    AND s.slug = :slug
+  ORDER BY p.rating_avg DESC, ps.base_amount;
+\ No newline at end of file
+diff --git a/applications/backend/app/queries/customers/providers/profile.sql b/applications/backend/app/queries/customers/providers/profile.sql
+index 013b22c..7f1591b 100644
+--- a/applications/backend/app/queries/customers/providers/profile.sql
++++ b/applications/backend/app/queries/customers/providers/profile.sql
+@@ -13,4 +13,5 @@ SELECT p.provider_id, p.display_name, p.headline, p.bio,
+        ), '[]'::json) AS services
+   FROM "PROVIDERS" p
+  WHERE p.provider_id = CAST(:provider_id AS uuid)
+-   AND p.is_active;
+\ No newline at end of file
++   AND p.is_active
++   AND p.verification_status = 'VERIFIED';
+\ No newline at end of file
+diff --git a/applications/backend/app/queries/providers/arrival/status.sql b/applications/backend/app/queries/providers/arrival/status.sql
+index e144e0b..8f09980 100644
+--- a/applications/backend/app/queries/providers/arrival/status.sql
++++ b/applications/backend/app/queries/providers/arrival/status.sql
+@@ -1,5 +1,9 @@
+ -- PROV.ARRIVAL.STATUS — arrival state for a provider's booking (Requirement Phase 19).
+-SELECT booking_id, status, arrival_code, arrived_at, verified_at,
++-- arrival_code is deliberately excluded: the customer hands the PIN to the
++-- provider in person as proof of a genuine on-site visit. Exposing it back
++-- through the provider's own API would let arrival be "verified" without
++-- ever requiring that handoff, defeating the whole point of the code.
++SELECT booking_id, status, arrived_at, verified_at,
+        arrival_latitude, arrival_longitude
+   FROM "BOOKINGS"
+  WHERE booking_id = CAST(:booking_id AS uuid)
+diff --git a/applications/backend/app/queries/providers/bookings/details.sql b/applications/backend/app/queries/providers/bookings/details.sql
+index 3812b55..32af5e1 100644
+--- a/applications/backend/app/queries/providers/bookings/details.sql
++++ b/applications/backend/app/queries/providers/bookings/details.sql
+@@ -1,7 +1,9 @@
+ -- PROV.BOOKING.DETAILS -- full operational screen for a provider booking (Phase 16)
++-- arrival_code deliberately excluded — see app/queries/providers/arrival/status.sql
++-- for why the provider's own API must never return the customer's arrival PIN.
+ SELECT b.booking_id, b.booking_number, b.status, b.scheduled_date,
+        b.time_window, b.agreed_amount, b.currency,
+-       b.payment_attempts, b.arrival_code, b.arrived_at, b.verified_at,
++       b.payment_attempts, b.arrived_at, b.verified_at,
+        b.started_at, b.completed_at, b.created_at, b.updated_at,
+        c.full_name AS customer_name,
+        c.phone AS customer_phone, c.email AS customer_email,
+diff --git a/applications/backend/app/queries/providers/checklist/booking_set_completed.sql b/applications/backend/app/queries/providers/checklist/booking_set_completed.sql
+index 5e7a9ef..a90cf37 100644
+--- a/applications/backend/app/queries/providers/checklist/booking_set_completed.sql
++++ b/applications/backend/app/queries/providers/checklist/booking_set_completed.sql
+@@ -4,8 +4,7 @@
+ UPDATE "BOOKING_CHECKLIST_ITEMS"
+    SET is_completed  = TRUE,
+        completed_at  = CASE WHEN is_completed = FALSE THEN now()
+-                            ELSE completed_at END,
+-       updated_at    = now()
++                            ELSE completed_at END
+  WHERE provider_id = CAST(:user_id AS uuid)
+    AND booking_id  = CAST(:booking_id AS uuid)
+    AND item_id     = CAST(:item_id AS uuid)
+diff --git a/applications/backend/app/queries/providers/checklist/instantiate.sql b/applications/backend/app/queries/providers/checklist/instantiate.sql
+index 620e04d..56b60b8 100644
+--- a/applications/backend/app/queries/providers/checklist/instantiate.sql
++++ b/applications/backend/app/queries/providers/checklist/instantiate.sql
+@@ -2,6 +2,9 @@
+ -- Copies the active template's task titles as checklist items. Idempotent per
+ -- booking via the INSERT .. SELECT .. WHERE NOT EXISTS guard.
+ -- items is a JSON array of plain task titles, e.g. ["Inspect unit","Clean filters"].
++-- The booking must actually be assigned to this provider — otherwise any
++-- provider with an active template could instantiate a checklist against a
++-- booking that isn't theirs (the FK on booking_id alone doesn't check that).
+ INSERT INTO "BOOKING_CHECKLIST_ITEMS" (booking_id, provider_id, task_title, position)
+ SELECT CAST(:booking_id AS uuid),
+        CAST(:user_id AS uuid),
+@@ -13,6 +16,11 @@ SELECT CAST(:booking_id AS uuid),
+  WHERE t.provider_id = CAST(:user_id AS uuid)
+    AND t.service_id  = CAST(:service_id AS uuid)
+    AND t.is_active   = TRUE
++   AND EXISTS (
++         SELECT 1 FROM "BOOKINGS" b
++          WHERE b.booking_id = CAST(:booking_id AS uuid)
++            AND b.provider_id = CAST(:user_id AS uuid)
++       )
+    AND NOT EXISTS (
+          SELECT 1 FROM "BOOKING_CHECKLIST_ITEMS" bci
+           WHERE bci.booking_id = CAST(:booking_id AS uuid)
+diff --git a/applications/backend/app/queries/providers/commission/fees_apply.sql b/applications/backend/app/queries/providers/commission/fees_apply.sql
+index 0b23b71..2093b5b 100644
+--- a/applications/backend/app/queries/providers/commission/fees_apply.sql
++++ b/applications/backend/app/queries/providers/commission/fees_apply.sql
+@@ -5,7 +5,7 @@
+ --          net_amount, reference_type, reference_id, description
+ -- Returns: created fee row.
+ -- =============================================================================
+-INSERT INTO \"PROVIDER_COMMISSION_FEES\" (
++INSERT INTO "PROVIDER_COMMISSION_FEES" (
+     provider_id,
+     currency,
+     gross_amount,
+diff --git a/applications/backend/app/queries/providers/commission/fees_list.sql b/applications/backend/app/queries/providers/commission/fees_list.sql
+index a54c813..478636c 100644
+--- a/applications/backend/app/queries/providers/commission/fees_list.sql
++++ b/applications/backend/app/queries/providers/commission/fees_list.sql
+@@ -17,7 +17,7 @@ SELECT
+     reference_id,
+     description,
+     created_at
+-FROM \"PROVIDER_COMMISSION_FEES\"
++FROM "PROVIDER_COMMISSION_FEES"
+ WHERE provider_id = CAST(:user_id AS uuid)
+   AND (:status::varchar IS NULL OR status = :status::varchar)
+ ORDER BY created_at DESC
+diff --git a/applications/backend/app/queries/providers/commission/fees_summary.sql b/applications/backend/app/queries/providers/commission/fees_summary.sql
+index 758f605..f7a5918 100644
+--- a/applications/backend/app/queries/providers/commission/fees_summary.sql
++++ b/applications/backend/app/queries/providers/commission/fees_summary.sql
+@@ -10,5 +10,5 @@ SELECT
+     COALESCE(SUM(tax_amount), 0)        AS total_tax,
+     COALESCE(SUM(net_amount), 0)        AS total_net,
+     COUNT(*)                            AS fee_count
+-FROM \"PROVIDER_COMMISSION_FEES\"
++FROM "PROVIDER_COMMISSION_FEES"
+ WHERE provider_id = CAST(:user_id AS uuid);
+diff --git a/applications/backend/app/queries/providers/commission/rate.sql b/applications/backend/app/queries/providers/commission/rate.sql
+index 691bd7f..e04d81e 100644
+--- a/applications/backend/app/queries/providers/commission/rate.sql
++++ b/applications/backend/app/queries/providers/commission/rate.sql
+@@ -8,7 +8,7 @@
+ -- =============================================================================
+ WITH prov AS (
+     SELECT *
+-    FROM \"PROVIDER_COMMISSION_RATES\"
++    FROM "PROVIDER_COMMISSION_RATES"
+     WHERE provider_id = CAST(:user_id AS uuid)
+       AND is_active
+       AND (effective_to IS NULL OR effective_to > now())
+@@ -40,7 +40,7 @@ SELECT
+     effective_to,
+     created_at,
+     updated_at
+-FROM \"PROVIDER_COMMISSION_RATES\"
++FROM "PROVIDER_COMMISSION_RATES"
+ WHERE provider_id IS NULL
+   AND is_active
+   AND currency = CAST(:currency AS varchar)
+diff --git a/applications/backend/app/queries/providers/invoices/summary.sql b/applications/backend/app/queries/providers/invoices/summary.sql
+index 39f58a8..c2cb927 100644
+--- a/applications/backend/app/queries/providers/invoices/summary.sql
++++ b/applications/backend/app/queries/providers/invoices/summary.sql
+@@ -1,5 +1,5 @@
+ SELECT
+-    COUNT(*) FILTER (WHERE "status" = "status") AS "total_count",
++    COUNT(*) AS "total_count",
+     COALESCE(SUM("gross_amount"), 0) AS "total_gross",
+     COALESCE(SUM("commission_amount"), 0) AS "total_commission",
+     COALESCE(SUM("tax_amount"), 0) AS "total_tax",
+diff --git a/applications/backend/app/queries/providers/safety/create.sql b/applications/backend/app/queries/providers/safety/create.sql
+new file mode 100644
+index 0000000..6ecbfda
+--- /dev/null
++++ b/applications/backend/app/queries/providers/safety/create.sql
+@@ -0,0 +1,28 @@
++WITH inserted AS (
++    INSERT INTO "PROVIDER_SAFETY_REPORTS" (
++        provider_id,
++        category,
++        title,
++        description,
++        is_serious,
++        status,
++        escalated_to_platform,
++        escalated_at,
++        created_at,
++        updated_at
++    ) VALUES (
++        %(provider_id)s,
++        %(category)s,
++        %(title)s,
++        %(description)s,
++        %(is_serious)s,
++        'open',
++        %(escalated_to_platform)s,
++        CASE WHEN %(escalated_to_platform)s THEN now() ELSE NULL END,
++        now(),
++        now()
++    )
++    RETURNING id, provider_id, category, title, description, is_serious, status,
++              escalated_to_platform, escalated_at, created_at, updated_at
++)
++SELECT * FROM inserted;
+diff --git a/applications/backend/app/queries/providers/safety/escalate.sql b/applications/backend/app/queries/providers/safety/escalate.sql
+new file mode 100644
+index 0000000..a76b965
+--- /dev/null
++++ b/applications/backend/app/queries/providers/safety/escalate.sql
+@@ -0,0 +1,10 @@
++UPDATE "PROVIDER_SAFETY_REPORTS"
++SET status = 'under_review',
++    escalated_to_platform = true,
++    escalated_at = now(),
++    updated_at = now()
++WHERE id = %(id)s
++  AND provider_id = %(provider_id)s
++  AND status = 'open'
++RETURNING id, provider_id, category, title, description, is_serious,
++          status, escalated_to_platform, escalated_at, created_at, updated_at;
+diff --git a/applications/backend/app/queries/providers/safety/get.sql b/applications/backend/app/queries/providers/safety/get.sql
+new file mode 100644
+index 0000000..a087d72
+--- /dev/null
++++ b/applications/backend/app/queries/providers/safety/get.sql
+@@ -0,0 +1,15 @@
++SELECT
++    id,
++    provider_id,
++    category,
++    title,
++    description,
++    is_serious,
++    status,
++    escalated_to_platform,
++    escalated_at,
++    created_at,
++    updated_at
++FROM "PROVIDER_SAFETY_REPORTS"
++WHERE id = %(id)s
++  AND provider_id = %(provider_id)s;
+diff --git a/applications/backend/app/queries/providers/safety/list.sql b/applications/backend/app/queries/providers/safety/list.sql
+new file mode 100644
+index 0000000..e744971
+--- /dev/null
++++ b/applications/backend/app/queries/providers/safety/list.sql
+@@ -0,0 +1,29 @@
++SELECT
++    id,
++    provider_id,
++    category,
++    title,
++    description,
++    is_serious,
++    status,
++    escalated_to_platform,
++    escalated_at,
++    created_at,
++    updated_at
++FROM "PROVIDER_SAFETY_REPORTS"
++WHERE provider_id = %(provider_id)s
++  AND (
++      %(category)s::text IS NULL
++      OR category = %(category)s
++  )
++  AND (
++      %(status)s::text IS NULL
++      OR status = %(status)s
++  )
++  AND (
++      %(search)s IS NULL
++      OR title ILIKE %(search)s
++      OR description ILIKE %(search)s
++  )
++ORDER BY created_at DESC
++LIMIT %(limit)s OFFSET %(offset)s;
+diff --git a/applications/backend/app/queries/providers/tracking/get_location.sql b/applications/backend/app/queries/providers/tracking/get_location.sql
+index 6199113..21d8dc4 100644
+--- a/applications/backend/app/queries/providers/tracking/get_location.sql
++++ b/applications/backend/app/queries/providers/tracking/get_location.sql
+@@ -1,4 +1,6 @@
+ -- PROV.TRIP.GET_LOCATION — customer views provider's live position (Requirement Phase 18)
++-- Scoped to the requesting customer's own booking — without this, anyone who
++-- knew/guessed a booking_id could read any provider's live GPS position.
+ SELECT b.booking_id,
+        p.display_name AS provider_name,
+        p.headline AS provider_headline,
+@@ -9,4 +11,5 @@ SELECT b.booking_id,
+   FROM "BOOKINGS" b
+   JOIN "PROVIDERS" p ON p.provider_id = b.provider_id
+  WHERE b.booking_id = CAST(:booking_id AS uuid)
++   AND b.customer_id = CAST(:customer_id AS uuid)
+    AND b.status = 'ON_THE_WAY';
+diff --git a/applications/backend/app/queries/providers/tracking/record_location.sql b/applications/backend/app/queries/providers/tracking/record_location.sql
+index 0dcf876..19836fd 100644
+--- a/applications/backend/app/queries/providers/tracking/record_location.sql
++++ b/applications/backend/app/queries/providers/tracking/record_location.sql
+@@ -1,4 +1,12 @@
+ -- PROV.TRIP.RECORD_LOCATION — append GPS trace to history (Requirement Phase 18)
++-- booking_id must actually be this provider's own booking — the FK alone
++-- doesn't check that, and without this guard any authenticated provider
++-- could inject GPS points into another provider's trip history.
+ INSERT INTO "PROVIDER_LOCATIONS" (booking_id, latitude, longitude)
+-VALUES (CAST(:booking_id AS uuid), CAST(:latitude AS numeric), CAST(:longitude AS numeric))
++SELECT CAST(:booking_id AS uuid), CAST(:latitude AS numeric), CAST(:longitude AS numeric)
++ WHERE EXISTS (
++    SELECT 1 FROM "BOOKINGS" b
++     WHERE b.booking_id = CAST(:booking_id AS uuid)
++       AND b.provider_id = CAST(:user_id AS uuid)
++ )
+ RETURNING location_id, recorded_at;
+diff --git a/applications/backend/app/queries/registry.yaml b/applications/backend/app/queries/registry.yaml
+index 0236b87..cd3b1f7 100644
+--- a/applications/backend/app/queries/registry.yaml
++++ b/applications/backend/app/queries/registry.yaml
+@@ -1445,6 +1445,27 @@ queries:
+       ownership_filter_required: true
+       requires_auth: true
+     sql: providers/bookings/start_status.sql
++  PROV.ARRIVAL.ARRIVE:
++    description: Provider records arrival with GPS on an on-the-way booking (Provider Phase 19).
++    operation: update
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/arrival/arrive.sql
++  PROV.ARRIVAL.VERIFY_PIN:
++    description: Provider enters the customer's arrival PIN to verify on-site presence (Provider Phase 19).
++    operation: update
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/arrival/verify_pin.sql
++  PROV.ARRIVAL.STATUS:
++    description: Arrival state for a provider's booking (Provider Phase 19).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/arrival/status.sql
+   PROV.TRIP.START:
+     description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
+     operation: update
+@@ -1463,7 +1484,7 @@ queries:
+     description: Append a GPS trace point to PROVIDER_LOCATIONS history (Provider Phase 18).
+     operation: create
+     security:
+-      ownership_filter_required: false
++      ownership_filter_required: true
+       requires_auth: true
+     sql: providers/tracking/record_location.sql
+   PROV.TRIP.END:
+@@ -1477,8 +1498,8 @@ queries:
+     description: Customer views provider's live position and ETA (Provider Phase 18).
+     operation: read
+     security:
+-      ownership_filter_required: false
+-      requires_auth: false
++      ownership_filter_required: true
++      requires_auth: true
+     sql: providers/tracking/get_location.sql
+   PROV.TRIP.GET_NAV_INFO:
+     description: Provider views customer address + trip context for navigation (Provider Phase 18).
+@@ -2341,6 +2362,35 @@ queries:
+       ownership_filter_required: true
+       requires_auth: true
+     sql: providers/portfolio/update.sql
++
++  PROV.SAFETY.REPORTS.CREATE:
++    description: Create a provider safety/incident report (Phase 41).
++    operation: create
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/safety/create.sql
++  PROV.SAFETY.REPORTS.LIST:
++    description: Provider safety/incident reports list (Phase 41).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/safety/list.sql
++  PROV.SAFETY.REPORTS.GET:
++    description: Single provider safety report by id (Phase 41).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/safety/get.sql
++  PROV.SAFETY.REPORTS.ESCALATE:
++    description: Escalate a serious provider safety report to platform administrators (Phase 41).
++    operation: update
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/safety/escalate.sql
+   PROV.NOTIFICATIONS.LIST:
+     description: Provider notifications list, unread first then newest (Provider Phase 37).
+     operation: read
+diff --git a/applications/backend/app/startup/composition.py b/applications/backend/app/startup/composition.py
+index efcb491..463d427 100644
+--- a/applications/backend/app/startup/composition.py
++++ b/applications/backend/app/startup/composition.py
+@@ -36,6 +36,8 @@ class Composition:
+         self.provider_service_config_repository: Any = None
+         self.provider_area_repository: Any = None
+         self.provider_booking_repository: Any = None
++        self.provider_arrival_repository: Any = None
++        self.provider_tracking_repository: Any = None
+         self.provider_calendar_repository: Any = None
+         self.provider_messaging_repository: Any = None
+         self.provider_dashboard_repository: Any = None
+@@ -295,6 +297,18 @@ class Composition:
+ 
+         self.provider_booking_repository = ProviderBookingSqlAdapter(self.sql_query_manager)
+ 
++        from app.adapters.persistence.provider_arrival_sql_adapter import (
++            ProviderArrivalSqlAdapter,
++        )
++
++        self.provider_arrival_repository = ProviderArrivalSqlAdapter(self.sql_query_manager)
++
++        from app.adapters.persistence.provider_tracking_sql_adapter import (
++            ProviderTrackingSqlAdapter,
++        )
++
++        self.provider_tracking_repository = ProviderTrackingSqlAdapter(self.sql_query_manager)
++
+         from app.adapters.persistence.provider_job_checklist_sql_adapter import (
+             ProviderJobChecklistSqlAdapter,
+         )
+@@ -658,6 +672,30 @@ class Composition:
+ 
+         return ProviderBookingService(bookings=self.provider_booking_repository)
+ 
++    def provider_messaging_service(self) -> Any:
++        """ProviderMessagingService — booking-linked customer messaging (Phase 17)."""
++        from app.domains.providers.services.provider_messaging_service import (
++            ProviderMessagingService,
++        )
++
++        return ProviderMessagingService(messaging=self.provider_messaging_repository)
++
++    def provider_arrival_service(self) -> Any:
++        """ProviderArrivalService — arrival + PIN verification (Phase 19)."""
++        from app.domains.providers.services.provider_arrival_service import (
++            ProviderArrivalService,
++        )
++
++        return ProviderArrivalService(arrival=self.provider_arrival_repository)
++
++    def provider_tracking_service(self) -> Any:
++        """ProviderTrackingService — navigation & live location (Phase 18)."""
++        from app.domains.providers.services.provider_tracking_service import (
++            ProviderTrackingService,
++        )
++
++        return ProviderTrackingService(tracking=self.provider_tracking_repository)
++
+     def provider_job_checklist_service(self) -> Any:
+         """ProviderJobChecklistService — job checklists (Phase 21)."""
+         from app.domains.providers.services.provider_job_checklist_service import (
+@@ -959,6 +997,14 @@ class Composition:
+ 
+         return ProviderDirectoryService(self.provider_read)
+ 
++    def provider_safety_service(self) -> Any:
++        """ProviderSafetyService — safety & incident reporting (Phase 41)."""
++        from app.domains.providers.services.provider_safety_service import (
++            ProviderSafetyService,
++        )
++
++        return ProviderSafetyService(safety=self.provider_safety_repository)
++
+     def booking_service(self) -> Any:
+         """BookingService â Modules 16 & 17."""
+         from app.domains.bookings.services.booking_service import BookingService
+diff --git a/applications/backend/docs/provider-backend-implementation.md b/applications/backend/docs/provider-backend-implementation.md
+index 92bc3b8..823a678 100644
+--- a/applications/backend/docs/provider-backend-implementation.md
++++ b/applications/backend/docs/provider-backend-implementation.md
+@@ -70,7 +70,7 @@
+ | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
+ | PRV-39 | 39 | Disputes | ⏳ |
+ | PRV-40 | 40 | Provider Support | ⏳ |
+-| PRV-41 | 41 | Safety & Incident Reporting | ⏳ |
++| PRV-41 | 41 | Safety & Incident Reporting | ⏳ → `provider-phase41-v1` |
+ | PRV-42 | 42 | Recurring Customers | ⏳ |
+ | PRV-43 | 43 | Business Customers + negotiated rates | ⏳ |
+ | PRV-44 | 44 | Team Management — workers/roles | ⏳ |
+diff --git a/applications/backend/migrations/versions/0045_provider_commission_fees.py b/applications/backend/migrations/versions/0045_provider_commission_fees.py
+index a7ce25a..05fc6ff 100644
+--- a/applications/backend/migrations/versions/0045_provider_commission_fees.py
++++ b/applications/backend/migrations/versions/0045_provider_commission_fees.py
+@@ -45,7 +45,7 @@ def upgrade() -> None:
+             "provider_id"      uuid           NOT NULL,
+             "currency"         varchar(3)     NOT NULL DEFAULT 'TZS',
+             "commission_rate"  numeric(6,4)   NOT NULL DEFAULT 0,
+-            "tax_on_commission numeric(6,4)   NOT NULL DEFAULT 0,
++            "tax_on_commission" numeric(6,4)  NOT NULL DEFAULT 0,
+             "is_active"        boolean        NOT NULL DEFAULT TRUE,
+             "effective_from"   timestamptz    NOT NULL DEFAULT now(),
+             "effective_to"     timestamptz,
+diff --git a/applications/backend/migrations/versions/0058_provider_safety.py b/applications/backend/migrations/versions/0058_provider_safety.py
+new file mode 100644
+index 0000000..5f33b95
+--- /dev/null
++++ b/applications/backend/migrations/versions/0058_provider_safety.py
+@@ -0,0 +1,56 @@
++"""Provider safety & incident reporting (PRV-41).
++
++Serious incidents are escalated to platform administrators automatically
++when the report is created.
++"""
++
++from alembic import op
++
++UPGRADE_SQL = """
++CREATE TABLE IF NOT EXISTS "PROVIDER_SAFETY_REPORTS" (
++    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
++    "provider_id" uuid NOT NULL REFERENCES "PROVIDERS"("id") ON DELETE CASCADE,
++    "category" text NOT NULL,
++    "title" text,
++    "description" text,
++    "is_serious" boolean NOT NULL DEFAULT false,
++    "status" text NOT NULL DEFAULT 'open',
++    "escalated_to_platform" boolean NOT NULL DEFAULT false,
++    "escalated_at" timestamptz,
++    "created_at" timestamptz NOT NULL DEFAULT now(),
++    "updated_at" timestamptz NOT NULL DEFAULT now(),
++    CONSTRAINT "chk_provider_safety_category" CHECK (
++        "category" IN (
++            'threatening_customer',
++            'unsafe_property',
++            'hazardous_environment',
++            'fraud',
++            'harassment',
++            'accident',
++            'injury',
++            'other'
++        )
++    ),
++    CONSTRAINT "chk_provider_safety_status" CHECK (
++        "status" IN ('open', 'under_review', 'closed')
++    )
++);
++
++CREATE INDEX IF NOT EXISTS "ix_provider_safety_provider_status_created"
++    ON "PROVIDER_SAFETY_REPORTS" ("provider_id", "status", "created_at" DESC);
++
++CREATE INDEX IF NOT EXISTS "ix_provider_safety_provider_created"
++    ON "PROVIDER_SAFETY_REPORTS" ("provider_id", "created_at" DESC);
++"""
++
++DOWNGRADE_SQL = """
++DROP TABLE IF EXISTS "PROVIDER_SAFETY_REPORTS" CASCADE;
++"""
++
++
++def upgrade() -> None:
++    op.execute(UPGRADE_SQL)
++
++
++def downgrade() -> None:
++    op.execute(DOWNGRADE_SQL)
+diff --git a/applications/backend/migrations/versions/0059_booking_scope_notes.py b/applications/backend/migrations/versions/0059_booking_scope_notes.py
+new file mode 100644
+index 0000000..78d79d6
+--- /dev/null
++++ b/applications/backend/migrations/versions/0059_booking_scope_notes.py
+@@ -0,0 +1,20 @@
++"""Add BOOKINGS.scope_notes so an approved SCOPE change request has somewhere
++to persist its effect — previously there was no field to write to at all,
++so approving a SCOPE change silently applied nothing.
++"""
++from __future__ import annotations
++
++from alembic import op
++
++revision = "0059"
++down_revision = "0051"
++
++
++def upgrade() -> None:
++    op.execute(
++        'ALTER TABLE "BOOKINGS" ADD COLUMN IF NOT EXISTS scope_notes VARCHAR(2000)'
++    )
++
++
++def downgrade() -> None:
++    op.execute('ALTER TABLE "BOOKINGS" DROP COLUMN IF EXISTS scope_notes')

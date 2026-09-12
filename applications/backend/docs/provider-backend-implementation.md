@@ -62,7 +62,7 @@
 | PRV-30 | 30 | Payout Management — methods + withdrawals | ✅ done (tag `provider-phase30-v1`) |
 | PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
 | PRV-32 | 32 | Invoices & Statements | ✅ |
-| PRV-33 | 33 | Ratings & Reviews | ⏳ |
+| PRV-33 | 33 | Ratings & Reviews | ✅ |
 | PRV-34 | 34 | Provider Performance KPIs | ⏳ |
 | PRV-35 | 35 | Provider Ranking & Reputation | ⏳ |
 | PRV-36 | 36 | Portfolio | ⏳ |
@@ -136,6 +136,24 @@ Phase 32 adds provider-facing invoice management.
   - `GET /{invoice_id}` — single invoice
 
 No generation or delivery in this phase — listing and reading only.
+
+## Phase 33 — Ratings & Reviews
+
+Phase 33 adds provider-facing review visibility.
+
+- `PROVIDER_REVIEWS` — provider-owned review rows with booking_id, customer_id,
+  rating (1-5), title, body, status (published), timestamps.
+- Governed queries `PROV.REVIEWS.LIST`, `PROV.REVIEWS.DETAIL`, `PROV.REVIEWS.SUMMARY`.
+- `ProviderReviewsService` with:
+  - list (optional status and min_rating filters),
+  - single review fetch with ownership check,
+  - summary: total, average rating, star distribution, this-month count.
+- Router prefix `/providers/me/ratings`:
+  - `GET /` — list reviews
+  - `GET /summary` — rating summary
+  - `GET /{review_id}` — single review
+
+Read-only in this phase — no review submission or response.
 
 ## Phase 37 — Provider Notifications
 

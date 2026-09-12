@@ -1,0 +1,27 @@
+{
+  "remote": "https://github.com/Restitius/fixo-app.git",
+  "expected_old_refs": {
+    "refs/heads/dev": "d43c76647c3235e07824c6ec50bda31974d370e7",
+    "refs/heads/main": "a7c2f4f842bc80d8ceb1a325f72b835c1d70555a",
+    "refs/tags/cicd-security-hardening-v1": "aaf1f092cef817fd297f7308e2a1605e64896115",
+    "refs/tags/provider-app-mobile-build-v1": "a403a72dff63e2d9a09d6b5084fa8271ff5bcb77",
+    "refs/tags/provider-frontend-domain-parity-v1": "d43c76647c3235e07824c6ec50bda31974d370e7",
+    "refs/tags/web-provider-backend-wiring-v1": "b403f49a0e1cdd49776d84f66aeedaa37733e3a7"
+  },
+  "publish_refs": {
+    "refs/heads/main": "1ade794890db83a1864ec25b516035b434bb9882",
+    "refs/heads/staging": "1ade794890db83a1864ec25b516035b434bb9882",
+    "refs/heads/dev": "8c73ae62bc1657b832b4e15bf32028e6e1cc0a8c",
+    "refs/heads/feature/recovered-work": "d45ebf48ecd72f247e5aa1bd1357ba5f1863b2f7",
+    "refs/tags/rebuild-20260919-baseline": "f871083bbb826061807c699852a00cf6c49f6d5e",
+    "refs/tags/rebuild-20260919-dev": "815155b837d566a8735eaf8ad030bb94a4d04a6e",
+    "refs/tags/rebuild-20260919-recovery": "5a392026afa0db7aa607ebbce870f674a0b880f5"
+  },
+  "remove_old_tags": [
+    "refs/tags/cicd-security-hardening-v1",
+    "refs/tags/provider-app-mobile-build-v1",
+    "refs/tags/provider-frontend-domain-parity-v1",
+    "refs/tags/web-provider-backend-wiring-v1"
+  ],
+  "atomic": true
+}
