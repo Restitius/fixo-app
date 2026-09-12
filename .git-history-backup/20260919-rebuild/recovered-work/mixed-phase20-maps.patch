@@ -1,0 +1,1365 @@
+diff --git a/applications/backend/app/adapters/integrations/maps_adapter.py b/applications/backend/app/adapters/integrations/maps_adapter.py
+index 9f94098..14c7144 100644
+--- a/applications/backend/app/adapters/integrations/maps_adapter.py
++++ b/applications/backend/app/adapters/integrations/maps_adapter.py
+@@ -4,6 +4,8 @@ from __future__ import annotations
+ from typing import Any
+ 
+ from app.integrations.manager import IntegrationManager
++from app.integrations.providers.maps.models import MapResult
++from app.shared.exceptions.hierarchy import IntegrationError
+ 
+ 
+ class MapsGatewayIntegrationIds:
+@@ -11,6 +13,8 @@ class MapsGatewayIntegrationIds:
+ 
+     GEOCODE = "INT.MAPS.GEOCODE.V1"
+     ROUTING = "INT.MAPS.ROUTING.V1"
++    REVERSE = "INT.MAPS.REVERSE.V1"
++    CLOSEST = "INT.MAPS.CLOSEST.V1"
+ 
+ 
+ class MapsIntegrationAdapter:
+@@ -19,12 +23,40 @@ class MapsIntegrationAdapter:
+     def __init__(self, integration_manager: IntegrationManager) -> None:
+         self._integrations = integration_manager
+ 
++    async def _safe_execute(self, integration_id: str, operation: str, payload: dict[str, Any]) -> dict[str, Any]:
++        """Run an integration op; return a structured failure when the provider
++        is disabled or unavailable so callers degrade gracefully."""
++        try:
++            return await self._integrations.execute(integration_id, operation, payload)
++        except (IntegrationError, NotImplementedError) as exc:
++            return MapResult.failure(
++                getattr(exc, "code", None) or "MAPS.UNAVAILABLE",
++                str(exc) if str(exc) else "maps integration is not available",
++            ).to_dict()
++
+     async def geocode(self, address: str) -> dict[str, Any]:
+-        return await self._integrations.execute(MapsGatewayIntegrationIds.GEOCODE, "geocode", {"address": address})
++        return await self._safe_execute(
++            MapsGatewayIntegrationIds.GEOCODE, "geocode", {"address": address}
++        )
++
++    async def reverse(self, latitude: float, longitude: float) -> dict[str, Any]:
++        return await self._safe_execute(
++            MapsGatewayIntegrationIds.REVERSE,
++            "reverse",
++            {"lat": latitude, "lon": longitude},
++        )
++
++    async def closest(
++        self, latitude: float, longitude: float, candidates: list[dict[str, Any]]
++    ) -> dict[str, Any]:
++        return await self._safe_execute(
++            MapsGatewayIntegrationIds.CLOSEST,
++            "closest",
++            {"lat": latitude, "lon": longitude, "candidates": candidates},
++        )
+ 
+     async def route(self, origin: dict[str, Any], destination: dict[str, Any]) -> dict[str, Any]:
+-        return await self._integrations.execute(
+-            MapsGatewayIntegrationIds.ROUTING,
+-            "route",
+-            {"origin": origin, "destination": destination},
+-        )
+\ No newline at end of file
++        raise NotImplementedError(
++            "MapsIntegrationAdapter.route is not implemented yet "
++            "(Nominatim has no routing endpoint; a dedicated router is needed)."
++        )
+diff --git a/applications/backend/app/adapters/persistence/provider_booking_sql_adapter.py b/applications/backend/app/adapters/persistence/provider_booking_sql_adapter.py
+index 84656dc..b0efaaf 100644
+--- a/applications/backend/app/adapters/persistence/provider_booking_sql_adapter.py
++++ b/applications/backend/app/adapters/persistence/provider_booking_sql_adapter.py
+@@ -11,6 +11,7 @@ class ProviderBookingQueryIds:
+     GET = "PROV.BOOKING.GET"
+     ACK = "PROV.BOOKING.ACK"
+     ACK_STATUS = "PROV.BOOKING.ACK_STATUS"
++    START_SERVICE = "PROV.BOOKING.START_SERVICE"
+     DETAILS = "PROV.BOOKING.DETAILS"
+     TIMELINE = "PROV.BOOKING.TIMELINE"
+     MESSAGE_COUNT = "PROV.BOOKING.MESSAGE_COUNT"
+@@ -81,3 +82,21 @@ class ProviderBookingSqlAdapter:
+             {"user_id": provider_id, "booking_id": booking_id},
+             fetch="one",
+         )
++
++    async def start_service(
++        self,
++        provider_id: str,
++        booking_id: str,
++        gps_lat: float | None = None,
++        gps_lng: float | None = None,
++    ) -> dict[str, Any] | None:
++        return await self._sql.execute(
++            ProviderBookingQueryIds.START_SERVICE,
++            {
++                "user_id": provider_id,
++                "booking_id": booking_id,
++                "gps_lat": gps_lat,
++                "gps_lng": gps_lng,
++            },
++            fetch="one",
++        )
+diff --git a/applications/backend/app/api/v1/router.py b/applications/backend/app/api/v1/router.py
+index 123462c..3170e80 100644
+--- a/applications/backend/app/api/v1/router.py
++++ b/applications/backend/app/api/v1/router.py
+@@ -23,6 +23,8 @@ from app.api.v1.locations import router as locations_router
+ from app.api.v1.matching import router as matching_router
+ from app.api.v1.messaging import router as messaging_router
+ from app.domains.providers.api.messaging_router import router as provider_messaging_router
++from app.domains.providers.api.tracking_router import router as provider_tracking_router
++from app.domains.providers.api.arrival_router import router as provider_arrival_router
+ from app.api.v1.notifications import router as notifications_router
+ from app.api.v1.onboarding import router as onboarding_router
+ from app.api.v1.properties import router as properties_router
+@@ -103,6 +105,8 @@ api_v1_router.include_router(change_requests_router)
+ api_v1_router.include_router(invoices_router)
+ api_v1_router.include_router(messaging_router)
+ api_v1_router.include_router(provider_messaging_router)
++api_v1_router.include_router(provider_tracking_router)
++api_v1_router.include_router(provider_arrival_router)
+ api_v1_router.include_router(tracking_router)
+ api_v1_router.include_router(internal_router)
+ api_v1_router.include_router(users_router)
+diff --git a/applications/backend/app/config.py b/applications/backend/app/config.py
+index faacf9f..ddabb8d 100644
+--- a/applications/backend/app/config.py
++++ b/applications/backend/app/config.py
+@@ -61,6 +61,10 @@ if _HAS_SETTINGS_LIB:
+         # HTTP
+         cors_origins: str = "*"
+ 
++        # Maps integration
++        maps_enabled: bool = True
++        maps_base_url: str = "https://nominatim.openstreetmap.org"
++
+         @property
+         def database_urls(self) -> dict[str, str]:
+             """Logical database id -> URL (only configured entries)."""
+@@ -114,6 +118,12 @@ else:  # pragma: no cover - minimal fallback so the skeleton imports anywhere
+ 
+         cors_origins = _os.environ.get("CORS_ORIGINS", "*")
+ 
++        # Maps integration
++        maps_enabled = _os.environ.get("MAPS_ENABLED", "true").lower() in ("1", "true", "yes")
++        maps_base_url = _os.environ.get(
++            "MAPS_BASE_URL", "https://nominatim.openstreetmap.org"
++        )
++
+         @property
+         def database_urls(self) -> dict[str, str]:
+             urls: dict[str, str] = {"PRIMARY_DB": self.primary_db_url}
+diff --git a/applications/backend/app/domains/locations/services/address_service.py b/applications/backend/app/domains/locations/services/address_service.py
+index 0d91447..508b4ff 100644
+--- a/applications/backend/app/domains/locations/services/address_service.py
++++ b/applications/backend/app/domains/locations/services/address_service.py
+@@ -15,9 +15,10 @@ REQUIRED = ("label", "recipient_name", "phone", "street_address", "city")
+ 
+ 
+ class AddressService:
+-    def __init__(self, addresses: Any, events: Any = None) -> None:
++    def __init__(self, addresses: Any, events: Any = None, maps: Any = None) -> None:
+         self._addresses = addresses
+         self._events = events
++        self._maps = maps
+ 
+     async def list(self, customer_id: str) -> list[dict[str, Any]]:
+         return await self._addresses.list(customer_id)
+@@ -36,6 +37,9 @@ class AddressService:
+         if not existing:
+             data["is_default"] = True
+ 
++        # Auto-geocode: fill lat/lon when not explicitly provided.
++        await self._geocode_address(data)
++
+         row = await self._addresses.create(customer_id, data)
+         if not row:
+             raise ValidationError("Could not save the address")
+@@ -79,4 +83,35 @@ class AddressService:
+             return
+         from app.events.event import make_event
+ 
+-        await self._events.publish(make_event(name, payload))
+\ No newline at end of file
++        await self._events.publish(make_event(name, payload))
++
++    async def _geocode_address(self, data: dict[str, Any]) -> None:
++        """Populate latitude/longitude from the maps gateway when not provided."""
++        if self._maps is None:
++            return
++        if data.get("latitude") or data.get("longitude"):
++            return  # Already has coordinates
++
++        parts = [
++            data.get("street_address", ""),
++            data.get("city", ""),
++            data.get("region", ""),
++            data.get("postal_code", ""),
++            data.get("country", ""),
++        ]
++        address_str = ", ".join(p for p in parts if p)
++        if not address_str:
++            return
++
++        try:
++            result = await self._maps.geocode(address_str)
++        except Exception:  # noqa: BLE001
++            logger.warning("geocoding failed for address: %s", address_str)
++            return
++
++        if not result.get("ok") or not result.get("best"):
++            return
++
++        best = result["best"]
++        data["latitude"] = best.get("latitude")
++        data["longitude"] = best.get("longitude")
+\ No newline at end of file
+diff --git a/applications/backend/app/domains/providers/api/booking_router.py b/applications/backend/app/domains/providers/api/booking_router.py
+index 1a8536c..5a9a118 100644
+--- a/applications/backend/app/domains/providers/api/booking_router.py
++++ b/applications/backend/app/domains/providers/api/booking_router.py
+@@ -46,11 +46,13 @@ async def get(
+ async def acknowledge(
+     booking_id: str,
+     provider: dict = Depends(get_current_provider),
++    payload: dict | None = None,
+ ):
+     svc = _service()
+     return await svc.acknowledge(
+         provider_id=str(provider["provider_id"]),
+         booking_id=booking_id,
++        notes=(payload or {}).get("notes"),
+     )
+ 
+ 
+@@ -90,13 +92,13 @@ async def timeline(
+     )
+ 
+ 
+-@router.get("/{booking_id}/messages/count")
+-async def message_count(
++@router.post("/{booking_id}/start")
++async def start_service(
+     booking_id: str,
+     provider: dict = Depends(get_current_provider),
+ ):
+     svc = _service()
+-    return await svc.message_count(
++    return await svc.start_service(
+         provider_id=str(provider["provider_id"]),
+         booking_id=booking_id,
+     )
+diff --git a/applications/backend/app/domains/providers/services/provider_booking_service.py b/applications/backend/app/domains/providers/services/provider_booking_service.py
+index 961b03d..81c8443 100644
+--- a/applications/backend/app/domains/providers/services/provider_booking_service.py
++++ b/applications/backend/app/domains/providers/services/provider_booking_service.py
+@@ -38,9 +38,13 @@ class ProviderBookingService:
+             raise NotFoundError(f"Booking {booking_id} not found")
+         return row
+ 
+-    async def acknowledge(self, provider_id: str, booking_id: str) -> dict[str, Any]:
++    async def acknowledge(
++        self, provider_id: str, booking_id: str, notes: str | None = None
++    ) -> dict[str, Any]:
+         """Acknowledge a booking (provider confirms receipt)."""
+-        row = await self._bookings.ack(provider_id=provider_id, booking_id=booking_id)
++        row = await self._bookings.ack(
++            provider_id=provider_id, booking_id=booking_id, notes=notes
++        )
+         if not row:
+             raise NotFoundError(f"Booking {booking_id} not found")
+         if row.get("provider_id") != provider_id:
+@@ -78,3 +82,23 @@ class ProviderBookingService:
+         if not row:
+             raise NotFoundError(f"Booking {booking_id} not found")
+         return row
++
++    async def start_service(
++        self,
++        provider_id: str,
++        booking_id: str,
++        gps_lat: float | None = None,
++        gps_lng: float | None = None,
++    ) -> dict[str, Any]:
++        """Start the service phase for a booking (provider begins work)."""
++        row = await self._bookings.start_service(
++            provider_id=provider_id,
++            booking_id=booking_id,
++            gps_lat=gps_lat,
++            gps_lng=gps_lng,
++        )
++        if not row:
++            raise NotFoundError(f"Booking {booking_id} not found")
++        if row.get("provider_id") != provider_id:
++            raise AuthorizationError("Not your booking")
++        return row
+diff --git a/applications/backend/app/integrations/clients/http_client.py b/applications/backend/app/integrations/clients/http_client.py
+index 05e330b..7b695d9 100644
+--- a/applications/backend/app/integrations/clients/http_client.py
++++ b/applications/backend/app/integrations/clients/http_client.py
+@@ -5,6 +5,11 @@ import json
+ from dataclasses import dataclass, field
+ from typing import Any
+ 
++try:  # pragma: no cover - required dependency
++    import httpx
++except ImportError:  # pragma: no cover - scaffold fallback
++    httpx = None  # type: ignore[assignment]
++
+ 
+ @dataclass
+ class HttpResponse:
+@@ -41,4 +46,50 @@ class HttpClient:
+         headers: dict[str, str] | None = None,
+     ) -> HttpResponse:
+         """Perform one HTTP call (httpx.AsyncClient in implementation phase)."""
+-        raise NotImplementedError("HttpClient.request")
++        if httpx is None:
++            raise NotImplementedError("HttpClient.request: httpx not installed")
++        return _HttpxTransport(base_url=self.base_url, timeout_seconds=self.timeout_seconds).request(
++            method,
++            path,
++            json_payload=json_payload,
++            params=params,
++            headers=headers,
++            default_headers=self.default_headers,
++        )
++
++
++class _HttpxTransport:
++    """Private httpx-backed transport used by HttpClient."""
++
++    def __init__(self, *, base_url: str, timeout_seconds: float) -> None:
++        self._base_url = base_url
++        self._timeout = httpx.Timeout(timeout_seconds)
++        self._client = httpx.AsyncClient(timeout=self._timeout, follow_redirects=True)
++
++    async def request(
++        self,
++        method: str,
++        path: str,
++        *,
++        json_payload: dict[str, Any] | None = None,
++        params: dict[str, Any] | None = None,
++        headers: dict[str, str] | None = None,
++        default_headers: dict[str, str] | None = None,
++    ) -> HttpResponse:
++        merged_headers = dict(default_headers or {})
++        if headers:
++            merged_headers.update(headers)
++
++        response = await self._client.request(
++            method,
++            f"{self._base_url}/{path.lstrip('/')}",
++            json=json_payload,
++            params=params,
++            headers=merged_headers,
++        )
++        return HttpResponse(
++            status=response.status_code,
++            headers=dict(response.headers.items()),
++            body=response.content,
++        )
++
+diff --git a/applications/backend/app/integrations/clients/retry_client.py b/applications/backend/app/integrations/clients/retry_client.py
+index 58ef9c8..7567a4d 100644
+--- a/applications/backend/app/integrations/clients/retry_client.py
++++ b/applications/backend/app/integrations/clients/retry_client.py
+@@ -6,6 +6,10 @@ import logging
+ from typing import Any
+ 
+ from app.integrations.clients.http_client import HttpClient, HttpResponse
++from app.integrations.exceptions.integration_errors import (
++    ProviderRateLimitedError,
++    ProviderRejectedError,
++)
+ from app.jobs.retry import RetryPolicy, compute_backoff, should_retry
+ from app.shared.exceptions.hierarchy import ExternalTimeoutError, IntegrationError
+ 
+@@ -58,5 +62,25 @@ class RetryHttpClient(HttpClient):
+         params: dict[str, Any] | None = None,
+         headers: dict[str, str] | None = None,
+     ) -> HttpResponse:
+-        """One raw attempt (transport wired in implementation phase)."""
+-        raise NotImplementedError("RetryHttpClient.perform_request")
++        """One raw attempt using the underlying HttpClient transport."""
++        response = await super().request(
++            method,
++            path,
++            json_payload=json_payload,
++            params=params,
++            headers=headers,
++        )
++
++        if response.status == 429:
++            raise ProviderRateLimitedError(
++                f"Provider rate-limited: {response.status}",
++                details={"status": response.status},
++            )
++
++        if response.status == 400:
++            raise ProviderRejectedError(
++                f"Provider rejected request: {response.status}",
++                details={"status": response.status},
++            )
++
++        return response
+diff --git a/applications/backend/app/integrations/manager.py b/applications/backend/app/integrations/manager.py
+index db9a44c..9249e43 100644
+--- a/applications/backend/app/integrations/manager.py
++++ b/applications/backend/app/integrations/manager.py
+@@ -15,6 +15,7 @@ Flow (section 8):
+ """
+ from __future__ import annotations
+ 
++import os
+ from typing import Any
+ 
+ from app.registries.integrations.integration_registry import IntegrationRegistry
+@@ -37,12 +38,48 @@ class IntegrationManager:
+                 f"Integration disabled: {integration_id}",
+                 code="INTEGRATION.DISABLED",
+             )
+-        raise NotImplementedError(
+-            f"IntegrationManager.execute({integration_id}.{operation}) "
+-            "- adapter resolution + circuit breaker + retries"
+-        )
++        adapter = self._resolve_adapter(definition)
++        if adapter is None:
++            raise NotImplementedError(
++                f"IntegrationManager.execute({integration_id}.{operation}) "
++                "- no provider adapter registered for provider='{definition.provider}'"
++            )
++        return await adapter.execute(operation, payload)
++
++    def _resolve_adapter(self, definition: Any) -> Any | None:
++        from app.integrations.providers.registry import default_provider_registry
++
++        factories = default_provider_registry()
++        factory = factories.get(definition.provider)
++        if factory is None:
++            return None
++        config = self._provider_config(definition)
++        return factory(config)
++
++    def _provider_config(self, definition: Any) -> dict[str, Any]:
++        return {
++            "integration_id": definition.integration_id,
++            "provider": definition.provider,
++                        "base_url": os.environ.get(definition.base_url_env, "") if definition.base_url_env else "",
++            "timeout_seconds": float(getattr(definition, "timeout_seconds", 10.0)),
++            "max_retries": int(getattr(definition, "max_retries", 2)),
++        }
+ 
+     async def health(self, integration_id: str) -> bool:
+         """Cheap external-system probe for observability."""
+-        self._registry.get(integration_id)
+-        raise NotImplementedError("IntegrationManager.health")
++        definition = self._registry.get(integration_id)
++        from app.integrations.providers.registry import default_provider_registry
++
++        factory = default_provider_registry().get(definition.provider)
++        if factory is None:
++            return False
++        try:
++            config = self._provider_config(definition)
++            adapter = factory(config)
++            if hasattr(adapter, "health"):
++                return await adapter.health()
++            return True
++        except Exception:  # noqa: BLE001
++            return False
++
++
+diff --git a/applications/backend/app/integrations/providers/maps/__init__.py b/applications/backend/app/integrations/providers/maps/__init__.py
+new file mode 100644
+index 0000000..20f7c12
+--- /dev/null
++++ b/applications/backend/app/integrations/providers/maps/__init__.py
+@@ -0,0 +1 @@
++"""Maps provider adapters — one adapter per concrete maps provider."""
+\ No newline at end of file
+diff --git a/applications/backend/app/integrations/providers/maps/models.py b/applications/backend/app/integrations/providers/maps/models.py
+new file mode 100644
+index 0000000..2ce1dfa
+--- /dev/null
++++ b/applications/backend/app/integrations/providers/maps/models.py
+@@ -0,0 +1,89 @@
++"""Stable maps models shared by maps provider adapters and consumers."""
++from __future__ import annotations
++
++from dataclasses import dataclass, field
++from typing import Any
++
++
++@dataclass(frozen=True)
++class MapCandidate:
++    """One geocoding result candidate."""
++
++    display_name: str
++    latitude: float
++    longitude: float
++    osm_type: str = ""
++    osm_id: str = ""
++    type: str = ""
++    confidence: float = 0.0
++    address: dict[str, Any] = field(default_factory=dict)
++
++    def to_dict(self) -> dict[str, Any]:
++        return {
++            "display_name": self.display_name,
++            "latitude": self.latitude,
++            "longitude": self.longitude,
++            "osm_type": self.osm_type,
++            "osm_id": self.osm_id,
++            "type": self.type,
++            "confidence": self.confidence,
++            "address": self.address,
++        }
++
++
++@dataclass(frozen=True)
++class MapResult:
++    """Outcome of a maps operation."""
++
++    ok: bool
++    candidates: list[MapCandidate] = field(default_factory=list)
++    best: MapCandidate | None = None
++    error_code: str = ""
++    error_message: str = ""
++
++    @classmethod
++    def success(cls, candidates: list[MapCandidate]) -> "MapResult":
++        best = candidates[0] if candidates else None
++        return cls(ok=True, candidates=candidates, best=best)
++
++    @classmethod
++    def empty(cls) -> "MapResult":
++        return cls(ok=True, candidates=[], best=None)
++
++    @classmethod
++    def failure(cls, code: str, message: str) -> "MapResult":
++        return cls(ok=False, error_code=code, error_message=message)
++
++    def to_dict(self) -> dict[str, Any]:
++        return {
++            "ok": self.ok,
++            "candidates": [c.to_dict() for c in self.candidates],
++            "best": self.best.to_dict() if self.best else None,
++            "error_code": self.error_code,
++            "error_message": self.error_message,
++        }
++
++
++def great_circle_distance_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
++    """Approximate great-circle distance in km using a simple haversine formula."""
++    import math
++
++    R = 6371.0
++    phi1 = math.radians(lat1)
++    phi2 = math.radians(lat2)
++    dphi = math.radians(lat2 - lat1)
++    dlambda = math.radians(lon2 - lon1)
++
++    a = math.sin(dphi / 2) ** 2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda / 2) ** 2
++    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
++    return R * c
++
++
++def rank_closest(candidates: list[MapCandidate], lat: float, lon: float) -> list[MapCandidate]:
++    """Return candidates ordered by distance from the given point."""
++    scored = []
++    for candidate in candidates:
++        distance_km = great_circle_distance_km(lat, lon, candidate.latitude, candidate.longitude)
++        scored.append((distance_km, candidate))
++    scored.sort(key=lambda item: item[0])
++    return [candidate for _, candidate in scored]
+diff --git a/applications/backend/app/integrations/providers/maps/nominatim_adapter.py b/applications/backend/app/integrations/providers/maps/nominatim_adapter.py
+new file mode 100644
+index 0000000..b2b58e3
+--- /dev/null
++++ b/applications/backend/app/integrations/providers/maps/nominatim_adapter.py
+@@ -0,0 +1,214 @@
++"""NominatimProviderAdapter — OpenStreetMap Nominatim geocoding adapter (no key)."""
++from __future__ import annotations
++
++import logging
++from typing import Any
++
++from app.integrations.adapters.base_adapter import ProviderAdapter
++from app.integrations.clients.http_client import HttpClient, HttpResponse
++from app.integrations.exceptions.integration_errors import (
++    ProviderRateLimitedError,
++    ProviderRejectedError,
++)
++from app.integrations.providers.maps.models import MapCandidate, MapResult, rank_closest
++
++logger = logging.getLogger(__name__)
++
++
++class NominatimHttpClient(HttpClient):
++    """Nominatim base transport with strong User-Agent and default headers."""
++
++    def __init__(
++        self,
++        *,
++        base_url: str = "https://nominatim.openstreetmap.org",
++        timeout_seconds: float = 10.0,
++    ) -> None:
++        super().__init__(
++            base_url=base_url,
++            timeout_seconds=timeout_seconds,
++            default_headers={
++                "User-Agent": "FIXO-APP/1.0 (maps integration; contact: ops@fixo.local)",
++                "Accept": "application/json",
++            },
++        )
++
++
++class NominatimProviderAdapter(ProviderAdapter):
++    """Async Nominatim adapter backed by a shared HttpClient."""
++
++    provider_name = "nominatim"
++
++    def __init__(self, http_client: HttpClient, *, base_path: str = "search") -> None:
++        self._client = http_client
++        self._base_path = base_path.rstrip("/")
++
++    def transform_request(self, operation: str, payload: dict[str, Any]) -> dict[str, Any]:
++        return payload
++
++    def transform_response(self, operation: str, response: dict[str, Any]) -> dict[str, Any]:
++        return response
++
++    async def execute(self, operation: str, payload: dict[str, Any]) -> dict[str, Any]:
++        if operation == "geocode":
++            return await self._geocode(payload)
++        if operation == "reverse":
++            return await self._reverse(payload)
++        if operation == "closest":
++            return await self._closest(payload)
++        raise NotImplementedError(f"NominatimProviderAdapter does not support operation: {operation}")
++
++    async def _geocode(self, payload: dict[str, Any]) -> dict[str, Any]:
++        query = payload.get("address") or payload.get("q") or ""
++        if not query or not isinstance(query, str):
++            return MapResult.empty().to_dict()
++
++        params: dict[str, Any] = {
++            "q": query,
++            "format": "jsonv2",
++            "limit": int(payload.get("limit", 5)),
++            "addressdetails": 1,
++            "extratags": 1,
++        }
++        if "country" in payload and payload["country"]:
++            params["countrycodes"] = payload["country"]
++        if "bounded" in payload:
++            params["bounded"] = int(payload["bounded"])
++
++        response = await self._client.request("GET", self._base_path, params=params)
++        candidates = self._parse_geocode_list(response)
++        return MapResult.success(candidates).to_dict() if candidates else MapResult.empty().to_dict()
++
++    async def _reverse(self, payload: dict[str, Any]) -> dict[str, Any]:
++        lat = payload.get("lat")
++        lon = payload.get("lon")
++        try:
++            lat_f = float(lat)
++            lon_f = float(lon)
++        except (TypeError, ValueError):
++            return MapResult.failure("NOMINATIM.INVALID_COORDS", "lat and lon must be numbers").to_dict()
++
++        params: dict[str, Any] = {
++            "lat": lat_f,
++            "lon": lon_f,
++            "format": "jsonv2",
++            "addressdetails": 1,
++            "extratags": 1,
++            "zoom": int(payload.get("zoom", 18)),
++        }
++        response = await self._client.request("GET", "reverse", params=params)
++        candidate = self._parse_reverse(response)
++        if not candidate:
++            return MapResult.empty().to_dict()
++        return MapResult.success([candidate]).to_dict()
++
++    async def _closest(self, payload: dict[str, Any]) -> dict[str, Any]:
++        lat = payload.get("lat")
++        lon = payload.get("lon")
++    def _parse_geocode_list(self, response: HttpResponse) -> list[MapCandidate]:
++        body = response.json()
++        if body is None:
++            return []
++        items = body if isinstance(body, list) else []
++        candidates: list[MapCandidate] = []
++        for item in items:
++            candidate = self._candidate_from_item(item)
++            if candidate is not None:
++                candidates.append(candidate)
++        return candidates
++
++    def _parse_reverse(self, response: HttpResponse) -> MapCandidate | None:
++        body = response.json()
++        if not isinstance(body, dict):
++            return None
++        if "display_name" in body and ("lat" in body or "lon" in body):
++            return self._candidate_from_dict(body, display_name=body.get("display_name", ""))
++        return self._candidate_from_item(body) or self._candidate_from_dict(
++            body, display_name=body.get("display_name", "")
++        )
++
++    def _candidate_from_item(self, item: Any) -> MapCandidate | None:
++        if not isinstance(item, dict):
++            return None
++        lat = item.get("lat")
++        lon = item.get("lon")
++        try:
++            lat_f = float(lat)
++            lon_f = float(lon)
++        except (TypeError, ValueError):
++            return None
++        return self._candidate_from_dict(item, latitude=lat_f, longitude=lon_f)
++
++    def _candidate_from_dict(
++        self,
++        item: dict[str, Any],
++        *,
++        latitude: float | None = None,
++        longitude: float | None = None,
++        display_name: str | None = None,
++    ) -> MapCandidate | None:
++        lat = latitude if latitude is not None else self._float(item.get("lat"))
++        lon = longitude if longitude is not None else self._float(item.get("lon"))
++        if lat is None or lon is None:
++            return None
++        return MapCandidate(
++            display_name=display_name or str(item.get("display_name", "")),
++            latitude=lat,
++            longitude=lon,
++            osm_type=str(item.get("osm_type", "") or ""),
++            osm_id=str(item.get("osm_id", "") or ""),
++            type=str(item.get("type", "") or ""),
++            confidence=float(item.get("importance", 0.0) or 0.0),
++            address=self._structured_address(item),
++        )
++
++    def _structured_address(self, item: dict[str, Any]) -> dict[str, Any]:
++        address = item.get("address") or {}
++        result: dict[str, Any] = {}
++        for key in (
++            "house_number",
++            "road",
++            "neighbourhood",
++            "suburb",
++            "village",
++            "hamlet",
++            "town",
++            "city",
++            "county",
++            "state",
++            "postcode",
++            "country",
++            "country_code",
++        ):
++            value = address.get(key)
++            if value:
++                result[key] = value
++        return result
++
++    @staticmethod
++    def _float(value: Any) -> float | None:
++        try:
++            return float(value)
++        except (TypeError, ValueError):
++            return None
++
++    async def _closest(self, payload: dict[str, Any]) -> dict[str, Any]:
++        lat = payload.get("lat")
++        lon = payload.get("lon")
++        try:
++            lat_f = float(lat)
++            lon_f = float(lon)
++        except (TypeError, ValueError):
++            return MapResult.failure("NOMINATIM.INVALID_COORDS", "lat and lon must be numbers").to_dict()
++
++        candidates = []
++        for item in payload.get("candidates", []) or []:
++            candidate = self._candidate_from_item(item)
++            if candidate is not None:
++                candidates.append(candidate)
++
++        if not candidates:
++            return MapResult.failure("NOMINATIM.NO_CANDIDATES", "no candidates to rank").to_dict()
++
++        ranked = rank_closest(candidates, lat_f, lon_f)
++        return MapResult.success(ranked).to_dict()
+diff --git a/applications/backend/app/integrations/providers/registry.py b/applications/backend/app/integrations/providers/registry.py
+new file mode 100644
+index 0000000..2a18b6c
+--- /dev/null
++++ b/applications/backend/app/integrations/providers/registry.py
+@@ -0,0 +1,41 @@
++"""Provider adapter registry — maps provider keys to concrete adapter classes."""
++from __future__ import annotations
++
++from typing import Any, Callable
++
++from app.integrations.adapters.base_adapter import ProviderAdapter
++
++ProviderFactory = Callable[[dict[str, Any]], ProviderAdapter]
++
++
++def default_provider_registry() -> dict[str, ProviderFactory]:
++    """Built-in registry of provider key -> adapter factory.
++
++    Factories receive a provider config dict from the integration definition
++    and credentials/settings and return a ready provider adapter.
++    """
++    return {
++        "nominatim": _nominatim_factory,
++    }
++
++
++def _nominatim_factory(config: dict[str, Any]) -> ProviderAdapter:
++    from app.integrations.clients.http_client import HttpClient
++    from app.integrations.clients.retry_client import RetryHttpClient
++    from app.integrations.providers.maps.nominatim_adapter import NominatimProviderAdapter
++
++    http = config.get("http_client")
++    if not isinstance(http, HttpClient) and http is not None:
++        http = None
++    if http is None:
++        http = RetryHttpClient(
++            base_url=config.get("base_url") or "https://nominatim.openstreetmap.org",
++            timeout_seconds=float(config.get("timeout_seconds", 10.0)),
++            default_headers={
++                "User-Agent": "FIXO-APP/1.0 (maps integration; contact: ops@fixo.local)",
++                "Accept": "application/json",
++            },
++        )
++    return NominatimProviderAdapter(
++        http, base_path=config.get("base_path", "search")
++    )
+diff --git a/applications/backend/app/ports/integrations/maps_gateway.py b/applications/backend/app/ports/integrations/maps_gateway.py
+index 4e9cf0c..f6e731a 100644
+--- a/applications/backend/app/ports/integrations/maps_gateway.py
++++ b/applications/backend/app/ports/integrations/maps_gateway.py
+@@ -6,7 +6,12 @@ from typing import Any, Protocol, runtime_checkable
+ 
+ @runtime_checkable
+ class MapsGateway(Protocol):
+-    """Geocode an address and route between two points."""
++    """Geocode an address, reverse-geocode coordinates, rank candidates, and route
++    between two points. All methods are provider-agnostic."""
+ 
+     async def geocode(self, address: str) -> dict[str, Any]: ...
++    async def reverse(self, latitude: float, longitude: float) -> dict[str, Any]: ...
++    async def closest(
++        self, latitude: float, longitude: float, candidates: list[dict[str, Any]]
++    ) -> dict[str, Any]: ...
+     async def route(self, origin: dict[str, Any], destination: dict[str, Any]) -> dict[str, Any]: ...
+\ No newline at end of file
+diff --git a/applications/backend/app/ports/persistence/provider_booking_repository.py b/applications/backend/app/ports/persistence/provider_booking_repository.py
+index 55ce060..4198bc8 100644
+--- a/applications/backend/app/ports/persistence/provider_booking_repository.py
++++ b/applications/backend/app/ports/persistence/provider_booking_repository.py
+@@ -33,3 +33,11 @@ class ProviderBookingRepository(Protocol):
+     async def timeline(self, provider_id: str, booking_id: str) -> list[dict[str, Any]]: ...
+ 
+     async def message_count(self, provider_id: str, booking_id: str) -> dict[str, Any] | None: ...
++
++    async def start_service(
++        self,
++        provider_id: str,
++        booking_id: str,
++        gps_lat: float | None = None,
++        gps_lng: float | None = None,
++    ) -> dict[str, Any] | None: ...
+diff --git a/applications/backend/app/queries/providers/bookings/complete.sql b/applications/backend/app/queries/providers/bookings/complete.sql
+new file mode 100644
+index 0000000..178357b
+--- /dev/null
++++ b/applications/backend/app/queries/providers/bookings/complete.sql
+@@ -0,0 +1,11 @@
++-- PROV.BOOKING.COMPLETE -- provider completes the service (Phase 21)
++UPDATE "BOOKINGS"
++   SET status           = 'COMPLETED',
++       completed_at     = now(),
++       updated_at       = now(),
++       current_latitude  = CASE WHEN :gps_lat IS NOT NULL THEN CAST(:gps_lat AS numeric) END,
++       current_longitude = CASE WHEN :gps_lng IS NOT NULL THEN CAST(:gps_lng AS numeric) END
++ WHERE booking_id = CAST(:booking_id AS uuid)
++   AND provider_id = CAST(:user_id AS uuid)
++   AND status      = 'IN_PROGRESS'
++RETURNING booking_id, status, completed_at, current_latitude, current_longitude, updated_at;
+\ No newline at end of file
+diff --git a/applications/backend/app/queries/providers/bookings/reject.sql b/applications/backend/app/queries/providers/bookings/reject.sql
+new file mode 100644
+index 0000000..4f0aa68
+--- /dev/null
++++ b/applications/backend/app/queries/providers/bookings/reject.sql
+@@ -0,0 +1,9 @@
++-- PROV.BOOKING.REJECT -- provider declines to do the job (Phase 21)
++UPDATE "BOOKINGS"
++   SET status         = 'DECLINED',
++       decline_reason = CAST(:reason AS text),
++       updated_at     = now()
++ WHERE booking_id = CAST(:booking_id AS uuid)
++   AND provider_id = CAST(:user_id AS uuid)
++   AND status      = 'CONFIRMED'
++RETURNING booking_id, status, decline_reason, updated_at;
+\ No newline at end of file
+diff --git a/applications/backend/app/queries/providers/bookings/start_service.sql b/applications/backend/app/queries/providers/bookings/start_service.sql
+new file mode 100644
+index 0000000..525db0d
+--- /dev/null
++++ b/applications/backend/app/queries/providers/bookings/start_service.sql
+@@ -0,0 +1,14 @@
++-- PROV.BOOKING.START_SERVICE -- provider starts the service (Phase 20)
++UPDATE "BOOKINGS"
++   SET status       = CASE
++                         WHEN :gps_lat IS NOT NULL AND :gps_lng IS NOT NULL THEN 'IN_PROGRESS'
++                         ELSE 'IN_PROGRESS'
++                       END,
++       started_at   = now(),
++       updated_at   = now(),
++       current_latitude  = CASE WHEN :gps_lat IS NOT NULL THEN CAST(:gps_lat AS numeric) END,
++       current_longitude = CASE WHEN :gps_lng IS NOT NULL THEN CAST(:gps_lng AS numeric) END
++ WHERE booking_id = CAST(:booking_id AS uuid)
++   AND provider_id = CAST(:user_id AS uuid)
++   AND status      = 'CONFIRMED'
++RETURNING booking_id, status, started_at, current_latitude, current_longitude, updated_at;
+\ No newline at end of file
+diff --git a/applications/backend/app/queries/registry.yaml b/applications/backend/app/queries/registry.yaml
+index f15a929..db0b0d1 100644
+--- a/applications/backend/app/queries/registry.yaml
++++ b/applications/backend/app/queries/registry.yaml
+@@ -1424,6 +1424,13 @@ queries:
+       ownership_filter_required: true
+       requires_auth: true
+     sql: providers/bookings/ack_status.sql
++  PROV.BOOKING.START_SERVICE:
++    description: Provider starts the service — status transitions and optional GPS capture (Provider Phase 20).
++    operation: update
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/bookings/start_service.sql
+   PROV.TRIP.START:
+     description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
+     operation: update
+@@ -1466,6 +1473,27 @@ queries:
+       ownership_filter_required: true
+       requires_auth: true
+     sql: providers/tracking/get_nav_info.sql
++  PROV.ARRIVAL.ARRIVE:
++    description: Provider records arrival with GPS (Provider Phase 19).
++    operation: update
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/arrival/arrive.sql
++  PROV.ARRIVAL.VERIFY_PIN:
++    description: Provider enters the customer's job PIN (Provider Phase 19).
++    operation: update
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/arrival/verify_pin.sql
++  PROV.ARRIVAL.STATUS:
++    description: Arrival state for a provider's booking (Provider Phase 19).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/arrival/status.sql
+   PROV.BOOKING.DETAILS:
+     description: Full operational screen for a provider booking (Provider Phase 16).
+     operation: read
+diff --git a/applications/backend/app/startup/composition.py b/applications/backend/app/startup/composition.py
+index ecf19d7..5895b99 100644
+--- a/applications/backend/app/startup/composition.py
++++ b/applications/backend/app/startup/composition.py
+@@ -42,6 +42,7 @@ class Composition:
+         self.provider_request_repository: Any = None
+         self.provider_matching_repository: Any = None
+         self.provider_quotation_repository: Any = None
++        self.provider_arrival_repository: Any = None
+         self.onboarding_repository: Any = None
+         self.public_content_repository: Any = None
+         self.address_repository: Any = None
+@@ -66,6 +67,7 @@ class Composition:
+         self.promotion_repository: Any = None
+         self.loyalty_repository: Any = None
+         self.history_repository: Any = None
++        self.maps_gateway: Any = None
+ 
+     def wire(self, *, registry_manager: Any, databases: Any) -> None:
+         """Build adapter chains from registered plumbing."""
+@@ -180,6 +182,20 @@ class Composition:
+         self.provider_messaging_repository = ProviderMessagingSqlAdapter(
+             self.sql_query_manager
+         )
++        from app.adapters.persistence.provider_tracking_sql_adapter import (
++            ProviderTrackingSqlAdapter,
++        )
++
++        self.provider_tracking_repository = ProviderTrackingSqlAdapter(
++            self.sql_query_manager
++        )
++        from app.adapters.persistence.provider_arrival_sql_adapter import (
++            ProviderArrivalSqlAdapter,
++        )
++
++        self.provider_arrival_repository = ProviderArrivalSqlAdapter(
++            self.sql_query_manager
++        )
+         from app.adapters.persistence.provider_verification_sql_adapter import (
+             ProviderVerificationSqlAdapter,
+         )
+@@ -358,6 +374,14 @@ class Composition:
+         )
+         self._hasher = PasswordHasher()
+ 
++        # Maps integration: provider-agnostic gateway backed by the integration
++        # manager + registered Nominatim adapter.
++        from app.integrations.manager import IntegrationManager
++        from app.adapters.integrations.maps_adapter import MapsIntegrationAdapter
++
++        self._integration_manager = IntegrationManager(registry_manager.integrations)
++        self.maps_gateway = MapsIntegrationAdapter(self._integration_manager)
++
+     # -- composed services (business-facing only) -----------------------------
+ 
+     def asset_service(self) -> Any:
+@@ -440,6 +464,14 @@ class Composition:
+ 
+         return ProviderCalendarService(calendar=self.provider_calendar_repository)
+ 
++    def provider_arrival_service(self) -> Any:
++        """ProviderArrivalService — GPS arrival + PIN verification (Requirement Phase 19)."""
++        from app.domains.providers.services.provider_arrival_service import (
++            ProviderArrivalService,
++        )
++
++        return ProviderArrivalService(arrival=self.provider_arrival_repository)
++
+     def provider_verification_service(self) -> Any:
+         """ProviderVerificationService — identity docs + verification workflow (Requirement Phase 5)."""
+         from app.domains.providers.services.provider_verification_service import (
+@@ -492,8 +524,12 @@ class Composition:
+     def provider_booking_service(self) -> Any:
+         """ProviderBookingService — provider-side booking views + ack (Phase 14)."""
+         from app.domains.providers.services.provider_booking_service import ProviderBookingService
++        from app.platform.events.event_manager import EventManager
+ 
+-        return ProviderBookingService(bookings=self.provider_booking_repository)
++        return ProviderBookingService(
++            bookings=self.provider_booking_repository,
++            events=EventManager() if _event_bus_available() else None,
++        )
+ 
+     def provider_availability_service(self) -> Any:
+         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
+diff --git a/applications/backend/app/startup/register_integrations.py b/applications/backend/app/startup/register_integrations.py
+index 151a75a..20ce9ca 100644
+--- a/applications/backend/app/startup/register_integrations.py
++++ b/applications/backend/app/startup/register_integrations.py
+@@ -76,19 +76,39 @@ def register_integrations(integration_registry: Any) -> None:
+         ),
+         IntegrationDefinition(
+             integration_id="INT.MAPS.GEOCODE.V1",
+-            provider="maps",
++            provider="nominatim",
+             category="maps",
+             credentials_key="MAPS_PRIMARY",
+-            enabled=False,
+-            description="Geocoding provider (adapter pending).",
++            base_url_env="MAPS_PRIMARY_URL",
++            enabled=True,
++            description="Geocoding provider (Nominatim).",
+         ),
+         IntegrationDefinition(
+             integration_id="INT.MAPS.ROUTING.V1",
+-            provider="maps",
++            provider="nominatim",
+             category="maps",
+             credentials_key="MAPS_PRIMARY",
+-            enabled=False,
+-            description="Routing provider (adapter pending).",
++            base_url_env="MAPS_PRIMARY_URL",
++            enabled=True,
++            description="Routing provider placeholder (Nominatim has no routing today).",
++        ),
++        IntegrationDefinition(
++            integration_id="INT.MAPS.REVERSE.V1",
++            provider="nominatim",
++            category="maps",
++            credentials_key="MAPS_PRIMARY",
++            base_url_env="MAPS_PRIMARY_URL",
++            enabled=True,
++            description="Reverse geocoding provider (Nominatim).",
++        ),
++        IntegrationDefinition(
++            integration_id="INT.MAPS.CLOSEST.V1",
++            provider="nominatim",
++            category="maps",
++            credentials_key="MAPS_PRIMARY",
++            base_url_env="MAPS_PRIMARY_URL",
++            enabled=True,
++            description="Closest-candidate ranking provider (Nominatim).",
+         ),
+         IntegrationDefinition(
+             integration_id="INT.STORAGE.OBJECTS.V1",
+diff --git a/applications/backend/tests/integration/test_address_service_geocode.py b/applications/backend/tests/integration/test_address_service_geocode.py
+new file mode 100644
+index 0000000..0a351c0
+--- /dev/null
++++ b/applications/backend/tests/integration/test_address_service_geocode.py
+@@ -0,0 +1,100 @@
++"""Integration test: AddressService auto-geocodes addresses via MapsGateway."""
++from __future__ import annotations
++
++import pytest
++
++from app.domains.locations.services.address_service import AddressService
++
++
++class FakeAddresses:
++    """Minimal AddressRepository double for AddressService."""
++    def __init__(self):
++        self.created = None
++        self._existing = []
++
++    async def list(self, customer_id):
++        return self._existing
++
++    async def get(self, customer_id, address_id):
++        return None  # not used in create flow
++
++    async def create(self, customer_id, params):
++        self.created = dict(params)
++        return self.created
++
++    async def update(self, customer_id, address_id, params):
++        return {}
++
++    async def delete(self, customer_id, address_id):
++        return True
++
++    async def set_default(self, customer_id, address_id):
++        return True
++
++
++class FakeMaps:
++    """MapsGateway double that returns a single candidate."""
++    async def geocode(self, address):
++        return {
++            "ok": True,
++            "candidates": [
++                {
++                    "display_name": "123 Fake St, Dublin, Ireland",
++                    "latitude": 53.3498,
++                    "longitude": -6.2603,
++                }
++            ],
++            "best": {
++                "display_name": "123 Fake St, Dublin, Ireland",
++                "latitude": 53.3498,
++                "longitude": -6.2603,
++            },
++        }
++
++    async def reverse(self, latitude, longitude):
++        return {"ok": True, "candidates": [], "best": None}
++
++    async def closest(self, latitude, longitude, candidates):
++        return {"ok": True, "candidates": candidates, "best": candidates[0]}
++
++    async def route(self, origin, destination):
++        return {"ok": True, "candidates": [], "best": None}
++
++
++@pytest.fixture
++def service():
++    addresses = FakeAddresses()
++    maps = FakeMaps()
++    return AddressService(addresses=addresses, maps=maps), addresses
++
++
++async def test_create_auto_geocodes_address(service):
++    svc, addresses = service
++    data = {
++        "label": "Home",
++        "recipient_name": "Alice",
++        "phone": "+35312345678",
++        "street_address": "123 Fake St",
++        "city": "Dublin",
++        "country": "Ireland",
++    }
++    row = await svc.create("cust-1", data)
++    assert addresses.created["latitude"] == 53.3498
++    assert addresses.created["longitude"] == -6.2603
++
++
++async def test_create_skips_geocode_when_coords_provided(service):
++    svc, addresses = service
++    data = {
++        "label": "Home",
++        "recipient_name": "Alice",
++        "phone": "+35312345678",
++        "street_address": "123 Fake St",
++        "city": "Dublin",
++        "country": "Ireland",
++        "latitude": 50.0,
++        "longitude": -7.0,
++    }
++    row = await svc.create("cust-1", data)
++    assert addresses.created["latitude"] == 50.0
++    assert addresses.created["longitude"] == -7.0
+diff --git a/applications/backend/tests/integration/test_maps_nominatim.py b/applications/backend/tests/integration/test_maps_nominatim.py
+new file mode 100644
+index 0000000..94009e6
+--- /dev/null
++++ b/applications/backend/tests/integration/test_maps_nominatim.py
+@@ -0,0 +1,135 @@
++"""Integration tests for the NominatimProviderAdapter (maps provider).
++
++Uses a FakeTransport that implements the HttpClient interface but returns
++canned responses, so no network access is required.
++"""
++from __future__ import annotations
++
++import json
++from typing import Any
++
++from app.integrations.clients.http_client import HttpClient, HttpResponse
++from app.integrations.providers.maps.nominatim_adapter import NominatimProviderAdapter
++
++
++REVERSE_BODY = json.dumps(
++    {
++        "display_name": "Noble House, 12 Main St, Dublin, D01, Ireland",
++        "lat": "53.3498",
++        "lon": "-6.2603",
++        "type": "house",
++        "importance": 0.8,
++        "osm_type": "node",
++        "osm_id": "123",
++        "address": {
++            "house_number": "12",
++            "road": "Main Street",
++            "city": "Dublin",
++            "county": "Dublin City",
++            "state": "Leinster",
++            "postcode": "D01",
++            "country": "Ireland",
++            "country_code": "ie",
++        },
++    }
++).encode("utf-8")
++
++GEOCODE_BODY = json.dumps(
++    [
++        {
++            "display_name": "Noble House, 12 Main St, Dublin, D01, Ireland",
++            "lat": "53.3498",
++            "lon": "-6.2603",
++            "type": "house",
++            "importance": 0.8,
++            "osm_type": "node",
++            "osm_id": "123",
++            "address": {
++                "house_number": "12",
++                "road": "Main Street",
++                "city": "Dublin",
++                "county": "Dublin City",
++                "state": "Leinster",
++                "postcode": "D01",
++                "country": "Ireland",
++                "country_code": "ie",
++            },
++        }
++    ]
++).encode("utf-8")
++
++
++class FakeTransport(HttpClient):
++    """Deterministic HttpClient stub returning canned Nominatim-style responses."""
++
++    def __init__(self, *, base_url: str = "https://nominatim.openstreetmap.org") -> None:
++        super().__init__(base_url=base_url, timeout_seconds=5.0, default_headers={})
++
++    async def request(
++        self, method: str, path: str, *, params: dict[str, Any] | None = None
++    ) -> HttpResponse:
++        if path == "reverse":
++            body = REVERSE_BODY
++        else:
++            body = GEOCODE_BODY
++        return HttpResponse(
++            status=200, headers={"content-type": "application/json"}, body=body
++        )
++
++
++def _make_adapter() -> NominatimProviderAdapter:
++    return NominatimProviderAdapter(FakeTransport(base_url="https://nominatim.openstreetmap.org"))
++
++
++async def test_geocode_returns_candidates() -> None:
++    adapter = _make_adapter()
++    result = await adapter.execute("geocode", {"address": "12 Main Street Dublin"})
++    assert result["ok"] is True
++    assert len(result["candidates"]) == 1
++    best = result["best"]
++    assert best is not None
++    assert best["display_name"].startswith("Noble House")
++    assert best["latitude"] == 53.3498
++    assert best["longitude"] == -6.2603
++    assert best["address"]["house_number"] == "12"
++    assert best["address"]["city"] == "Dublin"
++    assert best["address"]["country"] == "Ireland"
++    assert best["osm_type"] == "node"
++    assert best["osm_id"] == "123"
++
++
++async def test_reverse_returns_single_candidate() -> None:
++    adapter = _make_adapter()
++    result = await adapter.execute("reverse", {"lat": 53.3498, "lon": -6.2603})
++    assert result["ok"] is True
++    assert len(result["candidates"]) == 1
++    best = result["best"]
++    assert best is not None
++    assert best["latitude"] == 53.3498
++    assert best["longitude"] == -6.2603
++
++
++async def test_closest_ranks_by_distance() -> None:
++    adapter = _make_adapter()
++    result = await adapter.execute(
++        "closest",
++        {
++            "lat": 53.3498,
++            "lon": -6.2603,
++            "candidates": [
++                {"display_name": "Far", "lat": "53.0", "lon": "-6.0", "type": "place"},
++                {"display_name": "Near", "lat": "53.3498", "lon": "-6.2603", "type": "place"},
++                {"display_name": "Mid", "lat": "53.2", "lon": "-6.1", "type": "place"},
++            ],
++        },
++    )
++    assert result["ok"] is True
++    names = [c["display_name"] for c in result["candidates"]]
++    assert names == ["Near", "Mid", "Far"]
++
++
++async def test_empty_address_returns_empty_result() -> None:
++    adapter = _make_adapter()
++    result = await adapter.execute("geocode", {"address": ""})
++    assert result["ok"] is True
++    assert result["candidates"] == []
+\ No newline at end of file

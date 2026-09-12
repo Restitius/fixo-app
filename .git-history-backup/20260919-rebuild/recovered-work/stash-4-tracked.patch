@@ -1,0 +1,89 @@
+diff --git a/applications/backend/app/api/v1/router.py b/applications/backend/app/api/v1/router.py
+index 274f3ec..7f478fb 100644
+--- a/applications/backend/app/api/v1/router.py
++++ b/applications/backend/app/api/v1/router.py
+@@ -120,13 +120,23 @@ api_v1_router.include_router(provider_change_request_router)
+ api_v1_router.include_router(provider_materials_router)
+ api_v1_router.include_router(provider_completion_router)
+ api_v1_router.include_router(provider_reviews_router)
++# TEMP STOPGAP: provider_cancellation_router referenced but its router file
++# (app/domains/providers/api/*cancellation*.py) does not exist yet — appears
++# to be in-progress provider work. Disabled here only to unblock testing.
++# api_v1_router.include_router(provider_cancellation_router)
++
+ api_v1_router.include_router(provider_billing_router)
+ api_v1_router.include_router(provider_payout_router)
+ api_v1_router.include_router(provider_commission_router)
+-api_v1_router.include_router(provider_invoices_router)
+-api_v1_router.include_router(provider_ratings_router)
+-api_v1_router.include_router(provider_kpis_router)
+-api_v1_router.include_router(provider_ranking_router)
++# TEMP STOPGAP: provider_invoices_router / provider_ratings_router /
++# provider_kpis_router / provider_ranking_router are referenced here but were
++# never imported anywhere (their router files only define an unused
++# make_provider_*_router(*, service, ctx) factory that nothing calls) — this
++# was a NameError at import time, crashing the entire app on boot. Disabled
++# here only to unblock testing; the real fix (converting these 4 routers to
++# the standard module-level `router = APIRouter()` + Depends(get_current_provider)
++# pattern used everywhere else, matching phases 5-10/29-31) is deferred to the
++# provider-side pass.
+ api_v1_router.include_router(provider_portfolio_router)
+ api_v1_router.include_router(provider_notifications_router)
+ api_v1_router.include_router(provider_dashboard_router)
+diff --git a/applications/backend/app/queries/registry.yaml b/applications/backend/app/queries/registry.yaml
+index f7f8b9d..fc2088f 100644
+--- a/applications/backend/app/queries/registry.yaml
++++ b/applications/backend/app/queries/registry.yaml
+@@ -2445,4 +2445,31 @@ queries:
+     security:
+       ownership_filter_required: true
+       requires_auth: true
+-version: 1
++  PROV.CANCELLATION.LIST:
++    description: Latest cancellation requests for the current provider (Provider Phase 38).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/cancellations/list.sql
++  PROV.CANCELLATION.GET:
++    description: Single cancellation request by id, ownership-filtered to the provider (Provider Phase 38).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/cancellations/get.sql
++  PROV.CANCELLATION.CREATE:
++    description: Open a cancellation request for a provider's appointment (Provider Phase 38).
++    operation: create
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/cancellations/create.sql
++  PROV.CANCELLATION.METRICS:
++    description: Cancellation summary for the provider over a period (Provider Phase 38).
++    operation: read
++    security:
++      ownership_filter_required: true
++      requires_auth: true
++    sql: providers/cancellations/metrics.sql
+diff --git a/applications/backend/app/startup/composition.py b/applications/backend/app/startup/composition.py
+index daf8034..604f4b1 100644
+--- a/applications/backend/app/startup/composition.py
++++ b/applications/backend/app/startup/composition.py
+@@ -735,6 +735,15 @@ class Composition:
+ 
+         return ProviderReviewsService(reviews=self.provider_reviews_repository)
+ 
++    def provider_cancellation_service(self) -> Any:
++        from app.domains.providers.services.provider_cancellation_service import (
++            ProviderCancellationService,
++        )
++
++        return ProviderCancellationService(
++            cancellations=self.provider_cancellation_repository,
++        )
++
+     def provider_kpis_service(self) -> Any:
+         from app.domains.providers.services.provider_kpis_service import (
+             ProviderKpisService,
