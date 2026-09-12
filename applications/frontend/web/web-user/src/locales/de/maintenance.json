@@ -1,0 +1,92 @@
+{
+  "loading": "Wird geladen…",
+  "page": {
+    "title": "Wartung",
+    "subtitle": "Wiederkehrende Wartungspläne für deine Haushaltsgegenstände"
+  },
+  "metrics": {
+    "total": "Pläne Insgesamt",
+    "totalHint": "Insgesamt",
+    "active": "Aktive Pläne",
+    "activeHint": "Derzeit geplant",
+    "dueSoon": "Bald Fällig",
+    "dueSoonHint_one": "Innerhalb von {{count}} Tag",
+    "dueSoonHint_other": "Innerhalb von {{count}} Tagen",
+    "overdue": "Überfällig",
+    "overdueHint": "Erfordert Aufmerksamkeit"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Nach Gegenstand oder Dienstleistung suchen...",
+    "statusPlaceholder": "Status",
+    "allStatuses": "Alle Status",
+    "addPlan": "Plan Hinzufügen"
+  },
+  "table": {
+    "asset": "Gegenstand",
+    "service": "Dienstleistung",
+    "interval": "Intervall",
+    "nextDue": "Nächste Fälligkeit",
+    "status": "Status",
+    "actions": "Aktionen",
+    "intervalValue_one": "Alle {{count}} Tag",
+    "intervalValue_other": "Alle {{count}} Tage"
+  },
+  "statuses": {
+    "ACTIVE": "Aktiv",
+    "OVERDUE": "Überfällig",
+    "CANCELLED": "Storniert"
+  },
+  "assetFallback": "Gegenstand",
+  "serviceFallback": "Dienstleistung",
+  "actions": {
+    "markDone": "Als Erledigt Markieren",
+    "markingDone": "Wird markiert…",
+    "cancel": "Stornieren",
+    "cancelling": "Wird storniert…",
+    "cancelledNote": "Plan storniert",
+    "markedDone": "„{{asset}}“ als gewartet markiert"
+  },
+  "cancelConfirm": {
+    "title": "Diesen Wartungsplan stornieren?",
+    "description": "Dadurch werden zukünftige Erinnerungen für „{{asset}}“ — {{service}} beendet. Dies kann nicht rückgängig gemacht werden.",
+    "keep": "Plan Behalten",
+    "confirm": "Plan Stornieren",
+    "cancelled": "Wartungsplan storniert"
+  },
+  "itemLabel": "Wartungspläne",
+  "empty": {
+    "title": "Noch keine Wartungspläne",
+    "description": "Richte einen wiederkehrenden Plan ein, damit wir dich erinnern können, bevor ein Gegenstand mit der Wartung in Rückstand gerät.",
+    "action": "Plan Hinzufügen",
+    "filteredTitle": "Keine passenden Pläne",
+    "filteredDescription": "Versuche einen anderen Suchbegriff oder Status.",
+    "clearFilters": "Filter Zurücksetzen"
+  },
+  "addDialog": {
+    "title": "Wartungsplan Hinzufügen",
+    "assetLabel": "Gegenstand",
+    "assetPlaceholder": "Gegenstand auswählen",
+    "noAssetsHint": "Du hast noch keine Gegenstände.",
+    "noAssetsCta": "Gegenstand hinzufügen",
+    "categoryLabel": "Kategorie",
+    "categoryPlaceholder": "Kategorie auswählen",
+    "serviceLabel": "Dienstleistung",
+    "servicePlaceholder": "Dienstleistung auswählen",
+    "loadingServices": "Dienstleistungen werden geladen…",
+    "noServicesFound": "Keine Dienstleistungen in dieser Kategorie gefunden",
+    "intervalLabel": "Wiederholen alle (Tage)",
+    "intervalHint": "Zwischen 1 und 1095 Tagen",
+    "nextDueLabel": "Nächstes Fälligkeitsdatum (optional)",
+    "nextDueHint_one": "Standardmäßig {{count}} Tag ab heute, wenn leer gelassen",
+    "nextDueHint_other": "Standardmäßig {{count}} Tage ab heute, wenn leer gelassen",
+    "notesLabel": "Notizen (optional)",
+    "notesPlaceholder": "Alles Wissenswerte zu diesem Plan",
+    "cancel": "Abbrechen",
+    "save": "Plan Hinzufügen",
+    "saving": "Wird hinzugefügt…",
+    "selectAsset": "Wähle zuerst einen Gegenstand aus.",
+    "selectService": "Wähle zuerst eine Dienstleistung aus.",
+    "intervalRange": "Das Intervall muss zwischen 1 und 1095 Tagen liegen.",
+    "created": "Wartungsplan hinzugefügt"
+  }
+}
