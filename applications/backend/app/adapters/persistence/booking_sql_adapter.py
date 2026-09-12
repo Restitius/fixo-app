@@ -161,3 +161,10 @@ class BookingSqlAdapter:
             {"booking_id": booking_id, "scheduled_date": scheduled_date},
             fetch="one",
         )
+
+    async def set_scope_notes(self, booking_id: str, scope_notes: str) -> dict[str, Any] | None:
+        return await self._sql.execute(
+            "CUS.BOOKING.SET_SCOPE",
+            {"booking_id": booking_id, "scope_notes": scope_notes},
+            fetch="one",
+        )

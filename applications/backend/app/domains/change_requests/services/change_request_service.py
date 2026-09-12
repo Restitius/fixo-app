@@ -7,6 +7,7 @@ the internal channel). Applies approved effects to the booking aggregate.
 from __future__ import annotations
 
 import logging
+from datetime import date
 from typing import Any
 
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
@@ -54,7 +55,7 @@ class ChangeRequestService:
         current = {
             "TIME": str(booking.get("scheduled_date") or ""),
             "PRICE": f"{booking['agreed_amount']} {booking['currency']}",
-            "SCOPE": "current scope",
+            "SCOPE": str(booking.get("scope_notes") or "Original agreed scope"),
         }[change_type]
 
         row = await self._changes.create(customer_id, booking_id, {
@@ -96,6 +97,14 @@ class ChangeRequestService:
                 "Customer decisions apply to provider-proposed changes"
             )
 
+        # Validate the effect BEFORE any state changes commit. decide() and
+        # _apply_effect() are separate, non-transactional writes (each query
+        # commits on its own) — validating first means a bad proposed_value
+        # 422s here instead of leaving the change permanently stuck APPROVED
+        # with its effect never applied.
+        if decision == "APPROVED":
+            effect = self._validate_effect(change["change_type"], change["proposed_value"])
+
         wf_decision = await self._workflows.transition(
             workflow_id="WF.CHANGE_REQUEST.V1",
             from_state=change["status"], to_state=decision,
@@ -108,7 +117,7 @@ class ChangeRequestService:
 
         booking_id = str(row["booking_id"])
         if decision == "APPROVED":
-            await self._apply_effect(customer_id, booking_id, row)
+            await self._apply_effect(booking_id, row["change_type"], effect)
 
         detail = f"{row['change_type']} {decision}: {row['proposed_value']}"
         await self._bookings.add_timeline(customer_id, booking_id,
@@ -116,17 +125,26 @@ class ChangeRequestService:
         logger.info("change %s %s", change_id, decision)
         return {**row, "decision": decision}
 
-    async def _apply_effect(
-        self, customer_id: str, booking_id: str, decided: dict[str, Any]
-    ) -> None:
-        ctype = decided["change_type"]
-        value = decided["proposed_value"]
-        if ctype == "PRICE":
+    @staticmethod
+    def _validate_effect(change_type: str, value: str) -> Any:
+        """Parse+validate a proposed_value without writing anything."""
+        if change_type == "PRICE":
             try:
-                amount = float(value)
+                return float(value)
             except ValueError as exc:
                 raise ValidationError("Approved price is not numeric") from exc
-            await self._bookings.update_amount(booking_id, amount)
-        elif ctype == "TIME":
-            # Date-only values; validated loosely — bad values just no-op.
+        if change_type == "TIME":
+            try:
+                return date.fromisoformat(value).isoformat()
+            except ValueError as exc:
+                raise ValidationError("Approved date must be YYYY-MM-DD") from exc
+        # SCOPE: any non-empty text is valid (already enforced at propose time).
+        return value
+
+    async def _apply_effect(self, booking_id: str, change_type: str, value: Any) -> None:
+        if change_type == "PRICE":
+            await self._bookings.update_amount(booking_id, value)
+        elif change_type == "TIME":
             await self._bookings.set_scheduled_date(booking_id, value)
+        elif change_type == "SCOPE":
+            await self._bookings.set_scope_notes(booking_id, value)
