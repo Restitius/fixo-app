@@ -82,10 +82,11 @@
     "delete": "Delete asset",
     "addTitle": "Add a Home Asset",
     "editTitle": "Edit Asset",
-    "notLinkedNote": "Assets aren't linked to a specific property yet — this is a flat list of home items you own across all your properties.",
     "nameLabel": "Asset name",
     "namePlaceholder": "e.g. Water Heater, AC Unit",
     "typeLabel": "Asset type",
+    "propertyLabel": "Property",
+    "noProperty": "No property",
     "purchaseValueLabel": "Purchase value",
     "currencyLabel": "Currency",
     "purchasedAtLabel": "Purchase date",
@@ -106,16 +107,20 @@
     "columns": {
       "name": "Name",
       "type": "Type",
+      "property": "Property",
       "purchaseValue": "Purchase Value",
       "purchasedAt": "Purchased",
       "notes": "Notes",
       "actions": "Actions"
     },
     "types": {
-      "REAL_ESTATE": "Real Estate",
-      "VEHICLE": "Vehicle",
-      "EQUIPMENT": "Equipment",
-      "OTHER": "Other"
+      "appliance": "Appliance",
+      "hvac": "HVAC",
+      "plumbing": "Plumbing",
+      "electrical": "Electrical",
+      "furniture": "Furniture",
+      "security": "Security",
+      "other": "Other"
     }
   }
 }

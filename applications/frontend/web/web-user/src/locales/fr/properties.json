@@ -82,10 +82,11 @@
     "delete": "Supprimer l'équipement",
     "addTitle": "Ajouter un Équipement du Foyer",
     "editTitle": "Modifier l'Équipement",
-    "notLinkedNote": "Les équipements ne sont pas encore rattachés à un bien précis — il s'agit d'une liste unique des objets du foyer que vous possédez, tous biens confondus.",
     "nameLabel": "Nom de l'équipement",
     "namePlaceholder": "ex. Chauffe-eau, Climatiseur",
     "typeLabel": "Type d'équipement",
+    "propertyLabel": "Bien",
+    "noProperty": "Aucun bien",
     "purchaseValueLabel": "Valeur d'achat",
     "currencyLabel": "Devise",
     "purchasedAtLabel": "Date d'achat",
@@ -106,16 +107,20 @@
     "columns": {
       "name": "Nom",
       "type": "Type",
+      "property": "Bien",
       "purchaseValue": "Valeur d'Achat",
       "purchasedAt": "Date d'Achat",
       "notes": "Notes",
       "actions": "Actions"
     },
     "types": {
-      "REAL_ESTATE": "Bien Immobilier",
-      "VEHICLE": "Véhicule",
-      "EQUIPMENT": "Équipement",
-      "OTHER": "Autre"
+      "appliance": "Électroménager",
+      "hvac": "Climatisation/Chauffage",
+      "plumbing": "Plomberie",
+      "electrical": "Électricité",
+      "furniture": "Mobilier",
+      "security": "Sécurité",
+      "other": "Autre"
     }
   }
 }

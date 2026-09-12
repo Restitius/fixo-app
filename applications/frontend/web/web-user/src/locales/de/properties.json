@@ -82,10 +82,11 @@
     "delete": "Gegenstand löschen",
     "addTitle": "Haushaltsgegenstand Hinzufügen",
     "editTitle": "Gegenstand Bearbeiten",
-    "notLinkedNote": "Gegenstände sind noch keiner bestimmten Immobilie zugeordnet — dies ist eine einzige Liste der Haushaltsgegenstände, die dir über alle Immobilien hinweg gehören.",
     "nameLabel": "Name des Gegenstands",
     "namePlaceholder": "z. B. Warmwasserbereiter, Klimaanlage",
     "typeLabel": "Art des Gegenstands",
+    "propertyLabel": "Immobilie",
+    "noProperty": "Keine Immobilie",
     "purchaseValueLabel": "Kaufwert",
     "currencyLabel": "Währung",
     "purchasedAtLabel": "Kaufdatum",
@@ -106,16 +107,20 @@
     "columns": {
       "name": "Name",
       "type": "Typ",
+      "property": "Immobilie",
       "purchaseValue": "Kaufwert",
       "purchasedAt": "Kaufdatum",
       "notes": "Notizen",
       "actions": "Aktionen"
     },
     "types": {
-      "REAL_ESTATE": "Immobilie",
-      "VEHICLE": "Fahrzeug",
-      "EQUIPMENT": "Ausrüstung",
-      "OTHER": "Sonstiges"
+      "appliance": "Haushaltsgerät",
+      "hvac": "Klima/Heizung",
+      "plumbing": "Sanitär",
+      "electrical": "Elektrik",
+      "furniture": "Möbel",
+      "security": "Sicherheit",
+      "other": "Sonstiges"
     }
   }
 }

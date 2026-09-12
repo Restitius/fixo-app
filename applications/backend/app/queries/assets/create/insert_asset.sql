@@ -10,5 +10,6 @@ INSERT INTO "ASSETS" (
     :name, lower(:asset_type), :brand, :serial_number,
     :purchase_value, :purchase_value, COALESCE(:currency, 'TZS'),
     CAST(:purchased_at AS date), CAST(:warranty_until AS date), :notes
+)
 RETURNING asset_id, asset_code, name, status;
 

@@ -824,7 +824,7 @@ export const propertiesApi = {
 };
 
 export interface AssetRow {
-  asset_id: number;
+  asset_id: string;
   name: string;
   asset_type: string;
   status: string;
@@ -832,20 +832,25 @@ export interface AssetRow {
   current_value: number;
   currency: string;
   purchased_at?: string | null;
+  warranty_until?: string | null;
+  next_service_due?: string | null;
   notes?: string | null;
+  property_id?: string | null;
+  property_name?: string | null;
 }
 
-// Backed by the generic /assets domain (no property linkage yet — see plan's
-// disclosed caveat). Sell/revalue endpoints exist but are intentionally not
-// exposed here; they're finance concepts that don't fit a home appliance.
+// Backed by the real /assets domain (ASSETS table, Phase 11) — genuinely
+// linked to a property via property_id. Sell/revalue endpoints exist but are
+// intentionally not exposed here; they're finance concepts that don't fit a
+// home appliance.
 export const assetsApi = {
   list: () => apiClient.get<AssetRow[]>("/assets").then((r) => r.data),
-  get: (assetId: number | string) => apiClient.get<AssetRow>(`/assets/${assetId}`).then((r) => r.data),
-  create: (payload: { name: string; asset_type?: string; purchase_value?: number; currency?: string; purchased_at?: string | null; notes?: string | null }) =>
+  get: (assetId: string) => apiClient.get<AssetRow>(`/assets/${assetId}`).then((r) => r.data),
+  create: (payload: { name: string; asset_type?: string; property_id?: string | null; purchase_value?: number; currency?: string; purchased_at?: string | null; notes?: string | null }) =>
     apiClient.post<AssetRow>("/assets", payload).then((r) => r.data),
-  update: (assetId: number | string, payload: Partial<{ name: string; notes: string }>) =>
+  update: (assetId: string, payload: Partial<{ name: string; notes: string }>) =>
     apiClient.patch<AssetRow>(`/assets/${assetId}`, payload).then((r) => r.data),
-  remove: (assetId: number | string) => apiClient.delete(`/assets/${assetId}`).then((r) => r.data),
+  remove: (assetId: string) => apiClient.delete(`/assets/${assetId}`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
