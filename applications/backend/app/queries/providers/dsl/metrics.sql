@@ -1,6 +1,6 @@
 -- PROV.DSL.PROVIDER_METRICS.GET
 -- Read provider DSL lifetime metrics for a period.
--- Parameters: :provider_id, :period
+-- Parameters: :user_id, :period
 SELECT
     m.provider_id,
     m.period,
@@ -11,7 +11,7 @@ SELECT
     m.avg_resolution_hours,
     m.updated_at
 FROM
-    PROVIDER_DSL_PROVIDER_METRICS m
+    "PROVIDER_DSL_PROVIDER_METRICS" m
 WHERE
-    m.provider_id = :provider_id
+    m.provider_id = :user_id
     AND m.period = :period;

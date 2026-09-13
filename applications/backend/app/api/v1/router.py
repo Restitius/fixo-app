@@ -60,6 +60,7 @@ from app.domains.providers.api.portfolio_router import router as provider_portfo
 from app.domains.providers.api.notifications_router import router as provider_notifications_router
 from app.domains.providers.api.dsl_requests_router import router as provider_dsl_requests_router
 from app.domains.providers.api.disputes_router import router as provider_disputes_router
+from app.domains.providers.api.support_router import router as provider_support_router
 # TEMP STOPGAP: provider_safety_router's service imports a nonexistent
 # app.domains.providers.services.base_provider_service — the feature (Phase
 # 41, safety/incident reporting) is still mid-implementation elsewhere.
@@ -144,6 +145,7 @@ api_v1_router.include_router(provider_portfolio_router)
 api_v1_router.include_router(provider_notifications_router)
 api_v1_router.include_router(provider_dsl_requests_router)
 api_v1_router.include_router(provider_disputes_router)
+api_v1_router.include_router(provider_support_router)
 
 # api_v1_router.include_router(provider_safety_router)  # see TEMP STOPGAP above
 api_v1_router.include_router(provider_earnings_router)

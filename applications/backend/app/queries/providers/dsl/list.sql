@@ -1,6 +1,6 @@
 -- PROV.DSL.REQUESTS.LIST
 -- Read DSL requests for a provider, newest first.
--- Parameters: :provider_id, :status, :dsl_kind, :limit, :offset
+-- Parameters: :user_id, :status, :dsl_kind, :limit, :offset
 SELECT
     d.id,
     d.dsl_kind,
@@ -17,11 +17,11 @@ SELECT
     d.created_at,
     d.updated_at
 FROM
-    PROVIDER_DSL_REQUESTS d
+    "PROVIDER_DSL_REQUESTS" d
 WHERE
-    d.provider_id = :provider_id
-    AND (:status::text IS NULL OR d.status = :status)
-    AND (:dsl_kind::text IS NULL OR d.dsl_kind = :dsl_kind)
+    d.provider_id = :user_id
+    AND (CAST(:status AS text) IS NULL OR d.status = :status)
+    AND (CAST(:dsl_kind AS text) IS NULL OR d.dsl_kind = :dsl_kind)
 ORDER BY
     d.created_at DESC
 LIMIT :limit

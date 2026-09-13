@@ -5,4 +5,4 @@ SELECT "id", "provider_id", "rank_score", "rank_level", "badges",
        "avg_completion_rate", "avg_on_time_rate", "avg_rating",
        "last_computed_at", "created_at", "updated_at"
 FROM "PROVIDER_RANKING"
-WHERE "provider_id" = :provider_id;
+WHERE "provider_id" = :user_id;

@@ -2622,4 +2622,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/disputes/responses_list.sql
+  PROV.SUPPORT.TICKET.CREATE:
+    description: Open a provider support ticket (Provider Phase 40).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/create.sql
+  PROV.SUPPORT.TICKET.GET:
+    description: One owned provider support ticket (Provider Phase 40).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/get.sql
+  PROV.SUPPORT.TICKET.LIST:
+    description: Provider support ticket inbox (Provider Phase 40).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/list.sql
+  PROV.SUPPORT.MESSAGE.ADD:
+    description: Append a message to an owned provider support ticket (Provider Phase 40).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/message_add.sql
+  PROV.SUPPORT.MESSAGES.LIST:
+    description: Provider support ticket message thread (Provider Phase 40).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/messages_list.sql
 version: 1

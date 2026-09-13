@@ -19,12 +19,12 @@ class ProviderKpisSqlAdapter(ProviderKpisRepository):
     ) -> list[Any]:
         return await self._queries.execute(
             "PROV.KPIS.LIST",
-            {"provider_id": provider_id, "period": period, "limit": limit, "offset": offset},
+            {"user_id": provider_id, "period": period, "limit": limit, "offset": offset},
         )
 
     async def summary(self, provider_id: str) -> Any:
         rows = await self._queries.execute(
             "PROV.KPIS.SUMMARY",
-            {"provider_id": provider_id},
+            {"user_id": provider_id},
         )
         return rows[0] if rows else None

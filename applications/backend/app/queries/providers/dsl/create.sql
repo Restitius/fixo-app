@@ -2,7 +2,7 @@
 -- Create one DSL request for a provider.
 -- Parameters: :provider_id, :dsl_kind, :subject_type, :subject_id, :title,
 --             :dsl, :status, :priority, :reason, :requested_by, :parent_id, :root_request_id
-INSERT INTO PROVIDER_DSL_REQUESTS (
+INSERT INTO "PROVIDER_DSL_REQUESTS" (
     id,
     provider_id,
     dsl_kind,

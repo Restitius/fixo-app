@@ -6,4 +6,4 @@ SELECT
     COALESCE(SUM("net_amount"), 0) AS "total_net",
     COUNT(*) FILTER (WHERE "status" = 'overdue') AS "overdue_count"
 FROM "PROVIDER_INVOICES"
-WHERE "provider_id" = :provider_id;
+WHERE "provider_id" = :user_id;
