@@ -5,8 +5,10 @@
 -- is provider-scoped through BOOKINGS.provider_id.
 WITH owned AS (
     SELECT b.booking_id, b.customer_id, b.provider_id,
-           b.agreed_amount, b.currency, b.status
+           b.agreed_amount, b.currency, b.status,
+           COALESCE(q.discount_amount, 0) AS discount_amount
       FROM "BOOKINGS" b
+      LEFT JOIN "QUOTATIONS" q ON q.quote_id = b.quote_id
      WHERE b.booking_id  = CAST(:booking_id AS uuid)
        AND b.provider_id = CAST(:user_id AS uuid)
 ), approved_changes AS (
@@ -23,6 +25,7 @@ SELECT o.booking_id, o.customer_id, o.provider_id, o.status,
        o.agreed_amount       AS original_price,
        ac.additional_work    AS approved_additional_work,
        mt.materials_total    AS approved_materials,
+       o.discount_amount     AS discounts,
        o.currency,
        CASE WHEN o.status = 'CUSTOMER_CONFIRMED' THEN true ELSE false END AS bill_ready
   FROM owned o
