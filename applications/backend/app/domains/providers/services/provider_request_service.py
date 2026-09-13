@@ -74,6 +74,11 @@ class ProviderIncomingRequestService:
 
         row = await self._requests.respond(provider_id, request_id, payload)
         if row is None:
+            if response_type == "ACCEPTED":
+                raise ConflictError(
+                    "Request is no longer available — it may have already "
+                    "been accepted by another provider"
+                )
             raise ConflictError(
                 "Request is not in your incoming feed or was already "
                 "accepted/declined"
