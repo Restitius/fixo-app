@@ -36,6 +36,8 @@ class Composition:
         self.provider_service_config_repository: Any = None
         self.provider_area_repository: Any = None
         self.provider_booking_repository: Any = None
+        self.provider_arrival_repository: Any = None
+        self.provider_tracking_repository: Any = None
         self.provider_calendar_repository: Any = None
         self.provider_messaging_repository: Any = None
         self.provider_dashboard_repository: Any = None
@@ -294,6 +296,18 @@ class Composition:
         )
 
         self.provider_booking_repository = ProviderBookingSqlAdapter(self.sql_query_manager)
+
+        from app.adapters.persistence.provider_arrival_sql_adapter import (
+            ProviderArrivalSqlAdapter,
+        )
+
+        self.provider_arrival_repository = ProviderArrivalSqlAdapter(self.sql_query_manager)
+
+        from app.adapters.persistence.provider_tracking_sql_adapter import (
+            ProviderTrackingSqlAdapter,
+        )
+
+        self.provider_tracking_repository = ProviderTrackingSqlAdapter(self.sql_query_manager)
 
         from app.adapters.persistence.provider_job_checklist_sql_adapter import (
             ProviderJobChecklistSqlAdapter,
@@ -658,6 +672,30 @@ class Composition:
 
         return ProviderBookingService(bookings=self.provider_booking_repository)
 
+    def provider_messaging_service(self) -> Any:
+        """ProviderMessagingService — booking-linked customer messaging (Phase 17)."""
+        from app.domains.providers.services.provider_messaging_service import (
+            ProviderMessagingService,
+        )
+
+        return ProviderMessagingService(messaging=self.provider_messaging_repository)
+
+    def provider_arrival_service(self) -> Any:
+        """ProviderArrivalService — arrival + PIN verification (Phase 19)."""
+        from app.domains.providers.services.provider_arrival_service import (
+            ProviderArrivalService,
+        )
+
+        return ProviderArrivalService(arrival=self.provider_arrival_repository)
+
+    def provider_tracking_service(self) -> Any:
+        """ProviderTrackingService — navigation & live location (Phase 18)."""
+        from app.domains.providers.services.provider_tracking_service import (
+            ProviderTrackingService,
+        )
+
+        return ProviderTrackingService(tracking=self.provider_tracking_repository)
+
     def provider_job_checklist_service(self) -> Any:
         """ProviderJobChecklistService — job checklists (Phase 21)."""
         from app.domains.providers.services.provider_job_checklist_service import (
@@ -958,6 +996,14 @@ class Composition:
         )
 
         return ProviderDirectoryService(self.provider_read)
+
+    def provider_safety_service(self) -> Any:
+        """ProviderSafetyService — safety & incident reporting (Phase 41)."""
+        from app.domains.providers.services.provider_safety_service import (
+            ProviderSafetyService,
+        )
+
+        return ProviderSafetyService(safety=self.provider_safety_repository)
 
     def booking_service(self) -> Any:
         """BookingService â Modules 16 & 17."""

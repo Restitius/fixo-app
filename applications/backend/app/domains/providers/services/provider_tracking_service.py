@@ -47,9 +47,9 @@ class ProviderTrackingService:
         }
 
     async def record_location(
-        self, booking_id: str, latitude: float, longitude: float
+        self, provider_id: str, booking_id: str, latitude: float, longitude: float
     ) -> dict[str, Any]:
-        row = await self._tracking.record_location(booking_id, latitude, longitude)
+        row = await self._tracking.record_location(provider_id, booking_id, latitude, longitude)
         if not row:
             raise ValidationError("Could not record the position ping")
         return {"location_id": row["location_id"], "recorded_at": row["recorded_at"]}
@@ -61,8 +61,8 @@ class ProviderTrackingService:
         logger.info("provider %s ended trip for booking %s", provider_id, booking_id)
         return {"booking_id": row["booking_id"], "trip_ended_at": row["trip_ended_at"]}
 
-    async def get_location(self, booking_id: str) -> dict[str, Any]:
-        row = await self._tracking.get_location(booking_id)
+    async def get_location(self, booking_id: str, customer_id: str) -> dict[str, Any]:
+        row = await self._tracking.get_location(booking_id, customer_id)
         if not row:
             raise NotFoundError("No active trip found for this booking")
         return {

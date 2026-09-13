@@ -47,11 +47,16 @@ class ProviderTrackingSqlAdapter:
         )
 
     async def record_location(
-        self, booking_id: str, latitude: float, longitude: float
+        self, provider_id: str, booking_id: str, latitude: float, longitude: float
     ) -> dict[str, Any] | None:
         return await self._sql.execute(
             ProviderTripQueryIds.RECORD_LOCATION,
-            {"booking_id": booking_id, "latitude": latitude, "longitude": longitude},
+            {
+                "user_id": provider_id,
+                "booking_id": booking_id,
+                "latitude": latitude,
+                "longitude": longitude,
+            },
             fetch="one",
         )
 
@@ -62,9 +67,11 @@ class ProviderTrackingSqlAdapter:
             fetch="one",
         )
 
-    async def get_location(self, booking_id: str) -> dict[str, Any] | None:
+    async def get_location(self, booking_id: str, customer_id: str) -> dict[str, Any] | None:
         return await self._sql.execute(
-            ProviderTripQueryIds.GET_LOCATION, {"booking_id": booking_id}, fetch="one"
+            ProviderTripQueryIds.GET_LOCATION,
+            {"booking_id": booking_id, "customer_id": customer_id},
+            fetch="one",
         )
 
     async def get_nav_info(self, provider_id: str, booking_id: str) -> dict[str, Any] | None:

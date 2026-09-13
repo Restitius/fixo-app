@@ -27,10 +27,10 @@ class ProviderCalendarService:
         return await self._calendar.day(provider_id, date)
 
     async def week(
-        self, provider_id: str, date: str
+        self, provider_id: str, week_of: str
     ) -> dict[str, list[dict[str, Any]]]:
-        """Week view: 7 day buckets starting from the week containing `date`."""
-        base = date.fromisoformat(date)
+        """Week view: 7 day buckets starting from the week containing `week_of`."""
+        base = date.fromisoformat(week_of)
         start = base - timedelta(days=base.weekday())  # Monday
         days = []
         for i in range(7):
@@ -54,12 +54,12 @@ class ProviderCalendarService:
         self, provider_id: str, from_date: str, limit: int = 20
     ) -> list[dict[str, Any]]:
         """Agenda view: upcoming events in chronological order."""
-        events = await self._calendar.range(
-            provider_id, from_date, date.today().isoformat()
-        )
-        # For agenda, fetch a wider range and sort
-        future = [e for e in events if e.get("start_at") >= from_date]
-        return future[:limit]
+        # Bounding the query at `from_date` alone would return nothing (the
+        # range needs an end); look far enough ahead to catch anything a
+        # provider would reasonably need to see, then trim to `limit`.
+        horizon = (date.fromisoformat(from_date) + timedelta(days=180)).isoformat()
+        events = await self._calendar.range(provider_id, from_date, horizon)
+        return sorted(events, key=lambda e: e.get("start_at") or "")[:limit]
 
     async def check_overlap(
         self,
