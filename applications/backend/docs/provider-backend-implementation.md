@@ -69,7 +69,7 @@
 | PRV-37 | 37 | Provider Notifications | ✅ |
 | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
 | PRV-39 | 39 | Disputes | ✅ |
-| PRV-40 | 40 | Provider Support | ⏳ |
+| PRV-40 | 40 | Provider Support | ✅ |
 | PRV-41 | 41 | Safety & Incident Reporting | ⏳ |
 | PRV-42 | 42 | Recurring Customers | ⏳ |
 | PRV-43 | 43 | Business Customers + negotiated rates | ⏳ |
@@ -302,3 +302,32 @@ Phase 39 adds a provider side to the existing customer dispute surface.
 
 Dispute resolution stays platform/admin-side in this phase — the provider
 sees dispute state and can respond, but the resolution decision is not theirs.
+
+## Phase 40 — Provider Support
+
+Provider-side helpdesk, mirroring the existing customer support surface
+(`SUPPORT_TICKETS`/`TICKET_MESSAGES`) as its own provider-owned domain
+rather than sharing the customer tables.
+
+- `PROVIDER_SUPPORT_TICKETS` + `PROVIDER_TICKET_MESSAGES`, FK'd to
+  `PROVIDERS(provider_id)`.
+- Governed queries `PROV.SUPPORT.TICKET.CREATE/GET/LIST`,
+  `PROV.SUPPORT.MESSAGE.ADD`, `PROV.SUPPORT.MESSAGES.LIST`.
+- `ProviderSupportService` with category/priority validation, ownership
+  checks on every ticket/message access, and a closed-ticket message block.
+- Router prefix `/providers/me/support`:
+  - `POST /tickets` — open a ticket
+  - `GET /tickets` — list tickets
+  - `GET /tickets/{ticket_id}` — single ticket
+  - `POST /tickets/{ticket_id}/messages` — add a message
+  - `GET /tickets/{ticket_id}/messages` — list messages
+
+While building this, an audit of the underlying query executor surfaced
+three independent, previously-undiscovered bugs silently breaking every
+read/update/delete call in Modules 32-39 (Commission Fees, Invoices,
+Reviews, KPIs, Ranking, Portfolio, Notifications, DSL Requests, Disputes):
+an ownership-filter bind-param naming mismatch, a `:name::type` cast
+syntax that SQLAlchemy's text() bind-param parser mis-tokenizes, and
+unquoted DSL table names that Postgres folded to the wrong case. All were
+fixed and verified live against Postgres — see the "repair silent runtime
+failures across Modules 32-39" commit for the full detail.
