@@ -8,6 +8,7 @@ Dispute resolution stays platform/admin-side in this phase; the provider can
 see the dispute, its evidence, and respond (kind: acknowledgment /
 explanation / refund_offer).
 """
+from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Any, Protocol

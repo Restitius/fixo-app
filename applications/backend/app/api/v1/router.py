@@ -35,7 +35,10 @@ from app.domains.providers.api.calendar_router import router as provider_calenda
 from app.domains.providers.api.verification_router import router as provider_verification_router
 from app.domains.providers.api.service_config_router import router as provider_service_config_router
 from app.domains.providers.api.pricing_router import router as provider_pricing_router
+from app.domains.providers.api.areas_router import router as provider_areas_router
 from app.domains.providers.api.booking_router import router as provider_booking_router
+from app.domains.providers.api.arrival_router import router as provider_arrival_router
+from app.domains.providers.api.tracking_router import router as provider_tracking_router
 from app.domains.providers.api.checklist_router import router as provider_checklist_router
 from app.domains.providers.api.evidence_router import router as provider_evidence_router
 from app.domains.providers.api.change_request_router import (
@@ -57,6 +60,11 @@ from app.domains.providers.api.portfolio_router import router as provider_portfo
 from app.domains.providers.api.notifications_router import router as provider_notifications_router
 from app.domains.providers.api.dsl_requests_router import router as provider_dsl_requests_router
 from app.domains.providers.api.disputes_router import router as provider_disputes_router
+# TEMP STOPGAP: provider_safety_router's service imports a nonexistent
+# app.domains.providers.services.base_provider_service — the feature (Phase
+# 41, safety/incident reporting) is still mid-implementation elsewhere.
+# Re-enable once that module exists.
+# from app.domains.providers.api.safety_router import router as provider_safety_router
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -115,7 +123,10 @@ api_v1_router.include_router(provider_calendar_router)
 api_v1_router.include_router(provider_verification_router)
 api_v1_router.include_router(provider_service_config_router)
 api_v1_router.include_router(provider_pricing_router)
+api_v1_router.include_router(provider_areas_router)
 api_v1_router.include_router(provider_booking_router)
+api_v1_router.include_router(provider_arrival_router)
+api_v1_router.include_router(provider_tracking_router)
 api_v1_router.include_router(provider_checklist_router)
 api_v1_router.include_router(provider_evidence_router)
 api_v1_router.include_router(provider_change_request_router)
@@ -133,9 +144,10 @@ api_v1_router.include_router(provider_portfolio_router)
 api_v1_router.include_router(provider_notifications_router)
 api_v1_router.include_router(provider_dsl_requests_router)
 api_v1_router.include_router(provider_disputes_router)
+
+# api_v1_router.include_router(provider_safety_router)  # see TEMP STOPGAP above
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
-api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_requests_router)
 api_v1_router.include_router(provider_matching_router)
 api_v1_router.include_router(provider_quotations_router)

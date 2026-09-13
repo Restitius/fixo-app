@@ -8,6 +8,7 @@ DSL kinds: cancellation, reschedule.
 Statuses: open, escalated, closed, canceled.
 Priorities: low, medium, high, urgent.
 """
+from __future__ import annotations
 
 from abc import abstractmethod
 from typing import Any, Protocol

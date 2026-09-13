@@ -1,4 +1,6 @@
 -- PROV.TRIP.GET_LOCATION — customer views provider's live position (Requirement Phase 18)
+-- Scoped to the requesting customer's own booking — without this, anyone who
+-- knew/guessed a booking_id could read any provider's live GPS position.
 SELECT b.booking_id,
        p.display_name AS provider_name,
        p.headline AS provider_headline,
@@ -9,4 +11,5 @@ SELECT b.booking_id,
   FROM "BOOKINGS" b
   JOIN "PROVIDERS" p ON p.provider_id = b.provider_id
  WHERE b.booking_id = CAST(:booking_id AS uuid)
+   AND b.customer_id = CAST(:customer_id AS uuid)
    AND b.status = 'ON_THE_WAY';

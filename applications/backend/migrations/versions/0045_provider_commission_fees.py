@@ -45,7 +45,7 @@ def upgrade() -> None:
             "provider_id"      uuid           NOT NULL,
             "currency"         varchar(3)     NOT NULL DEFAULT 'TZS',
             "commission_rate"  numeric(6,4)   NOT NULL DEFAULT 0,
-            "tax_on_commission numeric(6,4)   NOT NULL DEFAULT 0,
+            "tax_on_commission" numeric(6,4)  NOT NULL DEFAULT 0,
             "is_active"        boolean        NOT NULL DEFAULT TRUE,
             "effective_from"   timestamptz    NOT NULL DEFAULT now(),
             "effective_to"     timestamptz,
