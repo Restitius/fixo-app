@@ -73,7 +73,7 @@
 | PRV-41 | 41 | Safety & Incident Reporting | ✅ |
 | PRV-42 | 42 | Recurring Customers | ✅ |
 | PRV-43 | 43 | Business Customers + negotiated rates | ✅ |
-| PRV-44 | 44 | Team Management — workers/roles | ⏳ |
+| PRV-44 | 44 | Team Management — workers/roles | ✅ |
 | PRV-45 | 45 | Job Assignment — dispatch/technician | ⏳ |
 | PRV-46 | 46 | Equipment & Tools registry | ⏳ |
 | PRV-47 | 47 | Documents & Compliance + expiry | ⏳ |
@@ -400,3 +400,25 @@ relationship and rate the provider has agreed with the customer.
   - `GET /{record_id}` — single record
   - `PATCH /{record_id}` — update rate/company/notes
   - `POST /{record_id}/deactivate` — end the relationship
+
+## Phase 44 — Provider Team Management (workers/roles)
+
+A provider's roster of workers/technicians with a role, managed by the
+provider account (the owner). This establishes a stable `member_id` that
+Job Assignment (Phase 45) will reference; it does not itself grant the
+member independent login credentials — that would be a separate,
+larger auth undertaking out of scope here.
+
+- `PROVIDER_TEAM_MEMBERS` — unique-constrained on (provider_id, phone),
+  role restricted to `OWNER | MANAGER | TECHNICIAN | DISPATCHER | OTHER`.
+- Governed queries `PROV.TEAM.MEMBER.CREATE/GET/UPDATE/DEACTIVATE`,
+  `PROV.TEAM.MEMBERS.LIST`.
+- `ProviderTeamService` validates name/phone/role; the adapter
+  translates the duplicate-phone unique-constraint violation into a
+  clean `ConflictError` on both create and update.
+- Router prefix `/providers/me/team`:
+  - `POST /` — add a team member
+  - `GET /` — list roster (optional status/role filters)
+  - `GET /{member_id}` — single member
+  - `PATCH /{member_id}` — update details/role
+  - `POST /{member_id}/deactivate` — remove from active roster

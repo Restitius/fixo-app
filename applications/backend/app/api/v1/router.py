@@ -68,6 +68,7 @@ from app.domains.providers.api.recurring_customers_router import (
 from app.domains.providers.api.business_customers_router import (
     router as provider_business_customers_router,
 )
+from app.domains.providers.api.team_router import router as provider_team_router
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -151,6 +152,7 @@ api_v1_router.include_router(provider_support_router)
 api_v1_router.include_router(provider_safety_router)
 api_v1_router.include_router(provider_recurring_customers_router)
 api_v1_router.include_router(provider_business_customers_router)
+api_v1_router.include_router(provider_team_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_requests_router)
