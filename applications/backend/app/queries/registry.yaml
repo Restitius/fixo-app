@@ -2537,4 +2537,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/dsl/metrics.sql
+  PROV.DISPUTE.LIST:
+    description: Provider disputes on their bookings, newest first (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/list.sql
+  PROV.DISPUTE.GET:
+    description: Single dispute by id, ownership-scoped (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/get.sql
+  PROV.DISPUTE.EVIDENCE.LIST:
+    description: Evidence on a dispute, ownership-scoped (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/evidence_list.sql
+  PROV.DISPUTE.RESPOND:
+    description: Submit a provider response on an owned dispute (Provider Phase 39).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/respond.sql
+  PROV.DISPUTE.RESPONSES.LIST:
+    description: Provider responses for a dispute (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/responses_list.sql
 version: 1
