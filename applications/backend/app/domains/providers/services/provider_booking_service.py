@@ -39,14 +39,17 @@ class ProviderBookingService:
         return row
 
     async def acknowledge(self, provider_id: str, booking_id: str) -> dict[str, Any]:
-        """Acknowledge a booking (provider confirms receipt)."""
+        """Acknowledge a booking (provider confirms receipt).
+
+        ack.sql itself enforces ownership and that the booking is still
+        CONFIRMED (via a WHERE EXISTS guard) — a `None` result here means
+        one of those didn't hold, not just "not found", but a 404 is the
+        honest response either way (it never reveals whether the id exists
+        under another provider).
+        """
         row = await self._bookings.ack(provider_id=provider_id, booking_id=booking_id)
         if not row:
-            raise NotFoundError(f"Booking {booking_id} not found")
-        if row.get("provider_id") != provider_id:
-            raise AuthorizationError("Not your booking")
-        if row.get("status") != "CONFIRMED":
-            raise AuthorizationError(f"Cannot acknowledge booking in status {row.get('status')}")
+            raise NotFoundError(f"Booking {booking_id} not found, not yours, or not CONFIRMED")
         if self._events:
             await self._events.publish(
                 "provider.booking.acknowledged",
