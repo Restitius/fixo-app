@@ -2685,4 +2685,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/recurring_customers/note_set.sql
+  PROV.BUSINESS_CUSTOMERS.CREATE:
+    description: Register a business customer with a negotiated rate (Provider Phase 43).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/create.sql
+  PROV.BUSINESS_CUSTOMERS.LIST:
+    description: Provider's registered business customers (Provider Phase 43).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/list.sql
+  PROV.BUSINESS_CUSTOMERS.GET:
+    description: Single owned business-customer record (Provider Phase 43).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/get.sql
+  PROV.BUSINESS_CUSTOMERS.UPDATE:
+    description: Modify a business customer's negotiated rate/notes (Provider Phase 43).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/update.sql
+  PROV.BUSINESS_CUSTOMERS.DEACTIVATE:
+    description: End a business customer's negotiated-rate relationship (Provider Phase 43).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/deactivate.sql
 version: 1

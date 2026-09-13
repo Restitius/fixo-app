@@ -72,7 +72,7 @@
 | PRV-40 | 40 | Provider Support | ✅ |
 | PRV-41 | 41 | Safety & Incident Reporting | ✅ |
 | PRV-42 | 42 | Recurring Customers | ✅ |
-| PRV-43 | 43 | Business Customers + negotiated rates | ⏳ |
+| PRV-43 | 43 | Business Customers + negotiated rates | ✅ |
 | PRV-44 | 44 | Team Management — workers/roles | ⏳ |
 | PRV-45 | 45 | Job Assignment — dispatch/technician | ⏳ |
 | PRV-46 | 46 | Equipment & Tools registry | ⏳ |
@@ -376,3 +376,27 @@ each cycle, so it can't itself express a provider-customer relationship.
   - `GET /{customer_id}` — one customer's summary + note
   - `GET /{customer_id}/bookings` — completed booking history
   - `PUT /{customer_id}/note` — set/update the private note
+
+## Phase 43 — Provider Business Customers & Negotiated Rates
+
+A provider-owned registry of business/corporate customers with an agreed
+negotiated rate (percent discount or fixed rate). Applying the rate to a
+live quote is out of scope for this phase — this establishes the
+relationship and rate the provider has agreed with the customer.
+
+- `PROVIDER_BUSINESS_CUSTOMERS` — one row per (provider, customer),
+  unique-constrained, with `negotiated_rate_type` (`PERCENT_DISCOUNT` |
+  `FIXED_RATE`) and `negotiated_rate_value`, plus company name/notes.
+- Governed queries `PROV.BUSINESS_CUSTOMERS.CREATE/LIST/GET/UPDATE/
+  DEACTIVATE`.
+- `ProviderBusinessCustomersService` validates the rate (percent capped
+  at 100, value non-negative); the adapter translates the unique-
+  constraint violation on duplicate registration into a clean
+  `ConflictError` (established pattern, see
+  `provider_service_area_sql_adapter.py`) instead of a raw 500.
+- Router prefix `/providers/me/business-customers`:
+  - `POST /` — register a business customer
+  - `GET /` — list (optional status filter)
+  - `GET /{record_id}` — single record
+  - `PATCH /{record_id}` — update rate/company/notes
+  - `POST /{record_id}/deactivate` — end the relationship
