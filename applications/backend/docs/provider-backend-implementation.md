@@ -70,7 +70,7 @@
 | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
 | PRV-39 | 39 | Disputes | ✅ |
 | PRV-40 | 40 | Provider Support | ✅ |
-| PRV-41 | 41 | Safety & Incident Reporting | ⏳ |
+| PRV-41 | 41 | Safety & Incident Reporting | ✅ |
 | PRV-42 | 42 | Recurring Customers | ⏳ |
 | PRV-43 | 43 | Business Customers + negotiated rates | ⏳ |
 | PRV-44 | 44 | Team Management — workers/roles | ⏳ |
@@ -331,3 +331,26 @@ syntax that SQLAlchemy's text() bind-param parser mis-tokenizes, and
 unquoted DSL table names that Postgres folded to the wrong case. All were
 fixed and verified live against Postgres — see the "repair silent runtime
 failures across Modules 32-39" commit for the full detail.
+
+## Phase 41 — Provider Safety & Incident Reporting
+
+A prior, incomplete attempt at this phase (service/router source deleted,
+orphaned `PROV.SAFETY.REPORTS.*` registry entries left pointing at missing
+SQL files, router registration disabled via a TEMP STOPGAP) was replaced
+with a complete implementation.
+
+- `PROVIDER_SAFETY_REPORTS` — provider-filed safety/incident reports,
+  optionally tied to a booking (FK'd to `PROVIDERS(provider_id)` and
+  nullable-FK'd to `BOOKINGS(booking_id)`).
+- Governed queries `PROV.SAFETY.REPORTS.CREATE/LIST/GET/ESCALATE` (the
+  create query enforces, in SQL, that a named booking belongs to the
+  reporting provider before inserting).
+- `ProviderSafetyService` with category/severity validation, ownership
+  checks, and an escalate action restricted to `OPEN`/`UNDER_REVIEW`
+  reports (idempotency guard: a second escalate raises a conflict).
+  Resolution stays platform/admin-side, mirroring Disputes (Phase 39).
+- Router prefix `/providers/me/safety`:
+  - `POST /reports` — file a report
+  - `GET /reports` — list reports (optional status/category filters)
+  - `GET /reports/{report_id}` — single report
+  - `POST /reports/{report_id}/escalate` — escalate to platform admins
