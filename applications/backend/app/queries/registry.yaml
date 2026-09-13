@@ -2481,4 +2481,60 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/notifications/unread_count.sql
+  PROV.DSL.REQUESTS.LIST:
+    description: Provider DSL requests, newest first (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/list.sql
+  PROV.DSL.REQUESTS.GET:
+    description: Single DSL request by id (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/get.sql
+  PROV.DSL.REQUESTS.CREATE:
+    description: Create one DSL request (Provider Phase 38).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/create.sql
+  PROV.DSL.REQUESTS.UPDATE:
+    description: Update mutable DSL request fields (Provider Phase 38).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/update.sql
+  PROV.DSL.REQUESTS.RESOLVE:
+    description: Close a DSL request as resolved (Provider Phase 38).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/resolve.sql
+  PROV.DSL.EXECUTION_LOGS.INSERT:
+    description: Append one DSL execution step (Provider Phase 38).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/exec_insert.sql
+  PROV.DSL.EXECUTION_LOGS.LIST:
+    description: Execution steps for a DSL request (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/exec_list.sql
+  PROV.DSL.PROVIDER_METRICS.GET:
+    description: Provider DSL lifetime metrics by period (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/metrics.sql
 version: 1
