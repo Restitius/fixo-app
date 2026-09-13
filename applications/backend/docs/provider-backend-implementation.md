@@ -74,7 +74,7 @@
 | PRV-42 | 42 | Recurring Customers | ✅ |
 | PRV-43 | 43 | Business Customers + negotiated rates | ✅ |
 | PRV-44 | 44 | Team Management — workers/roles | ✅ |
-| PRV-45 | 45 | Job Assignment — dispatch/technician | ⏳ |
+| PRV-45 | 45 | Job Assignment — dispatch/technician | ✅ |
 | PRV-46 | 46 | Equipment & Tools registry | ⏳ |
 | PRV-47 | 47 | Documents & Compliance + expiry | ⏳ |
 | PRV-48 | 48 | Promotions | ⏳ |
@@ -422,3 +422,27 @@ larger auth undertaking out of scope here.
   - `GET /{member_id}` — single member
   - `PATCH /{member_id}` — update details/role
   - `POST /{member_id}/deactivate` — remove from active roster
+
+## Phase 45 — Provider Job Assignment (dispatch/technician)
+
+Links a booking to one of the provider's team members (Phase 44). One
+active assignment per booking (unique constraint on `booking_id`);
+reassigning updates the existing row rather than creating history — a
+full audit trail is Phase 51's concern.
+
+- `PROVIDER_JOB_ASSIGNMENTS` — FK'd to `PROVIDERS`, `BOOKINGS`
+  (unique), and `PROVIDER_TEAM_MEMBERS`; status lifecycle `ASSIGNED →
+  ACKNOWLEDGED → IN_PROGRESS → COMPLETED`, or `CANCELLED`.
+- Governed queries `PROV.JOB_ASSIGNMENTS.CREATE/GET/UPDATE/CANCEL`,
+  `.LIST`. Create enforces in SQL that both the booking and the team
+  member belong to this provider, and the member is `ACTIVE`; update's
+  reassignment path re-validates the new member the same way.
+- `ProviderJobAssignmentsService` with status validation; the adapter
+  translates unique-constraint (duplicate booking assignment) and
+  check-constraint violations into clean `ConflictError`s.
+- Router prefix `/providers/me/job-assignments`:
+  - `POST /` — assign a team member to a booking
+  - `GET /` — list (optional status/member filters)
+  - `GET /{assignment_id}` — single assignment
+  - `PATCH /{assignment_id}` — reassign member and/or change status/notes
+  - `POST /{assignment_id}/cancel` — cancel an active assignment

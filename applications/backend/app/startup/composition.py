@@ -61,6 +61,7 @@ class Composition:
         self.provider_recurring_customers_repository: Any = None
         self.provider_business_customers_repository: Any = None
         self.provider_team_repository: Any = None
+        self.provider_job_assignments_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -499,6 +500,14 @@ class Composition:
         )
 
         self.provider_team_repository = ProviderTeamSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_job_assignments_sql_adapter import (
+            ProviderJobAssignmentsSqlAdapter,
+        )
+
+        self.provider_job_assignments_repository = ProviderJobAssignmentsSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -940,6 +949,14 @@ class Composition:
         )
 
         return ProviderTeamService(repository=self.provider_team_repository)
+
+    def provider_job_assignments_service(self) -> Any:
+        """ProviderJobAssignmentsService — dispatch/technician assignment (Req Phase 45)."""
+        from app.domains.providers.services.provider_job_assignments_service import (
+            ProviderJobAssignmentsService,
+        )
+
+        return ProviderJobAssignmentsService(repository=self.provider_job_assignments_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
