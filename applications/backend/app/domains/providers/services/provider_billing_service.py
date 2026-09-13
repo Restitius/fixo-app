@@ -8,7 +8,9 @@ This service is the provider's **read-only** view of that calculation:
 - approved additional work: SUM(APPROVED change additional_price)
 - approved materials: SUM(BOOKING_MATERIALS.amount)
 - taxes: the standard platform rate (18% default, overrideable per call)
-- discounts: customer-side (quotes/invoices) — surfaced as 0 here
+- discounts: the accepted quote's discount_amount (QUOTATIONS, via
+  BOOKINGS.quote_id) — the discount a customer negotiated pre-booking,
+  not something a provider can alter here
 
 Only APPROVED changes count (the Phase 23 guard: customer decides).
 Only signed-off bookings are bill-ready (CUSTOMER_CONFIRMED, Phase 26);
@@ -52,6 +54,7 @@ class ProviderBillingService:
         original = float(row.get("original_price") or 0)
         additional = float(row.get("approved_additional_work") or 0)
         materials_total = float(row.get("approved_materials") or 0)
+        discounts = float(row.get("discounts") or 0)
         subtotal = original + additional + materials_total
         taxes = round(subtotal * rate, 2)
 
@@ -75,8 +78,8 @@ class ProviderBillingService:
             "subtotal": subtotal,
             "tax_rate": rate,
             "taxes": taxes,
-            "discounts": 0.0,
-            "final_amount": round(subtotal + taxes, 2),
+            "discounts": discounts,
+            "final_amount": round(subtotal + taxes - discounts, 2),
             "approved_changes": [self._encode_change(c) for c in changes],
             "material_lines": [self._encode_material(m) for m in material_lines],
             "note": (
