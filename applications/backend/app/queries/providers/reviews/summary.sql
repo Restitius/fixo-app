@@ -8,4 +8,4 @@ SELECT
     COUNT(*) FILTER (WHERE "rating" = 1) AS "one_star",
     COUNT(*) FILTER (WHERE "created_at" >= date_trunc('month', now())) AS "this_month"
 FROM "PROVIDER_REVIEWS"
-WHERE "provider_id" = :provider_id AND "status" = 'published';
+WHERE "provider_id" = :user_id AND "status" = 'published';

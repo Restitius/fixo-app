@@ -21,7 +21,7 @@ class ProviderReviewsSqlAdapter(ProviderReviewsRepository):
         return await self._queries.execute(
             "PROV.REVIEWS.LIST",
             {
-                "provider_id": provider_id,
+                "user_id": provider_id,
                 "status": status,
                 "min_rating": min_rating,
                 "limit": limit,
@@ -32,13 +32,13 @@ class ProviderReviewsSqlAdapter(ProviderReviewsRepository):
     async def detail(self, provider_id: str, *, review_id: str) -> Any | None:
         rows = await self._queries.execute(
             "PROV.REVIEWS.DETAIL",
-            {"provider_id": provider_id, "review_id": review_id},
+            {"user_id": provider_id, "review_id": review_id},
         )
         return rows[0] if rows else None
 
     async def summary(self, provider_id: str) -> Any:
         rows = await self._queries.execute(
             "PROV.REVIEWS.SUMMARY",
-            {"provider_id": provider_id},
+            {"user_id": provider_id},
         )
         return rows[0] if rows else None

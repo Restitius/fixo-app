@@ -31,7 +31,7 @@ class ProviderPortfolioSqlAdapter(ProviderPortfolioRepository):
         return await self._queries.execute(
             "PROV.PORTFOLIO.LIST",
             {
-                "provider_id": provider_id,
+                "user_id": provider_id,
                 "status": status,
                 "limit": limit,
                 "offset": offset,
@@ -42,7 +42,7 @@ class ProviderPortfolioSqlAdapter(ProviderPortfolioRepository):
         """Fetch a single portfolio item by id (ownership-scoped)."""
         rows = await self._queries.execute(
             "PROV.PORTFOLIO.GET",
-            {"provider_id": provider_id, "portfolio_id": portfolio_id},
+            {"user_id": provider_id, "portfolio_id": portfolio_id},
         )
         return rows[0] if rows else None
 
@@ -58,7 +58,7 @@ class ProviderPortfolioSqlAdapter(ProviderPortfolioRepository):
         """Update an existing portfolio item (ownership-scoped)."""
         rows = await self._queries.execute(
             "PROV.PORTFOLIO.UPDATE",
-            {"provider_id": provider_id, "portfolio_id": portfolio_id, **fields},
+            {"user_id": provider_id, "portfolio_id": portfolio_id, **fields},
         )
         return rows[0] if rows else None
 
@@ -66,6 +66,6 @@ class ProviderPortfolioSqlAdapter(ProviderPortfolioRepository):
         """Remove a portfolio item (ownership-scoped)."""
         rows = await self._queries.execute(
             "PROV.PORTFOLIO.DELETE",
-            {"provider_id": provider_id, "portfolio_id": portfolio_id},
+            {"user_id": provider_id, "portfolio_id": portfolio_id},
         )
         return rows[0] if rows else None
