@@ -410,6 +410,30 @@ class Composition:
         self.provider_ranking_repository = ProviderRankingSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_portfolio_sql_adapter import (
+            ProviderPortfolioSqlAdapter,
+        )
+
+        self.provider_portfolio_repository = ProviderPortfolioSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_notifications_sql_adapter import (
+            ProviderNotificationsSqlAdapter,
+        )
+
+        self.provider_notifications_repository = ProviderNotificationsSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_dsl_requests_sql_adapter import (
+            ProviderDslRequestsSqlAdapter,
+        )
+
+        self.provider_dsl_requests_repository = ProviderDslRequestsSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
