@@ -8,9 +8,12 @@ Tables:
 - PROVIDER_DSL_PROVIDER_METRICS
 """
 
-from typing import Union
 from alembic import op
 import sqlalchemy as sa
+
+revision = "0053"
+down_revision = "0059"
+
 
 def upgrade() -> None:
     op.create_table(

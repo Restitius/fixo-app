@@ -20,7 +20,7 @@ def upgrade() -> None:
         """
         CREATE TABLE IF NOT EXISTS "PROVIDER_RANKING" (
             "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-            "provider_id" uuid NOT NULL REFERENCES "PROVIDERS"("id") ON DELETE CASCADE,
+            "provider_id" uuid NOT NULL REFERENCES "PROVIDERS"("provider_id") ON DELETE CASCADE,
             "rank_score" integer NOT NULL DEFAULT 0,
             "rank_level" varchar(16) NOT NULL DEFAULT 'bronze',
             "badges" jsonb NOT NULL DEFAULT '[]'::jsonb,
