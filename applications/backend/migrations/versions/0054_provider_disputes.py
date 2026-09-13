@@ -11,6 +11,9 @@ Extends the customer DISPUTES surface with a provider side:
 
 from alembic import op
 
+revision = "0054"
+down_revision = "0053"
+
 
 def upgrade() -> None:
     op.execute('ALTER TABLE "DISPUTES" ADD COLUMN IF NOT EXISTS provider_id UUID')

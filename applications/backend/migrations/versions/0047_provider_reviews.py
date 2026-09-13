@@ -16,7 +16,7 @@ def upgrade() -> None:
         """
         CREATE TABLE IF NOT EXISTS "PROVIDER_REVIEWS" (
             "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-            "provider_id" uuid NOT NULL REFERENCES "PROVIDERS"("id") ON DELETE CASCADE,
+            "provider_id" uuid NOT NULL REFERENCES "PROVIDERS"("provider_id") ON DELETE CASCADE,
             "booking_id" uuid,
             "customer_id" uuid NOT NULL,
             "rating" smallint NOT NULL,
