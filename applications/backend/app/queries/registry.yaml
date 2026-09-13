@@ -2755,4 +2755,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/team/deactivate.sql
+  PROV.JOB_ASSIGNMENTS.CREATE:
+    description: Assign a team member to a booking (Provider Phase 45).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/create.sql
+  PROV.JOB_ASSIGNMENTS.LIST:
+    description: The provider's job assignments (Provider Phase 45).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/list.sql
+  PROV.JOB_ASSIGNMENTS.GET:
+    description: Single owned job assignment (Provider Phase 45).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/get.sql
+  PROV.JOB_ASSIGNMENTS.UPDATE:
+    description: Reassign a member and/or change status/notes (Provider Phase 45).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/update.sql
+  PROV.JOB_ASSIGNMENTS.CANCEL:
+    description: Cancel an active job assignment (Provider Phase 45).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/cancel.sql
 version: 1
