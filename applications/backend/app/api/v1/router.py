@@ -56,6 +56,7 @@ from app.domains.providers.api.ranking_router import router as provider_ranking_
 from app.domains.providers.api.portfolio_router import router as provider_portfolio_router
 from app.domains.providers.api.notifications_router import router as provider_notifications_router
 from app.domains.providers.api.dsl_requests_router import router as provider_dsl_requests_router
+from app.domains.providers.api.disputes_router import router as provider_disputes_router
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -131,6 +132,7 @@ api_v1_router.include_router(provider_ranking_router)
 api_v1_router.include_router(provider_portfolio_router)
 api_v1_router.include_router(provider_notifications_router)
 api_v1_router.include_router(provider_dsl_requests_router)
+api_v1_router.include_router(provider_disputes_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_dashboard_router)
