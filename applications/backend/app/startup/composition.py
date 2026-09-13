@@ -56,6 +56,7 @@ class Composition:
         self.provider_reviews_repository: Any = None
         self.provider_kpis_repository: Any = None
         self.provider_ranking_repository: Any = None
+        self.provider_support_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -456,6 +457,14 @@ class Composition:
         self.provider_disputes_repository = ProviderDisputesSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_support_sql_adapter import (
+            ProviderSupportSqlAdapter,
+        )
+
+        self.provider_support_repository = ProviderSupportSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -851,6 +860,14 @@ class Composition:
         )
 
         return ProviderDisputesService(disputes=self.provider_disputes_repository)
+
+    def provider_support_service(self) -> Any:
+        """ProviderSupportService — provider helpdesk tickets (Req Phase 40)."""
+        from app.domains.providers.services.provider_support_service import (
+            ProviderSupportService,
+        )
+
+        return ProviderSupportService(repository=self.provider_support_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
