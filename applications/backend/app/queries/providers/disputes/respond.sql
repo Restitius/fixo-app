@@ -4,8 +4,8 @@ INSERT INTO "PROVIDER_DISPUTE_RESPONSES" (dispute_id, provider_id, kind, body)
 SELECT
     CAST(:dispute_id AS uuid),
     CAST(:provider_id AS uuid),
-    :kind::text,
-    :body::text
+    CAST(:kind AS text),
+    CAST(:body AS text)
 WHERE EXISTS (
     SELECT 1
     FROM "DISPUTES" d

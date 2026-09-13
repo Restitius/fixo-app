@@ -10,5 +10,5 @@ FROM "PROVIDER_DISPUTE_RESPONSES" r
 JOIN "DISPUTES" d ON d.dispute_id = r.dispute_id
 JOIN "BOOKINGS" b ON b.booking_id = d.booking_id
 WHERE r.dispute_id = CAST(:dispute_id AS uuid)
-  AND b.provider_id = CAST(:provider_id AS uuid)
+  AND b.provider_id = CAST(:user_id AS uuid)
 ORDER BY r.created_at ASC;

@@ -33,7 +33,7 @@ class ProviderDslRequestsSqlAdapter(ProviderDslRequestsRepository):
         return await self._queries.execute(
             "PROV.DSL.REQUESTS.LIST",
             {
-                "provider_id": provider_id,
+                "user_id": provider_id,
                 "status": status,
                 "dsl_kind": dsl_kind,
                 "limit": limit,
@@ -45,7 +45,7 @@ class ProviderDslRequestsSqlAdapter(ProviderDslRequestsRepository):
         """Fetch a single DSL request by id (ownership-scoped)."""
         rows = await self._queries.execute(
             "PROV.DSL.REQUESTS.GET",
-            {"provider_id": provider_id, "id": request_id},
+            {"user_id": provider_id, "id": request_id},
         )
         return rows[0] if rows else None
 
@@ -104,7 +104,7 @@ class ProviderDslRequestsSqlAdapter(ProviderDslRequestsRepository):
         rows = await self._queries.execute(
             "PROV.DSL.REQUESTS.UPDATE",
             {
-                "provider_id": provider_id,
+                "user_id": provider_id,
                 "id": request_id,
                 "status": status,
                 "priority": priority,
@@ -124,7 +124,7 @@ class ProviderDslRequestsSqlAdapter(ProviderDslRequestsRepository):
         """Close a DSL request as resolved (ownership-scoped)."""
         rows = await self._queries.execute(
             "PROV.DSL.REQUESTS.RESOLVE",
-            {"provider_id": provider_id, "id": request_id, "resolved_by": resolved_by},
+            {"user_id": provider_id, "id": request_id, "resolved_by": resolved_by},
         )
         return rows[0] if rows else None
 
@@ -155,18 +155,18 @@ class ProviderDslRequestsSqlAdapter(ProviderDslRequestsRepository):
         )
         return rows[0] if rows else None
 
-    async def list_execution_logs(self, *, dsl_request_id: str) -> list[Any]:
-        """Read execution steps for a DSL request, in order."""
+    async def list_execution_logs(self, provider_id: str, *, dsl_request_id: str) -> list[Any]:
+        """Read execution steps for a DSL request, in order (ownership-scoped)."""
         return await self._queries.execute(
             "PROV.DSL.EXECUTION_LOGS.LIST",
-            {"dsl_request_id": dsl_request_id},
+            {"dsl_request_id": dsl_request_id, "user_id": provider_id},
         )
 
     async def get_metrics(self, provider_id: str, *, period: str) -> Any | None:
         """Read provider DSL lifetime metrics for a period."""
         rows = await self._queries.execute(
             "PROV.DSL.PROVIDER_METRICS.GET",
-            {"provider_id": provider_id, "period": period},
+            {"user_id": provider_id, "period": period},
         )
         return rows[0] if rows else None
 
