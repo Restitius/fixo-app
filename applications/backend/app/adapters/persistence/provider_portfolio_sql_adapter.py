@@ -8,6 +8,8 @@ Routes operations through governed queries:
 - PROV.PORTFOLIO.DELETE — remove item (ownership-scoped)
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.provider_portfolio_repository import ProviderPortfolioRepository

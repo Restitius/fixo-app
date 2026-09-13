@@ -13,4 +13,5 @@ SELECT p.provider_id, p.display_name, p.headline, p.bio,
        ), '[]'::json) AS services
   FROM "PROVIDERS" p
  WHERE p.provider_id = CAST(:provider_id AS uuid)
-   AND p.is_active;
+   AND p.is_active
+   AND p.verification_status = 'VERIFIED';

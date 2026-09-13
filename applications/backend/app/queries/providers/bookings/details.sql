@@ -1,7 +1,9 @@
 -- PROV.BOOKING.DETAILS -- full operational screen for a provider booking (Phase 16)
+-- arrival_code deliberately excluded — see app/queries/providers/arrival/status.sql
+-- for why the provider's own API must never return the customer's arrival PIN.
 SELECT b.booking_id, b.booking_number, b.status, b.scheduled_date,
        b.time_window, b.agreed_amount, b.currency,
-       b.payment_attempts, b.arrival_code, b.arrived_at, b.verified_at,
+       b.payment_attempts, b.arrived_at, b.verified_at,
        b.started_at, b.completed_at, b.created_at, b.updated_at,
        c.full_name AS customer_name,
        c.phone AS customer_phone, c.email AS customer_email,

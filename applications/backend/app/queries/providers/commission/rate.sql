@@ -8,7 +8,7 @@
 -- =============================================================================
 WITH prov AS (
     SELECT *
-    FROM \"PROVIDER_COMMISSION_RATES\"
+    FROM "PROVIDER_COMMISSION_RATES"
     WHERE provider_id = CAST(:user_id AS uuid)
       AND is_active
       AND (effective_to IS NULL OR effective_to > now())
@@ -40,7 +40,7 @@ SELECT
     effective_to,
     created_at,
     updated_at
-FROM \"PROVIDER_COMMISSION_RATES\"
+FROM "PROVIDER_COMMISSION_RATES"
 WHERE provider_id IS NULL
   AND is_active
   AND currency = CAST(:currency AS varchar)

@@ -1445,6 +1445,27 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/bookings/start_status.sql
+  PROV.ARRIVAL.ARRIVE:
+    description: Provider records arrival with GPS on an on-the-way booking (Provider Phase 19).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/arrival/arrive.sql
+  PROV.ARRIVAL.VERIFY_PIN:
+    description: Provider enters the customer's arrival PIN to verify on-site presence (Provider Phase 19).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/arrival/verify_pin.sql
+  PROV.ARRIVAL.STATUS:
+    description: Arrival state for a provider's booking (Provider Phase 19).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/arrival/status.sql
   PROV.TRIP.START:
     description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
     operation: update
@@ -1463,7 +1484,7 @@ queries:
     description: Append a GPS trace point to PROVIDER_LOCATIONS history (Provider Phase 18).
     operation: create
     security:
-      ownership_filter_required: false
+      ownership_filter_required: true
       requires_auth: true
     sql: providers/tracking/record_location.sql
   PROV.TRIP.END:
@@ -1477,8 +1498,8 @@ queries:
     description: Customer views provider's live position and ETA (Provider Phase 18).
     operation: read
     security:
-      ownership_filter_required: false
-      requires_auth: false
+      ownership_filter_required: true
+      requires_auth: true
     sql: providers/tracking/get_location.sql
   PROV.TRIP.GET_NAV_INFO:
     description: Provider views customer address + trip context for navigation (Provider Phase 18).
@@ -2341,6 +2362,35 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/portfolio/update.sql
+
+  PROV.SAFETY.REPORTS.CREATE:
+    description: Create a provider safety/incident report (Phase 41).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/create.sql
+  PROV.SAFETY.REPORTS.LIST:
+    description: Provider safety/incident reports list (Phase 41).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/list.sql
+  PROV.SAFETY.REPORTS.GET:
+    description: Single provider safety report by id (Phase 41).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/get.sql
+  PROV.SAFETY.REPORTS.ESCALATE:
+    description: Escalate a serious provider safety report to platform administrators (Phase 41).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/escalate.sql
   PROV.NOTIFICATIONS.LIST:
     description: Provider notifications list, unread first then newest (Provider Phase 37).
     operation: read

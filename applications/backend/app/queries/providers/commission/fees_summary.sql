@@ -10,5 +10,5 @@ SELECT
     COALESCE(SUM(tax_amount), 0)        AS total_tax,
     COALESCE(SUM(net_amount), 0)        AS total_net,
     COUNT(*)                            AS fee_count
-FROM \"PROVIDER_COMMISSION_FEES\"
+FROM "PROVIDER_COMMISSION_FEES"
 WHERE provider_id = CAST(:user_id AS uuid);

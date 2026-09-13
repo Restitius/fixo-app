@@ -10,6 +10,7 @@ import logging
 import secrets
 from typing import Any
 
+from app.config import get_settings
 from app.security.jwt import JwtService
 from app.security.password import PasswordHasher
 from app.shared.exceptions.hierarchy import (
@@ -21,7 +22,17 @@ from app.shared.exceptions.hierarchy import (
 
 logger = logging.getLogger(__name__)
 
-DEV_MODE = True  # surfaces OTP codes in responses until SMS/email adapters land
+
+def _dev_mode() -> bool:
+    """Surface OTP codes in responses only outside production.
+
+    Until real SMS/email adapters land, this is how a developer or tester
+    obtains the code at all — but it must never be reachable in production,
+    where it would let anyone take over any account by requesting an OTP for
+    the victim's email/phone and reading the code straight out of the
+    response body.
+    """
+    return get_settings().environment != "production"
 
 
 def _hash_code(code: str) -> str:
@@ -95,21 +106,21 @@ class ProviderAuthService:
 
         code = await self._issue_otp(created["provider_id"], "VERIFY_EMAIL")
         await self._publish("EVT.PROVIDER.REGISTERED", created)
-        return {**created, **( {"otp_code": code} if DEV_MODE else {})}
+        return {**created, **( {"otp_code": code} if _dev_mode() else {})}
 
     async def request_otp(self, email: str) -> dict[str, Any]:
         provider = await self._providers.get_by_email(email.strip().lower())
         if not provider:
             return {"sent": True}  # do not reveal account existence
         code = await self._issue_otp(str(provider["provider_id"]), "VERIFY_EMAIL")
-        return {"sent": True, **( {"otp_code": code} if DEV_MODE else {})}
+        return {"sent": True, **( {"otp_code": code} if _dev_mode() else {})}
 
     async def request_password_reset(self, email: str) -> dict[str, Any]:
         provider = await self._providers.get_by_email(email.strip().lower())
         if not provider:
             return {"sent": True}
         code = await self._issue_otp(str(provider["provider_id"]), "PASSWORD_RESET")
-        return {"sent": True, **( {"otp_code": code} if DEV_MODE else {})}
+        return {"sent": True, **( {"otp_code": code} if _dev_mode() else {})}
 
     async def reset_password(self, email: str, code: str, new_password: str) -> dict[str, Any]:
         if len(new_password) < 8:
