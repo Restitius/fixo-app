@@ -68,7 +68,7 @@
 | PRV-36 | 36 | Portfolio | ✅ |
 | PRV-37 | 37 | Provider Notifications | ✅ |
 | PRV-38 | 38 | Cancellations & Rescheduling | ⏳ |
-| PRV-39 | 39 | Disputes | ⏳ |
+| PRV-39 | 39 | Disputes | ✅ |
 | PRV-40 | 40 | Provider Support | ⏳ |
 | PRV-41 | 41 | Safety & Incident Reporting | ⏳ |
 | PRV-42 | 42 | Recurring Customers | ⏳ |
