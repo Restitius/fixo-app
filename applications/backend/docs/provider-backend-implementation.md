@@ -239,3 +239,39 @@ Phase 37 adds provider-facing notification management.
 
 No delivery workers in this phase — notifications are managed synchronously
 through the service layer.
+
+## Phase 38 — DSL Cancellation & Rescheduling
+
+Phase 38 adds a provider-facing DSL-based cancellation/rescheduling workflow.
+
+- `PROVIDER_DSL_REQUESTS` — provider-owned DSL rows with dsl_kind
+  (cancellation/reschedule), subject_type/subject_id, title, dsl (jsonb),
+  status (open/escalated/closed/canceled), priority (low/medium/high/urgent),
+  reason, requested_by, resolved_by/at, parent_id/root_request_id, timestamps.
+- `PROVIDER_DSL_EXECUTION_LOGS` — ordered execution steps per DSL request
+  (step_order, action, status, summary/error jsonb, started/finished).
+- `PROVIDER_DSL_PROVIDER_METRICS` — provider lifetime rollups by period
+  (total/resolved/canceled/escalated, avg_resolution_hours).
+- Governed queries `PROV.DSL.REQUESTS.LIST`, `PROV.DSL.REQUESTS.GET`,
+  `PROV.DSL.REQUESTS.CREATE`, `PROV.DSL.REQUESTS.UPDATE`,
+  `PROV.DSL.REQUESTS.RESOLVE`, `PROV.DSL.EXECUTION_LOGS.INSERT`,
+  `PROV.DSL.EXECUTION_LOGS.LIST`, `PROV.DSL.PROVIDER_METRICS.GET`.
+- `ProviderDslRequestsService` with:
+  - list (optional status and dsl_kind filters),
+  - single request fetch with ownership check,
+  - create with validation (kind/priority enums, title/subject/dsl required),
+  - update with validation (partial updates, COALESCE behavior),
+  - resolve (close) with ownership check,
+  - execution-log reads with ownership check,
+  - metrics read with zeroed default when no row exists.
+- Router prefix `/providers/me/dsl-requests`:
+  - `GET /` — list requests
+  - `GET /metrics/summary` — lifetime metrics by period
+  - `GET /{request_id}` — single request
+  - `POST /` — create request
+  - `PATCH /{request_id}` — update request
+  - `POST /{request_id}/resolve` — close as resolved
+  - `GET /{request_id}/logs` — execution steps
+
+No background workers in this phase — requests are managed synchronously
+through the service layer.

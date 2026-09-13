@@ -766,6 +766,14 @@ class Composition:
 
         return ProviderNotificationsService(notifications=self.provider_notifications_repository)
 
+    def provider_dsl_requests_service(self) -> Any:
+        """ProviderDslRequestsService — DSL cancellation/rescheduling (Req Phase 38)."""
+        from app.domains.providers.services.provider_dsl_requests_service import (
+            ProviderDslRequestsService,
+        )
+
+        return ProviderDslRequestsService(dsl_requests=self.provider_dsl_requests_repository)
+
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
         from app.domains.providers.services.provider_availability_service import (
