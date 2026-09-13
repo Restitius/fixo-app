@@ -1,6 +1,6 @@
 -- PROV.DSL.REQUESTS.GET
 -- Read one DSL request owned by a provider.
--- Parameters: :provider_id, :id
+-- Parameters: :user_id, :id
 SELECT
     d.id,
     d.dsl_kind,
@@ -19,7 +19,7 @@ SELECT
     d.created_at,
     d.updated_at
 FROM
-    PROVIDER_DSL_REQUESTS d
+    "PROVIDER_DSL_REQUESTS" d
 WHERE
-    d.provider_id = :provider_id
+    d.provider_id = :user_id
     AND d.id = :id;

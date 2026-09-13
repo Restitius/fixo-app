@@ -8,4 +8,4 @@ SELECT
     COALESCE(SUM("revenue"), 0) AS "total_revenue",
     COUNT(*) AS "periods_count"
 FROM "PROVIDER_KPIS"
-WHERE "provider_id" = :provider_id;
+WHERE "provider_id" = :user_id;

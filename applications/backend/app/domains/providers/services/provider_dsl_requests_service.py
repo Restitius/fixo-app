@@ -188,7 +188,7 @@ class ProviderDslRequestsService:
         existing = await self._dsl_requests.get(provider_id, request_id=request_id)
         if existing is None:
             raise NotFoundError("DSL request not found")
-        rows = await self._dsl_requests.list_execution_logs(dsl_request_id=request_id)
+        rows = await self._dsl_requests.list_execution_logs(provider_id, dsl_request_id=request_id)
         return {"request_id": request_id, "logs": [self._encode_log(r) for r in rows]}
 
     async def get_metrics(self, provider_id: str, *, period: str) -> dict[str, Any]:

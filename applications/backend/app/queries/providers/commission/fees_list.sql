@@ -19,6 +19,6 @@ SELECT
     created_at
 FROM "PROVIDER_COMMISSION_FEES"
 WHERE provider_id = CAST(:user_id AS uuid)
-  AND (:status::varchar IS NULL OR status = :status::varchar)
+  AND (CAST(:status AS varchar) IS NULL OR status = CAST(:status AS varchar))
 ORDER BY created_at DESC
 LIMIT CAST(:limit AS int) OFFSET CAST(:offset AS int);

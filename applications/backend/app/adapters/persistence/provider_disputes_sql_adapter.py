@@ -32,7 +32,7 @@ class ProviderDisputesSqlAdapter(ProviderDisputesRepository):
         return await self._queries.execute(
             "PROV.DISPUTE.LIST",
             {
-                "provider_id": provider_id,
+                "user_id": provider_id,
                 "status": status,
                 "booking_id": booking_id,
                 "limit": limit,
@@ -44,7 +44,7 @@ class ProviderDisputesSqlAdapter(ProviderDisputesRepository):
         """Fetch a single dispute by id (ownership-scoped)."""
         rows = await self._queries.execute(
             "PROV.DISPUTE.GET",
-            {"provider_id": provider_id, "dispute_id": dispute_id},
+            {"user_id": provider_id, "dispute_id": dispute_id},
         )
         return rows[0] if rows else None
 
@@ -52,7 +52,7 @@ class ProviderDisputesSqlAdapter(ProviderDisputesRepository):
         """List evidence on a dispute (ownership-scoped)."""
         return await self._queries.execute(
             "PROV.DISPUTE.EVIDENCE.LIST",
-            {"provider_id": provider_id, "dispute_id": dispute_id},
+            {"user_id": provider_id, "dispute_id": dispute_id},
         )
 
     async def respond(
@@ -69,5 +69,5 @@ class ProviderDisputesSqlAdapter(ProviderDisputesRepository):
         """List provider responses for a dispute (ownership-scoped)."""
         return await self._queries.execute(
             "PROV.DISPUTE.RESPONSES.LIST",
-            {"provider_id": provider_id, "dispute_id": dispute_id},
+            {"user_id": provider_id, "dispute_id": dispute_id},
         )

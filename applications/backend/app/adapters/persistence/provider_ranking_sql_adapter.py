@@ -18,7 +18,7 @@ class ProviderRankingSqlAdapter(ProviderRankingRepository):
         """Return the ranking signals for one provider, or None if not yet computed."""
         rows = await self._queries.execute(
             "PROV.RANKING.GET",
-            {"provider_id": provider_id},
+            {"user_id": provider_id},
         )
         return rows[0] if rows else None
 
