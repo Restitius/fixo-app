@@ -5,7 +5,7 @@
 --          net_amount, reference_type, reference_id, description
 -- Returns: created fee row.
 -- =============================================================================
-INSERT INTO \"PROVIDER_COMMISSION_FEES\" (
+INSERT INTO "PROVIDER_COMMISSION_FEES" (
     provider_id,
     currency,
     gross_amount,

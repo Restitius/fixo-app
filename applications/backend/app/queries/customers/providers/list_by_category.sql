@@ -6,6 +6,7 @@ SELECT p.provider_id, p.display_name, p.headline, p.city, p.region,
   JOIN "PROVIDER_SERVICES" ps ON ps.provider_id = p.provider_id
   JOIN "SERVICES" s ON s.service_id = ps.service_id
  WHERE p.is_active
+   AND p.verification_status = 'VERIFIED'
    AND s.category_id = CAST(:category_id AS uuid)
  GROUP BY p.provider_id, p.display_name, p.headline, p.city, p.region,
           p.rating_avg, p.rating_count, p.jobs_completed

@@ -17,7 +17,7 @@ SELECT
     reference_id,
     description,
     created_at
-FROM \"PROVIDER_COMMISSION_FEES\"
+FROM "PROVIDER_COMMISSION_FEES"
 WHERE provider_id = CAST(:user_id AS uuid)
   AND (:status::varchar IS NULL OR status = :status::varchar)
 ORDER BY created_at DESC

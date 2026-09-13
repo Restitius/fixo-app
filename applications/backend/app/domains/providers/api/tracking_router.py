@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 
+from app.api.deps.auth import CurrentCustomer
 from app.api.deps.provider_auth import get_current_provider
 from app.domains.providers.services.provider_tracking_service import ProviderTrackingService
 from app.startup.composition import get_composition
@@ -51,7 +52,7 @@ async def record_location(
     provider: dict = Depends(get_current_provider),
     svc: ProviderTrackingService = Depends(_service),
 ) -> dict:
-    result = await svc.record_location(booking_id, latitude, longitude)
+    result = await svc.record_location(str(provider["provider_id"]), booking_id, latitude, longitude)
     return {"status": "ok", "trace": result}
 
 
@@ -78,8 +79,9 @@ async def get_nav_info(
 @router.get("/bookings/{booking_id}/location")
 async def get_location(
     booking_id: str,
+    customer: CurrentCustomer,
     svc: ProviderTrackingService = Depends(_service),
 ) -> dict:
     """Customer views provider's live position (status must be ON_THE_WAY)."""
-    result = await svc.get_location(booking_id)
+    result = await svc.get_location(booking_id, customer_id=str(customer["customer_id"]))
     return {"status": "ok", "tracking": result}

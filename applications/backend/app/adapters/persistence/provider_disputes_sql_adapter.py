@@ -8,6 +8,8 @@ Routes operations through governed queries:
 - PROV.DISPUTE.RESPONSES.LIST  — responses given for a dispute
 """
 
+from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.provider_disputes_repository import ProviderDisputesRepository

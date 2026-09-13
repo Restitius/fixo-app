@@ -4,8 +4,7 @@
 UPDATE "BOOKING_CHECKLIST_ITEMS"
    SET is_completed  = TRUE,
        completed_at  = CASE WHEN is_completed = FALSE THEN now()
-                            ELSE completed_at END,
-       updated_at    = now()
+                            ELSE completed_at END
  WHERE provider_id = CAST(:user_id AS uuid)
    AND booking_id  = CAST(:booking_id AS uuid)
    AND item_id     = CAST(:item_id AS uuid)
