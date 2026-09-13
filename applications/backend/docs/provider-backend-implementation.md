@@ -275,3 +275,30 @@ Phase 38 adds a provider-facing DSL-based cancellation/rescheduling workflow.
 
 No background workers in this phase — requests are managed synchronously
 through the service layer.
+
+## Phase 39 — Provider Disputes
+
+Phase 39 adds a provider side to the existing customer dispute surface.
+
+- `DISPUTES.provider_id` (new column, backfilled from `BOOKINGS.provider_id`)
+  plus an index, so provider-owned dispute views are direct.
+- `PROVIDER_DISPUTE_RESPONSES` — provider-supplied responses to disputes
+  (kind: acknowledgment/explanation/refund_offer, body, timestamps).
+- Governed queries `PROV.DISPUTE.LIST`, `PROV.DISPUTE.GET`,
+  `PROV.DISPUTE.EVIDENCE.LIST`, `PROV.DISPUTE.RESPOND`,
+  `PROV.DISPUTE.RESPONSES.LIST`.
+- `ProviderDisputesService` with:
+  - list (optional status and booking filters),
+  - single dispute fetch with ownership check,
+  - evidence read with ownership check,
+  - respond with validation (kind enum, body required) and ownership check,
+  - responses list with ownership check.
+- Router prefix `/providers/me/disputes`:
+  - `GET /` — list disputes
+  - `GET /{dispute_id}` — single dispute
+  - `GET /{dispute_id}/evidence` — dispute evidence
+  - `POST /{dispute_id}/responses` — submit a response
+  - `GET /{dispute_id}/responses` — list responses
+
+Dispute resolution stays platform/admin-side in this phase — the provider
+sees dispute state and can respond, but the resolution decision is not theirs.

@@ -434,6 +434,14 @@ class Composition:
         self.provider_dsl_requests_repository = ProviderDslRequestsSqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_disputes_sql_adapter import (
+            ProviderDisputesSqlAdapter,
+        )
+
+        self.provider_disputes_repository = ProviderDisputesSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -797,6 +805,14 @@ class Composition:
         )
 
         return ProviderDslRequestsService(dsl_requests=self.provider_dsl_requests_repository)
+
+    def provider_disputes_service(self) -> Any:
+        """ProviderDisputesService — provider-facing disputes (Req Phase 39)."""
+        from app.domains.providers.services.provider_disputes_service import (
+            ProviderDisputesService,
+        )
+
+        return ProviderDisputesService(disputes=self.provider_disputes_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
