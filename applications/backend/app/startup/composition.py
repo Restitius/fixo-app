@@ -58,6 +58,7 @@ class Composition:
         self.provider_ranking_repository: Any = None
         self.provider_support_repository: Any = None
         self.provider_safety_repository: Any = None
+        self.provider_recurring_customers_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -474,6 +475,14 @@ class Composition:
         self.provider_safety_repository = ProviderSafetySqlAdapter(
             self.sql_query_manager
         )
+
+        from app.adapters.persistence.provider_recurring_customers_sql_adapter import (
+            ProviderRecurringCustomersSqlAdapter,
+        )
+
+        self.provider_recurring_customers_repository = ProviderRecurringCustomersSqlAdapter(
+            self.sql_query_manager
+        )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
         self.change_request_repository = ChangeRequestSqlAdapter(self.sql_query_manager)
         self.cancellation_repository = CancellationSqlAdapter(self.sql_query_manager)
@@ -885,6 +894,16 @@ class Composition:
         )
 
         return ProviderSafetyService(repository=self.provider_safety_repository)
+
+    def provider_recurring_customers_service(self) -> Any:
+        """ProviderRecurringCustomersService — repeat customers (Req Phase 42)."""
+        from app.domains.providers.services.provider_recurring_customers_service import (
+            ProviderRecurringCustomersService,
+        )
+
+        return ProviderRecurringCustomersService(
+            repository=self.provider_recurring_customers_repository
+        )
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""

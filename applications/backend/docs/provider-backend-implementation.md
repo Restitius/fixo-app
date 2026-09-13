@@ -71,7 +71,7 @@
 | PRV-39 | 39 | Disputes | ✅ |
 | PRV-40 | 40 | Provider Support | ✅ |
 | PRV-41 | 41 | Safety & Incident Reporting | ✅ |
-| PRV-42 | 42 | Recurring Customers | ⏳ |
+| PRV-42 | 42 | Recurring Customers | ✅ |
 | PRV-43 | 43 | Business Customers + negotiated rates | ⏳ |
 | PRV-44 | 44 | Team Management — workers/roles | ⏳ |
 | PRV-45 | 45 | Job Assignment — dispatch/technician | ⏳ |
@@ -354,3 +354,25 @@ with a complete implementation.
   - `GET /reports` — list reports (optional status/category filters)
   - `GET /reports/{report_id}` — single report
   - `POST /reports/{report_id}/escalate` — escalate to platform admins
+
+## Phase 42 — Provider Recurring Customers
+
+A "recurring customer" here means a repeat customer of a specific
+provider — 2+ completed (`CLOSED`) bookings with them — computed on the
+fly from `BOOKINGS`. This is a distinct concept from the customer-side
+`RECURRING_SERVICES` subscription system (Module 22-ish, customer-owned
+auto-rebooking), which has no `provider_id` and re-matches from scratch
+each cycle, so it can't itself express a provider-customer relationship.
+
+- `PROVIDER_CUSTOMER_NOTES` — the only new state: a provider's private
+  note about a repeat customer (composite PK `provider_id, customer_id`).
+- Governed queries `PROV.RECURRING_CUSTOMERS.LIST` (2+ CLOSED bookings,
+  `HAVING COUNT(*) >= 2`), `.GET`, `.BOOKINGS` (completed booking history
+  with this provider), `.NOTE.SET` (upsert, gated in SQL on the provider
+  actually having a CLOSED booking with that customer).
+- `ProviderRecurringCustomersService` with ownership checks throughout.
+- Router prefix `/providers/me/recurring-customers`:
+  - `GET /` — list repeat customers
+  - `GET /{customer_id}` — one customer's summary + note
+  - `GET /{customer_id}/bookings` — completed booking history
+  - `PUT /{customer_id}/note` — set/update the private note
