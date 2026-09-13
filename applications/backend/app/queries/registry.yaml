@@ -2720,4 +2720,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/business_customers/deactivate.sql
+  PROV.TEAM.MEMBER.CREATE:
+    description: Add a worker to the provider's team (Provider Phase 44).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/create.sql
+  PROV.TEAM.MEMBERS.LIST:
+    description: The provider's team roster (Provider Phase 44).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/list.sql
+  PROV.TEAM.MEMBER.GET:
+    description: Single owned team member (Provider Phase 44).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/get.sql
+  PROV.TEAM.MEMBER.UPDATE:
+    description: Modify a team member's details/role (Provider Phase 44).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/update.sql
+  PROV.TEAM.MEMBER.DEACTIVATE:
+    description: Remove a worker from the active roster (Provider Phase 44).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/deactivate.sql
 version: 1
