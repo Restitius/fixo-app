@@ -1,7 +1,9 @@
 -- PROV.PAYOUT.WITHDRAW — request a withdrawal from the provider wallet (Phase 30).
 -- Atomic: creates the REQUESTED payout, moves available_balance -> reserved_funds
--- on the wallet (guarded: sufficient available balance), and writes one
--- WITHDRAWAL ledger entry. All-or-nothing in a single statement.
+-- on the wallet (guarded: sufficient available balance + method_id actually
+-- belongs to this provider, so the wallet debit itself fails closed on a
+-- foreign method_id rather than committing before payout_ins would reject it),
+-- and writes one WITHDRAWAL ledger entry. All-or-nothing in a single statement.
 WITH wallet_update AS (
     UPDATE "PROVIDER_WALLETS"
        SET available_balance = available_balance - CAST(:amount AS numeric),
@@ -10,6 +12,11 @@ WITH wallet_update AS (
            updated_at        = now()
      WHERE provider_id = CAST(:user_id AS uuid)
        AND available_balance >= CAST(:amount AS numeric)
+       AND EXISTS (
+             SELECT 1 FROM "PROVIDER_PAYOUT_METHODS" pm
+              WHERE pm.method_id = CAST(:method_id AS uuid)
+                AND pm.provider_id = CAST(:user_id AS uuid)
+           )
      RETURNING wallet_id, provider_id, available_balance
 ), payout_ins AS (
     INSERT INTO "PROVIDER_PAYOUTS"
