@@ -2657,4 +2657,32 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/support/messages_list.sql
+  PROV.RECURRING_CUSTOMERS.LIST:
+    description: Provider's repeat customers, 2+ completed bookings (Provider Phase 42).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/list.sql
+  PROV.RECURRING_CUSTOMERS.GET:
+    description: One repeat customer's summary and note (Provider Phase 42).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/get.sql
+  PROV.RECURRING_CUSTOMERS.BOOKINGS:
+    description: A repeat customer's completed booking history with this provider (Provider Phase 42).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/bookings.sql
+  PROV.RECURRING_CUSTOMERS.NOTE.SET:
+    description: Upsert a provider's private note about a repeat customer (Provider Phase 42).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/note_set.sql
 version: 1

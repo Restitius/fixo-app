@@ -62,6 +62,9 @@ from app.domains.providers.api.dsl_requests_router import router as provider_dsl
 from app.domains.providers.api.disputes_router import router as provider_disputes_router
 from app.domains.providers.api.support_router import router as provider_support_router
 from app.domains.providers.api.safety_router import router as provider_safety_router
+from app.domains.providers.api.recurring_customers_router import (
+    router as provider_recurring_customers_router,
+)
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -143,6 +146,7 @@ api_v1_router.include_router(provider_dsl_requests_router)
 api_v1_router.include_router(provider_disputes_router)
 api_v1_router.include_router(provider_support_router)
 api_v1_router.include_router(provider_safety_router)
+api_v1_router.include_router(provider_recurring_customers_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_requests_router)
