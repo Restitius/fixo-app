@@ -80,7 +80,7 @@
 | PRV-48 | 48 | Promotions | ✅ |
 | PRV-49 | 49 | Provider Analytics | ✅ |
 | PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ✅ |
-| PRV-51 | 51 | Provider Activity & Audit History | ⏳ |
+| PRV-51 | 51 | Provider Activity & Audit History | ✅ |
 | PRV-52 | 52 | Subscription / Provider Plans | ⏳ |
 | PRV-53 | 53 | Account Restrictions & Status | ⏳ |
 | PRV-54 | 54 | Account Closure | ⏳ |
@@ -590,3 +590,34 @@ privacy consent/export management for providers.
   - `GET`/`PUT /privacy/consents` — list / set a consent
     (`MARKETING`/`ANALYTICS`/`COMMUNICATION`)
   - `POST`/`GET /privacy/export-requests` — request / list data exports
+
+## Phase 51 — Provider Activity & Audit History
+
+A generic, append-only activity log. Deliberately scoped to the log
+itself plus its first real producers, not a retrofit of every prior
+module's write paths — wiring audit calls into all ~15 modules built
+this session would be a much larger, separate, higher-risk undertaking
+than one roadmap line item justifies.
+
+- `PROVIDER_ACTIVITY_LOG` — `action` (free-form, e.g.
+  `SECURITY.PASSWORD_CHANGED`), optional `entity_type`/`entity_id`, and
+  a `metadata` JSONB column.
+- Write access is internal-only: `PROV.ACTIVITY_LOG.RECORD` is called
+  by services, never exposed as a provider-facing endpoint — a provider
+  cannot fabricate their own audit trail. `PROV.ACTIVITY_LOG.LIST` is
+  the read path.
+- `ProviderActivityLogService.record()` JSON-serializes `metadata`
+  before it reaches the adapter — asyncpg needs an actual JSON string
+  (or `None`) for a JSONB bind, not a raw Python dict; passing a dict
+  directly fails with `DataError: 'dict' object has no attribute
+  'encode'`. The identical bug pattern was found (confirmed live) in
+  the existing DSL Requests module's `dsl` field (Phase 38) and flagged
+  as a separate follow-up rather than fixed here.
+- Wired as the first two real producers: `ProviderSecurityService.
+  change_password()`/`.revoke_all_sessions()` (Phase 50) now call
+  `record()` after succeeding, via an optional `activity_log`
+  constructor argument (`None`-guarded, so the service still works
+  standalone/in tests without it).
+- Router prefix `/providers/me/activity` (read-only):
+  - `GET /?action_prefix=SECURITY.` — list entries, optionally filtered
+    by an action-name prefix

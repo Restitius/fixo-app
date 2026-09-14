@@ -2944,4 +2944,18 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/settings/privacy/export_list.sql
+  PROV.ACTIVITY_LOG.RECORD:
+    description: Append one activity entry, internal use only (Provider Phase 51).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/activity_log/record.sql
+  PROV.ACTIVITY_LOG.LIST:
+    description: The provider's own activity/audit history (Provider Phase 51).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/activity_log/list.sql
 version: 1
