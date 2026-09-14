@@ -2993,4 +2993,32 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/subscriptions/history.sql
+  PROV.ACCOUNT_RESTRICTIONS.IMPOSE:
+    description: Platform/admin action - record a restriction on a provider account (Provider Phase 53). Not exposed via any provider-facing endpoint.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/account_restrictions/impose.sql
+  PROV.ACCOUNT_RESTRICTIONS.LIFT:
+    description: Platform/admin action - lift an active restriction (Provider Phase 53). Not exposed via any provider-facing endpoint.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/account_restrictions/lift.sql
+  PROV.ACCOUNT_RESTRICTIONS.LIST_ACTIVE:
+    description: The provider's currently active restrictions (Provider Phase 53).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/account_restrictions/list_active.sql
+  PROV.ACCOUNT_RESTRICTIONS.HISTORY:
+    description: The provider's full restriction history (Provider Phase 53).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/account_restrictions/history.sql
 version: 1
