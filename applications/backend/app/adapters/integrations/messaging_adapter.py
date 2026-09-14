@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.integrations.manager import IntegrationManager
+from app.integrations.external.manager import IntegrationManager
 
 
 class MessagingGatewayIntegrationIds:
@@ -26,7 +26,7 @@ class MessagingIntegrationAdapter:
     async def send_sms(self, to: str, text: str, *, template: str | None = None) -> dict[str, Any]:
         return await self._integrations.execute(
             MessagingGatewayIntegrationIds.SMS_TRANSACTIONAL,
-            "send",
+            "send_sms",
             {"to": to, "text": text, "template": template},
         )
 
