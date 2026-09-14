@@ -75,3 +75,80 @@ class ApiClient {
 }
 
 export const apiClient = new ApiClient();
+
+// ---- Typed feature methods -------------------------------------------------
+
+export interface ProviderNotificationRow {
+  id: string;
+  channel: string;
+  category: string;
+  title: string;
+  body: string;
+  is_read: boolean;
+  reference_type: string;
+  reference_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProviderBookingFeedRow {
+  booking_id: string;
+  booking_number: string;
+  status: string;
+  customer_name: string;
+  customer_phone?: string;
+  service_name?: string;
+  created_at: string;
+}
+
+export interface ProviderMessage {
+  message_id: string;
+  sender_role: "CUSTOMER" | "PROVIDER";
+  body: string;
+  created_at: string;
+}
+
+function qs(params: Record<string, unknown>): string {
+  const entries = Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== "");
+  if (!entries.length) return "";
+  return "?" + entries.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`).join("&");
+}
+
+export const fixoSdk = {
+  // ---- Notifications --------------------------------------------------------
+  notifications: (status: "unread" | "all" = "all", limit = 50, offset = 0) =>
+    apiClient
+      .get<{ notifications: ProviderNotificationRow[] }>(
+        `/providers/me/notifications${qs({ status, limit, offset })}`,
+      )
+      .then((r) => r.data.notifications),
+  notificationUnread: () =>
+    apiClient.get<{ unread_count: number }>("/providers/me/notifications/unread-count").then((r) => r.data),
+  markNotificationRead: (id: string) =>
+    apiClient.patch(`/providers/me/notifications/${id}/read`).then((r) => r.data),
+
+  // ---- Bookings (for the messages inbox list) --------------------------------
+  bookingFeed: (limit = 50, offset = 0) =>
+    apiClient
+      .get<ProviderBookingFeedRow[]>(`/providers/me/bookings${qs({ limit, offset })}`)
+      .then((r) => r.data),
+
+  // ---- Messages ---------------------------------------------------------------
+  getConversation: (bookingId: string) =>
+    apiClient
+      .get<{ conversation_id: string }>(`/providers/me/bookings/${bookingId}/messages/conversation`)
+      .then((r) => r.data),
+  listMessages: (bookingId: string, conversationId: string, limit = 50, offset = 0) =>
+    apiClient
+      .get<ProviderMessage[]>(
+        `/providers/me/bookings/${bookingId}/messages${qs({ conversation_id: conversationId, limit, offset })}`,
+      )
+      .then((r) => r.data),
+  sendMessage: (bookingId: string, conversationId: string, body: string) =>
+    apiClient
+      .post<ProviderMessage>(`/providers/me/bookings/${bookingId}/messages`, {
+        conversation_id: conversationId,
+        body,
+      })
+      .then((r) => r.data),
+};

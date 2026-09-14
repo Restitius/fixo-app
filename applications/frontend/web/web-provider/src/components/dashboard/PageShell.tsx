@@ -17,7 +17,10 @@ export function PageShell({ title, subtitle, children }: PageShellProps) {
   const { session, online, setOnline, logout } = useProviderAuth();
   const navigate = useNavigate();
 
-  const name = session?.name ?? "Provider";
+  const name =
+    session?.display_name ||
+    [session?.first_name, session?.last_name].filter(Boolean).join(" ") ||
+    "Provider";
   const initials =
     name
       .split(" ")
