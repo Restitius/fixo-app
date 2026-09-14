@@ -26,15 +26,25 @@ function LoginPage() {
   const [email, setEmail] = useState("john.m@fixo.co.tz");
   const [password, setPassword] = useState("password123");
   const [mode, setMode] = useState<"PASSWORD" | "OTP">("PASSWORD");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (mode === "OTP") {
       navigate({ to: "/verify-otp" });
       return;
     }
-    login(email);
-    navigate({ to: "/dashboard" });
+    setError("");
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      navigate({ to: "/dashboard" });
+    } catch {
+      setError("Invalid email or password.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const field =
@@ -70,12 +80,17 @@ function LoginPage() {
               </label>
             )}
 
+            {error && (
+              <p className="rounded-xl bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">{error}</p>
+            )}
+
             <button
               type="submit"
-              className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-transform hover:scale-[1.01]"
+              disabled={submitting}
+              className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-transform hover:scale-[1.01] disabled:opacity-60"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
-              {mode === "PASSWORD" ? "Sign in" : "Send OTP code"}
+              {mode === "PASSWORD" ? (submitting ? "Signing in…" : "Sign in") : "Send OTP code"}
             </button>
           </form>
 
