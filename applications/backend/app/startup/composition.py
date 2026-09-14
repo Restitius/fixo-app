@@ -70,6 +70,7 @@ class Composition:
         self.provider_activity_log_repository: Any = None
         self.provider_subscriptions_repository: Any = None
         self.provider_account_restrictions_repository: Any = None
+        self.provider_account_closure_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -576,6 +577,14 @@ class Composition:
         )
 
         self.provider_account_restrictions_repository = ProviderAccountRestrictionsSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_account_closure_sql_adapter import (
+            ProviderAccountClosureSqlAdapter,
+        )
+
+        self.provider_account_closure_repository = ProviderAccountClosureSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -1101,6 +1110,14 @@ class Composition:
         return ProviderAccountRestrictionsService(
             repository=self.provider_account_restrictions_repository
         )
+
+    def provider_account_closure_service(self) -> Any:
+        """ProviderAccountClosureService — account closure (Req Phase 54)."""
+        from app.domains.providers.services.provider_account_closure_service import (
+            ProviderAccountClosureService,
+        )
+
+        return ProviderAccountClosureService(self.provider_account_closure_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
