@@ -1,5 +1,4 @@
-"""Platform notifications package — facade over notification lifecycle."""
-from app.notifications.manager import NotificationManager as RegisteredNotificationManager
-from app.notifications.manager import NotificationResult
+"""Platform notifications package — the notification catalogue's delivery pipeline."""
+from app.platform.notifications.notification_manager import NotificationManager
 
-__all__ = ["RegisteredNotificationManager", "NotificationResult"]
+__all__ = ["NotificationManager"]
