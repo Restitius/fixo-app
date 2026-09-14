@@ -34,9 +34,12 @@ class ProviderPreferenceService:
 
 
 class ProviderSecurityService:
-    def __init__(self, accounts: ProviderAccountRepository, hasher: Any) -> None:
+    def __init__(
+        self, accounts: ProviderAccountRepository, hasher: Any, activity_log: Any = None
+    ) -> None:
         self._accounts = accounts
         self._hasher = hasher
+        self._activity_log = activity_log
 
     async def change_password(self, provider_id: str, current_password: str, new_password: str) -> bool:
         if len(new_password) < 8:
@@ -47,12 +50,16 @@ class ProviderSecurityService:
         result = await self._accounts.update_password(provider_id, self._hasher.hash(new_password))
         if not result:
             raise RuntimeError("Password update failed")
+        if self._activity_log is not None:
+            await self._activity_log.record(provider_id, action="SECURITY.PASSWORD_CHANGED")
         return True
 
     async def revoke_all_sessions(self, provider_id: str) -> dict[str, Any]:
         # No active sessions to revoke is a successful no-op, not a failure —
         # session_revoke_all's UPDATE ... RETURNING is empty either way.
         await self._accounts.session_revoke_all(provider_id)
+        if self._activity_log is not None:
+            await self._activity_log.record(provider_id, action="SECURITY.SESSIONS_REVOKED")
         return {"revoked": True}
 
 
