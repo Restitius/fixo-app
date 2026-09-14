@@ -4,7 +4,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from dataclasses import dataclass, field
 
-from app.integrations.contracts.base_integration import BaseIntegration
+from app.integrations.external.contracts.base_integration import BaseIntegration
 
 
 @dataclass(frozen=True)

@@ -1,11 +1,11 @@
-"""RetryHttpClient — wraps HttpClient with RetryPolicy-driven attempts."""
+"""RetryHttpClient - wraps HttpClient with RetryPolicy-driven attempts."""
 from __future__ import annotations
 
 import asyncio
 import logging
 from typing import Any
 
-from app.integrations.clients.http_client import HttpClient, HttpResponse
+from app.integrations.external.clients.http_client import HttpClient, HttpResponse
 from app.jobs.retry import RetryPolicy, compute_backoff, should_retry
 from app.shared.exceptions.hierarchy import ExternalTimeoutError, IntegrationError
 
@@ -39,7 +39,7 @@ class RetryHttpClient(HttpClient):
                     raise IntegrationError(f"Upstream 5xx: {response.status}")
                 return response
             except NotImplementedError:
-                raise  # scaffold boundary propagates untouched
+                raise
             except Exception as exc:  # noqa: BLE001
                 if not should_retry(attempt, self.retry_policy):
                     if isinstance(exc, (ExternalTimeoutError, IntegrationError)):
@@ -58,5 +58,11 @@ class RetryHttpClient(HttpClient):
         params: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
     ) -> HttpResponse:
-        """One raw attempt (transport wired in implementation phase)."""
-        raise NotImplementedError("RetryHttpClient.perform_request")
+        """One raw attempt delegated to the base HttpClient."""
+        return await super().request(
+            method,
+            path,
+            json_payload=json_payload,
+            params=params,
+            headers=headers,
+        )

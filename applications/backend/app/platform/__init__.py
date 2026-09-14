@@ -11,19 +11,23 @@ operations into governed executions.
 
     app/platform/
     |-- query/          SQLQueryManager (the governance boundary for SQL)
-    |-- integrations/   integration / provider resolution
+    |-- integrations/   thin facade over app/integrations/external/ (provider resolution)
     |-- events/         event dispatch
     |-- notifications/  notification lifecycle + channels
     |-- screens/        screen registry resolution
     |-- audit/          audit recording
-    |-- commands/       command bus
     |-- workflow/       state machines
     |-- pricing/        pricing engine
     |-- permissions/    authorization
     |-- files/ search/ cache/ jobs/ scheduler/
     '-- registry/       RegistryManager facade
+
+The command bus (CommandManager/CommandRegistry) — internal integrations,
+i.e. cross-domain calls — now lives at app/integrations/internal/,
+alongside app/integrations/external/ (third-party providers), rather
+than nested under this package.
 """
-from app.platform.commands import CommandManager
+from app.integrations.internal import CommandManager
 from app.platform.registry import RegistryManager
 
 __all__ = ["CommandManager", "RegistryManager"]

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from abc import abstractmethod
 
-from app.integrations.contracts.base_integration import BaseIntegration
+from app.integrations.external.contracts.base_integration import BaseIntegration
 
 
 class StorageProvider(BaseIntegration):

@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Sequence
 
-from app.registries.commands.command_registry import CommandDefinition, CommandRegistry
+from app.integrations.internal.registry import CommandDefinition, CommandRegistry
 
 
 def build_default_registry() -> CommandRegistry:

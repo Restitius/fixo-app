@@ -61,6 +61,16 @@ if _HAS_SETTINGS_LIB:
         # HTTP
         cors_origins: str = "*"
 
+        # SWALA SMS
+        swala_sms_enabled: bool = False
+        swala_sms_base_url: str = "https://swalasms.com/api/v1"
+        swala_sms_api_key: str = ""
+        swala_sms_sender_id: str = ""
+        swala_sms_webhook_secret: str = ""
+        swala_sms_timeout_seconds: float = 10.0
+        swala_sms_max_retries: int = 2
+        swala_sms_mode: str = "sandbox"  # sandbox | live
+
         @property
         def database_urls(self) -> dict[str, str]:
             """Logical database id -> URL (only configured entries)."""
@@ -114,6 +124,15 @@ else:  # pragma: no cover - minimal fallback so the skeleton imports anywhere
 
         cors_origins = _os.environ.get("CORS_ORIGINS", "*")
 
+        swala_sms_enabled = _os.environ.get("SWALA_SMS_ENABLED", "false").lower() in ("true", "1", "yes")
+        swala_sms_base_url = _os.environ.get("SWALA_SMS_BASE_URL", "https://swalasms.com/api/v1")
+        swala_sms_api_key = _os.environ.get("SWALA_SMS_API_KEY", "")
+        swala_sms_sender_id = _os.environ.get("SWALA_SMS_SENDER_ID", "")
+        swala_sms_webhook_secret = _os.environ.get("SWALA_SMS_WEBHOOK_SECRET", "")
+        swala_sms_timeout_seconds = float(_os.environ.get("SWALA_SMS_TIMEOUT_SECONDS", "10"))
+        swala_sms_max_retries = int(_os.environ.get("SWALA_SMS_MAX_RETRIES", "2"))
+        swala_sms_mode = _os.environ.get("SWALA_SMS_MODE", "sandbox")  # sandbox | live
+
         @property
         def database_urls(self) -> dict[str, str]:
             urls: dict[str, str] = {"PRIMARY_DB": self.primary_db_url}
@@ -137,3 +156,18 @@ else:  # pragma: no cover - minimal fallback so the skeleton imports anywhere
 def get_settings() -> AppConfig:
     """Process-wide settings singleton."""
     return AppConfig()
+
+
+def get_swala_sms_config(settings: AppConfig | None = None) -> dict[str, str | bool | float]:
+    """Resolved Swala SMS config bag for integration wiring."""
+    s = settings or get_settings()
+    return {
+        "enabled": bool(s.swala_sms_enabled),
+        "base_url": str(s.swala_sms_base_url).rstrip("/"),
+        "api_key": str(s.swala_sms_api_key),
+        "sender_id": str(s.swala_sms_sender_id),
+        "webhook_secret": str(s.swala_sms_webhook_secret),
+        "timeout_seconds": float(s.swala_sms_timeout_seconds),
+        "max_retries": int(s.swala_sms_max_retries),
+        "mode": str(s.swala_sms_mode).lower(),
+    }
