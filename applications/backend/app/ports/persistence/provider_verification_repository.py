@@ -16,6 +16,10 @@ class ProviderVerificationRepository(Protocol):
         """The provider's own active (non-withdrawn) documents."""
         ...
 
+    async def list_expiring(self, provider_id: str, *, within_days: int) -> list[dict[str, Any]]:
+        """Verified documents expiring within `within_days`, or already expired."""
+        ...
+
     async def add_document(
         self,
         provider_id: str,
