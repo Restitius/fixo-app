@@ -41,6 +41,17 @@ class ProviderVerificationService:
         rows = await self._verification.list_documents(provider_id)
         return [self._json_safe(dict(row)) for row in rows]
 
+    async def expiring_documents(
+        self, provider_id: str, *, within_days: int = 30
+    ) -> list[dict[str, Any]]:
+        """Verified documents nearing or past expiry (Provider Phase 47)."""
+        from app.shared.exceptions.hierarchy import ValidationError
+
+        if not 1 <= within_days <= 365:
+            raise ValidationError("within_days must be between 1 and 365")
+        rows = await self._verification.list_expiring(provider_id, within_days=within_days)
+        return [self._json_safe(dict(row)) for row in rows]
+
     async def status(self, provider_id: str) -> dict[str, Any]:
         row = await self._verification.status_aggregate(provider_id)
         if not row:
