@@ -62,6 +62,7 @@ class Composition:
         self.provider_business_customers_repository: Any = None
         self.provider_team_repository: Any = None
         self.provider_job_assignments_repository: Any = None
+        self.provider_equipment_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -508,6 +509,14 @@ class Composition:
         )
 
         self.provider_job_assignments_repository = ProviderJobAssignmentsSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_equipment_sql_adapter import (
+            ProviderEquipmentSqlAdapter,
+        )
+
+        self.provider_equipment_repository = ProviderEquipmentSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -957,6 +966,14 @@ class Composition:
         )
 
         return ProviderJobAssignmentsService(repository=self.provider_job_assignments_repository)
+
+    def provider_equipment_service(self) -> Any:
+        """ProviderEquipmentService — equipment & tools registry (Req Phase 46)."""
+        from app.domains.providers.services.provider_equipment_service import (
+            ProviderEquipmentService,
+        )
+
+        return ProviderEquipmentService(repository=self.provider_equipment_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
