@@ -79,7 +79,7 @@
 | PRV-47 | 47 | Documents & Compliance + expiry | ✅ |
 | PRV-48 | 48 | Promotions | ✅ |
 | PRV-49 | 49 | Provider Analytics | ✅ |
-| PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ⏳ |
+| PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ✅ |
 | PRV-51 | 51 | Provider Activity & Audit History | ⏳ |
 | PRV-52 | 52 | Subscription / Provider Plans | ⏳ |
 | PRV-53 | 53 | Account Restrictions & Status | ⏳ |
@@ -556,3 +556,37 @@ either.
 - Router prefix `/providers/me/analytics`:
   - `GET /overview?months=6` — monthly trend, chronological, oldest
     first, ending in the current month
+
+## Phase 50 — Provider Settings (notifications/security/privacy)
+
+Personal and business info editing already exist
+(`provider_profile_service`, `provider_business_service`) and are
+untouched by this phase. What was missing — mirrored from the customer-
+side `app/domains/accounts/services/account_service.py` and its
+`CUSTOMER_PREFERENCES`/`CONSENTS`/`DATA_EXPORT_REQUESTS` tables — was
+notification preferences, an authenticated password-change flow, and
+privacy consent/export management for providers.
+
+- Migration 0068: `PROVIDER_PREFERENCES`, `PROVIDER_CONSENTS`,
+  `PROVIDER_DATA_EXPORT_REQUESTS` — direct mirrors of the customer
+  tables. Security reuses the existing `PROVIDERS.password_hash` and
+  `PROVIDER_AUTH_SESSIONS` — no new table for that facet; only a new
+  `PROV.AUTH.PROVIDER.BY_ID_WITH_HASH` query and `get_by_id_with_hash()`
+  method added to the existing `ProviderAccountSqlAdapter` (mirroring
+  the customer auth adapter's identical internal-only query).
+- New `ProviderPreferenceService`/`ProviderSecurityService`/
+  `ProviderPrivacyService` in `provider_settings_service.py`, mirroring
+  the customer `PreferenceService`/`SecurityService`/`PrivacyService`
+  trio in one file.
+- Found and fixed while verifying: `revoke_all_sessions` on a provider
+  with no active sessions is a legitimate no-op, not a failure — the
+  underlying `UPDATE ... RETURNING` is empty either way, so the service
+  no longer raises on an empty result.
+- Router prefix `/providers/me/settings`:
+  - `GET`/`PUT /preferences` — list / upsert a key-value preference
+  - `POST /security/change-password` — verifies the current password
+    before hashing and storing the new one
+  - `POST /security/revoke-sessions` — end all other sessions
+  - `GET`/`PUT /privacy/consents` — list / set a consent
+    (`MARKETING`/`ANALYTICS`/`COMMUNICATION`)
+  - `POST`/`GET /privacy/export-requests` — request / list data exports

@@ -13,6 +13,7 @@ class ProviderAuthQueryIds:
     REGISTER = "PROV.AUTH.PROVIDER.REGISTER"
     BY_EMAIL = "PROV.AUTH.PROVIDER.BY_EMAIL"
     BY_ID = "PROV.AUTH.PROVIDER.BY_ID"
+    BY_ID_WITH_HASH = "PROV.AUTH.PROVIDER.BY_ID_WITH_HASH"
     MARK_VERIFIED = "PROV.AUTH.PROVIDER.MARK_VERIFIED"
     UPDATE_PASSWORD = "PROV.AUTH.PROVIDER.UPDATE_PASSWORD"
     OTP_ISSUE = "PROV.AUTH.OTP.ISSUE"
@@ -38,6 +39,11 @@ class ProviderAccountSqlAdapter:
     async def get_by_id(self, user_id: str) -> Any | None:
         return await self._sql.execute(
             ProviderAuthQueryIds.BY_ID, {"user_id": user_id}, fetch="one"
+        )
+
+    async def get_by_id_with_hash(self, user_id: str) -> Any | None:
+        return await self._sql.execute(
+            ProviderAuthQueryIds.BY_ID_WITH_HASH, {"user_id": user_id}, fetch="one"
         )
 
     async def mark_verified(self, user_id: str, *, email: bool, phone: bool) -> Any | None:

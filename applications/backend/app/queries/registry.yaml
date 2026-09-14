@@ -1319,6 +1319,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/auth/by_id.sql
+  PROV.AUTH.PROVIDER.BY_ID_WITH_HASH:
+    description: Internal-only — includes password_hash for change-password verification (Provider Phase 50). Never returned to a client.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/by_id_with_hash.sql
   PROV.AUTH.PROVIDER.MARK_VERIFIED:
     description: Confirms email/phone verification flags (Provider Phase 1).
     operation: update
@@ -2895,4 +2902,46 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/analytics/overview.sql
+  PROV.SETTINGS.PREFERENCE.LIST:
+    description: The provider's key/value preferences (Provider Phase 50).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/preferences/list.sql
+  PROV.SETTINGS.PREFERENCE.SET:
+    description: Upsert a provider preference (Provider Phase 50).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/preferences/set.sql
+  PROV.SETTINGS.PRIVACY.CONSENT.LIST:
+    description: The provider's consent settings (Provider Phase 50).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/consent_list.sql
+  PROV.SETTINGS.PRIVACY.CONSENT.SET:
+    description: Upsert a provider consent (Provider Phase 50).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/consent_set.sql
+  PROV.SETTINGS.PRIVACY.EXPORT.REQUEST:
+    description: Request a data export (Provider Phase 50).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/export_request.sql
+  PROV.SETTINGS.PRIVACY.EXPORT.LIST:
+    description: The provider's data export request history (Provider Phase 50).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/export_list.sql
 version: 1
