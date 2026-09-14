@@ -4,7 +4,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any
 
-from app.integrations.contracts.base_integration import BaseIntegration
+from app.integrations.external.contracts.base_integration import BaseIntegration
 
 
 class PaymentProvider(BaseIntegration):

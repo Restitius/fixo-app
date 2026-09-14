@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.integrations.manager import IntegrationManager as _IntegrationManager
+from app.integrations.external.manager import IntegrationManager as _IntegrationManager
 
 
 class IntegrationManager(_IntegrationManager):
