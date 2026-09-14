@@ -2958,4 +2958,39 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/activity_log/list.sql
+  PROV.PLANS.LIST:
+    description: Public catalogue of active subscription plans (Provider Phase 52).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/subscriptions/plans_list.sql
+  PROV.SUBSCRIPTIONS.CURRENT:
+    description: The provider's active subscription + plan details (Provider Phase 52).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/current.sql
+  PROV.SUBSCRIPTIONS.SUBSCRIBE:
+    description: Switch to a plan, cancelling any current active subscription (Provider Phase 52).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/subscribe.sql
+  PROV.SUBSCRIPTIONS.CANCEL:
+    description: Cancel the provider's active subscription (Provider Phase 52).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/cancel.sql
+  PROV.SUBSCRIPTIONS.HISTORY:
+    description: The provider's subscription history (Provider Phase 52).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/history.sql
 version: 1

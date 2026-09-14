@@ -81,7 +81,7 @@
 | PRV-49 | 49 | Provider Analytics | ✅ |
 | PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ✅ |
 | PRV-51 | 51 | Provider Activity & Audit History | ✅ |
-| PRV-52 | 52 | Subscription / Provider Plans | ⏳ |
+| PRV-52 | 52 | Subscription / Provider Plans | ✅ |
 | PRV-53 | 53 | Account Restrictions & Status | ⏳ |
 | PRV-54 | 54 | Account Closure | ⏳ |
 | PRV-31 | 31 | Commission & Fees | ✅ |
@@ -621,3 +621,33 @@ than one roadmap line item justifies.
 - Router prefix `/providers/me/activity` (read-only):
   - `GET /?action_prefix=SECURITY.` — list entries, optionally filtered
     by an action-name prefix
+
+## Phase 52 — Provider Subscription / Plans
+
+A plan catalogue and subscription lifecycle only — not wired into live
+commission calculation or feature gating in other modules (e.g. Team
+Management's roster size vs. a plan's `max_team_members`), which would
+be a separate, larger cross-cutting undertaking than this phase covers.
+
+- `PROVIDER_PLANS` — platform-managed catalogue, seeded with four tiers
+  (FREE/BASIC/PRO/PREMIUM). `PROVIDER_SUBSCRIPTIONS` — a provider's
+  subscription history; at most one `ACTIVE` row per provider (partial
+  unique index).
+- Governed queries `PROV.PLANS.LIST` (public catalogue, no ownership
+  filter), `PROV.SUBSCRIPTIONS.CURRENT/SUBSCRIBE/CANCEL/HISTORY`.
+  `SUBSCRIBE` atomically cancels any current active subscription and
+  starts a new one via CTEs, gated so an invalid/inactive `plan_id`
+  leaves the existing subscription untouched.
+- Found and fixed while verifying: the `cancel_existing` CTE wasn't
+  referenced anywhere in the final `INSERT ... SELECT`, so Postgres had
+  no guarantee it would execute before the insert's uniqueness check —
+  switching plans intermittently violated
+  `UQ_PROVIDER_SUBSCRIPTION_ACTIVE` even though the cancel "should"
+  have made room for the new row. Fixed with a `LEFT JOIN
+  cancel_existing ON true` to force the data dependency.
+- Router prefix `/providers/me/subscription`:
+  - `GET /plans` — public plan catalogue
+  - `GET /` — current active subscription
+  - `POST /subscribe` — subscribe or switch plans
+  - `POST /cancel` — cancel the active subscription
+  - `GET /history` — subscription history
