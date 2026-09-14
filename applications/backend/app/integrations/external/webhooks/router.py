@@ -74,5 +74,35 @@ async def swala_sms_webhook(request: Request) -> dict[str, Any]:
         )
     if event not in ("sms.delivered", "sms.failed"):
         return {"received": True, "event": event, "message_id": message_id}
-    # TODO(swala): persist/enqueue delivery update keyed by message_id+event.
+
+    from app.startup.composition import get_composition
+
+    sql = get_composition().sql_query_manager
+    receipt = await sql.execute(
+        "NTF.WEBHOOK_RECEIPTS.CREATE",
+        {"provider": "swala", "message_id": message_id, "event": event, "payload": json.dumps(data)},
+        fetch="one",
+    )
+    if receipt is None:
+        # Unique-violation no-op: this exact (provider, message_id, event)
+        # callback was already processed — a safe, idempotent replay.
+        return {"received": True, "event": event, "message_id": message_id, "duplicate": True}
+
+    attempt = await sql.execute(
+        "NTF.DELIVERY_ATTEMPTS.FIND_BY_REFERENCE",
+        {"channel": "sms", "provider_reference": message_id},
+        fetch="one",
+    )
+    if attempt is not None:
+        await sql.execute(
+            "NTF.DELIVERY_ATTEMPTS.UPDATE_STATUS",
+            {
+                "attempt_id": attempt["attempt_id"],
+                "status": "delivered" if event == "sms.delivered" else "failed",
+                "failure_reason": None if event == "sms.delivered" else "provider reported delivery failure",
+                "next_retry_at": None,
+                "provider_reference": message_id,
+            },
+            fetch="one",
+        )
     return {"received": True, "event": event, "message_id": message_id}
