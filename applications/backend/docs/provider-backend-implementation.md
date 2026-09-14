@@ -77,7 +77,7 @@
 | PRV-45 | 45 | Job Assignment — dispatch/technician | ✅ |
 | PRV-46 | 46 | Equipment & Tools registry | ✅ |
 | PRV-47 | 47 | Documents & Compliance + expiry | ✅ |
-| PRV-48 | 48 | Promotions | ⏳ |
+| PRV-48 | 48 | Promotions | ✅ |
 | PRV-49 | 49 | Provider Analytics | ⏳ |
 | PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ⏳ |
 | PRV-51 | 51 | Provider Activity & Audit History | ⏳ |
@@ -504,3 +504,33 @@ than introducing a new table.
 - Router prefix `/providers/me/compliance`:
   - `GET /documents/expiring?within_days=30` — verified documents
     nearing or past expiry, soonest first, each flagged `is_expired`
+
+## Phase 48 — Provider Promotions
+
+A provider's own discount codes, distinct from the platform-wide
+`PROMOTIONS` table (Phase 12), which has no `provider_id` at all —
+platform promos apply regardless of which provider a customer books.
+
+- `PROVIDER_PROMOTIONS` — unique on `(provider_id, code)`;
+  `discount_type` restricted to `PERCENT | FIXED_AMOUNT`; CHECK
+  constraints enforce a non-negative discount and `valid_until >
+  valid_from`.
+- Governed queries `PROV.PROMOTIONS.CREATE/GET/UPDATE/DEACTIVATE/
+  VALIDATE/REDEEM`, `.LIST` — `VALIDATE`/`REDEEM` mirror the existing
+  customer-side `CUS.PROMOTION.VALIDATE`/`.USE` pattern (same discount-
+  amount formula), scoped to the provider's own codes.
+- `ProviderPromotionsService`: discount-type/value/date-range
+  validation; the adapter translates unique/check-constraint violations
+  into clean `ConflictError`s.
+- Not wired into the live quotation/booking pricing pipeline — that
+  cross-domain integration is a separate, larger undertaking. This
+  phase establishes the registry and validate/redeem read-and-write
+  paths a provider's own checkout UI can call directly.
+- Router prefix `/providers/me/promotions`:
+  - `POST /` — create a promotion
+  - `GET /` — list (optional active filter)
+  - `GET /{promo_id}` — single record
+  - `PATCH /{promo_id}` — update terms
+  - `POST /{promo_id}/deactivate` — turn off
+  - `POST /validate` — resolve a code against an order amount
+  - `POST /{promo_id}/redeem` — consume one use
