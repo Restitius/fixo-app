@@ -2839,4 +2839,53 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/equipment/retire.sql
+  PROV.PROMOTIONS.CREATE:
+    description: Create a provider promotion code (Provider Phase 48).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/create.sql
+  PROV.PROMOTIONS.LIST:
+    description: The provider's promotion codes (Provider Phase 48).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/list.sql
+  PROV.PROMOTIONS.GET:
+    description: Single owned promotion (Provider Phase 48).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/get.sql
+  PROV.PROMOTIONS.UPDATE:
+    description: Modify a promotion's terms (Provider Phase 48).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/update.sql
+  PROV.PROMOTIONS.DEACTIVATE:
+    description: Turn off a promotion (Provider Phase 48).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/deactivate.sql
+  PROV.PROMOTIONS.VALIDATE:
+    description: Resolve a promo code against an order amount (Provider Phase 48).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/validate.sql
+  PROV.PROMOTIONS.REDEEM:
+    description: Consume one use of a valid promotion (Provider Phase 48).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/redeem.sql
 version: 1
