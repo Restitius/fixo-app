@@ -1,9 +1,15 @@
-"""CommandManager — platform facade over the command registry/bus."""
+"""CommandManager — internal integrations: the cross-domain command bus.
+
+Domains call each other through ports + internal integrations + this
+command bus, never by touching another domain's database directly
+(architecture rule: "Cross-domain calls... go through ports + internal
+integrations + command bus").
+"""
 from __future__ import annotations
 
 from typing import Any
 
-from app.registries.commands.command_registry import CommandRegistry
+from app.integrations.internal.registry import CommandRegistry
 
 
 class CommandManager:

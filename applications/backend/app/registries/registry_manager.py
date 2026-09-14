@@ -16,8 +16,8 @@ components by stable IDs instead of hard-coding implementations.
 """
 from __future__ import annotations
 
+from app.integrations.internal.registry import CommandRegistry
 from app.registries.clients.client_registry import ClientRegistry
-from app.registries.commands.command_registry import CommandRegistry
 from app.registries.events.event_registry import EventRegistry
 from app.registries.events.listener_registry import ListenerRegistry
 from app.registries.integrations.integration_registry import IntegrationRegistry

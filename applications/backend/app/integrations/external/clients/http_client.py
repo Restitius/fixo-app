@@ -1,9 +1,11 @@
-"""HttpClient — shared async HTTP boundary for all provider adapters."""
+"""HttpClient - shared async HTTP boundary for all provider adapters."""
 from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
 from typing import Any
+
+import httpx
 
 
 @dataclass
@@ -40,5 +42,21 @@ class HttpClient:
         params: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
     ) -> HttpResponse:
-        """Perform one HTTP call (httpx.AsyncClient in implementation phase)."""
-        raise NotImplementedError("HttpClient.request")
+        """Perform one HTTP call using httpx.AsyncClient."""
+        url = f"{self.base_url}{path}" if self.base_url else path
+        request_headers = {**self.default_headers, **(headers or {})}
+        if json_payload is not None and "content-type" not in {k.lower() for k in request_headers}:
+            request_headers.setdefault("content-type", "application/json")
+        async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
+            response = await client.request(
+                method,
+                url,
+                json=json_payload,
+                params=params,
+                headers=request_headers,
+            )
+        return HttpResponse(
+            status=response.status_code,
+            headers=dict(response.headers),
+            body=response.content,
+        )
