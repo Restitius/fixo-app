@@ -65,6 +65,8 @@ class Composition:
         self.provider_equipment_repository: Any = None
         self.provider_promotions_repository: Any = None
         self.provider_analytics_repository: Any = None
+        self.provider_preference_repository: Any = None
+        self.provider_privacy_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -535,6 +537,18 @@ class Composition:
         )
 
         self.provider_analytics_repository = ProviderAnalyticsSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_settings_sql_adapter import (
+            ProviderPreferenceSqlAdapter,
+            ProviderPrivacySqlAdapter,
+        )
+
+        self.provider_preference_repository = ProviderPreferenceSqlAdapter(
+            self.sql_query_manager
+        )
+        self.provider_privacy_repository = ProviderPrivacySqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -1008,6 +1022,30 @@ class Composition:
         )
 
         return ProviderAnalyticsService(repository=self.provider_analytics_repository)
+
+    def provider_preference_service(self) -> Any:
+        """ProviderPreferenceService — key/value preferences (Req Phase 50)."""
+        from app.domains.providers.services.provider_settings_service import (
+            ProviderPreferenceService,
+        )
+
+        return ProviderPreferenceService(self.provider_preference_repository)
+
+    def provider_security_service(self) -> Any:
+        """ProviderSecurityService — password change + session revocation (Req Phase 50)."""
+        from app.domains.providers.services.provider_settings_service import (
+            ProviderSecurityService,
+        )
+
+        return ProviderSecurityService(self.provider_account_repository, self._hasher)
+
+    def provider_privacy_service(self) -> Any:
+        """ProviderPrivacyService — consent management + data export (Req Phase 50)."""
+        from app.domains.providers.services.provider_settings_service import (
+            ProviderPrivacyService,
+        )
+
+        return ProviderPrivacyService(self.provider_privacy_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
