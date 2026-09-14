@@ -16,6 +16,7 @@ from app.shared.exceptions.hierarchy import ConflictError
 class ProviderVerificationQueryIds:
     DOC_TYPES = "PRV.VER.DOC.TYPES"
     DOCS_LIST = "PRV.VER.DOCS.LIST"
+    DOCS_EXPIRING = "PRV.VER.DOCS.EXPIRING"
     DOC_ADD = "PRV.VER.DOC.ADD"
     DOC_DELETE = "PRV.VER.DOC.DELETE"
     STATUS = "PRV.VER.STATUS"
@@ -52,6 +53,12 @@ class ProviderVerificationSqlAdapter:
     async def list_documents(self, provider_id: str) -> list[dict[str, Any]]:
         return await self._sql.execute(
             ProviderVerificationQueryIds.DOCS_LIST, {"user_id": provider_id}
+        ) or []
+
+    async def list_expiring(self, provider_id: str, *, within_days: int) -> list[dict[str, Any]]:
+        return await self._sql.execute(
+            ProviderVerificationQueryIds.DOCS_EXPIRING,
+            {"user_id": provider_id, "within_days": within_days},
         ) or []
 
     async def add_document(

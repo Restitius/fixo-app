@@ -76,7 +76,7 @@
 | PRV-44 | 44 | Team Management — workers/roles | ✅ |
 | PRV-45 | 45 | Job Assignment — dispatch/technician | ✅ |
 | PRV-46 | 46 | Equipment & Tools registry | ✅ |
-| PRV-47 | 47 | Documents & Compliance + expiry | ⏳ |
+| PRV-47 | 47 | Documents & Compliance + expiry | ✅ |
 | PRV-48 | 48 | Promotions | ⏳ |
 | PRV-49 | 49 | Provider Analytics | ⏳ |
 | PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ⏳ |
@@ -477,3 +477,30 @@ than fixed here, to keep this phase's diff scoped to Equipment.
   - `POST /{equipment_id}/assign` — check out to a member, or release
     (`member_id: null`)
   - `POST /{equipment_id}/retire` — retire (terminal)
+
+## Phase 47 — Provider Documents & Compliance (expiry)
+
+Discovered during this phase: the data model this phase calls for
+already exists — Phase 5's `PROVIDER_VERIFICATION_DOCUMENTS` (identity
+documents + review workflow) already has an `expiry_date` column, and
+its `PRV.VER.STATUS` aggregate already counts documents expiring soon.
+What was missing was a way to see *which* documents those are, so a
+provider can actually act on it — so this phase extends Phase 5 rather
+than introducing a new table.
+
+- New governed query `PRV.VER.DOCS.EXPIRING`, added to the existing
+  `ProviderVerificationRepository`/`ProviderVerificationSqlAdapter`
+  (`app/adapters/persistence/provider_verification_sql_adapter.py`,
+  `PRV.VER.*` prefix, matching that file's existing convention) rather
+  than a parallel adapter for the same table. Only `VERIFIED` documents
+  are considered "in force" and thus meaningfully expiring.
+- New `ProviderVerificationService.expiring_documents()` method
+  (`within_days`, validated 1-365).
+- Note: `PRV.VER.STATUS`'s existing `documents_expiring_soon` counts
+  documents where `status <> 'VERIFIED'`, which is a different
+  (arguably backwards) definition from this phase's `VERIFIED`-only
+  view. Left untouched — it predates this phase and changing Phase 5's
+  existing aggregate semantics was out of scope for this addition.
+- Router prefix `/providers/me/compliance`:
+  - `GET /documents/expiring?within_days=30` — verified documents
+    nearing or past expiry, soonest first, each flagged `is_expired`
