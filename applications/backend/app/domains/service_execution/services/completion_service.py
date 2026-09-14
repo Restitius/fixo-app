@@ -43,12 +43,7 @@ class CompletionService:
             customer_id, booking_id,
             "SERVICE_COMPLETED", "Customer confirmed the finished job",
         )
-        if self._notifications is not None:
-            await self._notifications.notify(
-                customer_id, ntype="SERVICE.COMPLETED",
-                title="Service completed",
-                body=f"{booking['booking_number']} — thanks for confirming.",
-                ref_type="BOOKING", ref_id=booking_id,
-            )
+        # NTF.SERVICE.COMPLETED.V1 outbox row is queued atomically inside
+        # CUS.BOOKING.MARK_COMPLETED.
         logger.info("completion confirmed for %s", booking["booking_number"])
         return await self._bookings.get(customer_id, booking_id)

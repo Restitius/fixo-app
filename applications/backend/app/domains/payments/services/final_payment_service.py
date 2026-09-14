@@ -88,14 +88,8 @@ class FinalPaymentService:
         if not closed:
             raise ValidationError("Booking could not be closed from PAID")
 
-        if self._notifications is not None:
-            await self._notifications.notify(
-                customer_id, ntype="PAYMENT.CAPTURED",
-                title="Payment received",
-                body=f"{booking['booking_number']} — funds captured.",
-                ref_type="BOOKING", ref_id=booking_id,
-            )
-
+        # NTF.PAYMENT.CAPTURED.V1 outbox row is queued atomically inside
+        # CUS.PAYMENT.MARK_CAPTURED.
         logger.info("final payment captured for %s (%s)",
                     booking["booking_number"], captured.get("capture_ref"))
         return await self._bookings.get(customer_id, booking_id)

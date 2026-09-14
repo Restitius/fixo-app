@@ -52,13 +52,8 @@ class InvoiceService:
                 customer_id, str(invoice["booking_id"]),
                 "INVOICE_READY", f"Invoice {invoice['invoice_number']} generated",
             )
-        if self._notifications is not None:
-            await self._notifications.notify(
-                customer_id, ntype="INVOICE.ISSUED",
-                title=f"Invoice {invoice['invoice_number']}",
-                body=f"{invoice['total_amount']} {invoice['currency']} due.",
-                ref_type="INVOICE", ref_id=invoice_id,
-            )
+        # NTF.INVOICE.ISSUED.V1 outbox row is queued atomically inside
+        # CUS.INVOICE.ISSUE.
         return row
 
     async def mark_paid(self, customer_id: str, invoice_id: str) -> dict[str, Any]:

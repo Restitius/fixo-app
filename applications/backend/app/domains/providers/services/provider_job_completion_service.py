@@ -85,17 +85,8 @@ class ProviderJobCompletionService:
             )
         result = self._decode_evidence(row)
 
-        # "Provider has completed the job." — customer confirms next (Phase 26).
-        if self._notifications is not None and row.get("customer_id"):
-            await self._notifications.notify(
-                str(row["customer_id"]),
-                ntype="SERVICE.COMPLETION_REQUESTED",
-                title="Provider has completed the job",
-                body=f"{booking.get('booking_number')} — review and confirm "
-                     f"completion.",
-                ref_type="BOOKING",
-                ref_id=booking_id,
-            )
+        # NTF.SERVICE.COMPLETION_REQUESTED.V1 outbox row (customer confirms
+        # next, Phase 26) is queued atomically inside PROV.COMPLETION.SUBMIT.
         return result
 
     # -- read ----------------------------------------------------------------------
