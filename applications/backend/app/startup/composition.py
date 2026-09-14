@@ -63,6 +63,7 @@ class Composition:
         self.provider_team_repository: Any = None
         self.provider_job_assignments_repository: Any = None
         self.provider_equipment_repository: Any = None
+        self.provider_promotions_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -517,6 +518,14 @@ class Composition:
         )
 
         self.provider_equipment_repository = ProviderEquipmentSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_promotions_sql_adapter import (
+            ProviderPromotionsSqlAdapter,
+        )
+
+        self.provider_promotions_repository = ProviderPromotionsSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -974,6 +983,14 @@ class Composition:
         )
 
         return ProviderEquipmentService(repository=self.provider_equipment_repository)
+
+    def provider_promotions_service(self) -> Any:
+        """ProviderPromotionsService — provider promotion codes (Req Phase 48)."""
+        from app.domains.providers.services.provider_promotions_service import (
+            ProviderPromotionsService,
+        )
+
+        return ProviderPromotionsService(repository=self.provider_promotions_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
