@@ -1634,6 +1634,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/verification/list.sql
+  PRV.VER.DOCS.EXPIRING:
+    description: Provider's verified documents nearing or past expiry (Provider Phase 47).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/expiring.sql
   PRV.VER.DOC.ADD:
     description: Upload one verification document (Provider Phase 5).
     operation: create
