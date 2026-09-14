@@ -51,21 +51,9 @@ class MaintenanceService:
     # -- invoked by the SchedulerManager job JOB.MAINTENANCE.SWEEP --
 
     async def sweep_overdue(self, batch: int = 200) -> dict[str, int]:
-        """Flag overdue ACTIVE plans (once) and notify their owners."""
+        """Flag overdue ACTIVE plans (once); NTF.MAINTENANCE.OVERDUE.V1 outbox
+        rows are queued atomically inside CUS.MAINTENANCE.FLAG_OVERDUE itself,
+        one per newly-flagged plan — already-flagged plans were announced on
+        an earlier pass and aren't touched by this UPDATE."""
         flagged_rows = await self._plans.flag_overdue()
-        flagged = len(flagged_rows)
-        # Notify only the plans this sweep flipped; already-flagged ones were
-        # announced on an earlier pass.
-        for plan in flagged_rows:
-            if self._notifications is not None:
-                try:
-                    await self._notifications.notify(
-                        str(plan["customer_id"]),
-                        ntype="MAINTENANCE.OVERDUE",
-                        title="Maintenance due",
-                        body=f"Plan {plan['plan_number']} is past its due date.",
-                        ref_type="MAINTENANCE_PLAN", ref_id=str(plan["plan_id"]),
-                    )
-                except Exception as exc:  # notify must never break the sweep
-                    logger.warning("overdue notify failed: %s", exc)
-        return {"flagged": flagged}
+        return {"flagged": len(flagged_rows)}
