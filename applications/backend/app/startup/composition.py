@@ -68,6 +68,7 @@ class Composition:
         self.provider_preference_repository: Any = None
         self.provider_privacy_repository: Any = None
         self.provider_activity_log_repository: Any = None
+        self.provider_subscriptions_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -558,6 +559,14 @@ class Composition:
         )
 
         self.provider_activity_log_repository = ProviderActivityLogSqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_subscriptions_sql_adapter import (
+            ProviderSubscriptionsSqlAdapter,
+        )
+
+        self.provider_subscriptions_repository = ProviderSubscriptionsSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -1065,6 +1074,14 @@ class Composition:
         )
 
         return ProviderActivityLogService(repository=self.provider_activity_log_repository)
+
+    def provider_subscriptions_service(self) -> Any:
+        """ProviderSubscriptionsService — subscription / provider plans (Req Phase 52)."""
+        from app.domains.providers.services.provider_subscriptions_service import (
+            ProviderSubscriptionsService,
+        )
+
+        return ProviderSubscriptionsService(repository=self.provider_subscriptions_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""

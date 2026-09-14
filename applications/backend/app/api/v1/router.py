@@ -78,6 +78,7 @@ from app.domains.providers.api.promotions_router import router as provider_promo
 from app.domains.providers.api.analytics_router import router as provider_analytics_router
 from app.domains.providers.api.settings_router import router as provider_settings_router
 from app.domains.providers.api.activity_log_router import router as provider_activity_log_router
+from app.domains.providers.api.subscriptions_router import router as provider_subscriptions_router
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -169,6 +170,7 @@ api_v1_router.include_router(provider_promotions_router)
 api_v1_router.include_router(provider_analytics_router)
 api_v1_router.include_router(provider_settings_router)
 api_v1_router.include_router(provider_activity_log_router)
+api_v1_router.include_router(provider_subscriptions_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_requests_router)
