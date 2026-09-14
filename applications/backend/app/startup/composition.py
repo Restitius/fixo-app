@@ -594,7 +594,16 @@ class Composition:
         self.dispute_repository = DisputeSqlAdapter(self.sql_query_manager)
         self.messaging_repository = MessagingSqlAdapter(self.sql_query_manager)
         self._tracking = TrackingSqlAdapter(self.sql_query_manager)
-        self.notification_manager = NotificationManager(self.sql_query_manager)
+        from app.integrations.external.manager import IntegrationManager
+        from app.adapters.integrations.messaging_adapter import MessagingIntegrationAdapter
+
+        self.integration_manager = IntegrationManager(registry_manager.integrations)
+        self.messaging_adapter = MessagingIntegrationAdapter(self.integration_manager)
+        self.notification_manager = NotificationManager(
+            self.sql_query_manager,
+            notification_registry=registry_manager.notifications,
+            messaging=self.messaging_adapter,
+        )
         self.invoice_repository = InvoiceSqlAdapter(self.sql_query_manager)
 
         # Phase 10 â post-service repositories.

@@ -72,13 +72,8 @@ class BookingService:
 
         await self._timeline(customer_id, row["booking_id"],
                              "CREATED", f"Booking {row['booking_number']} confirmed")
-        if self._notifications is not None:
-            await self._notifications.notify(
-                customer_id, ntype="BOOKING.CONFIRMED",
-                title="Booking confirmed",
-                body=f"{row['booking_number']} — your provider has been booked.",
-                ref_type="BOOKING", ref_id=row["booking_id"],
-            )
+        # NTF.BOOKING.CONFIRMED.V1 outbox rows (customer + assigned provider)
+        # are queued atomically inside CUS.BOOKING.CREATE itself.
         logger.info("booking %s confirmed for customer %s",
                     row["booking_number"], customer_id)
         return await self.get(customer_id, str(row["booking_id"]))
@@ -154,12 +149,14 @@ class BookingService:
         )
 
         updated = await self.get(customer_id, booking_id)
+        # CUS.BOOKING.SET_STATUS is shared across many transitions, so it
+        # can't safely carry a notification-specific CTE — queued here
+        # instead, right after the state write.
         if ok_auth and self._notifications is not None:
-            await self._notifications.notify(
-                customer_id, ntype="PAYMENT.AUTHORIZED",
-                title="Payment authorized",
-                body=f"{booking['booking_number']} — funds reserved for the job.",
-                ref_type="BOOKING", ref_id=booking_id,
+            await self._notifications.queue_notification(
+                "customer", customer_id,
+                key="NTF.PAYMENT.AUTHORIZED.V1",
+                data={"booking_id": booking_id, "booking_number": booking["booking_number"]},
             )
         return {
             **updated,
