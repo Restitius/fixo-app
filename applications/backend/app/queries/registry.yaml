@@ -2888,4 +2888,11 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/promotions/redeem.sql
+  PROV.ANALYTICS.OVERVIEW:
+    description: Monthly trend of bookings/revenue/rating/customers (Provider Phase 49).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/analytics/overview.sql
 version: 1

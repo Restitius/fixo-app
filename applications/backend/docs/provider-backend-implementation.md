@@ -78,7 +78,7 @@
 | PRV-46 | 46 | Equipment & Tools registry | ✅ |
 | PRV-47 | 47 | Documents & Compliance + expiry | ✅ |
 | PRV-48 | 48 | Promotions | ✅ |
-| PRV-49 | 49 | Provider Analytics | ⏳ |
+| PRV-49 | 49 | Provider Analytics | ✅ |
 | PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ⏳ |
 | PRV-51 | 51 | Provider Activity & Audit History | ⏳ |
 | PRV-52 | 52 | Subscription / Provider Plans | ⏳ |
@@ -534,3 +534,25 @@ platform promos apply regardless of which provider a customer books.
   - `POST /{promo_id}/deactivate` — turn off
   - `POST /validate` — resolve a code against an order amount
   - `POST /{promo_id}/redeem` — consume one use
+
+## Phase 49 — Provider Analytics
+
+A read-only monthly trend view, computed at query time directly from
+`BOOKINGS`/`PROVIDER_REVIEWS` rather than the `PROVIDER_KPIS` table
+(Phase 34, populated by a separate, not-necessarily-run batch job) —
+genuinely new ground versus the existing Dashboard (today/this-week
+snapshot) and KPIs (per-period stored rows) views, not a duplicate of
+either.
+
+- No new table. Governed query `PROV.ANALYTICS.OVERVIEW`: a
+  `generate_series`-backed month scaffold, left-joined to completed-
+  booking counts/revenue, average review rating, and a new-vs-repeat
+  customer split (a customer's first-ever `CLOSED` booking with this
+  provider falls in exactly one month as "new"; any later month they
+  book again counts them as "repeat" that month). Zero-fills months
+  with no activity rather than omitting them.
+- `ProviderAnalyticsService` validates the requested window (1-24
+  months).
+- Router prefix `/providers/me/analytics`:
+  - `GET /overview?months=6` — monthly trend, chronological, oldest
+    first, ending in the current month
