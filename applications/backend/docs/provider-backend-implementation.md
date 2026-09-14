@@ -75,7 +75,7 @@
 | PRV-43 | 43 | Business Customers + negotiated rates | ✅ |
 | PRV-44 | 44 | Team Management — workers/roles | ✅ |
 | PRV-45 | 45 | Job Assignment — dispatch/technician | ✅ |
-| PRV-46 | 46 | Equipment & Tools registry | ⏳ |
+| PRV-46 | 46 | Equipment & Tools registry | ✅ |
 | PRV-47 | 47 | Documents & Compliance + expiry | ⏳ |
 | PRV-48 | 48 | Promotions | ⏳ |
 | PRV-49 | 49 | Provider Analytics | ⏳ |
@@ -446,3 +446,34 @@ full audit trail is Phase 51's concern.
   - `GET /{assignment_id}` — single assignment
   - `PATCH /{assignment_id}` — reassign member and/or change status/notes
   - `POST /{assignment_id}/cancel` — cancel an active assignment
+
+## Phase 46 — Provider Equipment & Tools Registry
+
+A provider's tools/equipment, optionally checked out to a team member
+(Phase 44). While building this, an `asyncpg.exceptions.DataError:
+'str' object has no attribute 'toordinal'` was hit binding a raw JSON
+string to a `date`-typed column — asyncpg's prepared-statement protocol
+requires an actual `datetime.date` object once the target column type
+is known, unlike an untyped text comparison. Fixed by typing the
+`purchase_date` field as `date | None` on the Pydantic request model so
+FastAPI parses it before it reaches the service. The same bug pattern
+was found (confirmed live) in the existing Portfolio module's
+`completed_on` field and flagged as a separate follow-up task rather
+than fixed here, to keep this phase's diff scoped to Equipment.
+
+- `PROVIDER_EQUIPMENT` — category/condition/status enums enforced via
+  CHECK constraints; `assigned_member_id` nullable-FK's to
+  `PROVIDER_TEAM_MEMBERS`.
+- Governed queries `PROV.EQUIPMENT.CREATE/GET/UPDATE/ASSIGN/RETIRE`,
+  `.LIST`. Assign enforces in SQL that a new assignee is an `ACTIVE`
+  member of this provider, and blocks assigning equipment under
+  `MAINTENANCE` or `RETIRED`.
+- `ProviderEquipmentService` with category/condition/status validation.
+- Router prefix `/providers/me/equipment`:
+  - `POST /` — register equipment
+  - `GET /` — list (optional status/category filters)
+  - `GET /{equipment_id}` — single record
+  - `PATCH /{equipment_id}` — update details/condition/status
+  - `POST /{equipment_id}/assign` — check out to a member, or release
+    (`member_id: null`)
+  - `POST /{equipment_id}/retire` — retire (terminal)
