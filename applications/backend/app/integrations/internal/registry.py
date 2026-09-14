@@ -1,4 +1,7 @@
-"""Command Registry — CLI command names to handlers/metadata."""
+"""CommandRegistry — internal integrations: registered command names to
+handlers/metadata. Backs both the cross-domain command bus
+(CommandManager, app/integrations/internal/manager.py) and the
+management CLI (app/commands/cli.py)."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

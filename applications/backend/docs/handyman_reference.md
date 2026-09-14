@@ -189,7 +189,7 @@ Cross-domain calls never hit another domain's database directly. They go through
 | `IntegrationRegistry` / `IntegrationDefinition` | `app/registries/integrations/` | ✅ Complete |
 | `EventManager` | `app/platform/events/event_manager.py` | ✅ Complete |
 | `EventRegistry` / `ListenerRegistry` | `app/registries/events/` | ✅ Complete |
-| `CommandManager` / `CommandBus` | `app/platform/commands/` | ✅ Complete |
+| `CommandManager` / `CommandBus` | `app/integrations/internal/` | ✅ Complete |
 | `WorkflowManager` | `app/platform/workflow/workflow_manager.py` | ✅ Complete |
 | `WorkflowRegistry` | `app/registries/workflows/` | ✅ Complete |
 | `PermissionManager` / `OwnershipManager` | `app/platform/permissions/` | ✅ Complete |

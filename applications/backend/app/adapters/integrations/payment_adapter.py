@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from app.integrations.manager import IntegrationManager
+from app.integrations.external.manager import IntegrationManager
 
 
 class PaymentGatewayIntegrationIds:
