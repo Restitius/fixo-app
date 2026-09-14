@@ -2790,4 +2790,46 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/job_assignments/cancel.sql
+  PROV.EQUIPMENT.CREATE:
+    description: Register a piece of equipment (Provider Phase 46).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/create.sql
+  PROV.EQUIPMENT.LIST:
+    description: The provider's equipment registry (Provider Phase 46).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/list.sql
+  PROV.EQUIPMENT.GET:
+    description: Single owned equipment record (Provider Phase 46).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/get.sql
+  PROV.EQUIPMENT.UPDATE:
+    description: Modify equipment details/condition/status (Provider Phase 46).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/update.sql
+  PROV.EQUIPMENT.ASSIGN:
+    description: Check equipment out to a team member, or release it (Provider Phase 46).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/assign.sql
+  PROV.EQUIPMENT.RETIRE:
+    description: Retire a piece of equipment (Provider Phase 46).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/retire.sql
 version: 1

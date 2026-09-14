@@ -72,6 +72,7 @@ from app.domains.providers.api.team_router import router as provider_team_router
 from app.domains.providers.api.job_assignments_router import (
     router as provider_job_assignments_router,
 )
+from app.domains.providers.api.equipment_router import router as provider_equipment_router
 
 from app.domains.providers.api.availability_router import (
     router as provider_availability_router,
@@ -157,6 +158,7 @@ api_v1_router.include_router(provider_recurring_customers_router)
 api_v1_router.include_router(provider_business_customers_router)
 api_v1_router.include_router(provider_team_router)
 api_v1_router.include_router(provider_job_assignments_router)
+api_v1_router.include_router(provider_equipment_router)
 api_v1_router.include_router(provider_earnings_router)
 api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_requests_router)
