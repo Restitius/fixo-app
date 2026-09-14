@@ -25,6 +25,11 @@ def _build_provider(definition: IntegrationDefinition, client: Any = None) -> An
 
         return SwalaSmsProvider(definition, client=client)
 
+    if category == "email" and provider == "smtp":
+        from app.integrations.external.providers.email.smtp_provider import SmtpEmailProvider
+
+        return SmtpEmailProvider(definition, client=client)
+
     raise IntegrationError(
         f"No provider adapter for {category}/{provider} ({definition.integration_id})",
         code="INTEGRATION.NO_PROVIDER_ADAPTER",
