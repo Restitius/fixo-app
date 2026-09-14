@@ -660,8 +660,8 @@ queries:
   CUS.NOTIFICATIONS.LIST:
     cache:
       enabled: true
-      key_template: 30
-      ttl_seconds: notif:{user_id}
+      key_template: notif:{user_id}
+      ttl_seconds: 30
     description: CUS.NOTIFICATIONS.LIST registered query.
     operation: read
     security:
@@ -689,6 +689,76 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/notifications/unread_count.sql
+  NTF.OUTBOX.CREATE:
+    description: Durable outbox row for a notification to deliver (catalogue).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_create.sql
+  NTF.OUTBOX.CLAIM_PENDING:
+    description: Atomically claim a batch of pending outbox rows for the dispatch job.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_claim_pending.sql
+  NTF.OUTBOX.MARK_DISPATCHED:
+    description: Mark an outbox row fully processed.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_mark_dispatched.sql
+  NTF.OUTBOX.MARK_FAILED:
+    description: Mark an outbox row as failed to process (e.g. unknown catalogue key).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_mark_failed.sql
+  NTF.DELIVERY_ATTEMPTS.CREATE:
+    description: Record one delivery-channel attempt for an outbox item.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_create.sql
+  NTF.DELIVERY_ATTEMPTS.UPDATE_STATUS:
+    description: Reconcile a delivery attempt after a send or a webhook callback.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_update_status.sql
+  NTF.DELIVERY_ATTEMPTS.FIND_BY_REFERENCE:
+    description: Locate the delivery attempt a provider webhook callback refers to.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_find_by_reference.sql
+  NTF.WEBHOOK_RECEIPTS.CREATE:
+    description: Durable, deduplicated record of an inbound delivery callback.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/webhook_receipt_create.sql
+  NTF.CUSTOMER_LANGUAGE.GET:
+    description: Recipient's preferred_language, for locale-aware notification rendering.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/customer_language_get.sql
+  NTF.PROVIDER_LANGUAGE.GET:
+    description: Recipient's preferred_language, for locale-aware notification rendering.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/provider_language_get.sql
   CUS.ONBOARDING.STATUS:
     description: CUS.ONBOARDING.STATUS registered query.
     operation: read
@@ -2433,6 +2503,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/notifications/unread_count.sql
+  PROV.NOTIFICATIONS.CREATE:
+    description: Persist one provider notification (notification catalogue outbox drain).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/create.sql
   PROV.PORTFOLIO.DELETE:
     description: Remove a provider portfolio item (Provider Phase 36).
     operation: delete
@@ -2524,27 +2601,6 @@ queries:
     security:
       ownership_filter_required: true
       requires_auth: true
-  PROV.NOTIFICATIONS.LIST:
-    description: Provider notifications history (Provider Phase 32).
-    operation: read
-    security:
-      ownership_filter_required: true
-      requires_auth: true
-    sql: providers/notifications/list.sql
-  PROV.NOTIFICATIONS.MARK_READ:
-    description: Mark a provider notification as read (Provider Phase 32).
-    operation: update
-    security:
-      ownership_filter_required: true
-      requires_auth: true
-    sql: providers/notifications/mark_read.sql
-  PROV.NOTIFICATIONS.UNREAD_COUNT:
-    description: Unread notifications count for a provider (Provider Phase 32).
-    operation: read
-    security:
-      ownership_filter_required: true
-      requires_auth: true
-    sql: providers/notifications/unread_count.sql
   PROV.DSL.REQUESTS.LIST:
     description: Provider DSL requests, newest first (Provider Phase 38).
     operation: read
