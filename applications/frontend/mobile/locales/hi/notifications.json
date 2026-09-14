@@ -1,0 +1,69 @@
+{
+  "loading": "लोड हो रहा है…",
+  "page": {
+    "title": "सूचनाएं",
+    "subtitle": "अपडेट, रिमाइंडर और अलर्ट"
+  },
+  "tabs": {
+    "all": "सभी",
+    "unread": "अपठित",
+    "bookings": "बुकिंग",
+    "payments": "भुगतान"
+  },
+  "metrics": {
+    "totalNotifications": "कुल सूचनाएं",
+    "thisMonth": "इस महीने",
+    "unread": "अपठित",
+    "needsAttention": "ध्यान देने की आवश्यकता है",
+    "bookingUpdates": "बुकिंग अपडेट",
+    "serviceProgress": "सेवा की प्रगति",
+    "paymentAlerts": "भुगतान अलर्ट",
+    "recentBilling": "हाल की बिलिंग"
+  },
+  "list": {
+    "heading": "हाल की सूचनाएं",
+    "markAllRead": "सभी को पढ़ा हुआ चिह्नित करें",
+    "markedAsRead_one": "{{count}} सूचना पढ़ी हुई चिह्नित की गई",
+    "markedAsRead_other": "{{count}} सूचनाएं पढ़ी हुई चिह्नित की गईं",
+    "noMatching": "कोई मेल खाती सूचना नहीं",
+    "tryDifferentTab": "कोई दूसरा टैब आज़माएं।",
+    "showAll": "सभी दिखाएं",
+    "allCaughtUp": "आप पूरी तरह अपडेट हैं",
+    "noNotificationsYet": "यहां अभी तक कोई सूचना नहीं है — अपडेट और रिमाइंडर होने पर यहां दिखाई देंगे।",
+    "new": "नई",
+    "paid": "भुगतान हो गया"
+  },
+  "detail": {
+    "notificationType": "सूचना का प्रकार",
+    "bookingReference": "बुकिंग संदर्भ",
+    "provider": "सेवा प्रदाता",
+    "service": "सेवा",
+    "scheduledVisit": "निर्धारित विज़िट",
+    "location": "स्थान",
+    "relatedAmount": "संबंधित राशि",
+    "paymentMethod": "भुगतान का तरीका",
+    "invoiceReference": "इनवॉइस संदर्भ",
+    "reference": "संदर्भ"
+  },
+  "panel": {
+    "title": "सूचना विवरण",
+    "whatHappened": "क्या हुआ",
+    "recordedNote": "यह अपडेट आपकी बुकिंग के तहत दर्ज कर लिया गया है।",
+    "downloadInvoice": "इनवॉइस डाउनलोड करें",
+    "findInvoiceToast": "इनवॉइस पेज पर संबंधित इनवॉइस खोजें।",
+    "contactSupport": "सहायता से संपर्क करें",
+    "done": "हो गया"
+  },
+  "dialog": {
+    "title": "सूचना विवरण",
+    "subtitle": "पूरा अपडेट देखें और कार्रवाई करें",
+    "bookingLabel": "बुकिंग {{number}}",
+    "message": "संदेश",
+    "noDetails": "इस सूचना के लिए कोई अतिरिक्त विवरण नहीं है।",
+    "respondNote": "आप अपनी बुकिंग पेज से सीधे इस अपडेट का जवाब दे सकते हैं।",
+    "close": "बंद करें",
+    "markAsRead": "पढ़ा हुआ चिह्नित करें",
+    "viewBooking": "बुकिंग देखें",
+    "findBookingToast": "अपनी बुकिंग सूची में बुकिंग {{number}} खोजें।"
+  }
+}

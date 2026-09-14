@@ -1,0 +1,73 @@
+{
+  "loading": "جارٍ التحميل…",
+  "page": {
+    "title": "الإشعارات",
+    "subtitle": "التحديثات والتذكيرات والتنبيهات"
+  },
+  "tabs": {
+    "all": "الكل",
+    "unread": "غير مقروءة",
+    "bookings": "الحجوزات",
+    "payments": "المدفوعات"
+  },
+  "metrics": {
+    "totalNotifications": "إجمالي الإشعارات",
+    "thisMonth": "هذا الشهر",
+    "unread": "غير مقروءة",
+    "needsAttention": "يحتاج إلى انتباه",
+    "bookingUpdates": "تحديثات الحجز",
+    "serviceProgress": "تقدّم الخدمة",
+    "paymentAlerts": "تنبيهات الدفع",
+    "recentBilling": "الفوترة الأخيرة"
+  },
+  "list": {
+    "heading": "الإشعارات الأخيرة",
+    "markAllRead": "تعليم الكل كمقروء",
+    "markedAsRead_zero": "لم يتم تعليم أي إشعار كمقروء",
+    "markedAsRead_one": "تم تعليم إشعار واحد كمقروء",
+    "markedAsRead_two": "تم تعليم إشعارين كمقروءين",
+    "markedAsRead_few": "تم تعليم {{count}} إشعارات كمقروءة",
+    "markedAsRead_many": "تم تعليم {{count}} إشعارًا كمقروء",
+    "markedAsRead_other": "تم تعليم {{count}} إشعار كمقروء",
+    "noMatching": "لا توجد إشعارات مطابقة",
+    "tryDifferentTab": "جرّب علامة تبويب أخرى.",
+    "showAll": "عرض الكل",
+    "allCaughtUp": "لقد اطّلعت على كل شيء",
+    "noNotificationsYet": "لا توجد إشعارات هنا بعد — ستظهر التحديثات والتذكيرات فور حدوثها.",
+    "new": "جديد",
+    "paid": "مدفوع"
+  },
+  "detail": {
+    "notificationType": "نوع الإشعار",
+    "bookingReference": "رقم الحجز",
+    "provider": "مزود الخدمة",
+    "service": "الخدمة",
+    "scheduledVisit": "الزيارة المجدولة",
+    "location": "الموقع",
+    "relatedAmount": "المبلغ المرتبط",
+    "paymentMethod": "طريقة الدفع",
+    "invoiceReference": "رقم الفاتورة",
+    "reference": "المرجع"
+  },
+  "panel": {
+    "title": "تفاصيل الإشعار",
+    "whatHappened": "ما الذي حدث",
+    "recordedNote": "تم تسجيل هذا التحديث في حجزك.",
+    "downloadInvoice": "تنزيل الفاتورة",
+    "findInvoiceToast": "ابحث عن الفاتورة المطابقة في صفحة الفواتير.",
+    "contactSupport": "التواصل مع الدعم",
+    "done": "تم"
+  },
+  "dialog": {
+    "title": "تفاصيل الإشعار",
+    "subtitle": "راجع التحديث الكامل واتخذ إجراءً",
+    "bookingLabel": "الحجز {{number}}",
+    "message": "الرسالة",
+    "noDetails": "لا توجد تفاصيل إضافية لهذا الإشعار.",
+    "respondNote": "يمكنك الرد على هذا التحديث مباشرة من صفحة حجزك.",
+    "close": "إغلاق",
+    "markAsRead": "تعليم كمقروء",
+    "viewBooking": "عرض الحجز",
+    "findBookingToast": "ابحث عن الحجز {{number}} في قائمة حجوزاتك."
+  }
+}

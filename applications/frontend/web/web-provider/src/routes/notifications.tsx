@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Bell, BellRing, CheckCheck } from "lucide-react";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
 import { StatusPill } from "@/components/dashboard/StatusPill";
-import { activityLog, notifications as seed } from "@/lib/mock-data";
+import { activityLog } from "@/lib/mock-data";
+import { fixoSdk, type ProviderNotificationRow } from "@/lib/api-client";
 
 const title = "Notifications — FIXO Provider";
 const description = "Job alerts, quote activity, payments, reviews and compliance reminders in one feed.";
@@ -23,14 +24,41 @@ export const Route = createFileRoute("/notifications")({
   component: NotificationsPage,
 });
 
-const filters = ["ALL", "request", "quote", "payment", "review", "verification", "payout"];
-
 function NotificationsPage() {
-  const [items, setItems] = useState(seed);
+  const [items, setItems] = useState<ProviderNotificationRow[]>([]);
   const [filter, setFilter] = useState("ALL");
 
-  const rows = items.filter((n) => filter === "ALL" || n.type === filter);
-  const unread = items.filter((n) => n.unread).length;
+  const load = useCallback(() => {
+    fixoSdk
+      .notifications("all", 50, 0)
+      .then(setItems)
+      .catch(() => setItems((prev) => prev));
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const filters = useMemo(
+    () => ["ALL", ...Array.from(new Set(items.map((n) => n.category))).sort()],
+    [items],
+  );
+  const rows = items.filter((n) => filter === "ALL" || n.category === filter);
+  const unread = items.filter((n) => !n.is_read).length;
+
+  async function markAllRead() {
+    await Promise.all(items.filter((n) => !n.is_read).map((n) => fixoSdk.markNotificationRead(n.id)));
+    setItems((prev) => prev.map((n) => ({ ...n, is_read: true })));
+  }
+
+  async function markRead(id: string) {
+    setItems((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+    try {
+      await fixoSdk.markNotificationRead(id);
+    } catch {
+      // leave optimistic read state — a retry on next load will reconcile
+    }
+  }
 
   return (
     <ProviderPage title="Notifications" subtitle={`${unread} unread`}>
@@ -39,7 +67,7 @@ function NotificationsPage() {
           title="Feed"
           action={
             <button
-              onClick={() => setItems((p) => p.map((n) => ({ ...n, unread: false })))}
+              onClick={markAllRead}
               className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
             >
               <CheckCheck className="size-4" /> Mark all read
@@ -56,28 +84,33 @@ function NotificationsPage() {
                 }`}
                 style={filter === f ? { backgroundImage: "var(--gradient-primary)" } : undefined}
               >
-                {f === "ALL" ? "All" : f}
+                {f === "ALL" ? "All" : f.replace(/_/g, " ").toLowerCase()}
               </button>
             ))}
           </div>
 
           <div className="space-y-3">
+            {rows.length === 0 && (
+              <p className="py-8 text-center text-sm text-muted-foreground">No notifications yet.</p>
+            )}
             {rows.map((n) => (
               <div
                 key={n.id}
-                onClick={() => setItems((p) => p.map((x) => (x.id === n.id ? { ...x, unread: false } : x)))}
+                onClick={() => !n.is_read && markRead(n.id)}
                 className={`flex cursor-pointer items-start gap-3 rounded-2xl p-4 transition-colors ${
-                  n.unread ? "bg-primary/5" : "bg-muted/50"
+                  !n.is_read ? "bg-primary/5" : "bg-muted/50"
                 }`}
               >
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  {n.unread ? <BellRing className="size-4" /> : <Bell className="size-4" />}
+                  {!n.is_read ? <BellRing className="size-4" /> : <Bell className="size-4" />}
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold">{n.title}</p>
                   <p className="text-xs text-muted-foreground">{n.body}</p>
                 </div>
-                <span className="shrink-0 text-xs text-muted-foreground">{n.at}</span>
+                <span className="shrink-0 text-xs text-muted-foreground">
+                  {new Date(n.created_at).toLocaleDateString()}
+                </span>
               </div>
             ))}
           </div>
