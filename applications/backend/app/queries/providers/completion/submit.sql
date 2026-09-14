@@ -3,6 +3,7 @@
 -- transition STARTED/IN_PROGRESS -> COMPLETION_REQUESTED, so the
 -- customer receives "Provider has completed the job" (Phase 26 sign-off
 -- confirms it via the Module 25 flow). One report per booking (UNIQUE).
+-- Also writes the NTF.SERVICE.COMPLETION_REQUESTED.V1 outbox row atomically.
 WITH ins AS (
     INSERT INTO "BOOKING_JOB_COMPLETIONS"
            (booking_id, provider_id, completion_notes, work_performed,
@@ -34,7 +35,13 @@ WITH ins AS (
            updated_at = now()
       FROM ins
      WHERE b.booking_id = ins.booking_id
-    RETURNING b.booking_id, b.status, b.customer_id
+    RETURNING b.booking_id, b.status, b.customer_id, b.booking_number
+), outbox_ins AS (
+    INSERT INTO "NOTIFICATION_OUTBOX" (event_key, recipient_type, recipient_id, payload)
+    SELECT 'NTF.SERVICE.COMPLETION_REQUESTED.V1', 'customer', upd.customer_id,
+           jsonb_build_object('booking_id', upd.booking_id, 'booking_number', upd.booking_number)
+      FROM upd
+    RETURNING outbox_id
 )
 SELECT i.completion_id, i.booking_id, i.provider_id, i.completion_notes,
        i.work_performed, i.materials_summary, i.before_after_evidence,
@@ -42,4 +49,5 @@ SELECT i.completion_id, i.booking_id, i.provider_id, i.completion_notes,
        i.maintenance_recommendations, i.created_at,
        u.status AS booking_status, u.customer_id
   FROM ins i
-  JOIN upd u ON u.booking_id = i.booking_id;
+  JOIN upd u ON u.booking_id = i.booking_id
+  LEFT JOIN (SELECT count(*) FROM outbox_ins) AS _outbox_forced ON true;

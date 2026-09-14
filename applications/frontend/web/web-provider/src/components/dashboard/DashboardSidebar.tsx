@@ -25,6 +25,9 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useProviderAuth } from "@/lib/provider-auth";
+import { fixoSdk } from "@/lib/api-client";
 
 const groups = [
   {
@@ -78,7 +81,36 @@ const groups = [
   },
 ];
 
+function useUnreadNotificationCount(): number {
+  const { access_token, loading } = useProviderAuth();
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!access_token || loading) return;
+    let cancelled = false;
+    const poll = () => {
+      fixoSdk
+        .notificationUnread()
+        .then((r) => {
+          if (!cancelled) setCount(r.unread_count);
+        })
+        .catch(() => {
+          // non-fatal — badge just stays at its last known value
+        });
+    };
+    poll();
+    const interval = setInterval(poll, 30_000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [access_token, loading]);
+
+  return count;
+}
+
 function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
+  const unreadCount = useUnreadNotificationCount();
   return (
     <>
       <nav className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1 [scrollbar-gutter:stable]">
@@ -103,7 +135,12 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
                     }}
                   >
                     <item.icon className="size-[18px] shrink-0" />
-                    {item.title}
+                    <span className="flex-1">{item.title}</span>
+                    {item.to === "/notifications" && unreadCount > 0 && (
+                      <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-[11px] font-semibold text-destructive-foreground">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    )}
                   </Link>
                 </li>
               ))}

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { MailCheck, MessageSquare } from "lucide-react";
 
-import { useProviderAuth } from "@/lib/provider-auth";
 import { provider } from "@/lib/mock-data";
 
 const title = "Verify Your Account — FIXO Provider";
@@ -23,7 +22,6 @@ export const Route = createFileRoute("/verify-otp")({
 
 function VerifyPage() {
   const navigate = useNavigate();
-  const { login } = useProviderAuth();
   const [phoneCode, setPhoneCode] = useState("");
   const [emailCode, setEmailCode] = useState("");
   const [error, setError] = useState("");
@@ -34,7 +32,9 @@ function VerifyPage() {
       setError("Enter both 6-digit codes. Demo codes: 123456");
       return;
     }
-    login();
+    // Registration + OTP verification isn't wired to the real backend yet
+    // (separate from the login flow this pass wired up) — this still just
+    // walks the demo forward. See the follow-up task for wiring it for real.
     navigate({ to: "/onboarding" });
   }
 

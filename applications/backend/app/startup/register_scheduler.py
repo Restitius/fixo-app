@@ -26,6 +26,11 @@ def register_scheduler(composition: Any) -> Any:
         composition.maintenance_service().sweep_overdue,
         interval_seconds=300,
     )
+    scheduler.register(
+        "JOB.NOTIFICATIONS.DISPATCH",
+        composition.notification_manager.process_pending,
+        interval_seconds=15,
+    )
     composition.scheduler = scheduler
     logger.info("scheduler ready: %s", sorted(scheduler._jobs))
     return scheduler

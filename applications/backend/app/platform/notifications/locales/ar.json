@@ -1,0 +1,30 @@
+{
+  "NTF.BOOKING.CONFIRMED.V1": {
+    "customer": {"title": "تم تأكيد الحجز", "body": "{booking_number} — تم حجز مزود الخدمة الخاص بك."},
+    "assigned_provider": {"title": "تم تعيين حجز جديد", "body": "تم حجزك من أجل {booking_number}."}
+  },
+  "NTF.PAYMENT.AUTHORIZED.V1": {
+    "customer": {"title": "تم اعتماد الدفع", "body": "{booking_number} — تم حجز الأموال لهذه الخدمة."}
+  },
+  "NTF.BOOKING.ON_THE_WAY.V1": {
+    "customer": {"title": "مزود الخدمة في الطريق إليك", "body": "الحجز {booking_number}"}
+  },
+  "NTF.BOOKING.ARRIVED.V1": {
+    "customer": {"title": "وصل مزود الخدمة", "body": "الحجز {booking_number}"}
+  },
+  "NTF.SERVICE.COMPLETION_REQUESTED.V1": {
+    "customer": {"title": "أنهى مزود الخدمة العمل", "body": "{booking_number} — يرجى المراجعة وتأكيد الإنجاز."}
+  },
+  "NTF.SERVICE.COMPLETED.V1": {
+    "customer": {"title": "اكتملت الخدمة", "body": "{booking_number} — شكرًا لتأكيدك."}
+  },
+  "NTF.PAYMENT.CAPTURED.V1": {
+    "customer": {"title": "تم استلام الدفع", "body": "{booking_number} — تم تحصيل الأموال."}
+  },
+  "NTF.INVOICE.ISSUED.V1": {
+    "customer": {"title": "فاتورة {invoice_number}", "body": "المستحق {total_amount} {currency}."}
+  },
+  "NTF.MAINTENANCE.OVERDUE.V1": {
+    "customer": {"title": "الصيانة متأخرة", "body": "تجاوزت الخطة {plan_number} تاريخ استحقاقها."}
+  }
+}

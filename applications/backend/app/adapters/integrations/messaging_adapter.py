@@ -23,11 +23,17 @@ class MessagingIntegrationAdapter:
     def __init__(self, integration_manager: IntegrationManager) -> None:
         self._integrations = integration_manager
 
-    async def send_sms(self, to: str, text: str, *, template: str | None = None) -> dict[str, Any]:
+    async def send_sms(
+        self, to: str, text: str, *, template: str | None = None,
+        notification_id: str | None = None, reference: str | None = None,
+    ) -> dict[str, Any]:
         return await self._integrations.execute(
             MessagingGatewayIntegrationIds.SMS_TRANSACTIONAL,
             "send_sms",
-            {"to": to, "text": text, "template": template},
+            {
+                "to": to, "text": text, "template": template,
+                "notification_id": notification_id, "reference": reference,
+            },
         )
 
     async def send_email(self, to: str, subject: str, body: str, *, template: str | None = None) -> dict[str, Any]:

@@ -1,1 +1,0 @@
-"""Notification templates and rendering."""

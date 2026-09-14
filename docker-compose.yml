@@ -59,7 +59,7 @@ services:
     environment:
       PRIMARY_DB_URL: postgresql+asyncpg://fixo:fixo_dev_password@postgres:5432/fixo
       REDIS_URL: redis://redis:6379/0
-      CORS_ORIGINS: http://localhost:3000,http://localhost:5173,http://localhost:8081,http://localhost:5190,http://localhost:5191
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173,http://localhost:8081,http://localhost:5190,http://localhost:5191,http://localhost:5192
     depends_on:
       postgres:
         condition: service_healthy
