@@ -3021,4 +3021,11 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: providers/account_restrictions/history.sql
+  PROV.ACCOUNT.CLOSURE.SCHEDULE:
+    description: Uses SP_DELETE_PROVIDER_ACCOUNT (inserts PROVIDER_ACCOUNT_CLOSURES + soft-deletes provider) (Provider Phase 54).
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/account_closure/schedule.sql
 version: 1

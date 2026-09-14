@@ -1,4 +1,5 @@
-"""Provider settings router - Phase 50 (notifications preferences, security, privacy).
+"""Provider settings router - Phase 50 (notifications preferences, security,
+privacy) and Phase 54 (account closure).
 
 Prefix: /providers/me/settings
 
@@ -90,3 +91,12 @@ async def list_exports(
 ) -> dict:
     svc = get_composition().provider_privacy_service()
     return ok(await svc.list_exports(str(provider["provider_id"]), limit=limit, offset=offset))
+
+
+@router.post("/closure")
+async def schedule_closure(provider: CurrentProvider) -> dict:
+    svc = get_composition().provider_account_closure_service()
+    return ok(
+        await svc.schedule_closure(str(provider["provider_id"])),
+        title="Account closure scheduled",
+    )

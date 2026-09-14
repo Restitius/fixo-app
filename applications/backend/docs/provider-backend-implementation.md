@@ -83,9 +83,7 @@
 | PRV-51 | 51 | Provider Activity & Audit History | ✅ |
 | PRV-52 | 52 | Subscription / Provider Plans | ✅ |
 | PRV-53 | 53 | Account Restrictions & Status | ✅ |
-| PRV-54 | 54 | Account Closure | ⏳ |
-| PRV-31 | 31 | Commission & Fees | ✅ |
-| PRV-32 | 32 | Provider Notifications | ✅ |
+| PRV-54 | 54 | Account Closure | ✅ |
 
 Verification: `cd applications/backend && python -m pytest` stays green (new unit
 tests included per phase); each phase ships migration + queries + port/adapter +
@@ -675,3 +673,29 @@ larger, higher-risk undertaking than this phase covers.
   - `GET /` — summary: whether the account is currently restricted,
     plus the active restrictions
   - `GET /history` — full restriction history
+
+## Phase 54 — Provider Account Closure
+
+Mirrors the customer-side account closure flow (Phase 15's
+`AccountClosureService`/`ACCOUNT_CLOSURES`/`SP_DELETE_ACCOUNT`) for
+providers, at identical scope — a schedule-only action; the customer
+side has no reversal endpoint either despite its table carrying
+`reversed_at`/`is_reversal` columns, and this phase does not touch
+provider auth/login logic (consistent with Phase 53 leaving
+`PROVIDERS.status`/enforcement alone).
+
+- Migration 0072: adds `PROVIDERS.deleted_at`/`is_deleted` (previously
+  absent — the column customer accounts already had, providers never
+  did), `PROVIDER_ACCOUNT_CLOSURES`, and a `SP_DELETE_PROVIDER_ACCOUNT`
+  stored procedure mirroring `SP_DELETE_ACCOUNT` exactly (inserts a
+  closure record, soft-deletes the provider row).
+- Governed query `PROV.ACCOUNT.CLOSURE.SCHEDULE` calls the SP.
+- `ProviderAccountClosureService.schedule_closure()` mirrors
+  `AccountClosureService` structurally.
+- Endpoint added to the existing Phase 50 settings router rather than a
+  new router file, since it's one action with no facet of its own:
+  `POST /providers/me/settings/closure`.
+
+This completes Provider Modules 40-54 (PRV-40 through PRV-54), the full
+set requested after the Provider Backend audit (Modules 1-35) and the
+Modules 32-39 runtime-failure repair.
