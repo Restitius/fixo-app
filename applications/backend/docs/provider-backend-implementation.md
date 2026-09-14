@@ -82,7 +82,7 @@
 | PRV-50 | 50 | Provider Settings (personal/business/notifications/security/privacy) | ✅ |
 | PRV-51 | 51 | Provider Activity & Audit History | ✅ |
 | PRV-52 | 52 | Subscription / Provider Plans | ✅ |
-| PRV-53 | 53 | Account Restrictions & Status | ⏳ |
+| PRV-53 | 53 | Account Restrictions & Status | ✅ |
 | PRV-54 | 54 | Account Closure | ⏳ |
 | PRV-31 | 31 | Commission & Fees | ✅ |
 | PRV-32 | 32 | Provider Notifications | ✅ |
@@ -651,3 +651,27 @@ be a separate, larger cross-cutting undertaking than this phase covers.
   - `POST /subscribe` — subscribe or switch plans
   - `POST /cancel` — cancel the active subscription
   - `GET /history` — subscription history
+
+## Phase 53 — Provider Account Restrictions & Status
+
+A log of platform-imposed restrictions (warnings, suspensions, feature
+limits, bans), read-only from the provider side — imposing/lifting one
+is a platform/admin action, mirroring Disputes' (Phase 39) "resolution
+stays platform-side" convention. Deliberately does not modify
+`PROVIDERS.status` or touch auth/login logic — wiring restrictions into
+live enforcement (blocking login, blocking bookings) is a separate,
+larger, higher-risk undertaking than this phase covers.
+
+- `PROVIDER_ACCOUNT_RESTRICTIONS` — `restriction_type` restricted to
+  `WARNING | SUSPENSION | FEATURE_LIMIT | BAN`.
+- Governed queries `PROV.ACCOUNT_RESTRICTIONS.IMPOSE/LIFT` (admin-side,
+  `ownership_filter_required: false` — not scoped to a caller's own
+  resource) and `.LIST_ACTIVE`/`.HISTORY` (provider-facing, ownership-
+  scoped).
+- `ProviderAccountRestrictionsService.impose()`/`.lift()` are kept for
+  the admin module to call later; no provider-facing endpoint exposes
+  them in this phase.
+- Router prefix `/providers/me/account-status` (read-only):
+  - `GET /` — summary: whether the account is currently restricted,
+    plus the active restrictions
+  - `GET /history` — full restriction history
