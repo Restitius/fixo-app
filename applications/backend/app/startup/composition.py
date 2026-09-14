@@ -67,6 +67,7 @@ class Composition:
         self.provider_analytics_repository: Any = None
         self.provider_preference_repository: Any = None
         self.provider_privacy_repository: Any = None
+        self.provider_activity_log_repository: Any = None
         self.provider_request_repository: Any = None
         self.provider_matching_repository: Any = None
         self.provider_quotation_repository: Any = None
@@ -549,6 +550,14 @@ class Composition:
             self.sql_query_manager
         )
         self.provider_privacy_repository = ProviderPrivacySqlAdapter(
+            self.sql_query_manager
+        )
+
+        from app.adapters.persistence.provider_activity_log_sql_adapter import (
+            ProviderActivityLogSqlAdapter,
+        )
+
+        self.provider_activity_log_repository = ProviderActivityLogSqlAdapter(
             self.sql_query_manager
         )
         self.payment_repository = PaymentSqlAdapter(self.sql_query_manager)
@@ -1037,7 +1046,9 @@ class Composition:
             ProviderSecurityService,
         )
 
-        return ProviderSecurityService(self.provider_account_repository, self._hasher)
+        return ProviderSecurityService(
+            self.provider_account_repository, self._hasher, self.provider_activity_log_service()
+        )
 
     def provider_privacy_service(self) -> Any:
         """ProviderPrivacyService — consent management + data export (Req Phase 50)."""
@@ -1046,6 +1057,14 @@ class Composition:
         )
 
         return ProviderPrivacyService(self.provider_privacy_repository)
+
+    def provider_activity_log_service(self) -> Any:
+        """ProviderActivityLogService — activity & audit history (Req Phase 51)."""
+        from app.domains.providers.services.provider_activity_log_service import (
+            ProviderActivityLogService,
+        )
+
+        return ProviderActivityLogService(repository=self.provider_activity_log_repository)
 
     def provider_availability_service(self) -> Any:
         """ProviderAvailabilityService — working hours & availability (Req Phase 9)."""
