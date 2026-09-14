@@ -109,11 +109,21 @@ class SwalaSmsProvider(MessagingProvider):
 
     @staticmethod
     def _idempotency_key(*, notification_id: str | None, reference: str | None, recipient: str) -> str:
+        # No phone-number-only fallback: two distinct notifications to the
+        # same number must never collide on the same idempotency key. Every
+        # caller in the notification catalogue passes notification_id (the
+        # outbox row id), so this only fires for a caller that skipped that
+        # contract — which is a bug at the call site, not something to paper
+        # over with a weaker key.
         if notification_id:
             return f"fixo:{notification_id}:sms"
         if reference:
             return f"fixo:{reference}:sms"
-        return f"fixo:{recipient}:sms"
+        raise ProviderRejectedError(
+            "send_sms requires notification_id or reference for a stable idempotency key",
+            code="INTEGRATION.SWALA_MISSING_IDEMPOTENCY_INPUT",
+            details={"recipient": recipient},
+        )
 
     @staticmethod
     def _interpret_send_response(*, to: str, response: Any, idempotency_key: str) -> dict[str, Any]:
