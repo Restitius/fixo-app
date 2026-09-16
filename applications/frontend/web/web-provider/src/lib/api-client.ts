@@ -813,3 +813,69 @@ export const availabilityApi = {
     apiClient.post<TimeOffRow>("/providers/availability/time-off", data).then((r) => r.data),
   removeTimeOff: (timeOffId: string) => apiClient.delete(`/providers/availability/time-off/${timeOffId}`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Wallet transactions + payouts (payout methods are already in onboardingApi
+// — reused here rather than duplicated). Field names read directly from
+// provider_wallet_service.py's _encode_tx and provider_payout_service.py.
+// ---------------------------------------------------------------------------
+
+export interface WalletTransaction {
+  entry_id: string;
+  entry_type: string;
+  amount: number;
+  running_balance: number;
+  currency: string;
+  reference_type?: string | null;
+  reference_id?: string | null;
+  booking_number?: string | null;
+  description?: string | null;
+  created_at: string;
+}
+
+export interface PayoutRow {
+  payout_id: string;
+  payout_number: string;
+  method_id: string;
+  amount: number;
+  currency: string;
+  status: string;
+  failure_reason?: string | null;
+  requested_at?: string | null;
+  processed_at?: string | null;
+  completed_at?: string | null;
+  method_type?: string | null;
+  provider_name?: string | null;
+  destination?: string | null;
+}
+
+export const walletApi = {
+  overview: () => apiClient.get<WalletOverview>("/providers/me/wallet").then((r) => r.data),
+  transactions: (limit = 20, offset = 0) =>
+    apiClient
+      .get<{ transactions: WalletTransaction[]; limit: number; offset: number }>(`/providers/me/wallet/transactions${qs({ limit, offset })}`)
+      .then((r) => r.data.transactions),
+};
+
+export const payoutsApi = {
+  listMethods: () => apiClient.get<PayoutMethod[]>("/providers/me/payouts/methods").then((r) => r.data),
+  addMethod: (data: {
+    method_type: string;
+    provider_name?: string | undefined;
+    account_holder?: string | undefined;
+    account_number?: string | undefined;
+    mobile_number?: string | undefined;
+    currency: string;
+    is_default: boolean;
+  }) => apiClient.post<PayoutMethod>("/providers/me/payouts/methods", data).then((r) => r.data),
+  setDefaultMethod: (methodId: string) => apiClient.post(`/providers/me/payouts/methods/${methodId}/default`).then((r) => r.data),
+  deleteMethod: (methodId: string) => apiClient.delete(`/providers/me/payouts/methods/${methodId}`).then((r) => r.data),
+  withdraw: (data: { method_id: string; amount: number; currency: string }) =>
+    apiClient.post<PayoutRow>("/providers/me/payouts/withdraw", data).then((r) => r.data),
+  list: (limit = 20, offset = 0) =>
+    apiClient
+      .get<{ payouts: PayoutRow[]; limit: number; offset: number }>(`/providers/me/payouts${qs({ limit, offset })}`)
+      .then((r) => r.data.payouts),
+  get: (payoutId: string) => apiClient.get<PayoutRow>(`/providers/me/payouts/${payoutId}`).then((r) => r.data),
+  cancel: (payoutId: string) => apiClient.post<PayoutRow>(`/providers/me/payouts/${payoutId}/cancel`).then((r) => r.data),
+};
