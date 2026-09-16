@@ -14,7 +14,7 @@ synchronous through the service layer.
 """
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError

@@ -1,7 +1,9 @@
 """RebookService — Phase 10 module 30 (rebooking)."""
 from __future__ import annotations
+
 import logging
 from typing import Any
+
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
 
 logger = logging.getLogger(__name__)

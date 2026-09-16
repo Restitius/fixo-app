@@ -1,7 +1,9 @@
 """Favorite repository port — business-facing contract for favorites."""
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
+
 
 class FavoriteRepositoryPort(ABC):
     @abstractmethod

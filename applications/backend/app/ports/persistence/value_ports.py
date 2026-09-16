@@ -1,5 +1,6 @@
 """Wallet / promotion / loyalty ports — business-facing contracts (Phase 12)."""
 from __future__ import annotations
+
 from typing import Any, Protocol
 
 

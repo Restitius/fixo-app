@@ -14,7 +14,6 @@ from typing import Any
 
 from app.shared.exceptions.hierarchy import NotFoundError
 
-
 # -- rank level constants ---------------------------------------------------------
 RANK_LEVELS = ("bronze", "silver", "gold", "platinum")
 

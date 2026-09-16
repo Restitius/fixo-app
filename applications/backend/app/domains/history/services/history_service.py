@@ -1,5 +1,6 @@
 """History service — read-only screens fed by dedicated registered reads (Module 40/42)."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.history_repository import HistoryRepositoryPort

@@ -5,8 +5,8 @@ from fastapi import APIRouter, Depends
 
 from app.api.deps.provider_auth import CurrentProvider
 from app.domains.providers.services.provider_arrival_service import ProviderArrivalService
-from app.startup.composition import get_composition
 from app.shared.responses.envelope import success_envelope
+from app.startup.composition import get_composition
 
 router = APIRouter(tags=["provider-arrival"])
 

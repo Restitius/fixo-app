@@ -1,6 +1,7 @@
 """Liability workflow/state-transition rules (pure predicates)."""
 from __future__ import annotations
 
+
 def archive_requires_zero_balance(outstanding) -> bool:
     """Only fully repaid liabilities may be archived."""
     from decimal import Decimal

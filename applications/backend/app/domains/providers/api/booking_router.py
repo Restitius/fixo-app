@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
-
 from pydantic import BaseModel
 
 from app.api.deps.provider_auth import get_current_provider

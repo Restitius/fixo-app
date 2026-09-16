@@ -1,5 +1,6 @@
 """Loyalty service — points earn/spend on a running-total ledger (Module 36)."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.value_ports import LoyaltyRepositoryPort

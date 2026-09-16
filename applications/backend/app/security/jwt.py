@@ -1,7 +1,7 @@
 """JwtService — token minting/verification (PyJWT)."""
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
 
@@ -52,7 +52,7 @@ class JwtService:
         return claims
 
     def _encode(self, claims: dict, ttl: int, typ: str) -> str:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         payload = {
             **claims,
             "iss": self.issuer,

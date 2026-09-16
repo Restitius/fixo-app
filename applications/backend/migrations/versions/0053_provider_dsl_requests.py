@@ -8,8 +8,8 @@ Tables:
 - PROVIDER_DSL_PROVIDER_METRICS
 """
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision = "0053"
 down_revision = "0059"
