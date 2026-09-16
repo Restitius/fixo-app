@@ -9,6 +9,17 @@ from app.infrastructure.storage.storage_manager import StorageManager
 ALLOWED_MIME = {"image/jpeg": ".jpg", "image/png": ".png", "application/pdf": ".pdf"}
 MAX_BYTES = 5 * 1024 * 1024  # 5 MB per file
 
+# content_type is client-supplied (the multipart request's own header) and
+# was previously trusted blindly — a caller could claim "application/pdf"
+# for any file at all. These are the real magic-byte signatures for the
+# three allowed types, checked against the actual bytes so the claimed
+# MIME type can't be spoofed.
+_MAGIC_BYTES: dict[str, tuple[bytes, ...]] = {
+    "image/jpeg": (b"\xff\xd8\xff",),
+    "image/png": (b"\x89PNG\r\n\x1a\n",),
+    "application/pdf": (b"%PDF-",),
+}
+
 
 class FileManager:
     """Validate → key-generate → persist through StorageManager."""
@@ -32,6 +43,9 @@ class FileManager:
             raise ValueError("Empty file")
         if len(content) > MAX_BYTES:
             raise ValueError("File exceeds the 5MB limit")
+        signatures = _MAGIC_BYTES[mime]
+        if not any(content.startswith(sig) for sig in signatures):
+            raise ValueError(f"File content does not match the declared type: {mime}")
 
         safe_name = name.replace("\\", "_").replace("/", "_")[:180]
         key = f"{folder}/{uuid.uuid4().hex}{ext}"
