@@ -741,3 +741,75 @@ export const completionApi = {
     apiClient.post<CompletionReport>(`/providers/me/completion/bookings/${bookingId}/complete`, data).then((r) => r.data),
   getReport: (bookingId: string) => apiClient.get<CompletionReport>(`/providers/me/completion/bookings/${bookingId}`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Calendar + availability. Field names read directly from
+// provider_calendar_service.py / availability_router.py and their governed
+// SQL this session.
+// ---------------------------------------------------------------------------
+
+export interface CalendarEvent {
+  source: "booking" | "blocked" | "unavailable";
+  event_id: string;
+  title: string;
+  start_at: string;
+  end_at: string;
+  status: string;
+  details?: Record<string, unknown>;
+}
+
+export interface WorkingHoursRow {
+  hours_id?: string;
+  day_of_week: number;
+  is_available: boolean;
+  start_time?: string | null;
+  end_time?: string | null;
+}
+
+export interface AvailabilitySettings {
+  is_online: boolean;
+  accepts_emergency: boolean;
+  accepts_same_day: boolean;
+  accepts_holidays: boolean;
+  vacation_mode: boolean;
+  vacation_from?: string | null;
+  vacation_until?: string | null;
+  timezone: string;
+  notes?: string | null;
+}
+
+export interface TimeOffRow {
+  time_off_id: string;
+  reason?: string | null;
+  starts_at: string;
+  ends_at: string;
+}
+
+export const calendarApi = {
+  // month_view/agenda_view wrap their event list in {..., events} rather
+  // than returning a bare array (see calendar_router.py) — unwrap here so
+  // callers get the plain CalendarEvent[] the type promises.
+  month: (year: number, month: number) =>
+    apiClient
+      .get<{ year: number; month: number; events: CalendarEvent[] }>(`/providers/me/calendar/month/${year}/${month}`)
+      .then((r) => r.data.events),
+  week: (date: string) =>
+    apiClient.get<{ week_start: string; days: { date: string; events: CalendarEvent[] }[] }>(`/providers/me/calendar/week/${date}`).then((r) => r.data),
+  agenda: (fromDate: string, limit = 20) =>
+    apiClient
+      .get<{ from_date: string; events: CalendarEvent[] }>(`/providers/me/calendar/agenda${qs({ from_date: fromDate, limit })}`)
+      .then((r) => r.data.events),
+};
+
+export const availabilityApi = {
+  getSettings: () => apiClient.get<AvailabilitySettings>("/providers/availability/settings").then((r) => r.data),
+  saveSettings: (data: Partial<AvailabilitySettings>) =>
+    apiClient.put<AvailabilitySettings>("/providers/availability/settings", data).then((r) => r.data),
+  listHours: () => apiClient.get<WorkingHoursRow[]>("/providers/availability/hours").then((r) => r.data),
+  setDay: (dayOfWeek: number, data: { is_available: boolean; start_time?: string | undefined; end_time?: string | undefined }) =>
+    apiClient.put<WorkingHoursRow>(`/providers/availability/hours/${dayOfWeek}`, data).then((r) => r.data),
+  listTimeOff: () => apiClient.get<TimeOffRow[]>("/providers/availability/time-off").then((r) => r.data),
+  addTimeOff: (data: { reason?: string; starts_at: string; ends_at: string }) =>
+    apiClient.post<TimeOffRow>("/providers/availability/time-off", data).then((r) => r.data),
+  removeTimeOff: (timeOffId: string) => apiClient.delete(`/providers/availability/time-off/${timeOffId}`).then((r) => r.data),
+};
