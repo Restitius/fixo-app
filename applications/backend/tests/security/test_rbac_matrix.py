@@ -215,13 +215,25 @@ def test_every_api_v1_route_has_a_recorded_rbac_expectation():
     get_current_provider, or an entry in _KNOWN_EXCEPTIONS fails the build.
     This is what actually keeps the matrix from rotting — see handbook
     section 8.1's own reasoning for why the coverage test is the one that
-    matters, not the matrix entries themselves."""
+    matters, not the matrix entries themselves.
+
+    `_current_uploader` (app/api/v1/uploads.py) is also recognized: it's a
+    real, legitimate third auth dependency — the generic upload/serve
+    routes accept either a customer or a provider bearer token (their JWTs
+    carry different claim shapes), so it can't just be
+    get_current_customer/get_current_provider. It still requires and
+    validates a real bearer token; it is not equivalent to no auth at all.
+    """
     missing: list[str] = []
     for path, route in _flatten_routes(app.routes):
         if not path.startswith("/api/v1/"):
             continue
         deps = _dependency_names(route)
-        authenticated = "get_current_customer" in deps or "get_current_provider" in deps
+        authenticated = (
+            "get_current_customer" in deps
+            or "get_current_provider" in deps
+            or "_current_uploader" in deps
+        )
         for method in route.methods - {"HEAD", "OPTIONS"}:
             key = (method, path)
             if not authenticated and key not in _KNOWN_EXCEPTIONS:
