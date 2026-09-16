@@ -1,0 +1,161 @@
+# .github/workflows/deploy-staging.yml
+#
+# Deploys what build.yml already produced and signed for this commit —
+# never rebuilds from source. Two genuinely different deploy shapes:
+#   - backend: a container, pulled from GHCR and run on whatever compute
+#     the user provisions (see the clearly-marked pending block below —
+#     cloud provider/compute target not chosen yet, per this session's
+#     "pipeline code only" scoping: I write the workflow, the user applies
+#     the real cloud resources).
+#   - web-user / web-provider: confirmed this session (real `npm run build`
+#     output, not assumed) to target Cloudflare Workers via nitro's
+#     cloudflare-module preset. Deployed with `wrangler deploy` from the
+#     signed build-output tarball build.yml produced — this part is REAL,
+#     not pending, once CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID repo
+#     secrets exist (the one manual step: create a Cloudflare API token
+#     scoped to Workers Scripts:Edit for this account, add it as a repo
+#     secret — see wrangler's own docs for exact token permissions).
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [staging]
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false   # never interrupt a deploy already in flight
+
+permissions:
+  contents: read
+  id-token: write   # cosign verification doesn't need this, but wrangler OIDC-less auth does not either — kept for parity with build.yml's signing identity checks
+
+env:
+  BACKEND_IMAGE: ghcr.io/restitius/fixo-backend
+
+jobs:
+  verify-backend-image:
+    name: Verify signed backend image
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.resolve.outputs.digest }}
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: sigstore/cosign-installer@<pin-to-commit-sha>   # v3.7.0
+      - name: Resolve digest for this commit's tag
+        id: resolve
+        run: |
+          digest=$(docker buildx imagetools inspect "${{ env.BACKEND_IMAGE }}:git-${{ github.sha }}" --format '{{json .Manifest}}' | python3 -c 'import json,sys; print(json.load(sys.stdin)["digest"])')
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+      - name: Verify signature (refuses anything build.yml didn't sign)
+        run: scripts/verify-image.sh "${{ env.BACKEND_IMAGE }}@${{ steps.resolve.outputs.digest }}"
+
+  verify-frontend-artifacts:
+    name: Verify signed frontend artifact (${{ matrix.app }})
+    strategy:
+      matrix:
+        app: [web-user, web-provider]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: sigstore/cosign-installer@<pin-to-commit-sha>   # v3.7.0
+      - uses: actions/download-artifact@<pin-to-commit-sha>   # v4.1.8
+        with:
+          name: ${{ matrix.app }}-git-${{ github.sha }}
+          path: artifact
+      - name: Verify signature and checksum
+        working-directory: artifact
+        run: |
+          ../scripts/verify-frontend-artifact.sh \
+            "${{ matrix.app }}-git-${{ github.sha }}.tar.gz" \
+            "${{ matrix.app }}-git-${{ github.sha }}.tar.gz.sig" \
+            "${{ matrix.app }}-git-${{ github.sha }}.tar.gz.pem"
+      - uses: actions/upload-artifact@<pin-to-commit-sha>   # v4.4.3
+        with:
+          name: ${{ matrix.app }}-verified-git-${{ github.sha }}
+          retention-days: 1
+          path: artifact/${{ matrix.app }}-git-${{ github.sha }}.tar.gz
+
+  sms-key-guard:
+    name: SMS key/environment guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - run: scripts/check-sms-key-env.sh staging
+        env:
+          SWALA_SMS_API_KEY: ${{ secrets.STAGING_SWALA_SMS_API_KEY }}
+          SWALA_SMS_MODE: ${{ vars.STAGING_SWALA_SMS_MODE }}
+
+  migrate:
+    name: Apply migrations (expand-only gate)
+    needs: [verify-backend-image, sms-key-guard]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@<pin-to-commit-sha>    # v5.3.0
+        with: { python-version: "3.12" }
+      - run: pip install -r applications/backend/requirements.txt
+      - name: Reject unsafe schema changes reaching staging
+        run: python scripts/check-migration-safety.py --base "origin/dev"
+      - name: alembic upgrade head
+        working-directory: applications/backend
+        run: alembic upgrade head
+        env:
+          PRIMARY_DB_URL: ${{ secrets.STAGING_PRIMARY_DB_URL }}
+
+  deploy-backend:
+    name: Deploy backend (staging)
+    needs: [verify-backend-image, migrate]
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+
+      # --- PENDING: cloud provider / compute target not chosen yet --------
+      # This repo's "pipeline code only" scope (confirmed this session): I
+      # write the deploy step, the user provisions and names the real
+      # compute target (ECS service, Cloud Run service, AKS deployment,
+      # etc.) and fills in the auth step below. Everything above this line
+      # (verify signature, migrate, SMS guard) is real and runs today.
+      - name: Authenticate to cloud provider
+        run: |
+          echo "::warning::No cloud provider configured yet — add the auth step for your target here (aws-actions/configure-aws-credentials, google-github-actions/auth, azure/login, etc.)."
+      - name: Deploy new revision
+        run: |
+          echo "::warning::Pending cloud provider choice. Once configured, pull ${{ env.BACKEND_IMAGE }}@${{ needs.verify-backend-image.outputs.digest }} and roll it out on the real compute target."
+      # ---------------------------------------------------------------------
+
+      - name: Smoke test — liveness
+        run: curl -fsS "${{ vars.STAGING_BACKEND_URL }}/api/v1/health"
+      - name: Smoke test — readiness
+        run: curl -fsS "${{ vars.STAGING_BACKEND_URL }}/api/v1/health/ready"
+
+  deploy-frontend:
+    name: Deploy frontend (${{ matrix.app }}, staging)
+    needs: verify-frontend-artifacts
+    strategy:
+      matrix:
+        include:
+          - app: web-user
+            smoke_url_var: STAGING_WEB_USER_URL
+          - app: web-provider
+            smoke_url_var: STAGING_WEB_PROVIDER_URL
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/download-artifact@<pin-to-commit-sha>   # v4.1.8
+        with:
+          name: ${{ matrix.app }}-verified-git-${{ github.sha }}
+      - run: tar -xzf ${{ matrix.app }}-git-${{ github.sha }}.tar.gz -C .
+      - name: wrangler deploy (Cloudflare Workers)
+        uses: cloudflare/wrangler-action@<pin-to-commit-sha>   # v3.14.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: .
+          command: deploy --config server/wrangler.json --env staging
+      - name: Smoke test
+        env:
+          SMOKE_URL: ${{ vars[matrix.smoke_url_var] }}
+        run: curl -fsS "$SMOKE_URL"
