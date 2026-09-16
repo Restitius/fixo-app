@@ -1,10 +1,12 @@
 """Provider Materials & Expenses — API routes (Requirement Phase 24)."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_materials_service import (
     ProviderMaterialsService,
 )
@@ -35,17 +37,19 @@ async def add_material(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.add(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        item_name=body.item_name,
-        quantity=body.quantity,
-        unit_cost=body.unit_cost,
-        amount=body.amount,
-        currency=body.currency,
-        note=body.note,
-        attachment_url=body.attachment_url,
-        attachment_kind=body.attachment_kind,
+    return ok(
+        await svc.add(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            item_name=body.item_name,
+            quantity=body.quantity,
+            unit_cost=body.unit_cost,
+            amount=body.amount,
+            currency=body.currency,
+            note=body.note,
+            attachment_url=body.attachment_url,
+            attachment_kind=body.attachment_kind,
+        )
     )
 
 
@@ -55,9 +59,11 @@ async def list_materials(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.list_for_booking(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.list_for_booking(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -67,9 +73,11 @@ async def materials_summary(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.summary(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.summary(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -80,8 +88,10 @@ async def delete_material(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.delete(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        material_id=material_id,
+    return ok(
+        await svc.delete(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            material_id=material_id,
+        )
     )

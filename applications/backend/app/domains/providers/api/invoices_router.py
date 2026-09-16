@@ -14,6 +14,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, Query
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_invoices_service import (
     ProviderInvoicesService,
 )
@@ -34,9 +35,7 @@ async def list_invoices(
 ) -> dict[str, Any]:
     """List provider invoices, newest period first."""
     svc = _service()
-    return await svc.list_invoices(
-        provider_id=str(provider["provider_id"]), limit=limit, offset=offset
-    )
+    return ok(await svc.list_invoices(provider_id=str(provider["provider_id"]), limit=limit, offset=offset))
 
 
 @router.get("/summary")
@@ -45,7 +44,7 @@ async def get_summary(
 ) -> dict[str, Any]:
     """Return provider invoice totals and overdue count."""
     svc = _service()
-    return await svc.get_summary(provider_id=str(provider["provider_id"]))
+    return ok(await svc.get_summary(provider_id=str(provider["provider_id"])))
 
 
 @router.get("/{invoice_id}")
@@ -55,6 +54,4 @@ async def get_invoice(
 ) -> dict[str, Any]:
     """Return a single invoice by id (ownership-checked)."""
     svc = _service()
-    return await svc.get_invoice(
-        provider_id=str(provider["provider_id"]), invoice_id=invoice_id
-    )
+    return ok(await svc.get_invoice(provider_id=str(provider["provider_id"]), invoice_id=invoice_id))
