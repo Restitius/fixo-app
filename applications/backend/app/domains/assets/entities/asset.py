@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 
+from app.domains.assets.entities.asset_value import AssetValuePoint
+
 
 @dataclass
 class Asset:
@@ -21,7 +23,7 @@ class Asset:
     currency: str
     purchased_at: date | None = None
     notes: str | None = None
-    history: list["AssetValuePoint"] = field(default_factory=list)
+    history: list[AssetValuePoint] = field(default_factory=list)
 
     def is_sellable(self) -> bool:
         """Business shorthand used by policies/rules."""
