@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from sqlalchemy import text
+
 from app.shared.enums.common import DatabaseId
 
 
@@ -43,8 +45,17 @@ class DatabaseManager:
 
     async def health(self) -> dict[str, bool]:
         """Liveness per registered database (SELECT 1 style probes)."""
-        raise NotImplementedError("DatabaseManager.health — probe each engine")
+        results: dict[str, bool] = {}
+        for key, engine in self._engines.items():
+            try:
+                async with engine.connect() as conn:
+                    await conn.execute(text("SELECT 1"))
+                results[key] = True
+            except Exception:
+                results[key] = False
+        return results
 
     async def dispose(self) -> None:
         """Dispose all engines on shutdown."""
-        raise NotImplementedError("DatabaseManager.dispose")
+        for engine in self._engines.values():
+            await engine.dispose()

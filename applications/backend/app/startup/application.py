@@ -27,6 +27,22 @@ def create_application() -> FastAPI:
     @asynccontextmanager
     async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         await bootstrap.run_startup()
+        if bootstrap.databases is not None:
+            from app.api.v1.system import get_health_reporter
+            from app.observability.health import HealthCheck
+
+            databases = bootstrap.databases
+
+            async def _check_databases() -> HealthCheck:
+                results = await databases.health()
+                ok = bool(results) and all(results.values())
+                return HealthCheck(
+                    component="database",
+                    status="up" if ok else "down",
+                    detail=", ".join(f"{k}={'up' if v else 'down'}" for k, v in results.items()),
+                )
+
+            get_health_reporter().register("database", _check_databases)
         try:
             yield
         finally:
