@@ -77,4 +77,4 @@ async def remove_service(service_id: str, provider: CurrentProvider) -> Any:
 @router.post("/{service_id}/submit")
 async def submit_for_approval(service_id: str, provider: CurrentProvider) -> Any:
     """Submit the configuration for platform approval (DRAFT/REJECTED -> PENDING_APPROVAL)."""
-    return ok(await _service().submit(str(provider["provider_id"]), service_id))
+    return ok(await _service().submit_for_approval(str(provider["provider_id"]), service_id))
