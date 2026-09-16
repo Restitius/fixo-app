@@ -129,7 +129,6 @@ api_v1_router.include_router(catalog_router)
 api_v1_router.include_router(service_requests_router)
 api_v1_router.include_router(matching_router)
 api_v1_router.include_router(quotations_router)
-api_v1_router.include_router(providers_router)
 api_v1_router.include_router(provider_auth_router)
 api_v1_router.include_router(provider_onboarding_router)
 api_v1_router.include_router(provider_profile_router)
@@ -178,6 +177,19 @@ api_v1_router.include_router(provider_wallet_router)
 api_v1_router.include_router(provider_requests_router)
 api_v1_router.include_router(provider_matching_router)
 api_v1_router.include_router(provider_quotations_router)
+# providers_router (customer-facing directory) is registered last among all
+# /providers/* routers: its GET /providers/{provider_id} is a single-segment
+# catch-all that would otherwise shadow every other bare /providers/<word>
+# route registered after it (e.g. /providers/dashboard, /providers/requests —
+# FastAPI/Starlette matches routes in registration order, not by
+# specificity). Found via live end-to-end testing this session: GET
+# /providers/dashboard was silently being handled by this router's
+# provider-profile lookup instead of dashboard_router.py, decoding the
+# caller's own provider JWT as if it were a customer token and failing with
+# "Account no longer exists" — a real, previously undetected bug masked by
+# the frontend's error-toast/fallback-to-zero UI looking identical to a
+# genuinely empty dashboard.
+api_v1_router.include_router(providers_router)
 api_v1_router.include_router(bookings_router)
 api_v1_router.include_router(change_requests_router)
 api_v1_router.include_router(invoices_router)
