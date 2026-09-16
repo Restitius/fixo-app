@@ -158,13 +158,24 @@ class ProviderAuthService:
     # -- login / tokens --------------------------------------------------------
 
     async def login(self, email: str, password: str, device_info: str = "", ip: str = "") -> dict[str, Any]:
-        provider = await self._providers.get_by_email(email.strip().lower())
-        if not provider or not self._hasher.verify(password, provider["password_hash"]):
+        auth_row = await self._providers.get_by_email(email.strip().lower())
+        if not auth_row or not self._hasher.verify(password, auth_row["password_hash"]):
             raise AuthenticationError("Invalid email or password")
-        if provider["status"] not in ("ACTIVE", "DRAFT"):
+        if auth_row["status"] not in ("ACTIVE", "DRAFT"):
             raise AuthenticationError(
-                f"Account status '{provider['status']}' does not permit login"
+                f"Account status '{auth_row['status']}' does not permit login"
             )
+        # by_email.sql's row includes password_hash (needed above to verify
+        # it) and is missing several profile fields (first/middle/last_name,
+        # country/region/city/district) that by_id.sql has — re-fetch the
+        # safe, complete representation (the same one /me and refresh()
+        # return) rather than passing the raw auth row's hash to the client.
+        # Found live: the login response's embedded "provider" object was
+        # being stored client-side in localStorage with a real bcrypt hash
+        # inside it.
+        provider = await self._providers.get_by_id(str(auth_row["provider_id"]))
+        if not provider:
+            raise AuthenticationError("Account no longer exists")
         return await self._issue_tokens(provider, device_info, ip)
 
     async def refresh(self, refresh_token: str) -> dict[str, Any]:
