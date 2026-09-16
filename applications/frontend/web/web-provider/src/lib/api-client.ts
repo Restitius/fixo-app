@@ -72,6 +72,12 @@ class ApiClient {
   delete<T = any>(path: string) {
     return this.request<T>(path, { method: "DELETE" });
   }
+
+  // multipart — sendJsonHeader=false lets the browser set its own
+  // multipart/form-data boundary instead of us forcing application/json.
+  postForm<T = any>(path: string, form: FormData) {
+    return this.request<T>(path, { method: "POST", body: form }, false);
+  }
 }
 
 export const apiClient = new ApiClient();
@@ -151,4 +157,233 @@ export const fixoSdk = {
         body,
       })
       .then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Onboarding + the domains it curates (profile, business, verification,
+// services, pricing, areas). Real endpoints and field names read directly
+// from applications/backend/app/domains/providers/api/*.py this session —
+// onboarding.tsx has no data store of its own, it's a presentation layer
+// over these.
+// ---------------------------------------------------------------------------
+
+export interface OnboardingStepDef {
+  step_id: string;
+  code: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  is_required: boolean;
+}
+
+export interface OnboardingStatus {
+  steps: (OnboardingStepDef & { completed: boolean })[];
+  completed: boolean;
+  progress: string;
+  current_step: string | null;
+}
+
+export interface UploadedFile {
+  file_name: string;
+  mime_type: string;
+  size_bytes: number;
+  storage_key: string;
+  url: string;
+}
+
+export interface ProviderProfile {
+  provider_id: string;
+  profile_photo_url?: string | null | undefined;
+  gender?: string | null | undefined;
+  date_of_birth?: string | null | undefined;
+  bio?: string | null | undefined;
+  languages?: string | null | undefined;
+  professional_title?: string | null | undefined;
+  years_experience?: number | null | undefined;
+  qualifications?: string[];
+  certifications?: string[];
+  skills?: string[];
+  specializations?: string[];
+  tools?: string[];
+}
+
+export interface ProviderBusinessProfile {
+  business_name?: string | null | undefined;
+  logo_url?: string | null | undefined;
+  registration_number?: string | null | undefined;
+  tax_number?: string | null | undefined;
+  business_email?: string | null | undefined;
+  business_phone?: string | null | undefined;
+  address?: string | null | undefined;
+  city?: string | null | undefined;
+  region?: string | null | undefined;
+  country?: string | null | undefined;
+  description?: string | null | undefined;
+  year_established?: number | null | undefined;
+  num_employees?: number | null | undefined;
+  website?: string | null | undefined;
+}
+
+export interface VerificationDocType {
+  code: string;
+  label: string;
+  is_required: boolean;
+}
+
+export interface VerificationDocument {
+  doc_id: string;
+  doc_type: string;
+  front_image_url: string;
+  back_image_url?: string | null | undefined;
+  doc_number?: string | null | undefined;
+  status: string;
+  issue_date?: string | null | undefined;
+  expiry_date?: string | null | undefined;
+}
+
+export interface VerificationStatus {
+  status: string;
+  required_missing: string[];
+  documents_count: number;
+  expiring_soon: string[];
+}
+
+export interface CatalogServiceOption {
+  service_id: string;
+  name: string;
+  category_name: string;
+}
+
+export interface ProviderServiceConfig {
+  service_id: string;
+  display_name?: string | null | undefined;
+  description?: string | null | undefined;
+  years_experience?: number | null | undefined;
+  pricing_model: string;
+  minimum_charge?: number | null | undefined;
+  duration_minutes?: number | null | undefined;
+  is_emergency_available: boolean;
+  approval_status?: string | null | undefined;
+}
+
+export interface ProviderServicePricing {
+  service_id: string;
+  pricing_model: string;
+  base_amount?: number | null | undefined;
+  from_amount?: number | null | undefined;
+  hourly_rate?: number | null | undefined;
+  minimum_hours?: number | null | undefined;
+  inspection_fee?: number | null | undefined;
+  currency: string;
+  includes_text?: string | null | undefined;
+  is_negotiable: boolean;
+}
+
+export interface AreaSettings {
+  base_latitude?: number | null | undefined;
+  base_longitude?: number | null | undefined;
+  max_travel_km?: number | null | undefined;
+  travel_fee?: number | null | undefined;
+  free_travel_radius_km?: number | null | undefined;
+  currency: string;
+  notes?: string | null | undefined;
+}
+
+export interface ServiceArea {
+  area_id: string;
+  area_type: "LOCATION" | "RADIUS";
+  label?: string | null | undefined;
+  country?: string | null | undefined;
+  region?: string | null | undefined;
+  city?: string | null | undefined;
+  district?: string | null | undefined;
+  center_latitude?: number | null | undefined;
+  center_longitude?: number | null | undefined;
+  radius_km?: number | null | undefined;
+  is_active: boolean;
+}
+
+export interface PayoutMethod {
+  method_id: string;
+  method_type: string;
+  provider_name?: string | null | undefined;
+  account_holder?: string | null | undefined;
+  account_number?: string | null | undefined;
+  mobile_number?: string | null | undefined;
+  currency: string;
+  is_default: boolean;
+}
+
+export const onboardingApi = {
+  // -- shared upload (profile photos, logos, verification docs) -------------
+  uploadFile: (file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return apiClient.postForm<UploadedFile>("/uploads", form).then((r) => r.data);
+  },
+
+  // -- onboarding progress ----------------------------------------------------
+  steps: () => apiClient.get<OnboardingStepDef[]>("/providers/onboarding/steps").then((r) => r.data),
+  status: () => apiClient.get<OnboardingStatus>("/providers/onboarding/status").then((r) => r.data),
+  saveStep: (stepCode: string, data: Record<string, unknown>) =>
+    apiClient.put<OnboardingStatus>(`/providers/onboarding/steps/${stepCode}`, { data }).then((r) => r.data),
+  completeStep: (stepCode: string, data: Record<string, unknown>) =>
+    apiClient.post<OnboardingStatus>(`/providers/onboarding/steps/${stepCode}/complete`, { data }).then((r) => r.data),
+
+  // -- personal profile ---------------------------------------------------------
+  getProfile: () => apiClient.get<ProviderProfile>("/providers/profile").then((r) => r.data),
+  updateProfile: (data: Partial<ProviderProfile>) =>
+    apiClient.patch<ProviderProfile>("/providers/profile", data).then((r) => r.data),
+
+  // -- business profile -----------------------------------------------------
+  getBusiness: () => apiClient.get<ProviderBusinessProfile>("/providers/business").then((r) => r.data),
+  upsertBusiness: (data: Partial<ProviderBusinessProfile> & { business_name: string }) =>
+    apiClient.put<ProviderBusinessProfile>("/providers/business", data).then((r) => r.data),
+
+  // -- identity verification -------------------------------------------------
+  docTypes: () => apiClient.get<VerificationDocType[]>("/providers/verification/doc-types").then((r) => r.data),
+  documents: () => apiClient.get<VerificationDocument[]>("/providers/verification/documents").then((r) => r.data),
+  addDocument: (data: {
+    doc_type: string;
+    front_image_url: string;
+    back_image_url?: string | undefined;
+    doc_number?: string | undefined;
+  }) => apiClient.post<VerificationDocument>("/providers/verification/documents", data).then((r) => r.data),
+  withdrawDocument: (docId: string) => apiClient.delete(`/providers/verification/documents/${docId}`).then((r) => r.data),
+  verificationStatus: () => apiClient.get<VerificationStatus>("/providers/verification/status").then((r) => r.data),
+  submitVerification: () => apiClient.post("/providers/verification/submit").then((r) => r.data),
+
+  // -- services offered + pricing ---------------------------------------------
+  serviceCatalog: () => apiClient.get<CatalogServiceOption[]>("/providers/services/catalog").then((r) => r.data),
+  myServices: () => apiClient.get<ProviderServiceConfig[]>("/providers/services").then((r) => r.data),
+  configureService: (serviceId: string, data: Partial<ProviderServiceConfig>) =>
+    apiClient.put<ProviderServiceConfig>(`/providers/services/${serviceId}`, data).then((r) => r.data),
+  removeService: (serviceId: string) => apiClient.delete(`/providers/services/${serviceId}`).then((r) => r.data),
+
+  listPricing: () => apiClient.get<ProviderServicePricing[]>("/providers/pricing").then((r) => r.data),
+  upsertPricing: (serviceId: string, data: Partial<ProviderServicePricing>) =>
+    apiClient.put<ProviderServicePricing>(`/providers/pricing/${serviceId}`, data).then((r) => r.data),
+
+  // -- service areas ------------------------------------------------------------
+  getAreaSettings: () => apiClient.get<AreaSettings>("/providers/areas/settings").then((r) => r.data),
+  saveAreaSettings: (data: Partial<AreaSettings>) =>
+    apiClient.put<AreaSettings>("/providers/areas/settings", data).then((r) => r.data),
+  listAreas: () => apiClient.get<ServiceArea[]>("/providers/areas").then((r) => r.data),
+  addArea: (data: Partial<ServiceArea> & { area_type: "LOCATION" | "RADIUS" }) =>
+    apiClient.post<ServiceArea>("/providers/areas", data).then((r) => r.data),
+  updateArea: (areaId: string, data: Partial<ServiceArea>) =>
+    apiClient.patch<ServiceArea>(`/providers/areas/${areaId}`, data).then((r) => r.data),
+  removeArea: (areaId: string) => apiClient.delete(`/providers/areas/${areaId}`).then((r) => r.data),
+
+  // -- payout methods (onboarding's "payment information" step) ---------------
+  listPayoutMethods: () => apiClient.get<PayoutMethod[]>("/providers/me/payouts/methods").then((r) => r.data),
+  addPayoutMethod: (data: {
+    method_type: string;
+    provider_name?: string | undefined;
+    account_holder?: string | undefined;
+    account_number?: string | undefined;
+    mobile_number?: string | undefined;
+    currency: string;
+    is_default: boolean;
+  }) => apiClient.post<PayoutMethod>("/providers/me/payouts/methods", data).then((r) => r.data),
 };
