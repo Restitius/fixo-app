@@ -21,4 +21,5 @@ SELECT ps.service_id,
   JOIN "SERVICES" s ON s.service_id = ps.service_id
   JOIN "SERVICE_CATEGORIES" c ON c.category_id = s.category_id
  WHERE ps.provider_id = CAST(:user_id AS uuid)
+   AND ps.status <> 'ARCHIVED'
  ORDER BY c.sort_order, s.name;
