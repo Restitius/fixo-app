@@ -1,16 +1,26 @@
-import { useMemo, useState } from "react";
+// Invoices — wired to the real /providers/me/invoices/* endpoints. The
+// real backend model is periodic earnings STATEMENTS (gross/commission/
+// tax/net per period, status issued/paid/overdue/void) — not per-booking
+// customer invoices with a party/PDF download, which is what the old
+// mock modeled. provider_invoices_service.py's own docstring: "No
+// generation or delivery happens in this phase" — so no download button,
+// and the "Tax & compliance"/"Invoice preferences" panels (TIN on file,
+// VAT rate, email/logo toggles) are dropped since none of those fields
+// exist in the real schema.
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, FileText } from "lucide-react";
+import { AlertCircle, Loader2, Receipt } from "lucide-react";
+import { toast } from "sonner";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
-import { Panel } from "@/components/dashboard/PageShell";
+import { MetricCard } from "@/components/dashboard/MetricCard";
 import { StatusPill } from "@/components/dashboard/StatusPill";
 import { TableCard, TableFilterBar, TableHead, TableScroll } from "@/components/dashboard/DataTable";
-import { fmtDate, fmtMoney } from "@/lib/format";
-import { invoices } from "@/lib/mock-data";
+import { fmtMoney } from "@/lib/format";
+import { invoicesApi, type InvoiceRow, type InvoiceSummary } from "@/lib/api-client";
 
 const title = "Invoices — FIXO Provider";
-const description = "Customer invoices, earnings statements, commission statements and withdrawal receipts.";
+const description = "Periodic earnings statements: gross, commission, tax and net per period.";
 
 export const Route = createFileRoute("/invoices")({
   head: () => ({
@@ -25,85 +35,99 @@ export const Route = createFileRoute("/invoices")({
   component: InvoicesPage,
 });
 
-const kinds = ["Customer invoice", "Earnings statement", "Commission statement", "Withdrawal receipt"];
-
 function InvoicesPage() {
   const [search, setSearch] = useState("");
-  const [kind, setKind] = useState("ALL");
+  const [status, setStatus] = useState("ALL");
+  const [rows, setRows] = useState<InvoiceRow[]>([]);
+  const [summary, setSummary] = useState<InvoiceSummary | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const rows = useMemo(
+  useEffect(() => {
+    Promise.all([invoicesApi.list(), invoicesApi.summary()])
+      .then(([r, s]) => {
+        setRows(r);
+        setSummary(s);
+      })
+      .catch((err) => toast.error(err instanceof Error ? err.message : "Could not load invoices."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const filtered = useMemo(
     () =>
-      invoices.filter(
-        (i) =>
-          (kind === "ALL" || i.kind === kind) &&
-          `${i.id} ${i.customer} ${i.booking}`.toLowerCase().includes(search.toLowerCase()),
+      rows.filter(
+        (i) => (status === "ALL" || i.status === status) && i.invoice_number.toLowerCase().includes(search.toLowerCase()),
       ),
-    [search, kind],
+    [rows, search, status],
   );
 
+  if (loading) {
+    return (
+      <ProviderPage title="Invoices" subtitle="Periodic earnings statements FIXO generates for your business.">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </ProviderPage>
+    );
+  }
+
   return (
-    <ProviderPage title="Invoices" subtitle="Every document FIXO generates for your business.">
+    <ProviderPage title="Invoices" subtitle="Periodic earnings statements FIXO generates for your business.">
+      {summary && (
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <MetricCard icon={Receipt} label="Statements" value={String(summary.total_count)} hint="All time" />
+          <MetricCard icon={Receipt} label="Gross" value={fmtMoney(summary.total_gross)} hint="Before deductions" />
+          <MetricCard icon={Receipt} label="Net" value={fmtMoney(summary.total_net)} hint="After commission + tax" tone="success" tintValue />
+          <MetricCard icon={AlertCircle} label="Overdue" value={String(summary.overdue_count)} hint="Need attention" tone={summary.overdue_count > 0 ? "destructive" : "primary"} tintValue />
+        </div>
+      )}
+
       <TableFilterBar
         search={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search documents..."
+        searchPlaceholder="Search by invoice number..."
         filters={[
           {
-            value: kind,
-            onChange: setKind,
-            placeholder: "Document type",
-            options: [{ value: "ALL", label: "All documents" }, ...kinds.map((k) => ({ value: k, label: k }))],
+            value: status,
+            onChange: setStatus,
+            placeholder: "Status",
+            options: [
+              { value: "ALL", label: "All statuses" },
+              ...["issued", "paid", "overdue", "void"].map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) })),
+            ],
           },
         ]}
       />
 
-      <div className="grid gap-4 pb-6 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-4 pb-6 lg:grid-cols-1">
         <TableCard>
           <TableScroll minWidth={760}>
-            <TableHead columns={["Document", "Type", "Booking", "Party", "Amount", "Date", ""]} />
+            <TableHead columns={["Statement", "Period", "Gross", "Commission", "Tax", "Net", "Status"]} />
             <tbody>
-              {rows.map((i) => (
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-sm text-muted-foreground">
+                    No statements yet.
+                  </td>
+                </tr>
+              )}
+              {filtered.map((i) => (
                 <tr key={i.id} className="border-b border-border/60 last:border-0 hover:bg-muted/50">
-                  <td className="px-6 py-4 font-semibold">{i.id}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{i.kind}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{i.booking}</td>
-                  <td className="px-4 py-4">{i.customer}</td>
-                  <td className="px-4 py-4 font-semibold">{fmtMoney(i.amount)}</td>
-                  <td className="px-4 py-4 text-muted-foreground">{fmtDate(i.date)}</td>
+                  <td className="px-6 py-4 font-semibold">{i.invoice_number}</td>
+                  <td className="px-4 py-4 text-muted-foreground">
+                    {i.period_start} – {i.period_end}
+                  </td>
+                  <td className="px-4 py-4">{fmtMoney(i.gross_amount, i.currency)}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{fmtMoney(i.commission_amount, i.currency)}</td>
+                  <td className="px-4 py-4 text-muted-foreground">{fmtMoney(i.tax_amount, i.currency)}</td>
+                  <td className="px-4 py-4 font-semibold text-primary">{fmtMoney(i.net_amount, i.currency)}</td>
                   <td className="px-4 py-4">
-                    <div className="flex items-center justify-end gap-3">
-                      <StatusPill status={i.status} />
-                      <button className="text-muted-foreground transition-colors hover:text-primary" title="Download PDF">
-                        <Download className="size-4" />
-                      </button>
-                    </div>
+                    <StatusPill status={i.status.toUpperCase()} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </TableScroll>
         </TableCard>
-
-        <div className="mt-6 space-y-4">
-          <Panel title="Tax & compliance">
-            <div className="space-y-3 text-sm text-muted-foreground">
-              <p>TIN-114-902-338 is on file and printed on every customer invoice.</p>
-              <p>VAT is applied at 18% where applicable.</p>
-              <p>Annual summaries are issued each January for tax filing.</p>
-            </div>
-            <button className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card py-2.5 text-sm font-semibold hover:bg-muted">
-              <FileText className="size-4" /> Download 2026 summary
-            </button>
-          </Panel>
-          <Panel title="Invoice preferences">
-            <label className="flex items-center justify-between gap-3 rounded-xl bg-muted/50 px-4 py-3 text-sm">
-              Email invoices to me <input type="checkbox" defaultChecked className="size-4 accent-[var(--primary)]" />
-            </label>
-            <label className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-muted/50 px-4 py-3 text-sm">
-              Include company logo <input type="checkbox" defaultChecked className="size-4 accent-[var(--primary)]" />
-            </label>
-          </Panel>
-        </div>
       </div>
     </ProviderPage>
   );
