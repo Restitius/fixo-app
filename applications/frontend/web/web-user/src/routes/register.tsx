@@ -1,6 +1,6 @@
 // Register page — customer registration form.
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { User, Mail, Phone, Lock, Check } from "lucide-react";
@@ -40,7 +40,7 @@ export const Route = createFileRoute("/register")({
 function RegisterPage() {
   const { t } = useTranslation("auth");
   const { register: registerCustomer } = useAuth();
-  const { register, handleSubmit, formState: { isSubmitting, errors }, watch } =
+  const { register, control, handleSubmit, formState: { isSubmitting, errors }, watch } =
     useForm<RegisterValues>({
       resolver: zodResolver(registerSchema),
       defaultValues: {
@@ -111,7 +111,18 @@ function RegisterPage() {
 
           <div className="space-y-3">
             <div className="flex items-start space-x-3 space-y-0">
-              <Checkbox id="terms_accepted" {...register("terms_accepted")} className="mt-1" />
+              <Controller
+                name="terms_accepted"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id="terms_accepted"
+                    checked={field.value}
+                    onCheckedChange={(checked) => field.onChange(checked === true)}
+                    className="mt-1"
+                  />
+                )}
+              />
               <Label htmlFor="terms_accepted" className="font-normal">
                 {t("register.agreeTermsPrefix")} <a href="#" className="text-primary">{t("register.termsLink")}</a>
               </Label>
@@ -119,7 +130,18 @@ function RegisterPage() {
             {errors.terms_accepted && <p className="text-xs text-destructive">{errors.terms_accepted.message}</p>}
 
             <div className="flex items-start space-x-3 space-y-0">
-              <Checkbox id="privacy_accepted" {...register("privacy_accepted")} className="mt-1" />
+              <Controller
+                name="privacy_accepted"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox
+                    id="privacy_accepted"
+                    checked={field.value}
+                    onCheckedChange={(checked) => field.onChange(checked === true)}
+                    className="mt-1"
+                  />
+                )}
+              />
               <Label htmlFor="privacy_accepted" className="font-normal">
                 {t("register.agreePrivacyPrefix")} <a href="#" className="text-primary">{t("register.privacyLink")}</a>
               </Label>

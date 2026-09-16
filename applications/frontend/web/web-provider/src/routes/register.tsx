@@ -1,6 +1,15 @@
+// Register page — provider registration form (individual or business).
 import { useState } from "react";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { ArrowLeft, Building2, User, Wrench } from "lucide-react";
+import { toast } from "sonner";
+
+import { useProviderAuth } from "@/lib/provider-auth";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const title = "Provider Registration — FIXO";
 const description = "Create your FIXO provider account as an individual professional or a registered business.";
@@ -18,48 +27,81 @@ export const Route = createFileRoute("/register")({
   component: RegisterPage,
 });
 
+const registerSchema = z.object({
+  first_name: z.string().min(1, "First name is required"),
+  middle_name: z.string().optional(),
+  last_name: z.string().min(1, "Last name is required"),
+  email: z.string().email("Enter a valid email"),
+  phone: z.string().min(7, "Mobile number too short"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirm: z.string(),
+  country: z.string().optional(),
+  region: z.string().optional(),
+  city: z.string().optional(),
+  preferred_language: z.string(),
+  referral_code: z.string().optional(),
+  terms_accepted: z.boolean().refine((v) => v === true, { message: "You must accept the terms and conditions" }),
+  privacy_accepted: z.boolean().refine((v) => v === true, { message: "You must accept the privacy policy" }),
+}).refine((data) => data.password === data.confirm, {
+  message: "Passwords do not match",
+  path: ["confirm"],
+});
+
+type RegisterValues = z.infer<typeof registerSchema>;
+
 const field =
   "h-11 w-full rounded-xl border border-input bg-card px-3.5 text-sm outline-none transition-shadow focus:ring-2 focus:ring-ring/30";
 
 function RegisterPage() {
-  const navigate = useNavigate();
+  const { register: registerProvider } = useProviderAuth();
   const [accountType, setAccountType] = useState<"INDIVIDUAL" | "BUSINESS">("INDIVIDUAL");
-  const [error, setError] = useState("");
-  const [form, setForm] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirm: "",
-    country: "Tanzania",
-    region: "Dar es Salaam",
-    city: "Kinondoni",
-    language: "English",
-    referral: "",
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<RegisterValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      first_name: "",
+      middle_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirm: "",
+      country: "Tanzania",
+      region: "Dar es Salaam",
+      city: "Kinondoni",
+      preferred_language: "en",
+      referral_code: "",
+      terms_accepted: false,
+      privacy_accepted: false,
+    },
   });
 
-  function set(key: keyof typeof form, value: string) {
-    setForm((f) => ({ ...f, [key]: value }));
-  }
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!form.firstName || !form.lastName || !form.email || !form.phone) {
-      setError("Please complete first name, last name, email and mobile number.");
-      return;
+  const onSubmit = async (values: RegisterValues) => {
+    try {
+      await registerProvider({
+        first_name: values.first_name,
+        middle_name: values.middle_name || undefined,
+        last_name: values.last_name,
+        email: values.email,
+        phone: values.phone,
+        password: values.password,
+        account_type: accountType,
+        country: values.country || undefined,
+        region: values.region || undefined,
+        city: values.city || undefined,
+        preferred_language: values.preferred_language,
+        referral_code: values.referral_code || undefined,
+        terms_accepted: values.terms_accepted,
+        privacy_accepted: values.privacy_accepted,
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not create your account. Please try again.");
     }
-    if (form.password.length < 8) {
-      setError("Password must be at least 8 characters.");
-      return;
-    }
-    if (form.password !== form.confirm) {
-      setError("Passwords do not match.");
-      return;
-    }
-    navigate({ to: "/verify-otp" });
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background px-4 py-8">
@@ -78,7 +120,7 @@ function RegisterPage() {
             </span>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Create your provider account</h1>
-              <p className="text-sm text-muted-foreground">We verify your mobile number and email in the next step.</p>
+              <p className="text-sm text-muted-foreground">We verify your email in the next step.</p>
             </div>
           </div>
 
@@ -106,63 +148,101 @@ function RegisterPage() {
             ))}
           </div>
 
-          <form onSubmit={submit} className="mt-6 grid gap-4 sm:grid-cols-2">
-            <Field label="First name">
-              <input className={field} value={form.firstName} onChange={(e) => set("firstName", e.target.value)} />
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 grid gap-4 sm:grid-cols-2">
+            <Field label="First name" error={errors.first_name?.message}>
+              <input className={field} {...register("first_name")} />
             </Field>
             <Field label="Middle name">
-              <input className={field} value={form.middleName} onChange={(e) => set("middleName", e.target.value)} />
+              <input className={field} {...register("middle_name")} />
             </Field>
-            <Field label="Last name">
-              <input className={field} value={form.lastName} onChange={(e) => set("lastName", e.target.value)} />
+            <Field label="Last name" error={errors.last_name?.message}>
+              <input className={field} {...register("last_name")} />
             </Field>
-            <Field label="Email">
-              <input type="email" className={field} value={form.email} onChange={(e) => set("email", e.target.value)} />
+            <Field label="Email" error={errors.email?.message}>
+              <input type="email" className={field} {...register("email")} />
             </Field>
-            <Field label="Mobile number">
-              <input className={field} placeholder="+255 7XX XXX XXX" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
+            <Field label="Mobile number" error={errors.phone?.message}>
+              <input className={field} placeholder="+255 7XX XXX XXX" {...register("phone")} />
             </Field>
             <Field label="Preferred language">
-              <select className={field} value={form.language} onChange={(e) => set("language", e.target.value)}>
-                {["English", "Swahili", "French", "Arabic"].map((l) => (
-                  <option key={l}>{l}</option>
-                ))}
+              <select className={field} {...register("preferred_language")}>
+                <option value="en">English</option>
+                <option value="sw">Swahili</option>
+                <option value="fr">French</option>
+                <option value="ar">Arabic</option>
               </select>
             </Field>
-            <Field label="Password">
-              <input type="password" className={field} value={form.password} onChange={(e) => set("password", e.target.value)} />
+            <Field label="Password" error={errors.password?.message}>
+              <input type="password" className={field} {...register("password")} />
             </Field>
-            <Field label="Confirm password">
-              <input type="password" className={field} value={form.confirm} onChange={(e) => set("confirm", e.target.value)} />
+            <Field label="Confirm password" error={errors.confirm?.message}>
+              <input type="password" className={field} {...register("confirm")} />
             </Field>
             <Field label="Country">
-              <select className={field} value={form.country} onChange={(e) => set("country", e.target.value)}>
+              <select className={field} {...register("country")}>
                 {["Tanzania", "Kenya", "Uganda", "Rwanda"].map((c) => (
                   <option key={c}>{c}</option>
                 ))}
               </select>
             </Field>
             <Field label="Region / state">
-              <input className={field} value={form.region} onChange={(e) => set("region", e.target.value)} />
+              <input className={field} {...register("region")} />
             </Field>
             <Field label="City / district">
-              <input className={field} value={form.city} onChange={(e) => set("city", e.target.value)} />
+              <input className={field} {...register("city")} />
             </Field>
             <Field label="Referral code (optional)">
-              <input className={field} value={form.referral} onChange={(e) => set("referral", e.target.value)} />
+              <input className={field} {...register("referral_code")} />
             </Field>
 
-            {error && (
-              <p className="sm:col-span-2 rounded-xl bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">{error}</p>
-            )}
+            <div className="sm:col-span-2 space-y-3">
+              <div className="flex items-start gap-3">
+                <Controller
+                  name="terms_accepted"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="terms_accepted"
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked === true)}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                <Label htmlFor="terms_accepted" className="font-normal">
+                  I agree to the <a href="#" className="text-primary">Terms and Conditions</a>
+                </Label>
+              </div>
+              {errors.terms_accepted && <p className="text-xs text-destructive">{errors.terms_accepted.message}</p>}
+
+              <div className="flex items-start gap-3">
+                <Controller
+                  name="privacy_accepted"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="privacy_accepted"
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked === true)}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                <Label htmlFor="privacy_accepted" className="font-normal">
+                  I agree to the <a href="#" className="text-primary">Privacy Policy</a>
+                </Label>
+              </div>
+              {errors.privacy_accepted && <p className="text-xs text-destructive">{errors.privacy_accepted.message}</p>}
+            </div>
 
             <div className="sm:col-span-2">
               <button
                 type="submit"
-                className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-transform hover:scale-[1.01]"
+                disabled={isSubmitting}
+                className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-transform hover:scale-[1.01] disabled:opacity-60"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
-                Continue to verification
+                {isSubmitting ? "Creating account…" : "Continue to verification"}
               </button>
               <p className="mt-4 text-center text-sm text-muted-foreground">
                 Already registered?{" "}
@@ -178,11 +258,12 @@ function RegisterPage() {
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-sm font-medium">{label}</span>
       {children}
+      {error && <span className="mt-1 block text-xs text-destructive">{error}</span>}
     </label>
   );
 }
