@@ -1,22 +1,30 @@
+// Provider dashboard — wired to the real /providers/dashboard* endpoints,
+// the requests feed, wallet overview and onboarding status. Field names
+// read directly from provider_dashboard_service.py / their governed SQL
+// this session, not guessed from the old mock-data.ts shapes.
+import { useEffect, useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Briefcase, CalendarDays, Inbox, Star, TrendingUp, Wallet } from "lucide-react";
+import { Briefcase, CalendarDays, Inbox, Loader2, Star, TrendingUp, Wallet } from "lucide-react";
+import { toast } from "sonner";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { StatusPill } from "@/components/dashboard/StatusPill";
 import { fmtMoney } from "@/lib/format";
+import { useProviderAuth } from "@/lib/provider-auth";
 import {
-  bookings,
-  dashboardStats,
-  jobRequests,
-  notifications,
-  onboardingSteps,
-  performance,
-  provider,
-  walletSummary,
-  weekLoad,
-} from "@/lib/mock-data";
+  dashboardApi,
+  fixoSdk,
+  onboardingApi,
+  type DashboardEarnings,
+  type DashboardOverview,
+  type DashboardPerformance,
+  type DashboardScheduleItem,
+  type ProviderNotificationRow,
+  type RequestFeedItem,
+  type WalletOverview,
+} from "@/lib/api-client";
 
 const title = "Provider Dashboard — FIXO";
 const description = "Today's jobs, incoming requests, earnings and performance at a glance.";
@@ -35,28 +43,95 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardPage() {
-  const todays = bookings.filter((b) => b.date === "2026-09-04");
-  const maxLoad = Math.max(...weekLoad.map((w) => w.value), 1);
-  const doneSteps = onboardingSteps.filter((s) => s.done).length;
+  const { session } = useProviderAuth();
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+  const [todaySchedule, setTodaySchedule] = useState<DashboardScheduleItem[]>([]);
+  const [earnings, setEarnings] = useState<DashboardEarnings | null>(null);
+  const [performance, setPerformance] = useState<DashboardPerformance | null>(null);
+  const [wallet, setWallet] = useState<WalletOverview | null>(null);
+  const [requests, setRequests] = useState<RequestFeedItem[]>([]);
+  const [notifications, setNotifications] = useState<ProviderNotificationRow[]>([]);
+  const [onboardingComplete, setOnboardingComplete] = useState<{ progress: string; completed: boolean } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [ov, sched, earn, perf, wal, reqs, notifs, onboarding] = await Promise.all([
+          dashboardApi.overview(),
+          dashboardApi.schedule(),
+          dashboardApi.earnings(),
+          dashboardApi.performance(),
+          dashboardApi.wallet(),
+          dashboardApi.requestsFeed().catch(() => []),
+          fixoSdk.notifications("all", 4).catch(() => []),
+          onboardingApi.status().catch(() => null),
+        ]);
+        setOverview(ov);
+        setTodaySchedule(sched.today);
+        setEarnings(earn);
+        setPerformance(perf);
+        setWallet(wal);
+        setRequests(reqs);
+        setNotifications(notifs);
+        if (onboarding) setOnboardingComplete({ progress: onboarding.progress, completed: onboarding.completed });
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Could not load your dashboard.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <ProviderPage title="Loading…" subtitle="">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </ProviderPage>
+    );
+  }
+
+  const stats = overview?.stats;
+  const firstName = session?.first_name ?? session?.display_name ?? "there";
 
   return (
-    <ProviderPage title={`Habari, ${provider.firstName}`} subtitle="Here is what is happening with your business today.">
+    <ProviderPage title={`Habari, ${firstName}`} subtitle="Here is what is happening with your business today.">
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Briefcase} label="Jobs today" value={String(dashboardStats.todayJobs)} hint="2 remaining" />
-        <MetricCard icon={Inbox} label="New requests" value={String(dashboardStats.pendingRequests)} hint="Awaiting your response" tone="amber" tintValue />
-        <MetricCard icon={Wallet} label="Earned today" value={fmtMoney(dashboardStats.earningsToday)} hint="Net after commission" tone="success" tintValue />
-        <MetricCard icon={Star} label="Rating" value={`${provider.rating}`} hint={`${provider.reviewCount} reviews`} />
+        <MetricCard icon={Briefcase} label="Jobs today" value={String(stats?.todays_jobs ?? 0)} hint={`${stats?.active_jobs ?? 0} active`} />
+        <MetricCard icon={Inbox} label="New requests" value={String(stats?.pending_requests ?? 0)} hint="Awaiting your response" tone="amber" tintValue />
+        <MetricCard
+          icon={Wallet}
+          label="Earned today"
+          value={fmtMoney(stats?.earnings_today ?? 0, stats?.currency)}
+          hint="Collected today"
+          tone="success"
+          tintValue
+        />
+        <MetricCard icon={Star} label="Rating" value={stats?.rating_avg != null ? String(stats.rating_avg) : "—"} hint={`${stats?.rating_count ?? 0} reviews`} />
       </div>
 
-      {doneSteps < onboardingSteps.length && (
+      {onboardingComplete && !onboardingComplete.completed && (
         <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl p-5 text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
           <div>
-            <p className="text-base font-bold">Finish your onboarding ({doneSteps}/{onboardingSteps.length})</p>
+            <p className="text-base font-bold">Finish your onboarding ({onboardingComplete.progress})</p>
             <p className="text-sm text-primary-foreground/85">Complete service areas, payout details and agreements to unlock full job matching.</p>
           </div>
           <Link to="/onboarding" className="rounded-xl bg-white/95 px-5 py-2.5 text-sm font-bold text-primary">
             Continue
           </Link>
+        </div>
+      )}
+
+      {overview && overview.attention.length > 0 && (
+        <div className="mt-6 space-y-2">
+          {overview.attention.map((a) => (
+            <div key={a.code} className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 text-sm">
+              <span>{a.message}</span>
+              <StatusPill tone={a.severity === "critical" ? "destructive" : a.severity === "warning" ? "amber" : "primary"} label={a.severity} />
+            </div>
+          ))}
         </div>
       )}
 
@@ -71,19 +146,18 @@ function DashboardPage() {
           }
         >
           <div className="space-y-3">
-            {todays.map((b) => (
-              <div key={b.id} className="flex flex-wrap items-center gap-4 rounded-2xl bg-muted/50 p-4">
+            {todaySchedule.length === 0 && <p className="text-sm text-muted-foreground">No jobs scheduled for today.</p>}
+            {todaySchedule.map((b) => (
+              <div key={b.booking_id} className="flex flex-wrap items-center gap-4 rounded-2xl bg-muted/50 p-4">
                 <span className="flex size-12 shrink-0 flex-col items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <span className="text-sm font-bold">{b.time}</span>
+                  <span className="text-xs font-bold">{b.time_window ?? "—"}</span>
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold">{b.service}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {b.customer} · {b.address}
-                  </p>
+                  <p className="truncate text-sm font-semibold">{b.service_name}</p>
+                  <p className="truncate text-xs text-muted-foreground">{b.booking_number}</p>
                 </div>
-                <StatusPill status={b.stage} />
-                <span className="text-sm font-bold text-primary">{fmtMoney(b.price)}</span>
+                <StatusPill status={b.status} />
+                <span className="text-sm font-bold text-primary">{fmtMoney(b.agreed_amount, b.currency)}</span>
                 <Link to="/bookings" className="text-sm font-semibold text-primary hover:underline">
                   Open
                 </Link>
@@ -93,12 +167,11 @@ function DashboardPage() {
         </Panel>
 
         <Panel title="Wallet">
-          <p className="text-3xl font-extrabold tracking-tight text-primary">{fmtMoney(walletSummary.available)}</p>
+          <p className="text-3xl font-extrabold tracking-tight text-primary">{fmtMoney(wallet?.available_balance ?? 0, wallet?.currency)}</p>
           <p className="text-sm text-muted-foreground">Available for withdrawal</p>
           <div className="mt-4 space-y-2 text-sm">
-            <Row label="Pending clearance" value={fmtMoney(walletSummary.pending)} />
-            <Row label="Reserved (disputes)" value={fmtMoney(walletSummary.reserved)} />
-            <Row label="Lifetime earnings" value={fmtMoney(walletSummary.totalEarned)} />
+            <Row label="Pending clearance" value={fmtMoney(wallet?.pending_balance ?? 0, wallet?.currency)} />
+            <Row label="Reserved (disputes)" value={fmtMoney(wallet?.reserved_funds ?? 0, wallet?.currency)} />
           </div>
           <Link
             to="/payouts"
@@ -121,18 +194,16 @@ function DashboardPage() {
           }
         >
           <div className="space-y-3">
-            {jobRequests.slice(0, 3).map((r) => (
-              <div key={r.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border p-4">
+            {requests.length === 0 && <p className="text-sm text-muted-foreground">No incoming requests right now.</p>}
+            {requests.slice(0, 3).map((r) => (
+              <div key={r.match_id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border p-4">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate text-sm font-semibold">{r.service}</p>
-                    {r.urgent && <StatusPill tone="destructive" label="Urgent" />}
-                  </div>
+                  <p className="truncate text-sm font-semibold">{r.service_name}</p>
                   <p className="truncate text-xs text-muted-foreground">
-                    {r.customer} · {r.area} · {r.distanceKm} km · {r.estimatedDuration}
+                    {r.customer_name} · {[r.city, r.region].filter(Boolean).join(", ")}
                   </p>
                 </div>
-                <span className="text-sm font-bold text-primary">{fmtMoney(r.estimatedEarning)}</span>
+                {r.estimated_earnings != null && <span className="text-sm font-bold text-primary">{fmtMoney(r.estimated_earnings)}</span>}
                 <Link
                   to="/requests"
                   className="rounded-xl px-4 py-2 text-xs font-semibold text-primary-foreground"
@@ -145,22 +216,13 @@ function DashboardPage() {
           </div>
         </Panel>
 
-        <Panel title="This week">
-          <div className="flex h-40 items-end gap-2">
-            {weekLoad.map((d) => (
-              <div key={d.label} className="flex flex-1 flex-col items-center gap-2">
-                <div
-                  className="w-full rounded-t-xl"
-                  style={{ height: `${(d.value / maxLoad) * 100}%`, backgroundImage: "var(--gradient-primary)", minHeight: 4 }}
-                />
-                <span className="text-xs text-muted-foreground">{d.label}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 space-y-2 text-sm">
-            <Row label="Acceptance rate" value={`${performance.acceptanceRate}%`} />
-            <Row label="Completion rate" value={`${performance.completionRate}%`} />
-            <Row label="Avg. response" value={`${performance.responseMinutes} min`} />
+        <Panel title="Performance">
+          <div className="space-y-2 text-sm">
+            <Row label="Acceptance rate" value={performance?.acceptance_rate != null ? `${Math.round(performance.acceptance_rate * 100)}%` : "—"} />
+            <Row label="Completion rate" value={performance?.completion_rate != null ? `${Math.round(performance.completion_rate * 100)}%` : "—"} />
+            <Row label="Avg. response" value={performance?.response_time_minutes != null ? `${performance.response_time_minutes} min` : "—"} />
+            <Row label="Collected this week" value={fmtMoney(earnings?.collected_week ?? 0, earnings?.currency)} />
+            <Row label="Collected this month" value={fmtMoney(earnings?.collected_month ?? 0, earnings?.currency)} />
           </div>
         </Panel>
       </div>
@@ -168,14 +230,14 @@ function DashboardPage() {
       <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-3">
         <Panel className="lg:col-span-2" title="Recent notifications">
           <ul className="space-y-3">
-            {notifications.slice(0, 4).map((n) => (
+            {notifications.length === 0 && <p className="text-sm text-muted-foreground">No notifications yet.</p>}
+            {notifications.map((n) => (
               <li key={n.id} className="flex items-start gap-3 rounded-2xl bg-muted/50 p-4">
-                <span className={`mt-1.5 size-2 shrink-0 rounded-full ${n.unread ? "bg-primary" : "bg-muted-foreground/40"}`} />
+                <span className={`mt-1.5 size-2 shrink-0 rounded-full ${!n.is_read ? "bg-primary" : "bg-muted-foreground/40"}`} />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold">{n.title}</p>
                   <p className="truncate text-xs text-muted-foreground">{n.body}</p>
                 </div>
-                <span className="shrink-0 text-xs text-muted-foreground">{n.at}</span>
               </li>
             ))}
           </ul>
