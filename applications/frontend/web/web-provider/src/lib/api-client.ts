@@ -555,3 +555,189 @@ export const quotesApi = {
   submit: (quoteId: string) => apiClient.post<QuoteDetail>(`/providers/quotations/${quoteId}/submit`).then((r) => r.data),
   withdraw: (quoteId: string) => apiClient.post<QuoteDetail>(`/providers/quotations/${quoteId}/withdraw`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Bookings + job execution (arrival, tracking, checklist, evidence,
+// materials, change-requests, completion). Field names read directly from
+// each router's real request/response schema and governed SQL this session.
+// ---------------------------------------------------------------------------
+
+export interface BookingFeedRow {
+  booking_id: string;
+  booking_number: string;
+  status: string;
+  scheduled_date: string;
+  time_window?: string | null;
+  agreed_amount: number;
+  currency: string;
+  payment_attempts?: number;
+  created_at: string;
+  updated_at?: string;
+  customer_name: string;
+  customer_phone?: string | null;
+  customer_email?: string | null;
+  service_name: string;
+  street_address?: string | null;
+  city?: string | null;
+  region?: string | null;
+  acknowledged_at?: string | null;
+}
+
+export interface BookingDetail extends BookingFeedRow {
+  service_description?: string | null;
+  district?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  ack_notes?: string | null;
+  request_number?: string;
+  arrived_at?: string | null;
+  verified_at?: string | null;
+  started_at?: string | null;
+  completed_at?: string | null;
+}
+
+export interface BookingTimelineEvent {
+  timeline_id: string;
+  event: string;
+  detail?: string | null;
+  created_at: string;
+}
+
+export interface ArrivalStatus {
+  booking_id: string;
+  status: string;
+  arrived_at?: string | null;
+  verified_at?: string | null;
+  arrival_latitude?: number | null;
+  arrival_longitude?: number | null;
+}
+
+export interface ChecklistItem {
+  item_id: string;
+  booking_id: string;
+  task_title: string;
+  position: number;
+  is_completed: boolean;
+  completed_at?: string | null;
+  created_at?: string;
+}
+
+export interface ChecklistProgress {
+  booking_id: string;
+  total_items: number;
+  completed_items: number;
+  pct: number;
+}
+
+export interface EvidenceItem {
+  evidence_id: string;
+  booking_id: string;
+  phase: string;
+  kind: string;
+  title?: string | null;
+  body?: string | null;
+  media_url?: string | null;
+  quantity?: number | null;
+  unit?: string | null;
+  created_at: string;
+}
+
+export interface MaterialItem {
+  material_id: string;
+  booking_id: string;
+  item_name: string;
+  quantity: number;
+  unit_cost?: number | null;
+  amount?: number | null;
+  currency: string;
+  note?: string | null;
+  attachment_url?: string | null;
+  attachment_kind?: string | null;
+  created_at: string;
+}
+
+export interface ChangeRequestItem {
+  change_id: string;
+  booking_id: string;
+  change_type: string;
+  proposed_value: string;
+  reason?: string | null;
+  status?: string;
+  created_at?: string;
+}
+
+export interface CompletionReport {
+  completion_id: string;
+  booking_id: string;
+  completion_notes?: string | null;
+  work_performed?: string | null;
+  materials_summary?: string | null;
+  before_after_evidence?: string[] | null;
+  warranty_details?: string | null;
+  recommended_followup?: string | null;
+  maintenance_recommendations?: string | null;
+  created_at: string;
+  booking_status: string;
+}
+
+export const bookingsApi = {
+  feed: (status?: string, limit = 20, offset = 0) =>
+    apiClient.get<BookingFeedRow[]>(`/providers/me/bookings${qs({ status, limit, offset })}`).then((r) => r.data),
+  get: (bookingId: string) => apiClient.get<BookingFeedRow>(`/providers/me/bookings/${bookingId}`).then((r) => r.data),
+  details: (bookingId: string) => apiClient.get<BookingDetail>(`/providers/me/bookings/${bookingId}/details`).then((r) => r.data),
+  timeline: (bookingId: string) => apiClient.get<BookingTimelineEvent[]>(`/providers/me/bookings/${bookingId}/timeline`).then((r) => r.data),
+  acknowledge: (bookingId: string) => apiClient.post(`/providers/me/bookings/${bookingId}/acknowledge`).then((r) => r.data),
+  startService: (bookingId: string, gps?: { gps_lat: number; gps_lng: number }) =>
+    apiClient.post(`/providers/me/bookings/${bookingId}/start`, gps ?? {}).then((r) => r.data),
+};
+
+export const trackingApi = {
+  startTrip: (bookingId: string) => apiClient.post<{ booking_id: string; trip_started_at: string }>(`/providers/me/tracking/bookings/${bookingId}/start-trip`).then((r) => r.data),
+  endTrip: (bookingId: string) => apiClient.post(`/providers/me/tracking/bookings/${bookingId}/end-trip`).then((r) => r.data),
+};
+
+export const arrivalApi = {
+  arrive: (bookingId: string, latitude: number, longitude: number) =>
+    apiClient.post<ArrivalStatus>(`/providers/me/bookings/${bookingId}/arrive${qs({ latitude, longitude })}`).then((r) => r.data),
+  verifyPin: (bookingId: string, code: string) =>
+    apiClient.post<{ booking_id: string; verified_at: string }>(`/providers/me/bookings/${bookingId}/verify-pin${qs({ code })}`).then((r) => r.data),
+  status: (bookingId: string) => apiClient.get<ArrivalStatus>(`/providers/me/bookings/${bookingId}/arrival-status`).then((r) => r.data),
+};
+
+export const checklistApi = {
+  instantiate: (bookingId: string, serviceId: string) =>
+    apiClient.post<{ booking_id: string; items: ChecklistItem[]; already_instantiated: boolean }>(
+      `/providers/me/checklist/bookings/${bookingId}/instantiate`,
+      { service_id: serviceId },
+    ).then((r) => r.data),
+  listForBooking: (bookingId: string) => apiClient.get<ChecklistItem[]>(`/providers/me/checklist/bookings/${bookingId}`).then((r) => r.data),
+  setCompleted: (bookingId: string, itemId: string, isCompleted = true) =>
+    apiClient.post<ChecklistItem>(`/providers/me/checklist/bookings/${bookingId}/items/${itemId}/complete`, { is_completed: isCompleted }).then((r) => r.data),
+  progress: (bookingId: string) => apiClient.get<ChecklistProgress>(`/providers/me/checklist/bookings/${bookingId}/progress`).then((r) => r.data),
+};
+
+export const evidenceApi = {
+  add: (bookingId: string, data: { phase: string; kind: string; title?: string; media_url?: string }) =>
+    apiClient.post<EvidenceItem>(`/providers/me/evidence/bookings/${bookingId}`, data).then((r) => r.data),
+  list: (bookingId: string) => apiClient.get<EvidenceItem[]>(`/providers/me/evidence/bookings/${bookingId}`).then((r) => r.data),
+  delete: (bookingId: string, evidenceId: string) => apiClient.delete(`/providers/me/evidence/bookings/${bookingId}/${evidenceId}`).then((r) => r.data),
+};
+
+export const materialsApi = {
+  add: (bookingId: string, data: { item_name: string; quantity: number; amount?: number; currency?: string }) =>
+    apiClient.post<MaterialItem>(`/providers/me/materials/bookings/${bookingId}`, data).then((r) => r.data),
+  list: (bookingId: string) => apiClient.get<MaterialItem[]>(`/providers/me/materials/bookings/${bookingId}`).then((r) => r.data),
+  delete: (bookingId: string, materialId: string) => apiClient.delete(`/providers/me/materials/bookings/${bookingId}/${materialId}`).then((r) => r.data),
+};
+
+export const changeRequestsApi = {
+  submit: (bookingId: string, data: { change_type: string; proposed_value: string; reason?: string }) =>
+    apiClient.post<ChangeRequestItem>(`/providers/me/change-requests/bookings/${bookingId}`, data).then((r) => r.data),
+  list: (bookingId: string) => apiClient.get<ChangeRequestItem[]>(`/providers/me/change-requests/bookings/${bookingId}`).then((r) => r.data),
+};
+
+export const completionApi = {
+  complete: (bookingId: string, data: { completion_notes?: string; work_performed?: string }) =>
+    apiClient.post<CompletionReport>(`/providers/me/completion/bookings/${bookingId}/complete`, data).then((r) => r.data),
+  getReport: (bookingId: string) => apiClient.get<CompletionReport>(`/providers/me/completion/bookings/${bookingId}`).then((r) => r.data),
+};

@@ -62,7 +62,14 @@ function DashboardPage() {
           dashboardApi.schedule(),
           dashboardApi.earnings(),
           dashboardApi.performance(),
-          dashboardApi.wallet(),
+          // Non-critical for the dashboard to render — same treatment as
+          // requests/notifications/onboarding below. A real bug this
+          // session (wallet_router.py missing the standard envelope) made
+          // this throw on every call; without a .catch() here that single
+          // failure silently killed the *entire* Promise.all, and every
+          // fallback-to-zero value in this page's JSX made the resulting
+          // all-null state look identical to a genuine empty account.
+          dashboardApi.wallet().catch(() => null),
           dashboardApi.requestsFeed().catch(() => []),
           fixoSdk.notifications("all", 4).catch(() => []),
           onboardingApi.status().catch(() => null),
