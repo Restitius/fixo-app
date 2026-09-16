@@ -2351,7 +2351,7 @@ queries:
   PROV.PAYOUT.METHODS.ADD:
     description: Register a payout method for a provider (Provider Phase 30).
     sql: providers/payouts/method_add.sql
-    operation: update
+    operation: create
     security:
       ownership_filter_required: true
       requires_auth: true
