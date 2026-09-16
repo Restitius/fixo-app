@@ -9,8 +9,8 @@ Responsibilities (and NOTHING else lives in main.py):
 """
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
 
 from fastapi import FastAPI
 
@@ -40,6 +40,12 @@ def create_application() -> FastAPI:
         lifespan=lifespan,
     )
 
+    # Read by app/integrations/external/webhooks/router.py to verify inbound
+    # Swala SMS callback signatures. Nothing previously set this — the
+    # webhook has been unreachable (crashes on every call) since it was
+    # written; see the fix note there.
+    application.state.swala_sms_webhook_secret = settings.swala_sms_webhook_secret
+
     # --- middleware (last added == outermost) -----------------------------
     from fastapi.middleware.cors import CORSMiddleware
 
@@ -49,6 +55,7 @@ def create_application() -> FastAPI:
     from app.api.middleware.logging import LoggingMiddleware
     from app.api.middleware.request_id import RequestIdMiddleware
     from app.api.middleware.screen_tracking import ScreenTrackingMiddleware
+    from app.api.middleware.security_headers import SecurityHeadersMiddleware
 
     application.add_middleware(ExceptionHandlingMiddleware)
     application.add_middleware(LoggingMiddleware)
@@ -56,6 +63,7 @@ def create_application() -> FastAPI:
     application.add_middleware(ClientContextMiddleware)
     application.add_middleware(CorrelationIdMiddleware)
     application.add_middleware(RequestIdMiddleware)
+    application.add_middleware(SecurityHeadersMiddleware)
 
     cors_origins = settings.cors_origin_list
     application.add_middleware(
