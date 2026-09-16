@@ -1,8 +1,6 @@
 """AuditRepository — persistence for audit events (AUDIT_DB target)."""
 from __future__ import annotations
 
-from typing import Any
-
 from app.audit.audit_event import AuditEvent
 
 

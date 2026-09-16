@@ -23,7 +23,7 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from app.jobs.retry import RetryPolicy, compute_backoff, should_retry
@@ -229,7 +229,7 @@ class NotificationManager:
             if should_retry(1, self._retry_policy):
                 status = "pending"
                 delay = compute_backoff(1, self._retry_policy)
-                next_retry_at = datetime.now(timezone.utc) + timedelta(seconds=delay)
+                next_retry_at = datetime.now(UTC) + timedelta(seconds=delay)
             await self._sql.execute(
                 NotificationQueryIds.DELIVERY_UPDATE_STATUS,
                 {

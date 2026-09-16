@@ -3,11 +3,11 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Header
 from pydantic import BaseModel, EmailStr, Field
 
-from app.api.responses.response import ok
 from app.api.deps.auth import CurrentCustomer
+from app.api.responses.response import ok
 from app.startup.composition import get_composition
 
 router = APIRouter(prefix="/auth", tags=["auth"])

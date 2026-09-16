@@ -1,6 +1,7 @@
 """Liability business rules (pure predicates — enforce BEFORE persistence)."""
 from __future__ import annotations
 
+
 def approved_cannot_be_deleted_directly(status: str) -> bool:
     """Active liabilities must be settled/archived through the workflow."""
     return status == "ACTIVE"

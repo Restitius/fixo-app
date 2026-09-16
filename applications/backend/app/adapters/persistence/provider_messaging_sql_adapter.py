@@ -5,7 +5,6 @@ All queries are provider-scoped (ownership filter binds :user_id).
 """
 from __future__ import annotations
 
-import json
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager

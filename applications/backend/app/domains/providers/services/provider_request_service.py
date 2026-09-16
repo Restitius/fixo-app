@@ -9,7 +9,7 @@ PROVIDER_REQUEST_RESPONSES; quotes go to the existing QUOTATIONS table.
 """
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
 from typing import Any
 from uuid import UUID
@@ -30,7 +30,7 @@ class ProviderIncomingRequestService:
 
     async def feed(self, provider_id: str) -> list[dict[str, Any]]:
         """Matched requests awaiting a response, with remaining countdown."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         rows = await self._requests.feed(provider_id)
         return [self._with_countdown(row, now) for row in rows]
 
@@ -40,7 +40,7 @@ class ProviderIncomingRequestService:
         row = await self._requests.get(provider_id, request_id)
         if row is None:
             raise NotFoundError("Request is not in your incoming feed")
-        return self._with_countdown(row, datetime.now(timezone.utc))
+        return self._with_countdown(row, datetime.now(UTC))
 
     async def responses_list(self, provider_id: str) -> list[dict[str, Any]]:
         """The provider's response ledger (feeds acceptance metrics)."""
@@ -151,7 +151,7 @@ class ProviderIncomingRequestService:
                 deadline = None
         if deadline is not None:
             if deadline.tzinfo is None:
-                deadline = deadline.replace(tzinfo=timezone.utc)
+                deadline = deadline.replace(tzinfo=UTC)
             remaining = (deadline - now).total_seconds()
             item["respond_in_seconds"] = max(0, int(remaining))
             item["respond_expired"] = remaining <= 0

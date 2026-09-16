@@ -55,7 +55,7 @@ def audited(action: str) -> Callable[[F], F]:
     """
 
     def decorator(func: F) -> F:
-        setattr(func, "__audited_action__", action)
+        func.__audited_action__ = action
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
@@ -74,7 +74,7 @@ def traced(span_name: str) -> Callable[[F], F]:
     """
 
     def decorator(func: F) -> F:
-        setattr(func, "__trace_span__", span_name)
+        func.__trace_span__ = span_name
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:

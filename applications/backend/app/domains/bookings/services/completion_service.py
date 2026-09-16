@@ -4,12 +4,11 @@ Triggers the Phase 16 atomic completion: wallet credit + loyalty earn + close,
 all inside SP_CLOSE_BOOKING in a single PostgreSQL transaction.
 """
 from __future__ import annotations
-from typing import Any
 
 from typing import Any, Protocol
 
-from app.ports.persistence.phase16_ports import BookingClosePort
 from app.ports.persistence.booking_repository import BookingRepository
+from app.ports.persistence.phase16_ports import BookingClosePort
 
 
 class _WorkflowPort(Protocol):

@@ -1,8 +1,10 @@
 """WarrantyService — Phase 10 module 29."""
 from __future__ import annotations
+
 import logging
 from typing import Any
-from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
+
+from app.shared.exceptions.hierarchy import NotFoundError
 
 logger = logging.getLogger(__name__)
 

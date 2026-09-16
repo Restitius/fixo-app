@@ -1,9 +1,7 @@
 """TransactionDTO — internal transport for Transaction existing transaction (section 24)."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import date
-from decimal import Decimal
+from dataclasses import dataclass
 
 from app.shared.dtos.base import BaseDTO
 

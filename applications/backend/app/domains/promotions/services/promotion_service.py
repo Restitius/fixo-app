@@ -1,5 +1,6 @@
 """Promotion service — validate codes, consume uses (Module 35)."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.value_ports import PromotionRepositoryPort

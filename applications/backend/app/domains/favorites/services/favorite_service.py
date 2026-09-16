@@ -1,7 +1,9 @@
 """FavoriteService — Phase 10 module 30."""
 from __future__ import annotations
+
 import logging
 from typing import Any
+
 from app.shared.exceptions.hierarchy import ValidationError
 
 logger = logging.getLogger(__name__)

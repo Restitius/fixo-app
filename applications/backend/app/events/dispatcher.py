@@ -8,7 +8,6 @@ Flow (architecture section 16):
 from __future__ import annotations
 
 import inspect
-from typing import Any
 
 from app.events.event import DomainEvent
 from app.registries.events.listener_registry import ListenerRegistry

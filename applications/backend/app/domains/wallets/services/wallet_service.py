@@ -1,5 +1,6 @@
 """Wallet service — ledger-backed balance operations (Module 34)."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.value_ports import WalletRepositoryPort

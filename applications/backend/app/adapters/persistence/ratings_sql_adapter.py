@@ -1,9 +1,10 @@
 """Ratings adapter — owns CUS.RATING.* query IDs."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager
-from app.ports.persistence.phase16_ports import RatingRepositoryPort, BookingClosePort
+from app.ports.persistence.phase16_ports import BookingClosePort, RatingRepositoryPort
 
 
 class RatingSqlAdapter(RatingRepositoryPort):

@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Mapping, Sequence
-from decimal import Decimal
 from datetime import date, datetime
+from decimal import Decimal
 from typing import Any
 
 

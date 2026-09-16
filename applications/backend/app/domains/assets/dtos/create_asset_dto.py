@@ -1,7 +1,7 @@
 """CreateAssetDTO — internal transport for CreateAsset creation input (section 24)."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 

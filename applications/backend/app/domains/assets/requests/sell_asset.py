@@ -1,8 +1,8 @@
 """SellAsset sale — HTTP input validation schema."""
 from __future__ import annotations
 
-from decimal import Decimal
 from datetime import date
+from decimal import Decimal
 
 from app.shared.schemas.base import BaseSchema
 

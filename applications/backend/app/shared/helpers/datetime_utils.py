@@ -5,7 +5,7 @@ Includes the storage/logs partitioning scheme (§21):
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 MONTHS = (
     "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
@@ -14,7 +14,7 @@ MONTHS = (
 
 
 def utcnow() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def iso_utc(dt: datetime | None = None) -> str:

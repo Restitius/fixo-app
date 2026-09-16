@@ -1,5 +1,6 @@
 """History adapter — the ONLY place CUS.HISTORY.* / CUS.ACTIVITY.* IDs appear."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager

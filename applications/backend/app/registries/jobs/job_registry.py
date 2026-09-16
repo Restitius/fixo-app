@@ -1,7 +1,8 @@
 """Job Registry — job IDs (JOB-*) to handler callables/classes."""
 from __future__ import annotations
 
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from app.shared.exceptions.hierarchy import ConfigurationError
 

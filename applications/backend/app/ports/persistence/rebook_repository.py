@@ -1,7 +1,9 @@
 """Rebook repository port — business-facing contract for rebooking."""
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
+
 
 class RebookRepositoryPort(ABC):
     @abstractmethod

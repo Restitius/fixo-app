@@ -1,6 +1,7 @@
 """Authentication business rules (pure predicates — enforce BEFORE persistence)."""
 from __future__ import annotations
 
+
 def lockout_after_threshold(failed_count: int, threshold: int = 5) -> bool:
     """Lock the account once failures reach the threshold."""
     return failed_count >= threshold

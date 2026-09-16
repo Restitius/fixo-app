@@ -1,5 +1,6 @@
 """Favorite SQL adapter - translates business operations into governed SQL query IDs."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager

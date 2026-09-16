@@ -6,7 +6,8 @@ notifications, analytics, Kafka publishing, etc.
 from __future__ import annotations
 
 import itertools
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from app.shared.exceptions.hierarchy import ConfigurationError
 

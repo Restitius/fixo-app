@@ -1,10 +1,10 @@
 """MaintenanceService - Module 33: asset upkeep plans + overdue sweeps."""
 from __future__ import annotations
+
 import logging
 from datetime import date, timedelta
 from typing import Any
 
-from app.ports.persistence.maintenance_repository import MaintenanceRepositoryPort
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
 
 logger = logging.getLogger(__name__)

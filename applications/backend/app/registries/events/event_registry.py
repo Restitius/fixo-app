@@ -13,9 +13,9 @@ class EventRegistry:
     """Registers domain event classes under stable event names."""
 
     def __init__(self) -> None:
-        self._events: dict[str, type["DomainEvent"]] = {}
+        self._events: dict[str, type[DomainEvent]] = {}
 
-    def register(self, event_name: str, event_cls: type["DomainEvent"], *, override: bool = False) -> None:
+    def register(self, event_name: str, event_cls: type[DomainEvent], *, override: bool = False) -> None:
         if event_name in self._events and not override:
             raise ConfigurationError(
                 f"Event already registered: {event_name}",
@@ -23,7 +23,7 @@ class EventRegistry:
             )
         self._events[event_name] = event_cls
 
-    def get(self, event_name: str) -> type["DomainEvent"]:
+    def get(self, event_name: str) -> type[DomainEvent]:
         try:
             return self._events[event_name]
         except KeyError:
