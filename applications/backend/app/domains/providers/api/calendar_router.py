@@ -1,9 +1,11 @@
 """Provider Calendar — API routes (Phase 15)."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_calendar_service import ProviderCalendarService
 from app.startup.composition import get_composition
 
@@ -22,7 +24,7 @@ async def range_view(
     svc: ProviderCalendarService = Depends(_service),
 ) -> dict:
     events = await svc.range(str(provider["provider_id"]), from_date, to_date)
-    return {"from_date": from_date, "to_date": to_date, "events": events}
+    return ok({"from_date": from_date, "to_date": to_date, "events": events})
 
 
 @router.get("/day/{date}")
@@ -32,7 +34,7 @@ async def day_view(
     svc: ProviderCalendarService = Depends(_service),
 ) -> dict:
     events = await svc.day(str(provider["provider_id"]), date)
-    return {"date": date, "events": events}
+    return ok({"date": date, "events": events})
 
 
 @router.get("/week/{date}")
@@ -41,7 +43,7 @@ async def week_view(
     provider: dict = Depends(get_current_provider),
     svc: ProviderCalendarService = Depends(_service),
 ) -> dict:
-    return await svc.week(str(provider["provider_id"]), date)
+    return ok(await svc.week(str(provider["provider_id"]), date))
 
 
 @router.get("/month/{year}/{month}")
@@ -52,7 +54,7 @@ async def month_view(
     svc: ProviderCalendarService = Depends(_service),
 ) -> dict:
     events = await svc.month(str(provider["provider_id"]), year, month)
-    return {"year": year, "month": month, "events": events}
+    return ok({"year": year, "month": month, "events": events})
 
 
 @router.get("/agenda")
@@ -63,7 +65,7 @@ async def agenda_view(
     svc: ProviderCalendarService = Depends(_service),
 ) -> dict:
     events = await svc.agenda(str(provider["provider_id"]), from_date, limit)
-    return {"from_date": from_date, "events": events}
+    return ok({"from_date": from_date, "events": events})
 
 
 @router.get("/overlap-check")
@@ -73,7 +75,5 @@ async def overlap_check(
     provider: dict = Depends(get_current_provider),
     svc: ProviderCalendarService = Depends(_service),
 ) -> dict:
-    await svc.check_overlap(
-        str(provider["provider_id"]), scheduled_date, exclude_booking_id
-    )
-    return {"available": True, "scheduled_date": scheduled_date}
+    await svc.check_overlap(str(provider["provider_id"]), scheduled_date, exclude_booking_id)
+    return ok({"available": True, "scheduled_date": scheduled_date})

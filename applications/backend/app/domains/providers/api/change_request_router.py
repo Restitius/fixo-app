@@ -1,10 +1,12 @@
 """Provider Change Request — API routes (Requirement Phase 23)."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_change_request_service import (
     ProviderChangeRequestService,
 )
@@ -37,19 +39,21 @@ async def submit_change_request(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.submit(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        change_type=body.change_type,
-        proposed_value=body.proposed_value,
-        reason=body.reason,
-        new_work=body.new_work,
-        additional_labour=body.additional_labour,
-        additional_materials=body.additional_materials,
-        additional_time_minutes=body.additional_time_minutes,
-        additional_price=body.additional_price,
-        currency=body.currency,
-        supporting_photos=body.supporting_photos,
+    return ok(
+        await svc.submit(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            change_type=body.change_type,
+            proposed_value=body.proposed_value,
+            reason=body.reason,
+            new_work=body.new_work,
+            additional_labour=body.additional_labour,
+            additional_materials=body.additional_materials,
+            additional_time_minutes=body.additional_time_minutes,
+            additional_price=body.additional_price,
+            currency=body.currency,
+            supporting_photos=body.supporting_photos,
+        )
     )
 
 
@@ -59,9 +63,11 @@ async def list_change_requests(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.list_for_booking(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.list_for_booking(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -72,10 +78,12 @@ async def get_change_request(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.get(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        change_id=change_id,
+    return ok(
+        await svc.get(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            change_id=change_id,
+        )
     )
 
 
@@ -86,8 +94,10 @@ async def withdraw_change_request(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.withdraw(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        change_id=change_id,
+    return ok(
+        await svc.withdraw(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            change_id=change_id,
+        )
     )

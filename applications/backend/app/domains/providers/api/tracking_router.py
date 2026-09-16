@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.deps.auth import CurrentCustomer
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_tracking_service import ProviderTrackingService
 from app.startup.composition import get_composition
 
@@ -26,7 +27,7 @@ async def start_trip(
     svc: ProviderTrackingService = Depends(_service),
 ) -> dict:
     result = await svc.start_trip(str(provider["provider_id"]), booking_id)
-    return {"status": "ok", "trip": result}
+    return ok(result)
 
 
 @router.put("/bookings/{booking_id}/location")
@@ -41,7 +42,7 @@ async def update_location(
     result = await svc.update_location(
         str(provider["provider_id"]), booking_id, latitude, longitude, eta_minutes
     )
-    return {"status": "ok", "location": result}
+    return ok(result)
 
 
 @router.post("/bookings/{booking_id}/record-location")
@@ -53,7 +54,7 @@ async def record_location(
     svc: ProviderTrackingService = Depends(_service),
 ) -> dict:
     result = await svc.record_location(str(provider["provider_id"]), booking_id, latitude, longitude)
-    return {"status": "ok", "trace": result}
+    return ok(result)
 
 
 @router.post("/bookings/{booking_id}/end-trip")
@@ -63,7 +64,7 @@ async def end_trip(
     svc: ProviderTrackingService = Depends(_service),
 ) -> dict:
     result = await svc.end_trip(str(provider["provider_id"]), booking_id)
-    return {"status": "ok", "trip": result}
+    return ok(result)
 
 
 @router.get("/bookings/{booking_id}/nav-info")
@@ -73,7 +74,7 @@ async def get_nav_info(
     svc: ProviderTrackingService = Depends(_service),
 ) -> dict:
     result = await svc.get_nav_info(str(provider["provider_id"]), booking_id)
-    return {"status": "ok", "navigation": result}
+    return ok(result)
 
 
 @router.get("/bookings/{booking_id}/location")
@@ -84,4 +85,4 @@ async def get_location(
 ) -> dict:
     """Customer views provider's live position (status must be ON_THE_WAY)."""
     result = await svc.get_location(booking_id, customer_id=str(customer["customer_id"]))
-    return {"status": "ok", "tracking": result}
+    return ok(result)
