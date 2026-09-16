@@ -28,7 +28,13 @@ class HealthReporter:
 
     async def readiness(self) -> list[HealthCheck]:
         """Run every checker; failures become status='down' entries."""
-        raise NotImplementedError("HealthReporter.readiness")
+        results: list[HealthCheck] = []
+        for component, checker in self._checkers.items():
+            try:
+                results.append(await checker())
+            except Exception as exc:
+                results.append(HealthCheck(component=component, status="down", detail=str(exc)))
+        return results
 
     async def liveness(self) -> HealthCheck:
         """Process-alive probe; always up when reachable."""
