@@ -225,8 +225,10 @@ export interface ProviderBusinessProfile {
 
 export interface VerificationDocType {
   code: string;
-  label: string;
+  name: string;
+  description?: string | null | undefined;
   is_required: boolean;
+  sort_order?: number | undefined;
 }
 
 export interface VerificationDocument {
@@ -241,10 +243,15 @@ export interface VerificationDocument {
 }
 
 export interface VerificationStatus {
-  status: string;
+  verification_status: string;
+  documents_total: number;
+  documents_verified: number;
+  documents_pending: number;
+  documents_rejected: number;
+  documents_more_info: number;
+  required_total: number;
   required_missing: string[];
-  documents_count: number;
-  expiring_soon: string[];
+  documents_expiring_soon: number;
 }
 
 export interface CatalogServiceOption {
@@ -354,6 +361,8 @@ export const onboardingApi = {
     front_image_url: string;
     back_image_url?: string | undefined;
     doc_number?: string | undefined;
+    issue_date?: string | undefined;
+    expiry_date?: string | undefined;
   }) => apiClient.post<VerificationDocument>("/providers/verification/documents", data).then((r) => r.data),
   withdrawDocument: (docId: string) => apiClient.delete(`/providers/verification/documents/${docId}`).then((r) => r.data),
   verificationStatus: () => apiClient.get<VerificationStatus>("/providers/verification/status").then((r) => r.data),
@@ -394,6 +403,55 @@ export const onboardingApi = {
     currency: string;
     is_default: boolean;
   }) => apiClient.post<PayoutMethod>("/providers/me/payouts/methods", data).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Account settings: preferences, security, privacy, closure.
+// Field names read directly from settings_router.py / provider_settings_service.py.
+// ---------------------------------------------------------------------------
+
+export interface ProviderPreference {
+  key: string;
+  value: string;
+  updated_at: string;
+}
+
+export interface ProviderConsent {
+  kind: "MARKETING" | "ANALYTICS" | "COMMUNICATION";
+  consented: boolean;
+  consented_at?: string | null | undefined;
+  revoked_at?: string | null | undefined;
+}
+
+export interface ProviderExportRequest {
+  request_id: string;
+  status: string;
+  requested_at: string;
+  completed_at?: string | null | undefined;
+  file_path?: string | null | undefined;
+}
+
+export const settingsApi = {
+  listPreferences: () => apiClient.get<ProviderPreference[]>("/providers/me/settings/preferences").then((r) => r.data),
+  setPreference: (key: string, value: string) =>
+    apiClient.put<ProviderPreference>("/providers/me/settings/preferences", { key, value }).then((r) => r.data),
+
+  changePassword: (currentPassword: string, newPassword: string) =>
+    apiClient
+      .post("/providers/me/settings/security/change-password", {
+        current_password: currentPassword,
+        new_password: newPassword,
+      })
+      .then((r) => r.data),
+  revokeSessions: () => apiClient.post("/providers/me/settings/security/revoke-sessions").then((r) => r.data),
+
+  listConsents: () => apiClient.get<ProviderConsent[]>("/providers/me/settings/privacy/consents").then((r) => r.data),
+  setConsent: (kind: ProviderConsent["kind"], consented: boolean) =>
+    apiClient.put<ProviderConsent>("/providers/me/settings/privacy/consents", { kind, consented }).then((r) => r.data),
+  requestExport: () => apiClient.post<ProviderExportRequest>("/providers/me/settings/privacy/export-requests").then((r) => r.data),
+  listExports: () => apiClient.get<ProviderExportRequest[]>("/providers/me/settings/privacy/export-requests").then((r) => r.data),
+
+  scheduleClosure: () => apiClient.post("/providers/me/settings/closure").then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
