@@ -276,16 +276,44 @@ function LoadingRows() {
 
 function PersonalTab() {
   const { t } = useTranslation("profile");
-  const { customer } = useAuth();
+  const { customer, updateProfile } = useAuth();
   const [addresses, setAddresses] = useState<Address[] | null>(null);
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
   const [tier, setTier] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [fullNameDraft, setFullNameDraft] = useState("");
+  const [phoneDraft, setPhoneDraft] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     void bookingApi.listAddresses().then(setAddresses).catch(() => setAddresses([]));
     void fixoSdk.listPaymentMethods().then(setMethods).catch(() => setMethods([]));
     void fixoSdk.loyaltyAccount().then((a) => setTier(a.tier)).catch(() => setTier(null));
   }, []);
+
+  function startEditing() {
+    setFullNameDraft(customer?.full_name ?? "");
+    setPhoneDraft(customer?.phone ?? "");
+    setEditing(true);
+  }
+
+  async function saveProfile() {
+    if (!fullNameDraft.trim()) {
+      toast.error(t("personal.profileSaveError"));
+      return;
+    }
+    setSaving(true);
+    try {
+      const trimmedPhone = phoneDraft.trim();
+      await updateProfile(trimmedPhone ? { full_name: fullNameDraft.trim(), phone: trimmedPhone } : { full_name: fullNameDraft.trim() });
+      toast.success(t("personal.profileSaved"));
+      setEditing(false);
+    } catch {
+      toast.error(t("personal.profileSaveError"));
+    } finally {
+      setSaving(false);
+    }
+  }
 
   // A real, disclosed completion score — not a fabricated percentage. Each
   // item is a genuine account fact (verification flags, real saved records).
@@ -298,10 +326,6 @@ function PersonalTab() {
   const verifiedCount = checklist.filter((c) => c.done).length;
   const completion = Math.round((verifiedCount / checklist.length) * 100);
   const dataLoaded = addresses !== null && methods !== null;
-
-  function editUnavailable() {
-    toast.info(t("personal.editUnavailable"));
-  }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
@@ -316,45 +340,75 @@ function PersonalTab() {
         <div className="rounded-3xl bg-card p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">{t("personal.personalInformation")}</h3>
-            <Button size="sm" variant="outline" className="gap-2" onClick={editUnavailable}>
-              <Pencil className="size-4" /> {t("personal.editProfile")}
-            </Button>
+            {!editing && (
+              <Button size="sm" variant="outline" className="gap-2" onClick={startEditing}>
+                <Pencil className="size-4" /> {t("personal.editProfile")}
+              </Button>
+            )}
           </div>
-          <div className="mt-2">
-            <Field icon={User} label={t("personal.fullName")} value={customer?.full_name ?? "—"} />
-            <Field
-              icon={Mail}
-              label={t("personal.email")}
-              value={customer?.email ?? "—"}
-              action={
-                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.email_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
-                  {customer?.email_verified ? t("verified") : t("unverified")}
-                </span>
-              }
-            />
-            <Field
-              icon={Phone}
-              label={t("personal.phone")}
-              value={customer?.phone ?? t("notSet")}
-              action={
-                customer?.phone ? (
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.phone_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
-                    {customer?.phone_verified ? t("verified") : t("unverified")}
+          {editing ? (
+            <div className="mt-4 space-y-3 rounded-2xl border border-border p-4 animate-in fade-in slide-in-from-top-1">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label>{t("personal.fullName")}</Label>
+                  <Input value={fullNameDraft} onChange={(e) => setFullNameDraft(e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>{t("personal.phone")}</Label>
+                  <Input value={phoneDraft} onChange={(e) => setPhoneDraft(e.target.value)} />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button disabled={saving} onClick={() => void saveProfile()}>{saving ? t("personal.saving") : t("personal.saveChanges")}</Button>
+                <Button variant="ghost" onClick={() => setEditing(false)}>{t("personal.cancel")}</Button>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-2">
+              <Field icon={User} label={t("personal.fullName")} value={customer?.full_name ?? "—"} />
+              <Field
+                icon={Mail}
+                label={t("personal.email")}
+                value={customer?.email ?? "—"}
+                action={
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.email_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
+                    {customer?.email_verified ? t("verified") : t("unverified")}
                   </span>
-                ) : (
-                  <button onClick={editUnavailable} className="text-sm font-semibold text-primary hover:underline">{t("add")}</button>
-                )
-              }
-            />
-            <Field
-              icon={Globe}
-              label={t("preferredLanguage")}
-              value={LANGUAGE_NAMES[customer?.preferred_language as keyof typeof LANGUAGE_NAMES] ?? "English"}
-              action={<LanguageSwitcher />}
-            />
-            <Field icon={Cake} label={t("personal.dateOfBirth")} value={t("notSet")} action={<button onClick={editUnavailable} className="text-sm font-semibold text-primary hover:underline">{t("add")}</button>} />
-            <Field icon={Clock} label={t("personal.timezone")} value={t("personal.timezoneValue")} />
-          </div>
+                }
+              />
+              <Field
+                icon={Phone}
+                label={t("personal.phone")}
+                value={customer?.phone ?? t("notSet")}
+                action={
+                  customer?.phone ? (
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.phone_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
+                      {customer?.phone_verified ? t("verified") : t("unverified")}
+                    </span>
+                  ) : (
+                    <button onClick={startEditing} className="text-sm font-semibold text-primary hover:underline">{t("add")}</button>
+                  )
+                }
+              />
+              <Field
+                icon={Globe}
+                label={t("preferredLanguage")}
+                value={LANGUAGE_NAMES[customer?.preferred_language as keyof typeof LANGUAGE_NAMES] ?? "English"}
+                action={<LanguageSwitcher />}
+              />
+              <Field
+                icon={Cake}
+                label={t("personal.dateOfBirth")}
+                value={t("notSet")}
+                action={
+                  <button onClick={() => toast.info(t("personal.dobUnavailable"))} className="text-sm font-semibold text-muted-foreground hover:underline">
+                    {t("add")}
+                  </button>
+                }
+              />
+              <Field icon={Clock} label={t("personal.timezone")} value={t("personal.timezoneValue")} />
+            </div>
+          )}
         </div>
 
         <SummaryCard title="">
