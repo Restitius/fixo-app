@@ -2,7 +2,7 @@
 // panel that squeezes the page layout (no dark overlay), matching the
 // pattern established on the Invoices page.
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BadgePercent,
   Calendar,
@@ -181,6 +181,7 @@ function PromotionsPage() {
   const [selected, setSelected] = useState<Promotion | null>(null);
   const [showAllPromos, setShowAllPromos] = useState(false);
   const [showAllRedemptions, setShowAllRedemptions] = useState(false);
+  const conditionsRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(() => {
     void fixoSdk
@@ -491,7 +492,7 @@ function PromotionsPage() {
                 <Field icon={MapPin} label={t("promotions.details.eligibleAreas")} value={t("promotions.details.allAreas")} />
               </div>
 
-              <div>
+              <div ref={conditionsRef}>
                 <h4 className="mb-2 text-sm font-semibold">{t("promotions.details.conditionsTitle")}</h4>
                 <ul className="space-y-1.5 text-sm text-muted-foreground">
                   <li>
@@ -539,7 +540,7 @@ function PromotionsPage() {
                   <Share2 className="size-4" /> {t("promotions.details.shareCode")}
                 </button>
                 <button
-                  onClick={() => toast.info(t("promotions.details.termsComingSoon"))}
+                  onClick={() => conditionsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
                   className="flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium hover:bg-muted"
                 >
                   <FileText className="size-4" /> {t("promotions.details.viewTerms")}
