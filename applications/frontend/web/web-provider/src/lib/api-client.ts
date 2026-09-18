@@ -37,7 +37,7 @@ class ApiClient {
     return h;
   }
 
-  private async request<T>(path: string, init: RequestInit, sendJsonHeader = true): Promise<ApiResponse<T>> {
+  private async request<T>(path: string, init: RequestInit, sendJsonHeader = true, raw = false): Promise<ApiResponse<T>> {
     let res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers(sendJsonHeader) });
 
     if (res.status === 401 && this._onUnauthorized && (await this._onUnauthorized())) {
@@ -45,6 +45,19 @@ class ApiClient {
     }
 
     const json = await res.json().catch(() => null);
+    if (raw) {
+      // A handful of routers (earnings, ranking, kpis, portfolio, reviews)
+      // return their payload directly on success — no {success,data}
+      // envelope — but errors from these same routers still go through the
+      // app's standard error envelope (every AppException handler wraps
+      // errors regardless of the success-path shape), so error parsing
+      // matches the normal path.
+      if (!res.ok) {
+        const msg = json?.message?.body || json?.message?.title || `Request failed (${res.status})`;
+        throw new ApiError(msg);
+      }
+      return { success: true, data: json as T };
+    }
     if (!res.ok || !json?.success) {
       const msg = json?.message?.body || json?.message?.title || `Request failed (${res.status})`;
       throw new ApiError(msg);
@@ -54,6 +67,12 @@ class ApiClient {
 
   get<T = any>(path: string) {
     return this.request<T>(path, { method: "GET" });
+  }
+
+  // For the routers that return raw, unwrapped JSON (see `request`'s `raw`
+  // param) instead of the standard {success,data} envelope.
+  getRaw<T = any>(path: string) {
+    return this.request<T>(path, { method: "GET" }, true, true);
   }
 
   post<T = any>(path: string, body: unknown = {}) {
@@ -1004,4 +1023,49 @@ export const invoicesApi = {
       .then((r) => r.data.invoices),
   summary: () => apiClient.get<InvoiceSummary>("/providers/me/invoices/summary").then((r) => r.data),
   get: (invoiceId: string) => apiClient.get<InvoiceRow>(`/providers/me/invoices/${invoiceId}`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Earnings — real /providers/me/earnings/* endpoints. Note: these responses
+// are NOT wrapped in the standard {success,data} envelope — the raw dict is
+// the body (confirmed against the router source, not the SDK's usual shape).
+// ---------------------------------------------------------------------------
+
+export interface EarningsSummary {
+  pending_earnings: number;
+  available_balance: number;
+  total_earnings: number;
+  withdrawn_amount: number;
+  views: {
+    today: number;
+    this_week: number;
+    this_month: number;
+    this_year: number;
+  };
+  currency: string;
+}
+
+export interface EarningsTransaction {
+  invoice_id: string;
+  invoice_number: string;
+  booking_id: string;
+  booking_number: string;
+  customer_name: string;
+  service_name: string;
+  amount: number;
+  currency: string;
+  status: "DRAFT" | "ISSUED" | "PAID" | "VOID";
+  issued_at: string | null;
+  paid_at: string | null;
+  created_at: string;
+}
+
+export const earningsApi = {
+  summary: () => apiClient.getRaw<EarningsSummary>("/providers/me/earnings/summary").then((r) => r.data),
+  transactions: (limit = 20, offset = 0) =>
+    apiClient
+      .getRaw<{ transactions: EarningsTransaction[]; limit: number; offset: number }>(
+        `/providers/me/earnings/transactions${qs({ limit, offset })}`,
+      )
+      .then((r) => r.data.transactions),
 };
