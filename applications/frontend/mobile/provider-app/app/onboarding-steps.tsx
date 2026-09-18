@@ -16,8 +16,10 @@ import ScreenHeader from '../components/ScreenHeader'
 import Button from '../components/Button'
 import Select from '../components/Select'
 import Checkbox from '../components/Checkbox'
+import StatusBadge from '../components/StatusBadge'
 import { CameraIcon, CheckCircleIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
+import { humanize } from '../lib/format'
 import {
   onboardingApi,
   type AreaSettings,
@@ -272,8 +274,8 @@ export default function OnboardingSteps() {
                 <>
                   {documents.map((d) => (
                     <View key={d.doc_id} className="flex-row items-center justify-between rounded-xl bg-[#f5f5f5] px-4 py-3">
-                      <Text className="text-[13px] font-semibold text-ink">{d.doc_type}</Text>
-                      <Text className="text-[12px] text-muted">{d.status}</Text>
+                      <Text className="text-[13px] font-semibold text-ink">{docTypes.find((t) => t.code === d.doc_type)?.name ?? humanize(d.doc_type)}</Text>
+                      <StatusBadge status={d.status} />
                     </View>
                   ))}
                   <Select value={docType || (docTypes[0]?.name ?? '')} onChange={setDocType} options={docTypes.map((t) => t.name)} />
@@ -333,7 +335,7 @@ export default function OnboardingSteps() {
                   {areas.map((a) => (
                     <View key={a.area_id} className="flex-row items-center justify-between rounded-2xl bg-[#f5f5f5] p-4">
                       <View className="flex-1">
-                        <Text className="text-[13px] font-semibold text-ink">{a.label || `${a.city ?? ''} ${a.region ?? ''}`.trim() || a.area_type}</Text>
+                        <Text className="text-[13px] font-semibold text-ink">{a.label || `${a.city ?? ''} ${a.region ?? ''}`.trim() || humanize(a.area_type)}</Text>
                         <Text className="text-[12px] text-muted">{a.area_type === 'RADIUS' ? `${a.radius_km ?? '—'} km radius` : [a.city, a.region].filter(Boolean).join(', ')}</Text>
                       </View>
                       <Switch value={a.is_active} onValueChange={(v) => toggleArea(a.area_id, v)} trackColor={{ false: '#e0e0e0', true: '#7210FF' }} thumbColor="#ffffff" />
@@ -361,7 +363,7 @@ export default function OnboardingSteps() {
                 <>
                   {payoutMethods.map((m) => (
                     <View key={m.method_id} className="flex-row items-center justify-between rounded-xl bg-[#f5f5f5] px-4 py-3">
-                      <Text className="text-[13px] font-semibold text-ink">{m.method_type}</Text>
+                      <Text className="text-[13px] font-semibold text-ink">{humanize(m.method_type)}</Text>
                       <Text className="text-[12px] text-muted">{m.mobile_number || m.account_number || m.provider_name}</Text>
                     </View>
                   ))}

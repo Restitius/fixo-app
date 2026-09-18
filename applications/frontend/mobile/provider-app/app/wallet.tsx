@@ -13,7 +13,7 @@ import Button from '../components/Button'
 import { WalletIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
 import { payoutsApi, walletApi, type PayoutMethod, type WalletOverview, type WalletTransaction } from '../lib/api-client'
-import { fmtMoney } from '../lib/format'
+import { fmtMoney, humanize } from '../lib/format'
 
 export default function Wallet() {
   const { access_token, loading: authLoading } = useAuth()
@@ -100,7 +100,7 @@ export default function Wallet() {
                       style={{ backgroundColor: methodId === m.method_id ? 'rgba(114,16,255,0.08)' : '#f5f5f5' }}
                     >
                       <Text className="text-[13px] text-ink">
-                        {m.method_type} — {m.mobile_number || m.account_number || m.provider_name}
+                        {humanize(m.method_type)} — {m.mobile_number || m.account_number || m.provider_name}
                       </Text>
                       {methodId === m.method_id && <View className="rounded-full bg-primary" style={{ width: 8, height: 8 }} />}
                     </Pressable>
@@ -118,7 +118,7 @@ export default function Wallet() {
               {transactions.map((t) => (
                 <View key={t.entry_id} className="rounded-2xl bg-[#f5f5f5] p-3.5">
                   <View className="flex-row items-center justify-between">
-                    <Text className="text-[13px] font-semibold text-ink">{t.entry_type}</Text>
+                    <Text className="text-[13px] font-semibold text-ink">{humanize(t.entry_type)}</Text>
                     <Text className="text-[13px] font-semibold" style={{ color: t.amount < 0 ? '#DC2626' : '#00B894' }}>
                       {fmtMoney(t.amount, t.currency)}
                     </Text>
