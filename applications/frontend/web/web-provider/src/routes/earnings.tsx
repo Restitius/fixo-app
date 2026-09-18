@@ -1,14 +1,16 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { BarChart3, Percent, TrendingUp, Wallet } from "lucide-react";
+import { CalendarClock, CalendarRange, TrendingUp, Wallet } from "lucide-react";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
 import { MetricCard } from "@/components/dashboard/MetricCard";
-import { fmtMoney } from "@/lib/format";
-import { earningsByService, earningsTrend, performance, promotions, walletSummary } from "@/lib/mock-data";
+import { StatusPill } from "@/components/dashboard/StatusPill";
+import { fmtDate, fmtMoney } from "@/lib/format";
+import { earningsApi, type EarningsSummary, type EarningsTransaction } from "@/lib/api-client";
 
-const title = "Earnings & Analytics — FIXO Provider";
-const description = "Revenue trends by month and service, commission paid, conversion metrics and promotion impact.";
+const title = "Earnings — FIXO Provider";
+const description = "Your real earnings balance and invoice transaction history.";
 
 export const Route = createFileRoute("/earnings")({
   head: () => ({
@@ -24,97 +26,71 @@ export const Route = createFileRoute("/earnings")({
 });
 
 function EarningsPage() {
-  const maxTrend = Math.max(...earningsTrend.map((t) => t.value));
-  const maxService = Math.max(...earningsByService.map((t) => t.value));
-  const commissionPaid = Math.round(walletSummary.totalEarned * 0.1);
+  const [summary, setSummary] = useState<EarningsSummary | null>(null);
+  const [transactions, setTransactions] = useState<EarningsTransaction[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([earningsApi.summary(), earningsApi.transactions(50, 0)])
+      .then(([s, t]) => {
+        setSummary(s);
+        setTransactions(t);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
-    <ProviderPage title="Earnings" subtitle="How your business is performing financially.">
+    <ProviderPage title="Earnings" subtitle="Your real balance and invoice history.">
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Wallet} label="Lifetime earnings" value={fmtMoney(walletSummary.totalEarned)} hint="Net of commission" />
-        <MetricCard icon={TrendingUp} label="This month" value={fmtMoney(earningsTrend[earningsTrend.length - 1]?.value ?? 0)} hint="September 2026" tone="success" tintValue />
-        <MetricCard icon={Percent} label="Commission paid" value={fmtMoney(commissionPaid)} hint="10% platform fee" tone="amber" tintValue />
-        <MetricCard icon={BarChart3} label="Avg. job value" value={fmtMoney(268000)} hint="Last 90 days" />
+        <MetricCard icon={Wallet} label="Lifetime earnings" value={fmtMoney(summary?.total_earnings ?? 0, summary?.currency)} hint="Issued + paid invoices" />
+        <MetricCard icon={TrendingUp} label="Available balance" value={fmtMoney(summary?.available_balance ?? 0, summary?.currency)} hint="Paid invoices" tone="success" tintValue />
+        <MetricCard icon={CalendarClock} label="Pending" value={fmtMoney(summary?.pending_earnings ?? 0, summary?.currency)} hint="Issued, not yet paid" tone="amber" tintValue />
+        <MetricCard icon={CalendarRange} label="This month" value={fmtMoney(summary?.views.this_month ?? 0, summary?.currency)} hint={`This week: ${fmtMoney(summary?.views.this_week ?? 0, summary?.currency)}`} />
       </div>
 
-      <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-[1.4fr_1fr]">
-        <Panel title="Monthly revenue">
-          <div className="flex h-56 items-end gap-3">
-            {earningsTrend.map((t) => (
-              <div key={t.label} className="flex flex-1 flex-col items-center gap-2">
-                <span className="text-[11px] font-semibold text-muted-foreground">{(t.value / 1_000_000).toFixed(1)}M</span>
-                <div
-                  className="w-full rounded-t-xl"
-                  style={{ height: `${(t.value / maxTrend) * 100}%`, backgroundImage: "var(--gradient-primary)" }}
-                />
-                <span className="text-xs text-muted-foreground">{t.label}</span>
-              </div>
-            ))}
-          </div>
-        </Panel>
-
-        <Panel title="Revenue by service">
-          <div className="space-y-3">
-            {earningsByService.map((s) => (
-              <div key={s.label}>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{s.label}</span>
-                  <span className="font-semibold">{fmtMoney(s.value)}</span>
-                </div>
-                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
-                  <div className="h-full rounded-full" style={{ width: `${(s.value / maxService) * 100}%`, backgroundImage: "var(--gradient-primary)" }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Panel>
+      <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-3">
+        <MetricCard icon={CalendarRange} label="Today" value={fmtMoney(summary?.views.today ?? 0, summary?.currency)} hint="Paid today" />
+        <MetricCard icon={CalendarRange} label="This year" value={fmtMoney(summary?.views.this_year ?? 0, summary?.currency)} hint="Paid this year" />
+        <MetricCard icon={Wallet} label="Withdrawn" value={fmtMoney(summary?.withdrawn_amount ?? 0, summary?.currency)} hint="Sent to payout methods" />
       </div>
 
-      <div className="grid gap-4 pb-6 lg:grid-cols-2">
-        <Panel title="Conversion funnel">
-          <div className="space-y-3 text-sm">
-            {[
-              { label: "Requests offered", value: performance.offered },
-              { label: "Accepted", value: performance.accepted },
-              { label: "Completed", value: performance.completed },
-              { label: "Cancelled", value: performance.cancelled },
-            ].map((r) => (
-              <div key={r.label}>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">{r.label}</span>
-                  <span className="font-semibold">{r.value}</span>
-                </div>
-                <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
-                  <div className="h-full rounded-full bg-primary" style={{ width: `${(r.value / performance.offered) * 100}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Panel>
-
-        <Panel title="Promotions">
-          <div className="space-y-3">
-            {promotions.map((p) => (
-              <div key={p.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-muted/50 p-4">
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold">{p.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {p.funding} · {p.period} · {p.impact}
-                  </p>
-                </div>
-                <button
-                  className={`rounded-xl px-4 py-2 text-xs font-semibold ${
-                    p.joined ? "border border-border bg-card hover:bg-muted" : "text-primary-foreground"
-                  }`}
-                  style={p.joined ? undefined : { backgroundImage: "var(--gradient-primary)" }}
-                >
-                  {p.joined ? "Leave" : "Join"}
-                </button>
-              </div>
-            ))}
-          </div>
-        </Panel>
-      </div>
+      <Panel title="Invoice transactions">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border/60 text-left text-xs text-muted-foreground">
+                <th className="py-2 pr-4">Invoice</th>
+                <th className="py-2 pr-4">Customer</th>
+                <th className="py-2 pr-4">Service</th>
+                <th className="py-2 pr-4">Status</th>
+                <th className="py-2 pr-4">Paid</th>
+                <th className="py-2 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {!loading && transactions.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="py-8 text-center text-muted-foreground">
+                    No transactions yet.
+                  </td>
+                </tr>
+              )}
+              {transactions.map((t) => (
+                <tr key={t.invoice_id} className="border-b border-border/60 last:border-0">
+                  <td className="py-3 pr-4 font-medium">{t.invoice_number}</td>
+                  <td className="py-3 pr-4 text-muted-foreground">{t.customer_name}</td>
+                  <td className="py-3 pr-4 text-muted-foreground">{t.service_name}</td>
+                  <td className="py-3 pr-4">
+                    <StatusPill status={t.status} />
+                  </td>
+                  <td className="py-3 pr-4 text-muted-foreground">{t.paid_at ? fmtDate(t.paid_at) : "—"}</td>
+                  <td className="py-3 text-right font-semibold text-primary">{fmtMoney(t.amount, t.currency)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Panel>
     </ProviderPage>
   );
 }
