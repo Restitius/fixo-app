@@ -13,7 +13,7 @@ import Select from '../components/Select'
 import { WalletIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
 import { payoutsApi, type PayoutMethod, type PayoutRow } from '../lib/api-client'
-import { fmtMoney } from '../lib/format'
+import { fmtMoney, humanize } from '../lib/format'
 
 const fieldCls = 'rounded-2xl bg-[#f5f5f5] px-4 py-3.5 text-[15px] text-ink'
 
@@ -91,7 +91,7 @@ export default function Payouts() {
               {methods.map((m) => (
                 <View key={m.method_id} className="rounded-2xl bg-[#f5f5f5] p-4">
                   <View className="flex-row items-center justify-between">
-                    <Text className="text-[14px] font-semibold text-ink">{m.method_type}</Text>
+                    <Text className="text-[14px] font-semibold text-ink">{humanize(m.method_type)}</Text>
                     {m.is_default && <StatusBadge label="Default" tone="success" />}
                   </View>
                   <Text className="text-[12px] text-muted mt-0.5">{m.mobile_number || m.account_number || m.provider_name}</Text>
@@ -133,7 +133,7 @@ export default function Payouts() {
                     <StatusBadge status={p.status} />
                   </View>
                   <View className="flex-row items-center justify-between mt-1">
-                    <Text className="text-[12px] text-muted">{p.destination ?? p.method_type ?? '—'}</Text>
+                    <Text className="text-[12px] text-muted">{p.destination ?? (p.method_type ? humanize(p.method_type) : '—')}</Text>
                     <Text className="text-[13px] font-semibold text-ink">{fmtMoney(p.amount, p.currency)}</Text>
                   </View>
                 </View>

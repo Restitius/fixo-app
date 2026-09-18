@@ -16,7 +16,7 @@ import Sheet from '../components/Sheet'
 import { CameraIcon, ShieldCheckIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
 import { onboardingApi, type VerificationDocType, type VerificationDocument, type VerificationStatus } from '../lib/api-client'
-import { fmtDate } from '../lib/format'
+import { fmtDate, humanize } from '../lib/format'
 
 export default function Documents() {
   const { access_token, loading: authLoading } = useAuth()
@@ -88,7 +88,11 @@ export default function Documents() {
             <Text className="text-[13px] text-ink mt-1">
               Status: <Text className="font-semibold">{status?.verification_status ?? 'NOT_SUBMITTED'}</Text>
             </Text>
-            {status && status.required_missing.length > 0 && <Text className="text-[12px] text-muted mt-1">Still needed: {status.required_missing.join(', ')}</Text>}
+            {status && status.required_missing.length > 0 && (
+              <Text className="text-[12px] text-muted mt-1">
+                Still needed: {status.required_missing.map((code) => docTypes.find((t) => t.code === code)?.name ?? humanize(code)).join(', ')}
+              </Text>
+            )}
             <View className="mt-3">
               <Button onPress={() => void submitForReview()} loading={submitting} disabled={missing > 0}>
                 Submit for review
