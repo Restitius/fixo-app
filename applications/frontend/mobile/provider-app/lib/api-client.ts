@@ -8,11 +8,14 @@ import Constants from "expo-constants";
 
 const BASE_URL = process.env["EXPO_PUBLIC_API_URL"] ?? "http://localhost:8000/api/v1";
 
+// Client ids are per-platform, not per-app — the registry has no
+// provider/user split (see app/clients/definitions.py), matching
+// user-app's own CLT-MOBILE-* sourcing.
 const CLIENT_ID = Constants.platform?.android
-  ? "CLT-PROVIDER-MOBILE-ANDROID"
+  ? "CLT-MOBILE-ANDROID"
   : Constants.platform?.ios
-    ? "CLT-PROVIDER-MOBILE-IOS"
-    : "CLT-PROVIDER-MOBILE";
+    ? "CLT-MOBILE-IOS"
+    : "CLT-MOBILE";
 const CLIENT_VERSION = Constants.expoConfig?.version ?? "dev";
 
 interface ApiResponse<T = any> {
