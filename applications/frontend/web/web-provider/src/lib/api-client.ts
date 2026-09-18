@@ -455,6 +455,25 @@ export const settingsApi = {
 };
 
 // ---------------------------------------------------------------------------
+// Activity log — read-only audit trail, recorded internally by other
+// services (no provider-facing write endpoint, so this can't be faked).
+// ---------------------------------------------------------------------------
+
+export interface ActivityLogEntry {
+  log_id: string;
+  action: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export const activityApi = {
+  list: (limit = 20, offset = 0) =>
+    apiClient.get<ActivityLogEntry[]>(`/providers/me/activity/${qs({ limit, offset })}`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
 // Dashboard + incoming requests feed. Field names read directly from
 // provider_dashboard_service.py / provider_request_service.py and their
 // governed SQL this session.
