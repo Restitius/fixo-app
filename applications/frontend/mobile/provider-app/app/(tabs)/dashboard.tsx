@@ -14,6 +14,7 @@ import { ArrowUpRightIcon, BellIcon, BookingsIcon, CalendarIcon, ChatBubbleIcon,
 import { useAuth } from '../../lib/auth-context'
 import {
   dashboardApi,
+  fixoSdk,
   onboardingApi,
   type DashboardOverview,
   type DashboardScheduleItem,
@@ -36,6 +37,7 @@ export default function Dashboard() {
   const [wallet, setWallet] = useState<WalletOverview | null>(null)
   const [requests, setRequests] = useState<RequestFeedItem[]>([])
   const [onboarding, setOnboarding] = useState<{ progress: string; completed: boolean } | null>(null)
+  const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -62,6 +64,10 @@ export default function Dashboard() {
         setLoading(false)
       }
     })()
+    fixoSdk
+      .notificationUnread()
+      .then((r) => setUnreadCount(r.unread_count))
+      .catch(() => {})
   }, [])
 
   const stats = overview?.stats
@@ -86,8 +92,15 @@ export default function Dashboard() {
               {firstName}
             </Text>
           </View>
-          <Pressable className="relative items-center justify-center size-11 rounded-full bg-[#f5f5f5]">
+          <Pressable onPress={() => router.push('/notifications' as any)} className="relative items-center justify-center size-11 rounded-full bg-[#f5f5f5]">
             <BellIcon size={20} color="#0B111F" />
+            {unreadCount > 0 && (
+              <View className="absolute items-center justify-center rounded-full bg-primary" style={{ top: 4, right: 4, minWidth: 16, height: 16, paddingHorizontal: 3 }}>
+                <Text className="text-white font-bold" style={{ fontSize: 9 }}>
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </Text>
+              </View>
+            )}
           </Pressable>
         </View>
 
