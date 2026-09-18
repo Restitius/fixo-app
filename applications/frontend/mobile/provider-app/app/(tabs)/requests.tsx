@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ScreenHeader from '../../components/ScreenHeader'
 import StatusBadge from '../../components/StatusBadge'
 import { ClockIcon, LocationIcon } from '../../components/icons'
 import { dashboardApi, requestsApi, type RequestFeedItem } from '../../lib/api-client'
@@ -46,7 +45,7 @@ export default function Requests() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Requests" />
+      <Text className="text-[22px] font-extrabold text-ink px-6 pt-2">Requests</Text>
       <ScrollView className="flex-1 px-6" contentContainerStyle={{ paddingBottom: 110 }}>
         {!loading && open.length === 0 && (
           <View className="items-center pt-20">

@@ -164,7 +164,8 @@ export default function OnboardingSteps() {
         }
       } else if (code === 'SERVICE_CONFIGURATION') {
         for (const serviceId of selectedServiceIds) {
-          await onboardingApi.configureService(serviceId, { pricing_model: pricingModel, minimum_charge: Number(minimumCharge) })
+          const displayName = catalog.find((c) => c.service_id === serviceId)?.name
+          await onboardingApi.configureService(serviceId, { display_name: displayName, pricing_model: pricingModel, minimum_charge: Number(minimumCharge) })
           await onboardingApi.upsertPricing(serviceId, { pricing_model: pricingModel, base_amount: Number(baseAmount) })
         }
       } else if (code === 'SERVICE_AREAS') {
