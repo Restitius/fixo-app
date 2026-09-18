@@ -6,6 +6,7 @@ import { Redirect } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../components/ScreenHeader'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Select from '../components/Select'
 import Sheet from '../components/Sheet'
 import { LocationIcon, PlusIcon } from '../components/icons'
@@ -102,9 +103,15 @@ export default function ServiceAreas() {
 
         <Text className="text-[15px] font-bold text-ink mt-7">Travel policy</Text>
         <View className="mt-3" style={{ gap: 10 }}>
-          <TextInput className={fieldCls} placeholder="Maximum travel distance (km)" keyboardType="numeric" value={settings.max_travel_km != null ? String(settings.max_travel_km) : ''} onChangeText={(v) => setSettings((s) => ({ ...s, max_travel_km: v ? Number(v) : undefined }))} />
-          <TextInput className={fieldCls} placeholder="Free travel radius (km)" keyboardType="numeric" value={settings.free_travel_radius_km != null ? String(settings.free_travel_radius_km) : ''} onChangeText={(v) => setSettings((s) => ({ ...s, free_travel_radius_km: v ? Number(v) : undefined }))} />
-          <TextInput className={fieldCls} placeholder="Travel fee beyond free radius" keyboardType="numeric" value={settings.travel_fee != null ? String(settings.travel_fee) : ''} onChangeText={(v) => setSettings((s) => ({ ...s, travel_fee: v ? Number(v) : undefined }))} />
+          <Field label="Maximum travel distance (km)">
+            <TextInput className={fieldCls} keyboardType="numeric" value={settings.max_travel_km != null ? String(settings.max_travel_km) : ''} onChangeText={(v) => setSettings((s) => ({ ...s, max_travel_km: v ? Number(v) : undefined }))} />
+          </Field>
+          <Field label="Free travel radius (km)">
+            <TextInput className={fieldCls} keyboardType="numeric" value={settings.free_travel_radius_km != null ? String(settings.free_travel_radius_km) : ''} onChangeText={(v) => setSettings((s) => ({ ...s, free_travel_radius_km: v ? Number(v) : undefined }))} />
+          </Field>
+          <Field label="Travel fee beyond free radius">
+            <TextInput className={fieldCls} keyboardType="numeric" value={settings.travel_fee != null ? String(settings.travel_fee) : ''} onChangeText={(v) => setSettings((s) => ({ ...s, travel_fee: v ? Number(v) : undefined }))} />
+          </Field>
           <Button onPress={() => void saveSettings()} loading={savingSettings}>
             Save travel policy
           </Button>
@@ -168,16 +175,30 @@ function AddAreaForm({ onSaved }: { onSaved: () => void }) {
         <Select value={areaType} onChange={(v) => setAreaType(v as 'Location' | 'Radius')} options={['Location', 'Radius']} />
         {areaType === 'Location' ? (
           <>
-            <TextInput className={fieldCls} placeholder="Country" value={country} onChangeText={setCountry} />
-            <TextInput className={fieldCls} placeholder="Region" value={region} onChangeText={setRegion} />
-            <TextInput className={fieldCls} placeholder="City" value={city} onChangeText={setCity} />
-            <TextInput className={fieldCls} placeholder="District" value={district} onChangeText={setDistrict} />
+            <Field label="Country">
+              <TextInput className={fieldCls} value={country} onChangeText={setCountry} />
+            </Field>
+            <Field label="Region">
+              <TextInput className={fieldCls} value={region} onChangeText={setRegion} />
+            </Field>
+            <Field label="City">
+              <TextInput className={fieldCls} value={city} onChangeText={setCity} />
+            </Field>
+            <Field label="District">
+              <TextInput className={fieldCls} value={district} onChangeText={setDistrict} />
+            </Field>
           </>
         ) : (
           <>
-            <TextInput className={fieldCls} placeholder="Center latitude" keyboardType="numeric" value={centerLat} onChangeText={setCenterLat} />
-            <TextInput className={fieldCls} placeholder="Center longitude" keyboardType="numeric" value={centerLng} onChangeText={setCenterLng} />
-            <TextInput className={fieldCls} placeholder="Radius (km)" keyboardType="numeric" value={radiusKm} onChangeText={setRadiusKm} />
+            <Field label="Center latitude">
+              <TextInput className={fieldCls} keyboardType="numeric" value={centerLat} onChangeText={setCenterLat} />
+            </Field>
+            <Field label="Center longitude">
+              <TextInput className={fieldCls} keyboardType="numeric" value={centerLng} onChangeText={setCenterLng} />
+            </Field>
+            <Field label="Radius (km)">
+              <TextInput className={fieldCls} keyboardType="numeric" value={radiusKm} onChangeText={setRadiusKm} />
+            </Field>
           </>
         )}
       </View>

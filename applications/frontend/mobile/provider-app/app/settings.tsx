@@ -7,6 +7,7 @@ import { Redirect } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../components/ScreenHeader'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Select from '../components/Select'
 import { useAuth } from '../lib/auth-context'
 import { settingsApi, type ProviderConsent } from '../lib/api-client'
@@ -100,8 +101,12 @@ export default function Settings() {
 
         <Text className="text-[15px] font-bold text-ink mt-7">Security</Text>
         <View className="mt-3" style={{ gap: 10 }}>
-          <TextInput className={fieldCls} placeholder="Current password" secureTextEntry value={currentPassword} onChangeText={setCurrentPassword} />
-          <TextInput className={fieldCls} placeholder="New password" secureTextEntry value={newPassword} onChangeText={setNewPassword} />
+          <Field label="Current password">
+            <TextInput className={fieldCls} secureTextEntry value={currentPassword} onChangeText={setCurrentPassword} />
+          </Field>
+          <Field label="New password">
+            <TextInput className={fieldCls} secureTextEntry value={newPassword} onChangeText={setNewPassword} />
+          </Field>
           <Button onPress={() => void changePassword()} loading={changingPassword} disabled={!currentPassword || !newPassword}>
             Update password
           </Button>
@@ -132,7 +137,9 @@ export default function Settings() {
         </Text>
         <Text className="text-[12px] text-muted mt-1">Closing your account schedules its permanent closure. This cannot be undone once processed.</Text>
         <View className="mt-3" style={{ gap: 10 }}>
-          <TextInput className={fieldCls} placeholder="Type CLOSE to confirm" value={confirmClose} onChangeText={setConfirmClose} autoCapitalize="characters" />
+          <Field label="Type CLOSE to confirm">
+            <TextInput className={fieldCls} value={confirmClose} onChangeText={setConfirmClose} autoCapitalize="characters" />
+          </Field>
           <Button onPress={() => void closeAccount()} loading={closing} disabled={confirmClose !== 'CLOSE'}>
             Close my account
           </Button>

@@ -9,6 +9,7 @@ import ScreenHeader from '../components/ScreenHeader'
 import MetricCard from '../components/MetricCard'
 import StatusBadge from '../components/StatusBadge'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Select from '../components/Select'
 import { WalletIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
@@ -107,14 +108,24 @@ export default function Payouts() {
                 <Select value={methodType} onChange={(v) => setMethodType(v as 'Mobile money' | 'Bank account')} options={['Mobile money', 'Bank account']} />
                 {methodType === 'Mobile money' ? (
                   <>
-                    <TextInput className={fieldCls} placeholder="Provider (M-Pesa, Tigo Pesa…)" value={providerName} onChangeText={setProviderName} />
-                    <TextInput className={fieldCls} placeholder="Mobile number" value={mobileNumber} onChangeText={setMobileNumber} keyboardType="phone-pad" />
+                    <Field label="Provider (M-Pesa, Tigo Pesa…)">
+                      <TextInput className={fieldCls} value={providerName} onChangeText={setProviderName} />
+                    </Field>
+                    <Field label="Mobile number">
+                      <TextInput className={fieldCls} value={mobileNumber} onChangeText={setMobileNumber} keyboardType="phone-pad" />
+                    </Field>
                   </>
                 ) : (
                   <>
-                    <TextInput className={fieldCls} placeholder="Account holder" value={accountHolder} onChangeText={setAccountHolder} />
-                    <TextInput className={fieldCls} placeholder="Bank name" value={providerName} onChangeText={setProviderName} />
-                    <TextInput className={fieldCls} placeholder="Account number" value={accountNumber} onChangeText={setAccountNumber} />
+                    <Field label="Account holder">
+                      <TextInput className={fieldCls} value={accountHolder} onChangeText={setAccountHolder} />
+                    </Field>
+                    <Field label="Bank name">
+                      <TextInput className={fieldCls} value={providerName} onChangeText={setProviderName} />
+                    </Field>
+                    <Field label="Account number">
+                      <TextInput className={fieldCls} value={accountNumber} onChangeText={setAccountNumber} />
+                    </Field>
                   </>
                 )}
                 <Button onPress={() => void addMethod()} loading={saving}>
