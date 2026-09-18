@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Avatar from '../../components/Avatar'
 import MetricCard from '../../components/MetricCard'
 import StatusBadge from '../../components/StatusBadge'
-import { ArrowUpRightIcon, BellIcon, BookingsIcon, CalendarIcon, ChatBubbleIcon, ClipboardCheckIcon, StarIcon, WalletIcon } from '../../components/icons'
+import { ArrowUpRightIcon, BellIcon, BookingsIcon, CalendarIcon, ChatBubbleIcon, StarIcon, WalletIcon } from '../../components/icons'
 import { useAuth } from '../../lib/auth-context'
 import {
   dashboardApi,
@@ -199,7 +199,7 @@ export default function Dashboard() {
             { label: 'Quotes', to: '/quotes', icon: ArrowUpRightIcon },
             { label: 'Calendar', to: '/(tabs)/calendar', icon: CalendarIcon },
             { label: 'Bookings', to: '/(tabs)/bookings', icon: BookingsIcon },
-            { label: 'Checklist', to: '/(tabs)/bookings', icon: ClipboardCheckIcon },
+            { label: 'Messages', to: '/messages', icon: ChatBubbleIcon },
           ].map((a) => (
             <Pressable key={a.label} onPress={() => router.push(a.to as any)} className="items-center gap-2" style={{ width: '25%' }}>
               <View className="items-center justify-center size-14 rounded-2xl bg-primary/8">
