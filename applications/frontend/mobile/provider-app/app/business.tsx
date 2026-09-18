@@ -6,6 +6,7 @@ import { Redirect } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../components/ScreenHeader'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import { useAuth } from '../lib/auth-context'
 import { onboardingApi, type ProviderBusinessProfile } from '../lib/api-client'
 
@@ -88,14 +89,5 @@ export default function Business() {
         )}
       </ScrollView>
     </SafeAreaView>
-  )
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <View>
-      <Text className="text-[12px] text-muted mb-1.5 ml-1">{label}</Text>
-      {children}
-    </View>
   )
 }

@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import * as ImagePicker from 'expo-image-picker'
 import ScreenHeader from '../components/ScreenHeader'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Select from '../components/Select'
 import Checkbox from '../components/Checkbox'
 import StatusBadge from '../components/StatusBadge'
@@ -243,16 +244,23 @@ export default function OnboardingSteps() {
             <View className="mt-4" style={{ gap: 12 }}>
               {code === 'PERSONAL_INFO' && (
                 <>
-                  <TextInput className={fieldCls} placeholder="Professional title" value={profile.professional_title ?? ''} onChangeText={(v) => setProfile((p) => ({ ...p, professional_title: v }))} />
-                  <TextInput
-                    className={fieldCls}
-                    placeholder="Years of experience"
-                    keyboardType="numeric"
-                    value={profile.years_experience != null ? String(profile.years_experience) : ''}
-                    onChangeText={(v) => setProfile((p) => ({ ...p, years_experience: v ? Number(v) : undefined }))}
-                  />
-                  <TextInput className={fieldCls} placeholder="Languages (English, Swahili)" value={profile.languages ?? ''} onChangeText={(v) => setProfile((p) => ({ ...p, languages: v }))} />
-                  <TextInput className={fieldCls} placeholder="Professional bio" value={profile.bio ?? ''} onChangeText={(v) => setProfile((p) => ({ ...p, bio: v }))} multiline numberOfLines={4} />
+                  <Field label="Professional title">
+                    <TextInput className={fieldCls} value={profile.professional_title ?? ''} onChangeText={(v) => setProfile((p) => ({ ...p, professional_title: v }))} />
+                  </Field>
+                  <Field label="Years of experience">
+                    <TextInput
+                      className={fieldCls}
+                      keyboardType="numeric"
+                      value={profile.years_experience != null ? String(profile.years_experience) : ''}
+                      onChangeText={(v) => setProfile((p) => ({ ...p, years_experience: v ? Number(v) : undefined }))}
+                    />
+                  </Field>
+                  <Field label="Languages (English, Swahili)">
+                    <TextInput className={fieldCls} value={profile.languages ?? ''} onChangeText={(v) => setProfile((p) => ({ ...p, languages: v }))} />
+                  </Field>
+                  <Field label="Professional bio">
+                    <TextInput className={fieldCls} value={profile.bio ?? ''} onChangeText={(v) => setProfile((p) => ({ ...p, bio: v }))} multiline numberOfLines={4} />
+                  </Field>
                   <Pressable onPress={() => void pickPhoto(setPhotoUrl)} className="rounded-2xl bg-[#f5f5f5] px-4 py-6 items-center">
                     <CameraIcon size={22} color="#7210FF" />
                     <Text className="text-[13px] text-ink mt-2">{photoUrl ? 'Profile photo uploaded' : 'Upload profile photo'}</Text>
@@ -263,11 +271,21 @@ export default function OnboardingSteps() {
               {code === 'BUSINESS_INFO' && (
                 <>
                   <Text className="text-[12px] text-muted">Optional — skip if you operate as an individual.</Text>
-                  <TextInput className={fieldCls} placeholder="Business name" value={business.business_name ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, business_name: v }))} />
-                  <TextInput className={fieldCls} placeholder="Registration number" value={business.registration_number ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, registration_number: v }))} />
-                  <TextInput className={fieldCls} placeholder="Business email" value={business.business_email ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, business_email: v }))} />
-                  <TextInput className={fieldCls} placeholder="Business phone" value={business.business_phone ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, business_phone: v }))} />
-                  <TextInput className={fieldCls} placeholder="Business address" value={business.address ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, address: v }))} />
+                  <Field label="Business name">
+                    <TextInput className={fieldCls} value={business.business_name ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, business_name: v }))} />
+                  </Field>
+                  <Field label="Registration number">
+                    <TextInput className={fieldCls} value={business.registration_number ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, registration_number: v }))} />
+                  </Field>
+                  <Field label="Business email">
+                    <TextInput className={fieldCls} value={business.business_email ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, business_email: v }))} />
+                  </Field>
+                  <Field label="Business phone">
+                    <TextInput className={fieldCls} value={business.business_phone ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, business_phone: v }))} />
+                  </Field>
+                  <Field label="Business address">
+                    <TextInput className={fieldCls} value={business.address ?? ''} onChangeText={(v) => setBusiness((b) => ({ ...b, address: v }))} />
+                  </Field>
                 </>
               )}
 
@@ -280,7 +298,9 @@ export default function OnboardingSteps() {
                     </View>
                   ))}
                   <Select value={docType || (docTypes[0]?.name ?? '')} onChange={setDocType} options={docTypes.map((t) => t.name)} />
-                  <TextInput className={fieldCls} placeholder="ID number" value={docNumber} onChangeText={setDocNumber} />
+                  <Field label="ID number">
+                    <TextInput className={fieldCls} value={docNumber} onChangeText={setDocNumber} />
+                  </Field>
                   <Pressable
                     onPress={async () => {
                       const perm = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -325,8 +345,12 @@ export default function OnboardingSteps() {
                   </View>
                   {myServices.length > 0 && <Text className="text-[12px] text-muted">Already configured: {myServices.map((s) => s.display_name || s.service_id).join(', ')}</Text>}
                   <Select value={pricingModel.replace(/_/g, ' ')} onChange={(v) => setPricingModel(v.replace(/ /g, '_'))} options={['FIXED', 'STARTING', 'HOURLY', 'INSPECTION_THEN_QUOTE', 'CUSTOM_QUOTATION'].map((o) => o.replace(/_/g, ' '))} />
-                  <TextInput className={fieldCls} placeholder="Base price (TZS)" keyboardType="numeric" value={baseAmount} onChangeText={setBaseAmount} />
-                  <TextInput className={fieldCls} placeholder="Minimum charge (TZS)" keyboardType="numeric" value={minimumCharge} onChangeText={setMinimumCharge} />
+                  <Field label="Base price (TZS)">
+                    <TextInput className={fieldCls} keyboardType="numeric" value={baseAmount} onChangeText={setBaseAmount} />
+                  </Field>
+                  <Field label="Minimum charge (TZS)">
+                    <TextInput className={fieldCls} keyboardType="numeric" value={minimumCharge} onChangeText={setMinimumCharge} />
+                  </Field>
                   <Text className="text-[12px] text-muted">Applies to every service selected above. Set different pricing per service later from Pricing in your profile.</Text>
                 </>
               )}
@@ -343,20 +367,22 @@ export default function OnboardingSteps() {
                     </View>
                   ))}
                   {areas.length === 0 && <Text className="text-[12px] text-muted">No service areas added yet — add them from Service Areas in your profile after onboarding, or set your travel policy below.</Text>}
-                  <TextInput
-                    className={fieldCls}
-                    placeholder="Maximum travel distance (km)"
-                    keyboardType="numeric"
-                    value={areaSettings.max_travel_km != null ? String(areaSettings.max_travel_km) : ''}
-                    onChangeText={(v) => setAreaSettings((s) => ({ ...s, max_travel_km: v ? Number(v) : undefined }))}
-                  />
-                  <TextInput
-                    className={fieldCls}
-                    placeholder="Travel fee (TZS)"
-                    keyboardType="numeric"
-                    value={areaSettings.travel_fee != null ? String(areaSettings.travel_fee) : ''}
-                    onChangeText={(v) => setAreaSettings((s) => ({ ...s, travel_fee: v ? Number(v) : undefined }))}
-                  />
+                  <Field label="Maximum travel distance (km)">
+                    <TextInput
+                      className={fieldCls}
+                      keyboardType="numeric"
+                      value={areaSettings.max_travel_km != null ? String(areaSettings.max_travel_km) : ''}
+                      onChangeText={(v) => setAreaSettings((s) => ({ ...s, max_travel_km: v ? Number(v) : undefined }))}
+                    />
+                  </Field>
+                  <Field label="Travel fee (TZS)">
+                    <TextInput
+                      className={fieldCls}
+                      keyboardType="numeric"
+                      value={areaSettings.travel_fee != null ? String(areaSettings.travel_fee) : ''}
+                      onChangeText={(v) => setAreaSettings((s) => ({ ...s, travel_fee: v ? Number(v) : undefined }))}
+                    />
+                  </Field>
                 </>
               )}
 
@@ -371,14 +397,24 @@ export default function OnboardingSteps() {
                   <Select value={methodType} onChange={(v) => setMethodType(v as 'Mobile money' | 'Bank account')} options={['Mobile money', 'Bank account']} />
                   {methodType === 'Mobile money' ? (
                     <>
-                      <TextInput className={fieldCls} placeholder="Mobile money provider (M-Pesa, Tigo Pesa…)" value={payoutProviderName} onChangeText={setPayoutProviderName} />
-                      <TextInput className={fieldCls} placeholder="Mobile number" value={mobileNumber} onChangeText={setMobileNumber} keyboardType="phone-pad" />
+                      <Field label="Mobile money provider (M-Pesa, Tigo Pesa…)">
+                        <TextInput className={fieldCls} value={payoutProviderName} onChangeText={setPayoutProviderName} />
+                      </Field>
+                      <Field label="Mobile number">
+                        <TextInput className={fieldCls} value={mobileNumber} onChangeText={setMobileNumber} keyboardType="phone-pad" />
+                      </Field>
                     </>
                   ) : (
                     <>
-                      <TextInput className={fieldCls} placeholder="Account holder name" value={accountHolder} onChangeText={setAccountHolder} />
-                      <TextInput className={fieldCls} placeholder="Bank / provider" value={payoutProviderName} onChangeText={setPayoutProviderName} />
-                      <TextInput className={fieldCls} placeholder="Account number" value={accountNumber} onChangeText={setAccountNumber} />
+                      <Field label="Account holder name">
+                        <TextInput className={fieldCls} value={accountHolder} onChangeText={setAccountHolder} />
+                      </Field>
+                      <Field label="Bank / provider">
+                        <TextInput className={fieldCls} value={payoutProviderName} onChangeText={setPayoutProviderName} />
+                      </Field>
+                      <Field label="Account number">
+                        <TextInput className={fieldCls} value={accountNumber} onChangeText={setAccountNumber} />
+                      </Field>
                     </>
                   )}
                 </>
