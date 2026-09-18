@@ -43,6 +43,8 @@ export default function Calendar() {
   const startWeekday = (firstOfMonth.getDay() + 6) % 7
   const daysInMonth = new Date(year, month, 0).getDate()
   const monthLabel = firstOfMonth.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+  const isCurrentMonth = year === now.getFullYear() && month === now.getMonth() + 1
+  const todayDate = now.getDate()
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -71,13 +73,20 @@ export default function Calendar() {
                   const day = i + 1
                   const iso = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
                   const dayEvents = eventsByDate.get(iso) ?? []
+                  const isToday = isCurrentMonth && day === todayDate
                   return (
                     <View key={day} style={{ width: `${100 / 7}%`, aspectRatio: 1 }} className="items-center justify-center">
                       <View
                         className="items-center justify-center rounded-xl"
-                        style={{ width: 32, height: 32, backgroundColor: dayEvents.length ? 'rgba(114,16,255,0.1)' : 'transparent' }}
+                        style={{
+                          width: 32,
+                          height: 32,
+                          backgroundColor: dayEvents.length ? 'rgba(114,16,255,0.1)' : 'transparent',
+                          borderWidth: isToday ? 1.5 : 0,
+                          borderColor: '#7210FF',
+                        }}
                       >
-                        <Text className="text-[13px]" style={{ color: dayEvents.length ? '#7210FF' : '#0B111F', fontWeight: dayEvents.length ? '700' : '400' }}>
+                        <Text className="text-[13px]" style={{ color: dayEvents.length || isToday ? '#7210FF' : '#0B111F', fontWeight: dayEvents.length || isToday ? '700' : '400' }}>
                           {day}
                         </Text>
                       </View>

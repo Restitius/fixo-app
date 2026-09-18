@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ScreenHeader from '../../components/ScreenHeader'
 import StatusBadge from '../../components/StatusBadge'
 import { bookingsApi, type BookingFeedRow } from '../../lib/api-client'
 import { fmtMoney } from '../../lib/format'
@@ -24,7 +23,7 @@ export default function Bookings() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title="Bookings" />
+      <Text className="text-[22px] font-extrabold text-ink px-6 pt-2">Bookings</Text>
       <ScrollView className="flex-1 px-6" contentContainerStyle={{ paddingBottom: 110 }}>
         {!loading && bookings.length === 0 && (
           <View className="items-center pt-20">
