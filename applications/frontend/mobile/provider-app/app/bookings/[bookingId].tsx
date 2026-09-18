@@ -7,12 +7,12 @@
 // never displays a "demo PIN" hint, matching web-provider's own comment.
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
-import { Redirect, useLocalSearchParams } from 'expo-router'
+import { Redirect, router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import * as Location from 'expo-location'
 import ScreenHeader from '../../components/ScreenHeader'
 import StatusBadge, { humanizeStatus } from '../../components/StatusBadge'
-import { CheckCircleIcon, LocationIcon, LockIcon, PlusIcon, ToolIcon } from '../../components/icons'
+import { ChatBubbleIcon, CheckCircleIcon, LocationIcon, LockIcon, PlusIcon, ToolIcon } from '../../components/icons'
 import { useAuth } from '../../lib/auth-context'
 import {
   arrivalApi,
@@ -158,7 +158,19 @@ export default function BookingDetailScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
-      <ScreenHeader title={detail.booking_number} back="/(tabs)/bookings" />
+      <ScreenHeader
+        title={detail.booking_number}
+        back="/(tabs)/bookings"
+        right={
+          <Pressable
+            onPress={() =>
+              router.push({ pathname: '/messages/[bookingId]', params: { bookingId: detail.booking_id, customerName: detail.customer_name, bookingNumber: detail.booking_number } } as any)
+            }
+          >
+            <ChatBubbleIcon size={20} color="#7210FF" />
+          </Pressable>
+        }
+      />
       <ScrollView className="flex-1 px-6" contentContainerStyle={{ paddingBottom: 40 }}>
         <View className="flex-row items-center justify-between mt-2">
           <Text className="text-[16px] font-bold text-ink">{detail.service_name}</Text>
