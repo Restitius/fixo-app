@@ -1,6 +1,5 @@
 // Lightweight API client — JSON, bearer header, one silent refresh on 401.
-// Scaffolded for web-provider so the provider panel uses the exact same
-// envelope/header contract as web-user once it wires the real API.
+// Same envelope/header contract as web-user's own api-client.ts.
 // Attribution: every request carries X-Client-ID = CLT-WEB-PROVIDER so the
 // backend can tell provider-web traffic apart in logs, events, audit and jobs.
 const BASE_URL = import.meta.env["VITE_API_URL"] ?? "http://localhost:8000/api/v1";
@@ -386,4 +385,122 @@ export const onboardingApi = {
     currency: string;
     is_default: boolean;
   }) => apiClient.post<PayoutMethod>("/providers/me/payouts/methods", data).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Dashboard + incoming requests feed. Field names read directly from
+// provider_dashboard_service.py / provider_request_service.py and their
+// governed SQL this session.
+// ---------------------------------------------------------------------------
+
+export interface DashboardAttentionItem {
+  code: string;
+  severity: "critical" | "warning" | "info";
+  message: string;
+  action: string;
+}
+
+export interface DashboardQuickAction {
+  code: string;
+  label: string;
+  method: string;
+  path: string;
+}
+
+export interface DashboardOverview {
+  stats: {
+    todays_jobs: number;
+    pending_requests: number;
+    active_jobs: number;
+    earnings_today: number;
+    currency: string;
+    rating_avg: number | null;
+    rating_count: number;
+    jobs_completed: number;
+  };
+  setup: Record<string, unknown>;
+  attention: DashboardAttentionItem[];
+  quick_actions: DashboardQuickAction[];
+}
+
+export interface DashboardScheduleItem {
+  booking_id: string;
+  booking_number: string;
+  scheduled_date: string;
+  time_window?: string | null;
+  status: string;
+  agreed_amount: number;
+  currency: string;
+  service_name: string;
+}
+
+export interface DashboardSchedule {
+  today: DashboardScheduleItem[];
+  upcoming: DashboardScheduleItem[];
+}
+
+export interface DashboardEarnings {
+  collected_today: number;
+  collected_week: number;
+  collected_month: number;
+  billed_month: number;
+  currency: string;
+}
+
+export interface DashboardPerformance {
+  total_bookings: number;
+  completed_bookings: number;
+  cancelled_bookings: number;
+  completion_rate: number | null;
+  cancellation_rate: number | null;
+  accepted_requests: number;
+  declined_requests: number;
+  acceptance_rate: number | null;
+  response_time_minutes: number | null;
+}
+
+export interface WalletOverview {
+  available_balance: number;
+  pending_balance: number;
+  reserved_funds: number;
+  currency: string;
+  withdrawals: number;
+  refund_deductions: number;
+  bonuses: number;
+  adjustments: number;
+}
+
+export interface RequestFeedItem {
+  match_id: string;
+  score?: number;
+  matched_at: string;
+  respond_by: string;
+  respond_in_seconds?: number | null;
+  respond_expired?: boolean;
+  request_id: string;
+  request_number: string;
+  description: string;
+  preferred_date?: string | null;
+  time_window?: string | null;
+  request_status: string;
+  service_name: string;
+  service_slug: string;
+  customer_name: string;
+  property_name?: string | null;
+  city?: string | null;
+  region?: string | null;
+  street_address?: string | null;
+  estimated_earnings?: number | null;
+  my_quote_id?: string | null;
+  my_quote_amount?: number | null;
+  my_quote_status?: string | null;
+}
+
+export const dashboardApi = {
+  overview: () => apiClient.get<DashboardOverview>("/providers/dashboard").then((r) => r.data),
+  schedule: () => apiClient.get<DashboardSchedule>("/providers/dashboard/schedule").then((r) => r.data),
+  earnings: () => apiClient.get<DashboardEarnings>("/providers/dashboard/earnings").then((r) => r.data),
+  performance: () => apiClient.get<DashboardPerformance>("/providers/dashboard/performance").then((r) => r.data),
+  wallet: () => apiClient.get<WalletOverview>("/providers/me/wallet").then((r) => r.data),
+  requestsFeed: () => apiClient.get<RequestFeedItem[]>("/providers/requests").then((r) => r.data),
 };
