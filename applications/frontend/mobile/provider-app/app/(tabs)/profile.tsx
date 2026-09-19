@@ -14,6 +14,7 @@ import { CenterModal } from '../../components/Sheet'
 import { useAuth } from '../../lib/auth-context'
 import { initialsOf } from '../../lib/format'
 import {
+  AwardIcon,
   BriefcaseIcon,
   CalendarIcon,
   ChevronRightIcon,
@@ -35,6 +36,7 @@ const MENU = [
   { icon: BriefcaseIcon, label: 'My services', to: '/services' },
   { icon: LocationIcon, label: 'Service areas', to: '/service-areas' },
   { icon: ShieldCheckIcon, label: 'Documents', to: '/documents' },
+  { icon: AwardIcon, label: 'Performance', to: '/performance' },
   { icon: HistoryIcon, label: 'Earnings', to: '/earnings' },
   { icon: WalletIcon, label: 'Wallet', to: '/wallet' },
   { icon: WalletIcon, label: 'Payouts', to: '/payouts' },
