@@ -4,9 +4,21 @@ import { Bell, BellRing, CheckCheck } from "lucide-react";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
-import { StatusPill } from "@/components/dashboard/StatusPill";
-import { activityLog } from "@/lib/mock-data";
-import { fixoSdk, type ProviderNotificationRow } from "@/lib/api-client";
+import { activityApi, fixoSdk, settingsApi, type ActivityLogEntry, type ProviderNotificationRow } from "@/lib/api-client";
+
+// Real, persisted channel toggles — reuses the same generic key/value
+// preference store settings.tsx already uses for "language" (no dedicated
+// notification-preferences endpoint exists, but the store itself is real
+// and has no key namespace restriction, so this isn't fabricated).
+const CHANNELS = [
+  { key: "new_job_requests", label: "New job requests" },
+  { key: "quote_responses", label: "Quote responses" },
+  { key: "booking_changes", label: "Booking changes" },
+  { key: "payments_payouts", label: "Payments & payouts" },
+  { key: "reviews", label: "Reviews" },
+  { key: "compliance_reminders", label: "Compliance reminders" },
+  { key: "promotions", label: "Promotions from FIXO" },
+] as const;
 
 const title = "Notifications — FIXO Provider";
 const description = "Job alerts, quote activity, payments, reviews and compliance reminders in one feed.";
@@ -27,6 +39,8 @@ export const Route = createFileRoute("/notifications")({
 function NotificationsPage() {
   const [items, setItems] = useState<ProviderNotificationRow[]>([]);
   const [filter, setFilter] = useState("ALL");
+  const [activity, setActivity] = useState<ActivityLogEntry[]>([]);
+  const [channelPrefs, setChannelPrefs] = useState<Record<string, boolean>>({});
 
   const load = useCallback(() => {
     fixoSdk
@@ -37,7 +51,30 @@ function NotificationsPage() {
 
   useEffect(() => {
     load();
+    activityApi.list(20, 0).then(setActivity).catch(() => setActivity([]));
+    settingsApi
+      .listPreferences()
+      .then((prefs) => {
+        const byKey = new Map(prefs.map((p) => [p.key, p.value]));
+        const next: Record<string, boolean> = {};
+        for (const c of CHANNELS) {
+          next[`push_${c.key}`] = byKey.get(`push_${c.key}`) !== "false";
+          next[`sms_${c.key}`] = byKey.get(`sms_${c.key}`) === "true";
+        }
+        setChannelPrefs(next);
+      })
+      .catch(() => {});
   }, [load]);
+
+  async function toggleChannel(prefKey: string) {
+    const next = !channelPrefs[prefKey];
+    setChannelPrefs((prev) => ({ ...prev, [prefKey]: next }));
+    try {
+      await settingsApi.setPreference(prefKey, String(next));
+    } catch {
+      setChannelPrefs((prev) => ({ ...prev, [prefKey]: !next }));
+    }
+  }
 
   const filters = useMemo(
     () => ["ALL", ...Array.from(new Set(items.map((n) => n.category))).sort()],
@@ -118,23 +155,27 @@ function NotificationsPage() {
 
         <div className="space-y-4">
           <Panel title="Delivery channels">
-            {[
-              "New job requests",
-              "Quote responses",
-              "Booking changes",
-              "Payments & payouts",
-              "Reviews",
-              "Compliance reminders",
-              "Promotions from FIXO",
-            ].map((c, i) => (
-              <label key={c} className="flex items-center justify-between gap-3 border-b border-border/60 py-3 text-sm last:border-0">
-                {c}
+            {CHANNELS.map((c) => (
+              <label key={c.key} className="flex items-center justify-between gap-3 border-b border-border/60 py-3 text-sm last:border-0">
+                {c.label}
                 <span className="flex gap-3 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
-                    Push <input type="checkbox" defaultChecked className="size-4 accent-[var(--primary)]" />
+                    Push
+                    <input
+                      type="checkbox"
+                      checked={channelPrefs[`push_${c.key}`] ?? true}
+                      onChange={() => void toggleChannel(`push_${c.key}`)}
+                      className="size-4 accent-[var(--primary)]"
+                    />
                   </span>
                   <span className="flex items-center gap-1">
-                    SMS <input type="checkbox" defaultChecked={i < 3} className="size-4 accent-[var(--primary)]" />
+                    SMS
+                    <input
+                      type="checkbox"
+                      checked={channelPrefs[`sms_${c.key}`] ?? false}
+                      onChange={() => void toggleChannel(`sms_${c.key}`)}
+                      className="size-4 accent-[var(--primary)]"
+                    />
                   </span>
                 </span>
               </label>
@@ -143,12 +184,11 @@ function NotificationsPage() {
 
           <Panel title="Account activity">
             <div className="space-y-3">
-              {activityLog.map((a) => (
-                <div key={a.at} className="rounded-2xl bg-muted/50 p-3">
-                  <p className="text-sm">{a.text}</p>
-                  <p className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
-                    {a.at} <StatusPill tone="muted" label={a.actor} />
-                  </p>
+              {activity.length === 0 && <p className="py-4 text-center text-sm text-muted-foreground">No activity recorded yet.</p>}
+              {activity.map((a) => (
+                <div key={a.log_id} className="rounded-2xl bg-muted/50 p-3">
+                  <p className="text-sm">{a.action.replace(/_/g, " ").replace(/\./g, " · ").toLowerCase()}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{new Date(a.created_at).toLocaleString()}</p>
                 </div>
               ))}
             </div>
