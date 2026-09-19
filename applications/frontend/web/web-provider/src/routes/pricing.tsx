@@ -1,14 +1,31 @@
+// Pricing — wired to the real backend.
+// Real model: one structured pricing row per CONFIGURED service, one of five
+// mutually-exclusive shapes (enforced server-side in provider_pricing_service.py):
+//   FIXED (base_amount) | STARTING (from_amount) | HOURLY (hourly_rate [+ minimum_hours])
+//   | INSPECTION_THEN_QUOTE (optional inspection_fee) | CUSTOM_QUOTATION (no amounts).
+// Dropped from the old mock: callout/emergency/weekend/after-hours surcharges,
+// travel-fee-per-km, and the commission-tier table — none of these fields exist
+// anywhere in the real pricing or services schema. Commission rate itself isn't
+// exposed by any provider-facing endpoint either, so the "commission example"
+// panel is gone rather than showing a fabricated percentage.
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Percent, Receipt, Tags } from "lucide-react";
+import { Loader2, Tags } from "lucide-react";
+import { toast } from "sonner";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
 import { MetricCard } from "@/components/dashboard/MetricCard";
+import { StatusPill } from "@/components/dashboard/StatusPill";
 import { fmtMoney } from "@/lib/format";
-import { commissionTiers, services } from "@/lib/mock-data";
+import {
+  onboardingApi,
+  type ProviderServiceConfig,
+  type ProviderServicePricing,
+} from "@/lib/api-client";
 
-const title = "Pricing & Commission — FIXO Provider";
-const description = "Set base prices, minimum charges, callout and emergency surcharges, and see your net earnings after commission.";
+const title = "Pricing — FIXO Provider";
+const description = "Set structured pricing for each of your configured services.";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -23,106 +40,210 @@ export const Route = createFileRoute("/pricing")({
   component: PricingPage,
 });
 
+const PRICING_MODELS = [
+  { code: "FIXED", label: "Fixed price" },
+  { code: "STARTING", label: "Starting from" },
+  { code: "HOURLY", label: "Hourly rate" },
+  { code: "INSPECTION_THEN_QUOTE", label: "Inspection, then quote" },
+  { code: "CUSTOM_QUOTATION", label: "Custom quotation only" },
+] as const;
+
 const field = "h-11 w-full rounded-xl border border-input bg-card px-3.5 text-sm outline-none focus:ring-2 focus:ring-ring/30";
 
+type Draft = Partial<ProviderServicePricing>;
+
 function PricingPage() {
-  const commission = 0.1;
+  const [services, setServices] = useState<ProviderServiceConfig[]>([]);
+  const [pricing, setPricing] = useState<Record<string, ProviderServicePricing>>({});
+  const [drafts, setDrafts] = useState<Record<string, Draft>>({});
+  const [loading, setLoading] = useState(true);
+  const [savingId, setSavingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    Promise.all([onboardingApi.myServices(), onboardingApi.listPricing()])
+      .then(([svcs, prices]) => {
+        setServices(svcs);
+        const byId: Record<string, ProviderServicePricing> = {};
+        for (const p of prices) byId[p.service_id] = p;
+        setPricing(byId);
+        const initialDrafts: Record<string, Draft> = {};
+        const validModels: readonly string[] = PRICING_MODELS.map((m) => m.code);
+        for (const s of svcs) {
+          initialDrafts[s.service_id] = byId[s.service_id] ?? {
+            // s.pricing_model is the coarse FIXED/HOURLY/QUOTED config-level field
+            // (a different, 3-value enum from this endpoint's 5 structured models) —
+            // only reuse it when it happens to also be a valid structured model code.
+            pricing_model: validModels.includes(s.pricing_model) ? s.pricing_model : "CUSTOM_QUOTATION",
+            currency: "TZS",
+            is_negotiable: false,
+          };
+        }
+        setDrafts(initialDrafts);
+      })
+      .catch((err) => toast.error(err instanceof Error ? err.message : "Could not load pricing."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  function updateDraft(serviceId: string, patch: Draft) {
+    setDrafts((d) => ({ ...d, [serviceId]: { ...d[serviceId], ...patch } }));
+  }
+
+  async function save(serviceId: string) {
+    const draft = drafts[serviceId];
+    if (!draft?.pricing_model) return;
+    setSavingId(serviceId);
+    try {
+      const saved = await onboardingApi.upsertPricing(serviceId, draft);
+      setPricing((p) => ({ ...p, [serviceId]: saved }));
+      toast.success("Pricing saved.");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not save pricing.");
+    } finally {
+      setSavingId(null);
+    }
+  }
+
+  const priced = services.filter((s) => pricing[s.service_id]).length;
+
+  if (loading) {
+    return (
+      <ProviderPage title="Pricing" subtitle="Set structured pricing for each of your configured services.">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </ProviderPage>
+    );
+  }
 
   return (
-    <ProviderPage title="Pricing" subtitle="Your rates, surcharges and how commission affects each payout.">
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <MetricCard icon={Tags} label="Active priced services" value={String(services.filter((s) => s.price > 0).length)} hint="Visible to customers" />
-        <MetricCard icon={Percent} label="Commission rate" value="10%" hint="Professional plan" tone="amber" tintValue />
-        <MetricCard icon={Receipt} label="Avg. net per job" value={fmtMoney(268000)} hint="Last 30 days" tone="success" tintValue />
+    <ProviderPage title="Pricing" subtitle="Set structured pricing for each of your configured services.">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <MetricCard icon={Tags} label="Configured services" value={String(services.length)} hint="From Services" />
+        <MetricCard icon={Tags} label="Priced services" value={`${priced}/${services.length}`} hint="Have pricing set" tone="success" tintValue />
       </div>
 
-      <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-[1fr_360px]">
-        <Panel title="Service rates">
-          <div className="space-y-3">
-            {services.map((s) => (
-              <div key={s.id} className="grid gap-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-[1.4fr_1fr_1fr]">
-                <div>
-                  <p className="text-sm font-semibold">{s.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {s.category} · {s.pricingModel.charAt(0) + s.pricingModel.slice(1).toLowerCase()}
-                  </p>
-                </div>
-                <label className="block">
-                  <span className="mb-1 block text-xs text-muted-foreground">Base price</span>
-                  <input className={field} type="number" defaultValue={s.price} />
-                </label>
-                <label className="block">
-                  <span className="mb-1 block text-xs text-muted-foreground">Minimum charge</span>
-                  <input className={field} type="number" defaultValue={s.minimumCharge} />
-                </label>
-              </div>
-            ))}
-          </div>
+      <div className="mt-4 pb-6">
+        <Panel title="Service pricing">
+          {services.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              You haven't configured any services yet. Add services on the Services page first.
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {services.map((s) => {
+                const draft = drafts[s.service_id] ?? {};
+                const model = draft.pricing_model ?? "CUSTOM_QUOTATION";
+                const existing = pricing[s.service_id];
+                return (
+                  <div key={s.service_id} className="rounded-2xl bg-muted/50 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-semibold">{s.display_name || s.service_id}</p>
+                        {s.description && <p className="text-xs text-muted-foreground">{s.description}</p>}
+                      </div>
+                      {existing && <StatusPill status="PRICED" />}
+                    </div>
+
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <label className="block">
+                        <span className="mb-1 block text-xs text-muted-foreground">Pricing model</span>
+                        <select
+                          className={field}
+                          value={model}
+                          onChange={(e) => updateDraft(s.service_id, { pricing_model: e.target.value })}
+                        >
+                          {PRICING_MODELS.map((m) => (
+                            <option key={m.code} value={m.code}>
+                              {m.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      {model === "FIXED" && (
+                        <AmountField label="Price" value={draft.base_amount} onChange={(v) => updateDraft(s.service_id, { base_amount: v })} />
+                      )}
+                      {model === "STARTING" && (
+                        <AmountField label="Starting from" value={draft.from_amount} onChange={(v) => updateDraft(s.service_id, { from_amount: v })} />
+                      )}
+                      {model === "HOURLY" && (
+                        <>
+                          <AmountField label="Hourly rate" value={draft.hourly_rate} onChange={(v) => updateDraft(s.service_id, { hourly_rate: v })} />
+                          <AmountField
+                            label="Minimum hours (optional)"
+                            value={draft.minimum_hours}
+                            onChange={(v) => updateDraft(s.service_id, { minimum_hours: v })}
+                          />
+                        </>
+                      )}
+                      {model === "INSPECTION_THEN_QUOTE" && (
+                        <AmountField
+                          label="Inspection fee (optional)"
+                          value={draft.inspection_fee}
+                          onChange={(v) => updateDraft(s.service_id, { inspection_fee: v })}
+                        />
+                      )}
+                    </div>
+
+                    <label className="mt-3 block">
+                      <span className="mb-1 block text-xs text-muted-foreground">What's included (optional)</span>
+                      <input
+                        className={field}
+                        value={draft.includes_text ?? ""}
+                        onChange={(e) => updateDraft(s.service_id, { includes_text: e.target.value })}
+                      />
+                    </label>
+
+                    <label className="mt-3 flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={draft.is_negotiable ?? false}
+                        onChange={(e) => updateDraft(s.service_id, { is_negotiable: e.target.checked })}
+                      />
+                      Price is negotiable
+                    </label>
+
+                    {existing?.base_amount != null && (
+                      <p className="mt-2 text-xs text-muted-foreground">Currently: {fmtMoney(existing.base_amount)}</p>
+                    )}
+
+                    <button
+                      onClick={() => save(s.service_id)}
+                      disabled={savingId === s.service_id}
+                      className="mt-4 rounded-xl px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+                      style={{ backgroundImage: "var(--gradient-primary)" }}
+                    >
+                      {savingId === s.service_id ? "Saving…" : "Save pricing"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </Panel>
-
-        <div className="space-y-4">
-          <Panel title="Surcharges">
-            <div className="space-y-3">
-              {[
-                { label: "Callout fee", value: 10000 },
-                { label: "Emergency surcharge (%)", value: 25 },
-                { label: "Weekend surcharge (%)", value: 15 },
-                { label: "After-hours surcharge (%)", value: 20 },
-                { label: "Travel fee per km beyond radius", value: 1200 },
-              ].map((s) => (
-                <label key={s.label} className="block">
-                  <span className="mb-1 block text-xs text-muted-foreground">{s.label}</span>
-                  <input className={field} type="number" defaultValue={s.value} />
-                </label>
-              ))}
-            </div>
-            <button
-              className="mt-4 w-full rounded-xl py-2.5 text-sm font-semibold text-primary-foreground"
-              style={{ backgroundImage: "var(--gradient-primary)" }}
-            >
-              Save pricing
-            </button>
-          </Panel>
-
-          <Panel title="Commission example">
-            <div className="space-y-2 text-sm">
-              <Row label="Customer pays" value={fmtMoney(100000)} />
-              <Row label="Platform commission (10%)" value={`- ${fmtMoney(100000 * commission)}`} />
-              <div className="flex items-center justify-between border-t border-border pt-2 font-semibold">
-                <span>You receive</span>
-                <span className="text-primary">{fmtMoney(100000 * (1 - commission))}</span>
-              </div>
-            </div>
-            <table className="mt-4 w-full text-left text-xs">
-              <thead className="text-muted-foreground">
-                <tr>
-                  <th className="py-1.5 font-semibold">Plan</th>
-                  <th className="py-1.5 font-semibold">Commission</th>
-                  <th className="py-1.5 font-semibold">Payout</th>
-                </tr>
-              </thead>
-              <tbody>
-                {commissionTiers.map((t) => (
-                  <tr key={t.plan} className="border-t border-border/60">
-                    <td className="py-2 font-medium">{t.plan}</td>
-                    <td className="py-2 text-primary">{t.commission}</td>
-                    <td className="py-2 text-muted-foreground">{t.payout}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Panel>
-        </div>
       </div>
     </ProviderPage>
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function AmountField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number | null | undefined;
+  onChange: (v: number | undefined) => void;
+}) {
   return (
-    <div className="flex items-center justify-between">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="font-semibold">{value}</span>
-    </div>
+    <label className="block">
+      <span className="mb-1 block text-xs text-muted-foreground">{label}</span>
+      <input
+        className={field}
+        type="number"
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value === "" ? undefined : Number(e.target.value))}
+      />
+    </label>
   );
 }
