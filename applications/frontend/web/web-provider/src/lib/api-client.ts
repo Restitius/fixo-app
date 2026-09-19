@@ -1069,3 +1069,63 @@ export const earningsApi = {
       )
       .then((r) => r.data.transactions),
 };
+
+// ---------------------------------------------------------------------------
+// Performance — ranking_router.py (rank/leaderboard) + kpis_router.py
+// (period KPI history + summary). Both raw (unwrapped) on success.
+// ---------------------------------------------------------------------------
+
+export type RankLevel = "bronze" | "silver" | "gold" | "platinum";
+
+export interface ProviderRanking {
+  provider_id: string;
+  rank_score: number;
+  rank_level: RankLevel;
+  badges: string[];
+  completed_jobs: number;
+  recurring_customers: number;
+  referrals: number;
+  avg_completion_rate: number;
+  avg_on_time_rate: number;
+  avg_rating: number;
+  last_computed_at: string | null;
+}
+
+export interface KpiPeriod {
+  id: string;
+  period: "weekly" | "monthly" | "quarterly" | "yearly";
+  period_start: string;
+  period_end: string;
+  completion_rate: number;
+  on_time_rate: number;
+  avg_rating: number;
+  response_time_minutes: number;
+  jobs_completed: number;
+  jobs_cancelled: number;
+  revenue: number;
+}
+
+export interface KpiSummary {
+  avg_completion_rate: number;
+  avg_on_time_rate: number;
+  avg_rating: number;
+  avg_response_time_minutes: number;
+  total_jobs_completed: number;
+  total_jobs_cancelled: number;
+  total_revenue: number;
+  periods_count: number;
+}
+
+export const rankingApi = {
+  // ranking_router raises NotFoundError (404) until a batch job first
+  // computes this provider's ranking — not a bug, just "not ranked yet".
+  mine: () => apiClient.getRaw<ProviderRanking>("/providers/me/ranking/").then((r) => r.data),
+};
+
+export const kpisApi = {
+  list: (period?: KpiPeriod["period"], limit = 50, offset = 0) =>
+    apiClient
+      .getRaw<{ kpis: KpiPeriod[]; limit: number; offset: number }>(`/providers/me/kpis/${qs({ period, limit, offset })}`)
+      .then((r) => r.data.kpis),
+  summary: () => apiClient.getRaw<KpiSummary>("/providers/me/kpis/summary").then((r) => r.data),
+};
