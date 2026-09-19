@@ -1233,3 +1233,37 @@ export const portfolioApi = {
   ) => apiClient.patchRaw<PortfolioItem>(`/providers/me/portfolio/${itemId}`, data).then((r) => r.data),
   remove: (itemId: string) => apiClient.deleteRaw<{ id: string }>(`/providers/me/portfolio/${itemId}`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Team — real /providers/me/team/* (team_router.py). Wrapped in the standard
+// {success,data} envelope (unlike earnings/ranking/kpis/portfolio/reviews),
+// so this uses the normal get/post/patch, not the raw variants. No hard
+// delete or re-activate — only deactivate (ACTIVE -> INACTIVE, one-way).
+// No jobs/rating fields on the real record; job assignment and equipment
+// tracking are separate, unexplored backend domains (job_assignments_router,
+// equipment_router) — out of scope here, not fabricated.
+// ---------------------------------------------------------------------------
+
+export type TeamRole = "OWNER" | "MANAGER" | "TECHNICIAN" | "DISPATCHER" | "OTHER";
+
+export interface TeamMember {
+  member_id: string;
+  full_name: string;
+  phone: string;
+  email: string | null;
+  role: TeamRole;
+  status: "ACTIVE" | "INACTIVE";
+  notes: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
+export const teamApi = {
+  list: (status?: "ACTIVE" | "INACTIVE", role?: TeamRole, limit = 50, offset = 0) =>
+    apiClient.get<TeamMember[]>(`/providers/me/team/${qs({ status, role, limit, offset })}`).then((r) => r.data),
+  create: (data: { full_name: string; phone: string; email?: string | undefined; role?: TeamRole | undefined; notes?: string | undefined }) =>
+    apiClient.post<TeamMember>("/providers/me/team/", data).then((r) => r.data),
+  update: (memberId: string, data: { full_name?: string | undefined; phone?: string | undefined; email?: string | undefined; role?: TeamRole | undefined; notes?: string | undefined }) =>
+    apiClient.patch<TeamMember>(`/providers/me/team/${memberId}`, data).then((r) => r.data),
+  deactivate: (memberId: string) => apiClient.post<TeamMember>(`/providers/me/team/${memberId}/deactivate`).then((r) => r.data),
+};

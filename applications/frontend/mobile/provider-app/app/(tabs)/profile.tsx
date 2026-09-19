@@ -38,6 +38,7 @@ const MENU = [
   { icon: BriefcaseIcon, label: 'My services', to: '/services' },
   { icon: LocationIcon, label: 'Service areas', to: '/service-areas' },
   { icon: ShieldCheckIcon, label: 'Documents', to: '/documents' },
+  { icon: UserIcon, label: 'Team', to: '/team' },
   { icon: ImageIcon, label: 'Portfolio', to: '/portfolio' },
   { icon: StarIcon, label: 'Reviews', to: '/reviews' },
   { icon: AwardIcon, label: 'Performance', to: '/performance' },
