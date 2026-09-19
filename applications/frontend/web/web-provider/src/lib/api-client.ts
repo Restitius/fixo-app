@@ -879,3 +879,43 @@ export const payoutsApi = {
   get: (payoutId: string) => apiClient.get<PayoutRow>(`/providers/me/payouts/${payoutId}`).then((r) => r.data),
   cancel: (payoutId: string) => apiClient.post<PayoutRow>(`/providers/me/payouts/${payoutId}/cancel`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Invoices — periodic earnings statements, not per-booking customer
+// invoices. Field names read directly from provider_invoices_service.py's
+// _encode_invoice/_encode_summary this session.
+// ---------------------------------------------------------------------------
+
+export interface InvoiceRow {
+  id: string;
+  invoice_number: string;
+  period_start: string;
+  period_end: string;
+  gross_amount: number;
+  commission_amount: number;
+  tax_amount: number;
+  net_amount: number;
+  currency: string;
+  status: string;
+  issued_at?: string | null;
+  due_at?: string | null;
+  paid_at?: string | null;
+}
+
+export interface InvoiceSummary {
+  total_count: number;
+  total_gross: number;
+  total_commission: number;
+  total_tax: number;
+  total_net: number;
+  overdue_count: number;
+}
+
+export const invoicesApi = {
+  list: (limit = 50, offset = 0) =>
+    apiClient
+      .get<{ invoices: InvoiceRow[]; limit: number; offset: number }>(`/providers/me/invoices/${qs({ limit, offset })}`)
+      .then((r) => r.data.invoices),
+  summary: () => apiClient.get<InvoiceSummary>("/providers/me/invoices/summary").then((r) => r.data),
+  get: (invoiceId: string) => apiClient.get<InvoiceRow>(`/providers/me/invoices/${invoiceId}`).then((r) => r.data),
+};
