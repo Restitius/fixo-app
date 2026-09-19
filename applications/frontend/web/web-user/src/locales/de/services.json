@@ -1,0 +1,183 @@
+{
+  "common": {
+    "loading": "Wird geladen…",
+    "close": "Schließen",
+    "bookNow": "Jetzt buchen",
+    "topRated": "Bestbewertet",
+    "reviewsCount_one": "{{formatted}} Bewertung",
+    "reviewsCount_other": "{{formatted}} Bewertungen",
+    "jobsDoneCount_one": "{{formatted}} erledigter Auftrag",
+    "jobsDoneCount_other": "{{formatted}} erledigte Aufträge",
+    "toast": {
+      "savedToBookmarks": "Zu Lesezeichen hinzugefügt",
+      "removedFromBookmarks": "Aus Lesezeichen entfernt"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "Dienstleistungen durchsuchen",
+      "subtitle": "Finde den richtigen Service für dein Zuhause oder Büro"
+    },
+    "metrics": {
+      "availableServices": { "label": "Verfügbare Dienstleistungen", "hint": "Über alle Kategorien hinweg" },
+      "averageRating": { "label": "Durchschnittliche Bewertung", "hint": "Basierend auf echten Anbieterbewertungen" },
+      "trustedProviders": { "label": "Vertrauenswürdige Anbieter", "hint": "Über alle Kategorien hinweg" },
+      "emergencyReady": { "label": "Notfallbereit", "hint": "Gelistete Notdienste" }
+    },
+    "searchPlaceholder": "Dienstleistungen suchen (z. B. Sanitär, Elektrik)...",
+    "sort": {
+      "popular": "Beliebt",
+      "topRated": "Bestbewertet",
+      "az": "A–Z"
+    },
+    "emptyState": {
+      "title": "Keine Dienstleistungen gefunden",
+      "description": "Wir konnten keine Dienstleistungen finden, die zu „{{query}}“ passen. Versuche ein anderes Stichwort.",
+      "action": "Suche löschen"
+    },
+    "fromPrice": "Ab {{price}}",
+    "askProvider": "Anbieter fragen",
+    "jobsDoneCount_one": "{{formatted}} erledigter Auftrag",
+    "jobsDoneCount_other": "{{formatted}} erledigte Aufträge",
+    "serviceCount_one": "{{count}} Dienstleistung",
+    "serviceCount_other": "{{count}} Dienstleistungen",
+    "findProviders": "Anbieter finden",
+    "popularCategories": "Beliebte Kategorien",
+    "providerCount_one": "{{count}} Anbieter",
+    "providerCount_other": "{{count}} Anbieter",
+    "quickMatch": {
+      "title": "Schnelle Service-Vermittlung",
+      "description": "Sag uns, was du brauchst, und wir vermitteln dich an die besten Anbieter.",
+      "cta": "Jetzt vermitteln lassen"
+    },
+    "dialog": {
+      "title": "Servicedetails",
+      "jobsCompleted_one": "{{formatted}} abgeschlossener Auftrag",
+      "jobsCompleted_other": "{{formatted}} abgeschlossene Aufträge",
+      "startingFrom": "Ab",
+      "providersAvailable": "Verfügbare Anbieter",
+      "whatsIncluded": "Was enthalten ist",
+      "noServicesYet": "Echte Dienstleistungen dieser Kategorie werden hier angezeigt.",
+      "priceRange": "Durchschnittliche Preisspanne",
+      "priceFrom": "{{price}}+",
+      "varies": "Variiert",
+      "priceVariesNote": "Der Preis variiert je nach Komplexität der Aufgabe und benötigten Materialien.",
+      "whyChooseFixo": "Warum Kunden sich für FIXO entscheiden",
+      "reasons": {
+        "skilled": "Qualifizierte und erfahrene Anbieter",
+        "quickResponse": "Schnelle Reaktion und zuverlässiger Service",
+        "qualityWork": "Qualitätsarbeit, gestützt durch echte Bewertungen",
+        "transparentPricing": "Transparente Preise im Voraus"
+      },
+      "features": {
+        "realReviews": { "title": "Echte Bewertungen", "hint": "Von echten Kunden" },
+        "upfrontPricing": { "title": "Transparente Preise", "hint": "Keine versteckten Kosten" },
+        "onTimeService": { "title": "Pünktlicher Service", "hint": "Wir respektieren deine Zeit" },
+        "providersReadyCount_one": "{{count}} Anbieter",
+        "providersReadyCount_other": "{{count}} Anbieter",
+        "readyToHelp": "Bereit zu helfen"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "Anbieter finden",
+    "pageTitleWithCategory": "{{category}}-Anbieter",
+    "subtitle": "Wähle einen vertrauenswürdigen Profi für deinen Service",
+    "backToServices": "Zurück zu den Dienstleistungen",
+    "thisService": "diesen Service",
+    "noCategory": {
+      "title": "Wähle zuerst einen Service",
+      "description": "Wähle eine Servicekategorie, um die echten Anbieter zu sehen, die sie anbieten.",
+      "action": "Dienstleistungen durchsuchen"
+    },
+    "metrics": {
+      "providersFound": { "label": "Gefundene Anbieter", "hint": "Passend zu dieser Kategorie" },
+      "averageRating": {
+        "label": "Durchschnittliche Bewertung",
+        "hint_one": "Basierend auf {{formatted}} Bewertung",
+        "hint_other": "Basierend auf {{formatted}} Bewertungen"
+      },
+      "totalReviews": { "label": "Bewertungen insgesamt", "hint": "Über diese Anbieter hinweg" },
+      "startingFrom": { "label": "Ab", "hint": "Wettbewerbsfähige Preise" }
+    },
+    "searchPlaceholder": "Anbieter suchen...",
+    "allLocations": "Alle Standorte",
+    "anyRating": "Beliebige Bewertung",
+    "sort": {
+      "recommended": "Empfohlen",
+      "topRated": "Bestbewertet",
+      "lowestPrice": "Niedrigster Preis",
+      "mostJobs": "Meiste Aufträge"
+    },
+    "noResults": {
+      "title": "Derzeit keine {{category}}-Anbieter",
+      "description": "Wir haben noch niemanden, der zu deinen Filtern passt. Versuche, deine Suche zu erweitern.",
+      "action": "Filter löschen"
+    },
+    "startingFromPrice": "Ab {{price}}",
+    "removeBookmark": "Lesezeichen entfernen",
+    "saveBookmark": "Lesezeichen speichern",
+    "viewProfile": "Profil ansehen",
+    "serviceArea": {
+      "title": "Einsatzgebiet",
+      "empty": "Noch keine Standortdaten für diese Anbieter."
+    },
+    "recommendation": {
+      "title": "Unsere Empfehlung",
+      "description": "Diese Anbieter sind nach echten Kundenbewertungen für {{category}} eingestuft.",
+      "items": {
+        "reviews": "Echte Bewertungen von echten Kunden",
+        "pricing": "Transparente Preise pro Auftrag",
+        "security": "Sichere Buchung & Zahlungen",
+        "support": "Support verfügbar, falls etwas schiefgeht"
+      }
+    },
+    "dialog": {
+      "title": "Anbieterprofil",
+      "activeSince": "Aktiv seit",
+      "completedJobs": "Abgeschlossene Aufträge",
+      "servicesOffered": "Angebotene Dienstleistungen",
+      "avgPrice": "Durchschnittspreis",
+      "servicesPricing": "Leistungen & Preise",
+      "allPricesInTZS": "Alle Preise in TZS",
+      "noServices": "Noch keine Dienstleistungen gelistet.",
+      "localFallback": "Lokal",
+      "features": {
+        "transparentPricing": { "title": "Transparente Preise", "hint": "Keine versteckten Kosten" },
+        "realReviewsCount_one": "{{formatted}} echte Bewertung",
+        "realReviewsCount_other": "{{formatted}} echte Bewertungen",
+        "realReviews": { "hint": "Von echten Kunden" },
+        "coverageTitle": "Abdeckung in {{city}}",
+        "coverage": { "hint": "Ein lokaler Experte in deiner Nähe" },
+        "securePayments": { "title": "Sichere Zahlungen", "hint": "Sicher verarbeitet" }
+      },
+      "saved": "Gespeichert",
+      "save": "Speichern",
+      "messageUnavailable": "Direktnachrichten sind verfügbar, sobald du eine aktive Buchung mit diesem Anbieter hast.",
+      "messageProvider": "Anbieter kontaktieren"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "Lesezeichen",
+    "subtitle": "Deine gespeicherten Lieblingsanbieter",
+    "empty": {
+      "title": "Noch keine Lesezeichen",
+      "description": "Speichere Anbieter, die dir gefallen, über ihr Profil — sie erscheinen dann hier für schnellen Zugriff.",
+      "action": "Anbieter durchsuchen"
+    },
+    "remove": "Entfernen"
+  },
+  "search": {
+    "pageTitle": "Suche",
+    "subtitle": "Finde einen Service in unserem echten Katalog",
+    "placeholder": "Dienstleistungen suchen, z. B. Sanitär, Reinigung, Klimaanlagenreparatur...",
+    "searchButton": "Suchen",
+    "prompt": "Gib ein Stichwort ein und drücke Enter oder Suchen.",
+    "empty": {
+      "title": "Keine Ergebnisse gefunden",
+      "description": "Nichts entspricht „{{query}}“. Versuche ein anderes Stichwort."
+    },
+    "resultsCount_one": "{{count}} Ergebnis für „{{query}}“",
+    "resultsCount_other": "{{count}} Ergebnisse für „{{query}}“"
+  }
+}

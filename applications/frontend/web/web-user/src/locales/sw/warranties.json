@@ -1,0 +1,52 @@
+{
+  "loading": "Inapakia…",
+  "page": {
+    "title": "Dhamana",
+    "subtitle": "Dhamana za kazi zako zilizokamilika, na madai yoyote uliyowasilisha"
+  },
+  "metrics": {
+    "total": "Jumla ya Dhamana",
+    "totalHint": "Wakati wote",
+    "active": "Dhamana Zinazotumika",
+    "activeHint": "Zinazotumika sasa",
+    "expiringSoon": "Zinakaribia Kuisha",
+    "expiringSoonHint_one": "Ndani ya siku {{count}}",
+    "expiringSoonHint_other": "Ndani ya siku {{count}}",
+    "claimsSubmitted": "Madai Yaliyowasilishwa",
+    "claimsSubmittedHint_one": "Dai {{count}} limewasilishwa",
+    "claimsSubmittedHint_other": "Madai {{count}} yamewasilishwa"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Tafuta kwa huduma au mtoa huduma..."
+  },
+  "table": {
+    "service": "Huduma",
+    "provider": "Mtoa Huduma",
+    "expires": "Inaisha",
+    "status": "Hali",
+    "claim": "Dai",
+    "actions": "Vitendo"
+  },
+  "serviceFallback": "Huduma",
+  "fileClaim": "Wasilisha Dai",
+  "claimAlreadyFiled": "Dai limewasilishwa",
+  "itemLabel": "dhamana",
+  "empty": {
+    "title": "Hakuna dhamana bado",
+    "description": "Dhamana huonekana hapa moja kwa moja mara booking inapokamilika.",
+    "action": "Angalia Booking Zangu",
+    "filteredTitle": "Hakuna dhamana zinazolingana",
+    "filteredDescription": "Jaribu neno tofauti la utafutaji.",
+    "clearFilters": "Futa Utafutaji"
+  },
+  "claimDialog": {
+    "title": "Wasilisha Dai la Dhamana",
+    "placeholder": "Eleza tatizo la kazi hii kwa undani...",
+    "hint": "Herufi {{count}}/2000 (kiwango cha chini ni 10)",
+    "tooShort": "Tafadhali eleza tatizo kwa herufi angalau 10.",
+    "cancel": "Ghairi",
+    "submit": "Wasilisha Dai",
+    "submitting": "Inawasilisha...",
+    "submitted": "Dai lako limewasilishwa"
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "loyalty": {
+    "loading": "Loading…",
+    "page": {
+      "title": "Loyalty",
+      "subtitle": "Rewards for recurring customers"
+    },
+    "ptsValue": "{{points}} pts",
+    "metrics": {
+      "pointsBalance": "Points Balance",
+      "availableNow": "Available now",
+      "tierStatus": "Tier Status",
+      "ptsToTier": "{{points}} pts to {{tier}}",
+      "topTier": "Top tier",
+      "earnedThisMonth": "Earned This Month",
+      "fromActivities_one": "From {{count}} activity",
+      "fromActivities_other": "From {{count}} activities",
+      "redeemed": "Redeemed",
+      "rewardsUsed_one": "{{count}} reward used",
+      "rewardsUsed_other": "{{count}} rewards used"
+    },
+    "tierCard": {
+      "currentTier": "Current tier",
+      "tierName": "{{tier}} tier",
+      "progressToTier": "Progress to {{tier}}",
+      "reachedTopTier": "You've reached the top tier",
+      "ptsOfPts": "{{balance}} / {{target}} pts",
+      "quickActions": "Quick actions",
+      "earnPoints": "Earn points",
+      "redeemReward": "Redeem reward",
+      "viewRules": "View rules",
+      "conversionNote": "100 points = TZS 1,000 reward credit"
+    },
+    "activity": {
+      "recentActivity": "Recent points activity",
+      "viewAll": "View all",
+      "noActivityYet": "No points activity yet",
+      "noActivityHint": "Book a service to start earning loyalty points.",
+      "columnActivity": "Activity",
+      "columnDate": "Date",
+      "columnPoints": "Points",
+      "columnStatus": "Status",
+      "earned": "Earned",
+      "redeemed": "Redeemed"
+    },
+    "rewards": {
+      "availableRewards": "Available rewards",
+      "viewAllRewards": "View all rewards",
+      "minPts": "Min. {{points}} pts"
+    },
+    "earnDialog": {
+      "title": "Earn points",
+      "pointsLabel": "Points",
+      "placeholder": "e.g. 100",
+      "enterPointsFirst": "Enter points first",
+      "adding": "Adding...",
+      "addPoints": "Add points",
+      "earnedToast": "Earned {{points}} pts — balance {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "Redeem reward",
+      "subtitle": "Use your points for available benefits",
+      "currentBalance": "Current balance",
+      "notEnoughPoints": "Not enough points for this reward",
+      "confirmDeduction": "Please confirm you understand points will be deducted",
+      "notEnoughPointsBadge": "Not enough points",
+      "selectedReward": "Selected reward",
+      "pointsRequired": "Points required",
+      "remainingAfter": "Remaining points after redemption",
+      "consentLabel": "I understand points will be deducted immediately",
+      "instantNote": "Redeemed rewards apply instantly to your account.",
+      "cancel": "Cancel",
+      "redeeming": "Redeeming...",
+      "redeemNow": "Redeem now",
+      "redeemedToast": "{{reward}} redeemed!"
+    },
+    "detailSheet": {
+      "title": "Loyalty details",
+      "memberSince": "Member since",
+      "tierBenefits": "Tier benefits",
+      "benefitsValue": "{{tier}} benefits",
+      "rewardConversion": "Reward conversion",
+      "conversionValue": "100 pts = TZS 1,000",
+      "nextMilestone": "Next reward milestone",
+      "milestoneValue": "{{points}} pts ({{tier}} tier)",
+      "topTierReached": "Top tier reached",
+      "selectedActivity": "Selected activity",
+      "referenceCode": "Reference code",
+      "pointsEarned": "Points earned",
+      "pointsSpent": "Points spent",
+      "balanceAfter": "Balance after",
+      "timeline": "Timeline",
+      "recorded": "{{activity}} recorded",
+      "viewRules": "View rules",
+      "share": "Share",
+      "copiedToClipboard": "Copied to clipboard",
+      "done": "Done"
+    },
+    "tierBenefits": {
+      "Bronze": ["Earn 1 point per TZS 1,000 spent", "Standard booking priority"],
+      "Silver": ["Earn 1 point per TZS 1,000 spent", "Priority customer support"],
+      "Gold": ["10% bonus points on every booking", "Priority provider matching"],
+      "Platinum": ["20% bonus points on every booking", "Dedicated support line", "Free priority booking add-on"]
+    },
+    "rewardCatalog": {
+      "discount5000": "TZS {{amount}} off",
+      "priorityBooking": "Priority booking",
+      "freeInspection": "Free inspection"
+    },
+    "share": {
+      "title": "FIXO Loyalty",
+      "message": "{{activity}} — {{sign}}{{points}} pts",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} pts (ref {{ref}})"
+    }
+  },
+  "promotions": {
+    "loading": "Loading…",
+    "page": {
+      "title": "Promotions",
+      "subtitle": "Deals and discounts on your next service"
+    },
+    "metrics": {
+      "activePromotions": "Active Promotions",
+      "currentlyAvailable": "Currently available",
+      "totalSavings": "Total Savings",
+      "acrossRedemptions": "Across all redemptions",
+      "usedThisMonth": "Used This Month",
+      "appliedOnBookings": "Applied on bookings",
+      "expiringSoon": "Expiring Soon",
+      "within7Days": "Within 7 days"
+    },
+    "categories": {
+      "plumbing": "Plumbing",
+      "cleaning": "Cleaning",
+      "painting": "Painting",
+      "acCooling": "AC & Cooling",
+      "electrical": "Electrical",
+      "moving": "Moving",
+      "general": "General Services"
+    },
+    "discount": {
+      "percentOff": "{{value}}% off",
+      "amountOff": "{{amount}} off"
+    },
+    "labels": {
+      "noCap": "No cap",
+      "noMinimum": "No minimum",
+      "unlimited": "Unlimited",
+      "usageOfLimit": "{{used}} of {{limit}} used"
+    },
+    "promoCode": {
+      "title": "Promo code",
+      "enterCode": "Enter promo code",
+      "placeholder": "e.g. WELCOME10",
+      "orderAmount": "Order amount (TZS)",
+      "validateCode": "Validate code",
+      "enterCodeFirst": "Enter a promotion code",
+      "enterAmountFirst": "Enter an order amount",
+      "appliesSave": "{{code}} applies — save {{amount}}",
+      "save": "Save {{amount}}",
+      "savePercent": "Save {{amount}} ({{percent}}%)",
+      "disclaimer": "Promo codes apply only to eligible services and cannot be combined with other offers."
+    },
+    "availablePromotions": {
+      "title": "Available promotions",
+      "subtitle": "Choose a promotion to apply to your booking.",
+      "noneTitle": "No active promotions",
+      "noneDescription": "Check back soon — new deals show up here.",
+      "expires": "Expires {{date}}",
+      "details": "Details",
+      "useNow": "Use now",
+      "showLess": "Show less",
+      "viewAll": "View all promotions"
+    },
+    "redemptions": {
+      "title": "Recent redemptions",
+      "showLess": "Show less",
+      "viewAll": "View all",
+      "noneTitle": "No redemptions yet",
+      "noneDescription": "Promotions you actually apply will show up here with the real savings amount.",
+      "columnCode": "Promo code",
+      "columnDate": "Date",
+      "columnSavings": "Savings",
+      "columnStatus": "Status",
+      "applied": "Applied"
+    },
+    "details": {
+      "title": "Promotion details",
+      "active": "Active",
+      "expired": "Expired",
+      "maxSavings": "Max savings: {{amount}}",
+      "promoCode": "Promo code",
+      "category": "Category",
+      "validity": "Validity",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "Minimum order",
+      "usageLimit": "Usage limit",
+      "eligibleAreas": "Eligible areas",
+      "allAreas": "All areas",
+      "conditionsTitle": "Conditions",
+      "conditionGeneral": "Valid only on eligible services.",
+      "conditionCategory": "Valid only on eligible {{category}} services.",
+      "conditionNoCombine": "Cannot be combined with other promo codes.",
+      "conditionAppliedImmediately": "Applied immediately when you use this promotion.",
+      "recentUseTitle": "Recent use",
+      "noRecentUse": "No redemptions yet for this code.",
+      "columnBookingRef": "Booking reference",
+      "columnDate": "Date",
+      "columnSavings": "Savings",
+      "shareCode": "Share code",
+      "viewTerms": "View terms",
+      "useThisPromotion": "Use this promotion",
+      "termsComingSoon": "Full terms will be listed here soon — see the conditions above in the meantime."
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "Enter an order amount above so we can calculate real savings.",
+      "appliedSaved": "{{code}} applied — saved {{amount}}",
+      "copiedToClipboard": "Promo code copied to clipboard"
+    },
+    "share": {
+      "title": "FIXO Promotion",
+      "message": "Use promo code {{code}} on FIXO — {{discount}}"
+    }
+  }
+}

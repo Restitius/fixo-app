@@ -1,0 +1,208 @@
+{
+  "loading": "読み込み中…",
+  "bookings": {
+    "pageTitle": "予約一覧",
+    "pageSubtitle": "予約とサービス履歴を確認できます",
+    "tabs": {
+      "upcoming": "予定",
+      "completed": "完了",
+      "cancelled": "キャンセル済み"
+    },
+    "stats": {
+      "upcomingBookings": "今後の予約",
+      "upcomingBookingsHint": "予定済み",
+      "completedThisMonth": "今月の完了件数",
+      "completedThisMonthHint": "今月",
+      "pendingPayments": "保留中の支払い",
+      "pendingPaymentsHint": "承認待ち",
+      "totalSpent": "累計支出額",
+      "totalSpentHint": "全期間"
+    },
+    "searchPlaceholder": "予約を検索...",
+    "statusPlaceholder": "ステータス",
+    "allStatuses": "すべてのステータス",
+    "servicePlaceholder": "サービス",
+    "allServices": "すべてのサービス",
+    "emptyUpcoming": {
+      "title": "今後の予約はありません",
+      "description": "まだ予定されている予約はありません。サービスを予約するとここに表示されます。",
+      "actionLabel": "サービスを予約する"
+    },
+    "emptyCompleted": {
+      "title": "完了した予約はまだありません",
+      "description": "完了とマークされた作業がここに表示されます。",
+      "actionLabel": "サービスを見る"
+    },
+    "emptyCancelled": {
+      "title": "キャンセルした予約はありません",
+      "description": "キャンセルした予約は記録としてここに表示されます。",
+      "actionLabel": "今後の予約を見る"
+    },
+    "emptyFiltered": {
+      "title": "一致する予約がありません",
+      "description": "検索条件やフィルターを調整してお試しください。",
+      "actionLabel": "フィルターをクリア"
+    },
+    "columns": {
+      "service": "サービス",
+      "bookingId": "予約ID",
+      "schedule": "予定",
+      "provider": "提供者",
+      "status": "ステータス",
+      "amount": "金額"
+    },
+    "serviceFallback": "サービス",
+    "itemLabel": "件の予約"
+  },
+  "calendar": {
+    "pageTitle": "カレンダー",
+    "pageSubtitle": "日付ごとの予約を表示します",
+    "myBookings": "予約一覧",
+    "noBookingsThisDay": "この日に予約はありません。",
+    "serviceFallback": "サービス",
+    "footerHint": "紫の点が付いている日には、少なくとも1件の実際の予約が入っています。"
+  },
+  "inbox": {
+    "pageTitle": "受信箱",
+    "pageSubtitle": "予約先の提供者にメッセージを送れます",
+    "emptyTitle": "まだ会話はありません",
+    "emptyDescription": "予約に提供者が割り当てられると、ここでメッセージのやり取りができます。",
+    "browseServices": "サービスを見る",
+    "serviceFallback": "サービス",
+    "noMessagesYet": "まだメッセージはありません — 挨拶してみましょう！",
+    "messagePlaceholder": "メッセージ..."
+  },
+  "history": {
+    "pageTitle": "履歴",
+    "pageSubtitle": "アカウントで起きたすべてのことを一か所で確認できます",
+    "viewing": "表示中",
+    "detailSheetTitle": "履歴の詳細",
+    "categories": {
+      "bookings": "予約",
+      "payments": "支払い",
+      "wallet": "ウォレット",
+      "loyalty": "ロイヤルティ",
+      "invoices": "請求書"
+    },
+    "bookingsSection": {
+      "totalBookings": "予約件数",
+      "totalBookingsHint": "全期間",
+      "paidJobs": "支払い済みの作業",
+      "paidJobsHint": "完了",
+      "cancelled": "キャンセル済み",
+      "cancelledHint": "全期間",
+      "totalCharged": "請求総額",
+      "totalChargedHint": "全期間",
+      "pendingAuthorizations": "承認待ち",
+      "pendingAuthorizationsHint": "確定待ち",
+      "fullyPaid": "全額支払い済み",
+      "fullyPaidHint": "完了",
+      "searchBookings": "予約を検索...",
+      "searchCharges": "請求を検索...",
+      "statusPlaceholder": "ステータス",
+      "allStatuses": "すべてのステータス",
+      "statusPaid": "支払い済み",
+      "statusClosed": "終了",
+      "statusCancelled": "キャンセル済み",
+      "statusAuthorized": "承認済み",
+      "emptyMatchingTitle": "一致する結果がありません",
+      "emptyMatchingDescription": "検索条件やフィルターを調整してください。",
+      "clearFilters": "フィルターをクリア",
+      "noBookingsTitle": "予約はまだありません",
+      "noBookingsDescription": "完了して支払われた作業がここに表示されます。",
+      "noChargesTitle": "請求はまだありません",
+      "noChargesDescription": "予約による請求がここに表示されます。",
+      "browseServices": "サービスを見る",
+      "columns": {
+        "service": "サービス",
+        "bookingId": "予約ID",
+        "date": "日付",
+        "provider": "提供者",
+        "status": "ステータス",
+        "amount": "金額"
+      },
+      "serviceFallback": "サービス",
+      "itemLabelBookings": "件の予約",
+      "itemLabelCharges": "件の請求"
+    },
+    "walletSection": {
+      "totalCredited": "入金合計",
+      "totalCreditedHint": "全期間",
+      "totalDebited": "出金合計",
+      "totalDebitedHint": "全期間",
+      "currentBalance": "現在の残高",
+      "currentBalanceHint": "現在",
+      "searchPlaceholder": "取引を検索...",
+      "typePlaceholder": "種類",
+      "allTypes": "すべての種類",
+      "credit": "入金",
+      "debit": "出金",
+      "emptyMatchingTitle": "一致する取引がありません",
+      "emptyMatchingDescription": "検索条件やフィルターを調整してください。",
+      "clearFilters": "フィルターをクリア",
+      "emptyTitle": "ウォレットの利用履歴はまだありません",
+      "emptyDescription": "入金、出金、保留がここに表示されます。",
+      "goToWallet": "ウォレットへ移動",
+      "columns": {
+        "type": "種類",
+        "date": "日付",
+        "amount": "金額",
+        "balanceAfter": "変動後残高"
+      },
+      "itemLabel": "件の取引"
+    },
+    "loyaltySection": {
+      "pointsEarned": "獲得ポイント",
+      "pointsEarnedHint": "全期間",
+      "pointsSpent": "利用ポイント",
+      "pointsSpentHint": "全期間",
+      "currentBalance": "現在の残高",
+      "currentBalanceHint": "現在",
+      "searchPlaceholder": "アクティビティを検索...",
+      "typePlaceholder": "種類",
+      "all": "すべて",
+      "earned": "獲得",
+      "spent": "利用",
+      "emptyMatchingTitle": "一致するアクティビティがありません",
+      "emptyMatchingDescription": "検索条件やフィルターを調整してください。",
+      "clearFilters": "フィルターをクリア",
+      "emptyTitle": "ロイヤルティの利用履歴はまだありません",
+      "emptyDescription": "サービスを予約してロイヤルティポイントを貯めましょう。",
+      "goToLoyalty": "ロイヤルティへ移動",
+      "columns": {
+        "activity": "アクティビティ",
+        "date": "日付",
+        "points": "ポイント",
+        "balanceAfter": "変動後残高"
+      },
+      "itemLabel": "件の履歴"
+    },
+    "invoicesSection": {
+      "totalInvoices": "請求書件数",
+      "totalInvoicesHint": "全期間",
+      "paid": "支払い済み",
+      "paidHint": "完了",
+      "outstanding": "未払い",
+      "outstandingHint": "支払い待ち",
+      "searchPlaceholder": "請求書を検索...",
+      "statusPlaceholder": "ステータス",
+      "allStatuses": "すべてのステータス",
+      "issued": "発行済み",
+      "paidStatus": "支払い済み",
+      "emptyMatchingTitle": "一致する請求書がありません",
+      "emptyMatchingDescription": "検索条件やフィルターを調整してください。",
+      "clearFilters": "フィルターをクリア",
+      "emptyTitle": "請求書はまだありません",
+      "emptyDescription": "予約が完了して確定されると請求書が発行されます。",
+      "goToInvoices": "請求書へ移動",
+      "columns": {
+        "invoiceNumber": "請求書番号",
+        "booking": "予約",
+        "date": "日付",
+        "status": "ステータス",
+        "amount": "金額"
+      },
+      "itemLabel": "件の請求書"
+    }
+  }
+}

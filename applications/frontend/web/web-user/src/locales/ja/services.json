@@ -1,0 +1,183 @@
+{
+  "common": {
+    "loading": "読み込み中…",
+    "close": "閉じる",
+    "bookNow": "今すぐ予約",
+    "topRated": "高評価",
+    "reviewsCount_one": "{{formatted}}件のレビュー",
+    "reviewsCount_other": "{{formatted}}件のレビュー",
+    "jobsDoneCount_one": "{{formatted}}件の作業完了",
+    "jobsDoneCount_other": "{{formatted}}件の作業完了",
+    "toast": {
+      "savedToBookmarks": "ブックマークに保存しました",
+      "removedFromBookmarks": "ブックマークから削除しました"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "サービスを探す",
+      "subtitle": "ご自宅やオフィスに合ったサービスを見つけましょう"
+    },
+    "metrics": {
+      "availableServices": { "label": "利用可能なサービス", "hint": "全カテゴリー" },
+      "averageRating": { "label": "平均評価", "hint": "実際の提供者評価に基づく" },
+      "trustedProviders": { "label": "信頼できる提供者", "hint": "全カテゴリー" },
+      "emergencyReady": { "label": "緊急対応可能", "hint": "掲載されている緊急サービス" }
+    },
+    "searchPlaceholder": "サービスを検索（例：配管、電気）...",
+    "sort": {
+      "popular": "人気",
+      "topRated": "高評価",
+      "az": "A–Z"
+    },
+    "emptyState": {
+      "title": "サービスが見つかりません",
+      "description": "「{{query}}」に一致するサービスが見つかりませんでした。別のキーワードをお試しください。",
+      "action": "検索をクリア"
+    },
+    "fromPrice": "{{price}}から",
+    "askProvider": "提供者に確認する",
+    "jobsDoneCount_one": "{{formatted}}件の作業完了",
+    "jobsDoneCount_other": "{{formatted}}件の作業完了",
+    "serviceCount_one": "{{count}}件のサービス",
+    "serviceCount_other": "{{count}}件のサービス",
+    "findProviders": "提供者を探す",
+    "popularCategories": "人気のカテゴリー",
+    "providerCount_one": "{{count}}名の提供者",
+    "providerCount_other": "{{count}}名の提供者",
+    "quickMatch": {
+      "title": "クイックサービスマッチング",
+      "description": "ご要望をお聞かせください。最適な提供者をご紹介します。",
+      "cta": "今すぐマッチング"
+    },
+    "dialog": {
+      "title": "サービス詳細",
+      "jobsCompleted_one": "{{formatted}}件の作業完了",
+      "jobsCompleted_other": "{{formatted}}件の作業完了",
+      "startingFrom": "開始価格",
+      "providersAvailable": "利用可能な提供者",
+      "whatsIncluded": "含まれる内容",
+      "noServicesYet": "このカテゴリーの実際のサービスがここに表示されます。",
+      "priceRange": "平均価格帯",
+      "priceFrom": "{{price}}〜",
+      "varies": "変動あり",
+      "priceVariesNote": "価格は作業の複雑さや必要な材料によって異なります。",
+      "whyChooseFixo": "お客様がFIXOを選ぶ理由",
+      "reasons": {
+        "skilled": "熟練した経験豊富な提供者",
+        "quickResponse": "迅速な対応と信頼できるサービス",
+        "qualityWork": "実際のレビューに裏付けられた高品質な作業",
+        "transparentPricing": "透明で事前に提示される料金"
+      },
+      "features": {
+        "realReviews": { "title": "実際のレビュー", "hint": "実際のお客様から" },
+        "upfrontPricing": { "title": "透明な料金", "hint": "隠れた費用なし" },
+        "onTimeService": { "title": "時間厳守のサービス", "hint": "お客様の時間を尊重します" },
+        "providersReadyCount_one": "{{count}}名の提供者",
+        "providersReadyCount_other": "{{count}}名の提供者",
+        "readyToHelp": "サポートの準備ができています"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "提供者を探す",
+    "pageTitleWithCategory": "{{category}}の提供者",
+    "subtitle": "サービスに信頼できるプロを選びましょう",
+    "backToServices": "サービス一覧に戻る",
+    "thisService": "このサービス",
+    "noCategory": {
+      "title": "まずサービスを選択してください",
+      "description": "実際にサービスを提供している提供者を見るには、サービスカテゴリーを選択してください。",
+      "action": "サービスを探す"
+    },
+    "metrics": {
+      "providersFound": { "label": "見つかった提供者", "hint": "このカテゴリーに一致" },
+      "averageRating": {
+        "label": "平均評価",
+        "hint_one": "{{formatted}}件のレビューに基づく",
+        "hint_other": "{{formatted}}件のレビューに基づく"
+      },
+      "totalReviews": { "label": "レビュー総数", "hint": "これらの提供者全体で" },
+      "startingFrom": { "label": "開始価格", "hint": "競争力のある価格" }
+    },
+    "searchPlaceholder": "提供者を検索...",
+    "allLocations": "すべての地域",
+    "anyRating": "評価を問わない",
+    "sort": {
+      "recommended": "おすすめ",
+      "topRated": "高評価",
+      "lowestPrice": "最安値",
+      "mostJobs": "実績が最も多い"
+    },
+    "noResults": {
+      "title": "現在、{{category}}の提供者はいません",
+      "description": "現在のフィルターに一致する提供者がまだいません。検索範囲を広げてみてください。",
+      "action": "フィルターをクリア"
+    },
+    "startingFromPrice": "{{price}}から",
+    "removeBookmark": "ブックマークを解除",
+    "saveBookmark": "ブックマークに保存",
+    "viewProfile": "プロフィールを見る",
+    "serviceArea": {
+      "title": "対応エリア",
+      "empty": "これらの提供者の地域データはまだありません。"
+    },
+    "recommendation": {
+      "title": "おすすめ",
+      "description": "これらの提供者は、{{category}}に関する実際のお客様評価に基づいてランク付けされています。",
+      "items": {
+        "reviews": "実際のお客様による実際のレビュー",
+        "pricing": "作業ごとの透明な料金",
+        "security": "安全な予約とお支払い",
+        "support": "何か問題があった場合もサポートをご利用いただけます"
+      }
+    },
+    "dialog": {
+      "title": "提供者プロフィール",
+      "activeSince": "活動開始",
+      "completedJobs": "完了した作業",
+      "servicesOffered": "提供サービス",
+      "avgPrice": "平均価格",
+      "servicesPricing": "サービスと料金",
+      "allPricesInTZS": "すべての価格はTZS表示です",
+      "noServices": "まだ登録されているサービスはありません。",
+      "localFallback": "地域",
+      "features": {
+        "transparentPricing": { "title": "透明な料金", "hint": "隠れた費用なし" },
+        "realReviewsCount_one": "{{formatted}}件の実際のレビュー",
+        "realReviewsCount_other": "{{formatted}}件の実際のレビュー",
+        "realReviews": { "hint": "実際のお客様から" },
+        "coverageTitle": "{{city}}に対応",
+        "coverage": { "hint": "お近くの地域専門家" },
+        "securePayments": { "title": "安全なお支払い", "hint": "安全に処理されます" }
+      },
+      "saved": "保存済み",
+      "save": "保存",
+      "messageUnavailable": "この提供者との有効な予約が成立すると、ダイレクトメッセージが利用可能になります。",
+      "messageProvider": "提供者にメッセージを送る"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "ブックマーク",
+    "subtitle": "保存したお気に入りの提供者",
+    "empty": {
+      "title": "まだブックマークがありません",
+      "description": "プロフィールから気に入った提供者を保存すると、後で簡単にアクセスできるようここに表示されます。",
+      "action": "提供者を探す"
+    },
+    "remove": "削除"
+  },
+  "search": {
+    "pageTitle": "検索",
+    "subtitle": "実際のカタログからサービスを探す",
+    "placeholder": "サービスを検索（例：配管、清掃、エアコン修理）...",
+    "searchButton": "検索",
+    "prompt": "キーワードを入力し、Enterキーまたは検索を押してください。",
+    "empty": {
+      "title": "結果が見つかりません",
+      "description": "「{{query}}」に一致するものはありません。別のキーワードをお試しください。"
+    },
+    "resultsCount_one": "「{{query}}」の検索結果 {{count}}件",
+    "resultsCount_other": "「{{query}}」の検索結果 {{count}}件"
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "loading": "جارٍ التحميل…",
+  "help": {
+    "page": {
+      "title": "المساعدة",
+      "subtitle": "تذاكر الدعم ومركز المساعدة"
+    },
+    "metrics": {
+      "openTickets": "التذاكر المفتوحة",
+      "viewAllOpen": "عرض كل المفتوحة",
+      "resolved": "تم الحل",
+      "viewResolved": "عرض التي تم حلها",
+      "avgResponse": "متوسط وقت الاستجابة",
+      "thisMonth": "هذا الشهر",
+      "unreadReplies": "الردود غير المقروءة",
+      "viewReplies": "عرض الردود",
+      "durationMinutes": "{{count}} دقيقة",
+      "durationHours": "{{count}} ساعة",
+      "durationHoursMinutes": "{{hours}} ساعة و{{minutes}} دقيقة"
+    },
+    "search": {
+      "placeholder": "ابحث في التذاكر..."
+    },
+    "filters": {
+      "allStatuses": "كل الحالات",
+      "open": "مفتوحة",
+      "resolved": "تم الحل",
+      "closed": "مغلقة",
+      "allCategories": "كل الفئات"
+    },
+    "newTicket": "تذكرة جديدة",
+    "empty": {
+      "noMatchingTitle": "لا توجد تذاكر مطابقة",
+      "noMatchingDescription": "حاول تعديل بحثك أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "noTicketsTitle": "لا توجد تذاكر دعم",
+      "noTicketsDescription": "تحتاج مساعدة بخصوص حجز أو دفعة أو حسابك؟ افتح تذكرة وسنتواصل معك."
+    },
+    "table": {
+      "ticketNumber": "رقم التذكرة",
+      "subject": "الموضوع",
+      "category": "الفئة",
+      "priority": "الأولوية",
+      "status": "الحالة",
+      "updated": "آخر تحديث",
+      "messages": "الرسائل",
+      "showing": "عرض {{from}} إلى {{to}} من أصل {{total}} تذكرة"
+    },
+    "sidebar": {
+      "needHelpTitle": "تحتاج مساعدة؟",
+      "needHelpDescription": "اعثر على إجابات سريعة أو تواصل مع فريق الدعم لدينا.",
+      "faqShortcuts": "اختصارات الأسئلة الشائعة",
+      "faqs": {
+        "createTicket": "كيفية إنشاء تذكرة",
+        "ticketStatus": "فهم حالة التذكرة",
+        "refunds": "الاسترداد والإلغاء",
+        "paymentBilling": "مساعدة الدفع والفوترة"
+      },
+      "faqToasts": {
+        "createTicket": "انقر على \"تذكرة جديدة\" أعلاه، واملأ الموضوع والرسالة، ثم أرسل.",
+        "ticketStatus": "مفتوحة = بانتظار الرد. تم الحل = يعتبر الفريق أن المشكلة قد حُلّت. مغلقة = تمت أرشفة المحادثة."
+      },
+      "stillNeedHelpTitle": "ما زلت بحاجة إلى مساعدة؟",
+      "stillNeedHelpDescription": "فريق الدعم لدينا هنا من أجلك.",
+      "contactSupport": "تواصل مع الدعم"
+    },
+    "detail": {
+      "category": "الفئة",
+      "priority": "الأولوية",
+      "status": "الحالة",
+      "lastUpdated": "آخر تحديث",
+      "relatedTo": "متعلق بـ",
+      "bookingFallback": "الحجز",
+      "provider": "مزود الخدمة",
+      "conversation": "المحادثة",
+      "loadingMessages": "جارٍ التحميل…",
+      "noMessages": "لا توجد رسائل بعد.",
+      "timeline": {
+        "title": "الجدول الزمني للتذكرة",
+        "ticketCreated": "تم إنشاء التذكرة",
+        "supportReplied": "رد الدعم",
+        "youReplied": "لقد رددت",
+        "awaitingCustomer": "بانتظار العميل",
+        "respondToContinue": "رد للمتابعة",
+        "resolved": "تم الحل",
+        "pending": "قيد الانتظار"
+      },
+      "replyToCustomer": "الرد على العميل",
+      "attachmentsNotAvailable": "المرفقات غير متاحة بعد في ردود التذاكر.",
+      "replyPlaceholder": "اكتب رسالتك...",
+      "closedNotice": "هذه التذكرة مغلقة. افتح تذكرة جديدة إذا احتجت إلى مزيد من المساعدة."
+    },
+    "dialog": {
+      "title": "تذكرة دعم جديدة",
+      "subtitle": "أخبرنا بما حدث من خطأ وسيساعدك فريقنا.",
+      "subjectLabel": "الموضوع *",
+      "subjectPlaceholder": "صف مشكلتك باختصار",
+      "bookingReferenceLabel": "رقم مرجع الحجز",
+      "bookingReferencePlaceholder": "مثال: BK-123456",
+      "optional": "اختياري",
+      "categoryLabel": "الفئة *",
+      "priorityLabel": "الأولوية *",
+      "messageLabel": "الرسالة *",
+      "messagePlaceholder": "قدّم أكبر قدر ممكن من التفاصيل...",
+      "attachmentLabel": "مرفق (اختياري)",
+      "filesSelected_zero": "لم يتم اختيار ملفات",
+      "filesSelected_one": "تم اختيار ملف واحد",
+      "filesSelected_two": "تم اختيار ملفين",
+      "filesSelected_few": "تم اختيار {{count}} ملفات",
+      "filesSelected_many": "تم اختيار {{count}} ملفًا",
+      "filesSelected_other": "تم اختيار {{count}} ملف",
+      "dragDropPrefix": "اسحب الملفات وأفلتها هنا أو",
+      "browse": "تصفح",
+      "maxFileSize": "بحد أقصى 5 ميجابايت لكل ملف (PDF، JPG، PNG)",
+      "contactMethodLabel": "كيف تفضل أن نتواصل معك؟ *",
+      "contactEmailTitle": "البريد الإلكتروني",
+      "contactEmailHint": "سنرد على بريدك الإلكتروني",
+      "contactInAppTitle": "داخل التطبيق",
+      "contactInAppHint": "سنرد في صندوق الوارد الخاص بك",
+      "responseTimeNote": "يستجيب فريقنا عادةً خلال 1-2 ساعة عمل.",
+      "cancel": "إلغاء",
+      "submit": "إرسال التذكرة",
+      "submitting": "جارٍ الإرسال...",
+      "subjectTooShort": "يجب أن يتكون الموضوع من 3 أحرف على الأقل",
+      "describeIssue": "صف المشكلة قبل الإرسال",
+      "attachmentsNotAvailable": "المرفقات غير متاحة بعد — تم حفظ تذكرتك ورسالتك.",
+      "ticketOpened": "تم فتح تذكرة الدعم"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "التقييمات",
+      "subtitle": "قيّم مزودي الخدمة لأعمالك المكتملة"
+    },
+    "metrics": {
+      "totalReviews": "إجمالي التقييمات",
+      "allTimeReviews": "التقييمات منذ البداية",
+      "pendingReviews": "التقييمات المعلقة",
+      "bookingsToRate": "حجوزات بانتظار التقييم",
+      "averageRating": "متوسط التقييم",
+      "acrossAllProviders": "عبر جميع مزودي الخدمة",
+      "providersRated": "مزودو الخدمة المقيَّمون",
+      "distinctProviders": "مزودو خدمة مختلفون"
+    },
+    "tabs": {
+      "all": "الكل",
+      "pending": "معلقة",
+      "submitted": "مُرسَلة"
+    },
+    "search": {
+      "placeholder": "ابحث في الحجوزات أو الخدمات أو مزودي الخدمة..."
+    },
+    "sort": {
+      "oldestFirst": "الأقدم أولاً",
+      "newestFirst": "الأحدث أولاً"
+    },
+    "empty": {
+      "pendingTitle": "لا يوجد شيء معلق",
+      "submittedTitle": "لا توجد تقييمات بعد",
+      "allTitle": "لا يوجد شيء لتقييمه بعد",
+      "description": "بمجرد اكتمال الحجز وإغلاقه، ستتمكن من تقييم مزود الخدمة هنا.",
+      "viewMyBookings": "عرض حجوزاتي"
+    },
+    "serviceFallback": "خدمة",
+    "providerFallback": "مزود الخدمة",
+    "row": {
+      "submitted": "مُرسَل",
+      "rateNow": "قيّم الآن"
+    },
+    "recent": {
+      "title": "أحدث التقييمات",
+      "viewAll": "عرض الكل",
+      "emptyDescription": "ستظهر تقييماتك المُرسَلة هنا."
+    },
+    "starAriaLabel_zero": "بدون نجوم",
+    "starAriaLabel_one": "نجمة واحدة",
+    "starAriaLabel_two": "نجمتان",
+    "starAriaLabel_few": "{{count}} نجوم",
+    "starAriaLabel_many": "{{count}} نجمة",
+    "starAriaLabel_other": "{{count}} نجمة",
+    "detail": {
+      "title": "تفاصيل التقييم",
+      "yourReview": "تقييمك",
+      "noWrittenFeedback": "لا يوجد تعليق مكتوب لهذا الحجز.",
+      "bookingInformation": "معلومات الحجز",
+      "bookingId": "رقم الحجز",
+      "service": "الخدمة",
+      "dateTime": "التاريخ والوقت",
+      "amountPaid": "المبلغ المدفوع",
+      "editReview": "تعديل التقييم",
+      "viewBooking": "عرض الحجز"
+    },
+    "aspects": {
+      "quality": "الجودة",
+      "punctuality": "الالتزام بالموعد",
+      "communication": "التواصل",
+      "value": "القيمة مقابل السعر"
+    },
+    "highlightTags": {
+      "professional": "احترافي",
+      "onTime": "في الوقت المحدد",
+      "cleanWork": "عمل نظيف",
+      "friendly": "ودود"
+    },
+    "dialog": {
+      "title": "قيّم مزود الخدمة",
+      "subtitle": "شارك تجربتك حول هذا الحجز المكتمل.",
+      "bookingCode": "رمز الحجز",
+      "serviceDate": "تاريخ الخدمة",
+      "totalAmount": "المبلغ الإجمالي",
+      "overallQuestion": "كيف تقيّم تجربتك بشكل عام؟",
+      "tapToRate": "اضغط على نجمة للتقييم",
+      "rateAspects": "قيّم جوانب محددة",
+      "shareFeedback": "شارك ملاحظاتك",
+      "feedbackPlaceholder": "أخبرنا عن تجربتك...",
+      "whatStoodOut": "ما الذي أعجبك أكثر؟",
+      "optional": "اختياري",
+      "addPhotos": "إضافة صور",
+      "uploadUpTo5": "قم برفع حتى 5 صور للعمل المنجز",
+      "photosSelected_zero": "لم يتم اختيار صور",
+      "photosSelected_one": "تم اختيار صورة واحدة",
+      "photosSelected_two": "تم اختيار صورتين",
+      "photosSelected_few": "تم اختيار {{count}} صور",
+      "photosSelected_many": "تم اختيار {{count}} صورة",
+      "photosSelected_other": "تم اختيار {{count}} صورة",
+      "chooseFiles": "اختر الملفات",
+      "cancel": "إلغاء",
+      "submit": "إرسال التقييم",
+      "submitting": "جارٍ الإرسال...",
+      "pickStarRating": "اختر تقييمًا بالنجوم أولاً",
+      "photoAttachmentsNotAvailable": "مرفقات الصور غير متاحة بعد — تم حفظ تقييمك وتعليقاتك.",
+      "thanksForFeedback": "شكرًا لملاحظاتك!"
+    }
+  }
+}

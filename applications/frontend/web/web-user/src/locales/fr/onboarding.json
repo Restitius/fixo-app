@@ -1,0 +1,50 @@
+{
+  "loading": "Chargement…",
+  "title": "Bienvenue sur FIXO",
+  "subtitle": "Quelques étapes rapides pour préparer votre compte.",
+  "progress": "{{done}} étape(s) sur {{total}} terminée(s)",
+  "required": "Obligatoire",
+  "optional": "Facultatif",
+  "completed": "Terminé",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "Vérifier vos coordonnées",
+      "description": "Confirmez votre numéro de téléphone ou votre e-mail via le code que nous avons envoyé.",
+      "verifiedNote": "Vos coordonnées sont déjà vérifiées.",
+      "unverifiedNote": "Nous n'avons pas pu confirmer vos coordonnées automatiquement — vérifiez votre e-mail ou téléphone depuis votre profil, puis revenez ici.",
+      "markDone": "J'ai vérifié mes coordonnées"
+    },
+    "SET_LOCATION": {
+      "title": "Indiquez votre localisation",
+      "description": "Dites-nous où vous habitez afin que nous puissions trouver des prestataires à proximité.",
+      "labelLabel": "Libellé",
+      "recipientNameLabel": "Nom du destinataire",
+      "phoneLabel": "Téléphone",
+      "cityLabel": "Ville",
+      "streetLabel": "Adresse",
+      "regionLabel": "Région (facultatif)",
+      "save": "Enregistrer la localisation",
+      "saving": "Enregistrement…",
+      "fillRequired": "Renseignez le destinataire, le téléphone, la rue et la ville.",
+      "saved": "Localisation enregistrée"
+    },
+    "ADD_PROPERTY": {
+      "title": "Ajouter un bien",
+      "description": "Enregistrez le logement ou le bien où les services seront réalisés.",
+      "nameLabel": "Nom du bien",
+      "namePlaceholder": "ex. Maison, Bureau",
+      "typeLabel": "Type de bien",
+      "types": { "HOUSE": "Maison", "APARTMENT": "Appartement", "CONDO": "Copropriété", "OFFICE": "Bureau", "OTHER": "Autre" },
+      "bedroomsLabel": "Chambres",
+      "bathroomsLabel": "Salles de bain",
+      "save": "Ajouter le bien",
+      "saving": "Ajout…",
+      "skip": "Passer pour l'instant",
+      "fillRequired": "Saisissez un nom de bien.",
+      "saved": "Bien ajouté"
+    }
+  },
+  "continueCta": "Continuer vers le tableau de bord",
+  "allDoneTitle": "Tout est prêt !",
+  "allDoneSubtitle": "Votre compte est prêt. Trouvons-vous un excellent prestataire."
+}
