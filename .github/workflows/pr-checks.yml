@@ -1,0 +1,206 @@
+# .github/workflows/pr-checks.yml
+#
+# Answers: does the change work and does it respect the FIXO architecture?
+# Runs on every push to every pull request against main or dev — this
+# repo's actual long-lived branches (not the handbook's generic "develop").
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect changed areas
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      migrations: ${{ steps.filter.outputs.migrations }}
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: dorny/paths-filter@<pin-to-commit-sha>      # v3.0.2
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - "applications/frontend/web/**"
+            backend:
+              - "applications/backend/**"
+            migrations:
+              - "applications/backend/migrations/**"
+
+  frontend:
+    name: Frontend (${{ matrix.app }})
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [web-user, web-provider]
+        # mobile is intentionally excluded: it has no lint/typecheck/test/
+        # build tooling configured today (no ESLint config, no tsc script,
+        # no test runner, no Dockerfile). Add it here once that tooling
+        # exists rather than fabricate a passing job for it now.
+    defaults:
+      run:
+        working-directory: applications/frontend/web/${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: actions/setup-node@<pin-to-commit-sha>      # v4.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: applications/frontend/web/${{ matrix.app }}/package-lock.json
+      - run: npm ci
+      - run: npm run lint -- --max-warnings=0
+      - run: npm run typecheck
+      - run: npm run build
+        env:
+          CI: "true"
+      # No test script exists in either web app yet (no vitest/jest
+      # installed) — a real, documented gap, not silently skipped.
+      - name: Test suite (not yet configured)
+        run: echo "::notice::No test script exists for ${{ matrix.app }} yet — nothing to run."
+
+  backend:
+    name: Backend
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: applications/backend
+    services:
+      postgres:
+        image: postgres:16.4-alpine
+        env:
+          POSTGRES_USER: fixo
+          POSTGRES_PASSWORD: ci-local-only
+          POSTGRES_DB: fixo_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U fixo"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7.4-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      APP_ENV: test
+      PRIMARY_DB_URL: postgresql+asyncpg://fixo:ci-local-only@localhost:5432/fixo_test
+      REDIS_URL: redis://localhost:6379/0
+      SECRET_KEY: ci-local-only-secret-key-not-for-production-use
+      # Integration adapters run against local fakes. No provider is contacted.
+      SWALA_SMS_ENABLED: "false"
+      SWALA_SMS_BASE_URL: http://localhost:9099
+      SWALA_SMS_API_KEY: swl_test_XXXXXXXXXXXXXXXX
+      SWALA_SMS_WEBHOOK_SECRET: ci-fake-webhook-secret
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@<pin-to-commit-sha>    # v5.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: applications/backend/requirements.txt
+      - run: pip install -r requirements.txt
+        # ruff, mypy and pytest are already bundled in requirements.txt's
+        # own "Development / testing" section — no separate dev-requirements
+        # file exists in this repo.
+      - name: Changed Python files
+        id: py_diff
+        run: |
+          files=$(git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" -- '*.py' | grep '^applications/backend/' || true)
+          echo "files<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$files" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+      # Lint/format/typecheck are scoped to files this PR actually touches,
+      # not the whole repository. Baseline reality when this gate was
+      # introduced: 218 pre-existing ruff findings, 1032 of 1262 files never
+      # reformatted, 333 pre-existing mypy errors across 96 files — a repo-
+      # wide gate would fail on every future PR for reasons unrelated to its
+      # content. This is the standard "ratchet" pattern for adopting strict
+      # checks on an existing codebase: block regressions on touched code,
+      # work the pre-existing debt down separately and deliberately.
+      - name: Lint (changed files)
+        if: steps.py_diff.outputs.files != ''
+        run: echo "${{ steps.py_diff.outputs.files }}" | xargs ruff check
+      - name: Format check (changed files)
+        if: steps.py_diff.outputs.files != ''
+        run: echo "${{ steps.py_diff.outputs.files }}" | xargs ruff format --check
+      - name: Type check (changed files)
+        if: steps.py_diff.outputs.files != ''
+        run: echo "${{ steps.py_diff.outputs.files }}" | xargs mypy
+      - name: Run migrations
+        run: alembic upgrade head
+      - name: Full test suite
+        # Real coverage in this repo lives predominantly under tests/api/
+        # (17 files) with tests/unit, tests/architecture and tests/security
+        # alongside it; tests/integration is currently an empty placeholder.
+        # Run the whole suite rather than force an artificial unit/
+        # integration split that doesn't reflect how tests are organised
+        # here — matches this project's own local verification convention.
+        run: pytest -q
+
+  architecture:
+    name: Architecture rules
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    container: returntocorp/semgrep:<pin-to-digest>
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - name: Layering and boundary rules
+        run: semgrep --config security/semgrep/architecture.yml --error --quiet
+      - name: Import boundary tests
+        run: pytest tests/architecture -q
+        working-directory: applications/backend
+
+  migrations:
+    name: Migration safety
+    needs: changes
+    if: needs.changes.outputs.migrations == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@<pin-to-commit-sha>    # v5.3.0
+        with: { python-version: "3.12" }
+      - name: Reject unsafe schema changes without a rollback plan
+        run: |
+          python scripts/check-migration-safety.py --base "origin/${{ github.base_ref }}"
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+
+  pr-gate:
+    name: pr-gate
+    if: always()
+    needs: [changes, frontend, backend, architecture, migrations]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required job did not succeed
+        run: |
+          results='${{ toJSON(needs) }}'
+          echo "$results"
+          # "skipped" is acceptable only when the path filter excluded the area.
+          # "failure" and "cancelled" are never acceptable.
+          echo "$results" | python3 -c '
+          import json, sys
+          needs = json.load(sys.stdin)
+          bad = {k: v["result"] for k, v in needs.items()
+                 if v["result"] not in ("success", "skipped")}
+          if bad:
+              print("Blocking gate. Failed jobs:", bad)
+              sys.exit(1)
+          print("All required jobs passed or were correctly skipped.")
+          '
