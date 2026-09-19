@@ -6,6 +6,7 @@ Prefix: /providers/me/wallet
                         withdrawals / refund deductions / bonuses / adjustments)
 - GET /transactions     the full wallet transaction history (newest first)
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -13,6 +14,7 @@ from typing import Any
 from fastapi import APIRouter, Depends
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_wallet_service import (
     ProviderWalletService,
 )
@@ -30,7 +32,7 @@ async def wallet_overview(
     provider: dict = Depends(get_current_provider),
 ) -> dict[str, Any]:
     svc = _service()
-    return await svc.overview(provider_id=str(provider["provider_id"]))
+    return ok(await svc.overview(provider_id=str(provider["provider_id"])))
 
 
 @router.get("/transactions")
@@ -40,8 +42,10 @@ async def wallet_transactions(
     provider: dict = Depends(get_current_provider),
 ) -> dict[str, Any]:
     svc = _service()
-    return await svc.transactions(
-        provider_id=str(provider["provider_id"]),
-        limit=limit,
-        offset=offset,
+    return ok(
+        await svc.transactions(
+            provider_id=str(provider["provider_id"]),
+            limit=limit,
+            offset=offset,
+        )
     )
