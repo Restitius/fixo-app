@@ -119,7 +119,7 @@ jobs:
           output-file: backend-sbom.spdx.json
           upload-artifact: true
 
-      - uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da   # v3.7.0
+      - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6   # v4.1.2
 
       - name: Sign image (keyless, GitHub OIDC identity)
         run: |
@@ -184,7 +184,7 @@ jobs:
           output-file: ${{ matrix.app }}-sbom.spdx.json
           upload-artifact: true
 
-      - uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da   # v3.7.0
+      - uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6   # v4.1.2
 
       - name: Sign the build-output tarball (keyless, GitHub OIDC identity)
         working-directory: applications/frontend/web
