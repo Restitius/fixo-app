@@ -1,0 +1,23 @@
+# security/allowlists/dependency-exceptions.yml
+#
+# Time-boxed vulnerability exceptions (handbook section 6.4). Every entry
+# needs an id, a reason, a mitigation, an approver and an expiry — CI fails
+# on an expired entry exactly as loudly as on the original finding, which
+# forces a fresh decision rather than an inherited one.
+#
+# No exceptions exist yet — this file starts empty with the schema. Add an
+# entry only once the security.yml scan actually finds something needing
+# one; do not pre-populate it speculatively.
+exceptions: []
+
+# Example shape (not an active exception):
+# exceptions:
+#   - id: CVE-XXXX-XXXXX
+#     package: example-package
+#     reason: >-
+#       Why the vulnerable code path is not reachable from FIXO's usage.
+#     mitigation: What compensating control exists, and where in the code.
+#     approved_by: "@Restitius"
+#     opened: 2026-09-15
+#     expires: 2026-10-15
+#     ticket: FIXO-XXX
