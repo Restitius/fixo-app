@@ -15,6 +15,7 @@ import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DisputesRouteImport } from './routes/disputes'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as EarningsRouteImport } from './routes/earnings'
 import { Route as InvoicesRouteImport } from './routes/invoices'
@@ -68,6 +69,11 @@ const CustomersRoute = CustomersRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisputesRoute = DisputesRouteImport.update({
+  id: '/disputes',
+  path: '/disputes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentsRoute = DocumentsRouteImport.update({
@@ -198,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/customers': typeof CustomersRoute
   '/dashboard': typeof DashboardRoute
+  '/disputes': typeof DisputesRoute
   '/documents': typeof DocumentsRoute
   '/earnings': typeof EarningsRoute
   '/invoices': typeof InvoicesRoute
@@ -230,6 +237,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/customers': typeof CustomersRoute
   '/dashboard': typeof DashboardRoute
+  '/disputes': typeof DisputesRoute
   '/documents': typeof DocumentsRoute
   '/earnings': typeof EarningsRoute
   '/invoices': typeof InvoicesRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/customers': typeof CustomersRoute
   '/dashboard': typeof DashboardRoute
+  '/disputes': typeof DisputesRoute
   '/documents': typeof DocumentsRoute
   '/earnings': typeof EarningsRoute
   '/invoices': typeof InvoicesRoute
@@ -297,6 +306,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/customers'
     | '/dashboard'
+    | '/disputes'
     | '/documents'
     | '/earnings'
     | '/invoices'
@@ -329,6 +339,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/customers'
     | '/dashboard'
+    | '/disputes'
     | '/documents'
     | '/earnings'
     | '/invoices'
@@ -361,6 +372,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/customers'
     | '/dashboard'
+    | '/disputes'
     | '/documents'
     | '/earnings'
     | '/invoices'
@@ -394,6 +406,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   CustomersRoute: typeof CustomersRoute
   DashboardRoute: typeof DashboardRoute
+  DisputesRoute: typeof DisputesRoute
   DocumentsRoute: typeof DocumentsRoute
   EarningsRoute: typeof EarningsRoute
   InvoicesRoute: typeof InvoicesRoute
@@ -462,6 +475,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disputes': {
+      id: '/disputes'
+      path: '/disputes'
+      fullPath: '/disputes'
+      preLoaderRoute: typeof DisputesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/documents': {
@@ -642,6 +662,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   CustomersRoute: CustomersRoute,
   DashboardRoute: DashboardRoute,
+  DisputesRoute: DisputesRoute,
   DocumentsRoute: DocumentsRoute,
   EarningsRoute: EarningsRoute,
   InvoicesRoute: InvoicesRoute,
