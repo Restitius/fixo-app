@@ -1,0 +1,251 @@
+{
+  "invoices": {
+    "loading": "Wird geladen…",
+    "page": {
+      "title": "Rechnungen",
+      "subtitle": "Abrechnungsunterlagen für deine abgeschlossenen Aufträge"
+    },
+    "metrics": {
+      "totalInvoices": "Rechnungen insgesamt",
+      "allTime": "Insgesamt",
+      "paidInvoices": "Bezahlte Rechnungen",
+      "completed": "Abgeschlossen",
+      "pending": "Ausstehend",
+      "awaitingPayment": "Zahlung ausstehend",
+      "totalBilled": "Gesamt abgerechnet",
+      "acrossAllInvoices": "Über alle Rechnungen"
+    },
+    "recentInvoices": "Neueste Rechnungen",
+    "tabs": {
+      "all": "Alle",
+      "paid": "Bezahlt",
+      "pending": "Ausstehend",
+      "overdue": "Überfällig"
+    },
+    "downloadAll": "Alle herunterladen",
+    "empty": {
+      "titleAll": "Noch keine Rechnungen",
+      "titleFilteredPaid": "Keine bezahlten Rechnungen",
+      "titleFilteredPending": "Keine ausstehenden Rechnungen",
+      "titleFilteredOverdue": "Keine überfälligen Rechnungen",
+      "descriptionAll": "Eine Rechnung wird erstellt, sobald eine Buchung abgeschlossen und bestätigt ist. Schau nach deinem nächsten Auftrag wieder vorbei.",
+      "descriptionFiltered": "Versuche einen anderen Tab, um weitere Rechnungen zu sehen.",
+      "viewMyBookings": "Meine Buchungen ansehen"
+    },
+    "table": {
+      "service": "Dienstleistung",
+      "invoiceNumber": "Rechnungsnr.",
+      "provider": "Anbieter",
+      "issueDate": "Ausstellungsdatum",
+      "paymentMethod": "Zahlungsmethode",
+      "status": "Status",
+      "amount": "Betrag"
+    },
+    "serviceFallback": "Dienstleistung",
+    "pagination": {
+      "showing_one": "Zeige {{from}} bis {{to}} von {{count}} Rechnung",
+      "showing_other": "Zeige {{from}} bis {{to}} von {{count}} Rechnungen"
+    },
+    "fields": {
+      "invoiceNumber": "Rechnungsnummer",
+      "bookingReference": "Buchungsreferenz",
+      "provider": "Anbieter",
+      "category": "Kategorie",
+      "invoiceDate": "Rechnungsdatum",
+      "dueDate": "Fälligkeitsdatum",
+      "location": "Standort",
+      "paymentMethod": "Zahlungsmethode",
+      "customer": "Kunde"
+    },
+    "billing": {
+      "subtotal": "Zwischensumme",
+      "platformFee": "Plattformgebühr",
+      "totalAmount": "Gesamtbetrag",
+      "serviceCharge": "Servicegebühr"
+    },
+    "panel": {
+      "title": "Rechnungsdetails",
+      "progressTimeline": "Verlauf",
+      "downloadInvoice": "Rechnung herunterladen",
+      "contactSupport": "Support kontaktieren",
+      "payNotWiredToast": "Rechnungszahlungen sind noch nicht mit einem echten Zahlungsanbieter verbunden — verwalte deine Mittel unter Zahlungen.",
+      "payNow": "Jetzt bezahlen"
+    },
+    "timeline": {
+      "invoiceIssued": "Rechnung ausgestellt",
+      "paymentPending": "Zahlung ausstehend",
+      "reminderScheduled": "Erinnerung geplant",
+      "issued": "Ausgestellt",
+      "paid": "Bezahlt",
+      "downloaded": "Heruntergeladen"
+    },
+    "dialog": {
+      "receiptCopied": "Belegübersicht in die Zwischenablage kopiert",
+      "billingBreakdown": "Abrechnungsdetails",
+      "receiptNote": "Diese Rechnung steht als herunterladbarer Beleg für deine abgeschlossene Dienstleistung zur Verfügung.",
+      "close": "Schließen",
+      "shareReceipt": "Beleg teilen",
+      "downloadPdf": "PDF herunterladen",
+      "progress": "Fortschritt",
+      "shareText": "Rechnung {{invoiceNumber}} — {{amount}} bezahlt an {{provider}}"
+    }
+  },
+  "payments": {
+    "loading": "Wird geladen…",
+    "page": {
+      "title": "Zahlungen",
+      "subtitle": "Verwalte gespeicherte Methoden und verfolge Belastungen"
+    },
+    "toast": {
+      "defaultUpdated": "Standardzahlungsmethode aktualisiert",
+      "methodRemoved": "Zahlungsmethode entfernt"
+    },
+    "metrics": {
+      "savedMethods": "Gespeicherte Methoden",
+      "savedMethodsHint": "{{default}} Standard · {{backup}} Reserve",
+      "noMethodsYet": "Noch keine Methoden",
+      "thisMonthCharges": "Belastungen diesen Monat",
+      "acrossBookings_one": "Bei {{count}} Buchung",
+      "acrossBookings_other": "Bei {{count}} Buchungen",
+      "pendingAuthorizations": "Ausstehende Autorisierungen",
+      "authorizationCount_one": "{{count}} Autorisierung",
+      "authorizationCount_other": "{{count}} Autorisierungen"
+    },
+    "methods": {
+      "title": "Zahlungsmethoden",
+      "subtitle": "Gespeicherte Methoden für schnellere, sichere Zahlungen",
+      "addMethod": "Methode hinzufügen",
+      "searchPlaceholder": "Zahlungsmethoden suchen...",
+      "filterType": "Typ",
+      "filterAllTypes": "Alle Typen",
+      "filterCard": "Karte",
+      "filterMobileMoney": "Mobile Money",
+      "filterBank": "Bank",
+      "emptyFilteredTitle": "Keine passenden Methoden",
+      "emptyFilteredDescription": "Versuche, deine Suche oder Filter anzupassen.",
+      "clearFilters": "Filter zurücksetzen",
+      "emptyTitle": "Noch keine Zahlungsmethoden",
+      "emptyDescription": "Füge eine Karte, Mobile Money oder ein Bankkonto hinzu, um den Bezahlvorgang zu beschleunigen.",
+      "addPaymentMethod": "Zahlungsmethode hinzufügen",
+      "columns": {
+        "method": "Methode",
+        "type": "Typ",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "expires": "Läuft ab am {{date}}",
+      "default": "Standard",
+      "backup": "Reserve",
+      "setAsDefault": "Als Standard festlegen",
+      "remove": "Entfernen",
+      "secureFooter": "Deine Zahlungsdaten sind verschlüsselt, und es werden nur maskierte Informationen gespeichert."
+    },
+    "charges": {
+      "title": "Aktuelle Belastungen",
+      "subtitle": "Neueste Belastungen und Autorisierungen",
+      "searchPlaceholder": "Belastungen suchen...",
+      "filterStatus": "Status",
+      "filterAllStatuses": "Alle Status",
+      "filterAuthorized": "Autorisiert",
+      "filterPaid": "Bezahlt",
+      "filterClosed": "Abgeschlossen",
+      "emptyFilteredTitle": "Keine passenden Belastungen",
+      "emptyFilteredDescription": "Versuche, deine Suche oder Filter anzupassen.",
+      "clearFilters": "Filter zurücksetzen",
+      "emptyTitle": "Noch keine Belastungen",
+      "emptyDescription": "Sobald du eine Buchung abschließt und die Zahlung autorisierst, erscheint sie hier.",
+      "browseServices": "Dienstleistungen durchsuchen",
+      "columns": {
+        "service": "Dienstleistung",
+        "bookingId": "Buchungs-ID",
+        "date": "Datum",
+        "provider": "Anbieter",
+        "status": "Status",
+        "amount": "Betrag"
+      },
+      "serviceFallback": "Dienstleistung",
+      "itemLabel": "Belastungen"
+    },
+    "viewFullHistory": "Vollständigen Zahlungsverlauf im Verlauf ansehen →",
+    "chargeDetailsTitle": "Belastungsdetails",
+    "dialog": {
+      "title": "Zahlungsmethode hinzufügen",
+      "tabCard": "Karte",
+      "tabMobileMoney": "Mobile Money",
+      "tabBank": "Bank",
+      "errors": {
+        "cardRequired": "Gib Karteninhabername, Kartennummer und Ablaufdatum ein",
+        "invalidPhone": "Gib eine gültige Telefonnummer ein",
+        "bankRequired": "Gib Bankname und Kontonummer ein"
+      },
+      "methodAdded": "Zahlungsmethode hinzugefügt",
+      "labels": {
+        "cardholderName": "Karteninhabername",
+        "cardNumber": "Kartennummer",
+        "expiryDate": "Ablaufdatum",
+        "cvv": "CVV",
+        "provider": "Anbieter",
+        "billingPhone": "Abrechnungstelefonnummer",
+        "bankName": "Bankname",
+        "accountNumber": "Kontonummer"
+      },
+      "placeholders": {
+        "cardholderName": "z. B. Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "MM / JJ",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "z. B. CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "Als Standardzahlungsmethode festlegen",
+      "secureNote": "Deine Zahlungsdaten sind verschlüsselt und sicher gespeichert.",
+      "cancel": "Abbrechen",
+      "saving": "Wird gespeichert...",
+      "saveMethod": "Methode speichern"
+    }
+  },
+  "wallet": {
+    "loading": "Wird geladen…",
+    "page": {
+      "title": "Wallet",
+      "subtitle": "Deine Service-Wallet und ihr Kontoverlauf"
+    },
+    "errors": {
+      "positiveAmount": "Gib einen positiven Betrag ein"
+    },
+    "toast": {
+      "credited": "{{amount}} gutgeschrieben",
+      "debited": "{{amount}} abgebucht"
+    },
+    "metrics": {
+      "availableBalance": "Verfügbares Guthaben",
+      "rightNow": "Gerade jetzt",
+      "totalCredited": "Gesamt gutgeschrieben",
+      "allTime": "Insgesamt",
+      "totalDebited": "Gesamt abgebucht"
+    },
+    "amountLabel": "Betrag ({{currency}})",
+    "amountPlaceholder": "z. B. 20000",
+    "creditButton": "Gutschreiben",
+    "debitButton": "Abbuchen",
+    "refresh": "Aktualisieren",
+    "searchPlaceholder": "Transaktionen suchen...",
+    "filterType": "Typ",
+    "filterAllTypes": "Alle Typen",
+    "filterCredit": "Gutschrift",
+    "filterDebit": "Abbuchung",
+    "emptyFilteredTitle": "Keine passenden Transaktionen",
+    "emptyFilteredDescription": "Versuche, deine Suche oder Filter anzupassen.",
+    "clearFilters": "Filter zurücksetzen",
+    "emptyTitle": "Noch keine Transaktionen",
+    "emptyDescription": "Gutschriften, Abbuchungen und Sperrungen in deiner Wallet erscheinen hier.",
+    "columns": {
+      "type": "Typ",
+      "date": "Datum",
+      "amount": "Betrag",
+      "balanceAfter": "Guthaben danach"
+    },
+    "itemLabel": "Transaktionen"
+  }
+}

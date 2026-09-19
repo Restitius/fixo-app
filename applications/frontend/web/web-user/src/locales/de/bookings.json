@@ -1,0 +1,208 @@
+{
+  "loading": "Wird geladen…",
+  "bookings": {
+    "pageTitle": "Meine Buchungen",
+    "pageSubtitle": "Verfolge deine Termine und deinen Service-Verlauf",
+    "tabs": {
+      "upcoming": "Bevorstehend",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert"
+    },
+    "stats": {
+      "upcomingBookings": "Bevorstehende Buchungen",
+      "upcomingBookingsHint": "Geplant",
+      "completedThisMonth": "Diesen Monat abgeschlossen",
+      "completedThisMonthHint": "Dieser Kalendermonat",
+      "pendingPayments": "Ausstehende Zahlungen",
+      "pendingPaymentsHint": "Wartet auf Autorisierung",
+      "totalSpent": "Gesamtausgaben",
+      "totalSpentHint": "Insgesamt"
+    },
+    "searchPlaceholder": "Buchungen durchsuchen...",
+    "statusPlaceholder": "Status",
+    "allStatuses": "Alle Status",
+    "servicePlaceholder": "Dienstleistung",
+    "allServices": "Alle Dienstleistungen",
+    "emptyUpcoming": {
+      "title": "Keine bevorstehenden Buchungen",
+      "description": "Du hast noch keine Termine geplant. Buche einen Service, damit er hier erscheint.",
+      "actionLabel": "Service buchen"
+    },
+    "emptyCompleted": {
+      "title": "Noch keine abgeschlossenen Buchungen",
+      "description": "Als abgeschlossen markierte Aufträge erscheinen hier.",
+      "actionLabel": "Dienstleistungen durchsuchen"
+    },
+    "emptyCancelled": {
+      "title": "Keine stornierten Buchungen",
+      "description": "Buchungen, die du stornierst, erscheinen hier für deine Unterlagen.",
+      "actionLabel": "Bevorstehende ansehen"
+    },
+    "emptyFiltered": {
+      "title": "Keine passenden Buchungen",
+      "description": "Passe deine Suche oder Filter an, um zu finden, wonach du suchst.",
+      "actionLabel": "Filter zurücksetzen"
+    },
+    "columns": {
+      "service": "Dienstleistung",
+      "bookingId": "Buchungs-ID",
+      "schedule": "Termin",
+      "provider": "Anbieter",
+      "status": "Status",
+      "amount": "Betrag"
+    },
+    "serviceFallback": "Dienstleistung",
+    "itemLabel": "Buchungen"
+  },
+  "calendar": {
+    "pageTitle": "Kalender",
+    "pageSubtitle": "Deine Buchungen, nach Datum sortiert",
+    "myBookings": "Meine Buchungen",
+    "noBookingsThisDay": "Keine Buchungen an diesem Tag.",
+    "serviceFallback": "Dienstleistung",
+    "footerHint": "Daten mit einem violetten Punkt haben mindestens eine echte geplante Buchung."
+  },
+  "inbox": {
+    "pageTitle": "Posteingang",
+    "pageSubtitle": "Schreibe den Anbietern deiner Buchungen",
+    "emptyTitle": "Noch keine Unterhaltungen",
+    "emptyDescription": "Sobald einem deiner Buchungen ein Anbieter zugewiesen ist, kannst du ihm hier schreiben.",
+    "browseServices": "Dienstleistungen durchsuchen",
+    "serviceFallback": "Dienstleistung",
+    "noMessagesYet": "Noch keine Nachrichten — sag Hallo!",
+    "messagePlaceholder": "Nachricht..."
+  },
+  "history": {
+    "pageTitle": "Verlauf",
+    "pageSubtitle": "Alles, was auf deinem Konto passiert ist, an einem Ort",
+    "viewing": "Ansicht",
+    "detailSheetTitle": "Verlaufsdetails",
+    "categories": {
+      "bookings": "Buchungen",
+      "payments": "Zahlungen",
+      "wallet": "Wallet",
+      "loyalty": "Treueprogramm",
+      "invoices": "Rechnungen"
+    },
+    "bookingsSection": {
+      "totalBookings": "Buchungen insgesamt",
+      "totalBookingsHint": "Insgesamt",
+      "paidJobs": "Bezahlte Aufträge",
+      "paidJobsHint": "Abgeschlossen",
+      "cancelled": "Storniert",
+      "cancelledHint": "Insgesamt",
+      "totalCharged": "Gesamtbetrag belastet",
+      "totalChargedHint": "Insgesamt",
+      "pendingAuthorizations": "Ausstehende Autorisierungen",
+      "pendingAuthorizationsHint": "Wartet auf Einzug",
+      "fullyPaid": "Vollständig bezahlt",
+      "fullyPaidHint": "Abgeschlossen",
+      "searchBookings": "Buchungen durchsuchen...",
+      "searchCharges": "Belastungen durchsuchen...",
+      "statusPlaceholder": "Status",
+      "allStatuses": "Alle Status",
+      "statusPaid": "Bezahlt",
+      "statusClosed": "Abgeschlossen",
+      "statusCancelled": "Storniert",
+      "statusAuthorized": "Autorisiert",
+      "emptyMatchingTitle": "Keine passenden Ergebnisse",
+      "emptyMatchingDescription": "Passe deine Suche oder Filter an.",
+      "clearFilters": "Filter zurücksetzen",
+      "noBookingsTitle": "Noch keine Buchungen",
+      "noBookingsDescription": "Abgeschlossene und bezahlte Aufträge erscheinen hier.",
+      "noChargesTitle": "Noch keine Belastungen",
+      "noChargesDescription": "Belastungen aus deinen Buchungen erscheinen hier.",
+      "browseServices": "Dienstleistungen durchsuchen",
+      "columns": {
+        "service": "Dienstleistung",
+        "bookingId": "Buchungs-ID",
+        "date": "Datum",
+        "provider": "Anbieter",
+        "status": "Status",
+        "amount": "Betrag"
+      },
+      "serviceFallback": "Dienstleistung",
+      "itemLabelBookings": "Buchungen",
+      "itemLabelCharges": "Belastungen"
+    },
+    "walletSection": {
+      "totalCredited": "Gesamtgutschrift",
+      "totalCreditedHint": "Insgesamt",
+      "totalDebited": "Gesamtbelastung",
+      "totalDebitedHint": "Insgesamt",
+      "currentBalance": "Aktueller Kontostand",
+      "currentBalanceHint": "Gerade jetzt",
+      "searchPlaceholder": "Transaktionen durchsuchen...",
+      "typePlaceholder": "Typ",
+      "allTypes": "Alle Typen",
+      "credit": "Gutschrift",
+      "debit": "Belastung",
+      "emptyMatchingTitle": "Keine passenden Transaktionen",
+      "emptyMatchingDescription": "Passe deine Suche oder Filter an.",
+      "clearFilters": "Filter zurücksetzen",
+      "emptyTitle": "Noch keine Wallet-Aktivität",
+      "emptyDescription": "Gutschriften, Belastungen und Reservierungen erscheinen hier.",
+      "goToWallet": "Zur Wallet",
+      "columns": {
+        "type": "Typ",
+        "date": "Datum",
+        "amount": "Betrag",
+        "balanceAfter": "Saldo danach"
+      },
+      "itemLabel": "Transaktionen"
+    },
+    "loyaltySection": {
+      "pointsEarned": "Gesammelte Punkte",
+      "pointsEarnedHint": "Insgesamt",
+      "pointsSpent": "Eingelöste Punkte",
+      "pointsSpentHint": "Insgesamt",
+      "currentBalance": "Aktueller Kontostand",
+      "currentBalanceHint": "Gerade jetzt",
+      "searchPlaceholder": "Aktivität durchsuchen...",
+      "typePlaceholder": "Typ",
+      "all": "Alle",
+      "earned": "Gesammelt",
+      "spent": "Eingelöst",
+      "emptyMatchingTitle": "Keine passende Aktivität",
+      "emptyMatchingDescription": "Passe deine Suche oder Filter an.",
+      "clearFilters": "Filter zurücksetzen",
+      "emptyTitle": "Noch keine Treueprogramm-Aktivität",
+      "emptyDescription": "Buche einen Service, um Treuepunkte zu sammeln.",
+      "goToLoyalty": "Zum Treueprogramm",
+      "columns": {
+        "activity": "Aktivität",
+        "date": "Datum",
+        "points": "Punkte",
+        "balanceAfter": "Saldo danach"
+      },
+      "itemLabel": "Einträge"
+    },
+    "invoicesSection": {
+      "totalInvoices": "Rechnungen insgesamt",
+      "totalInvoicesHint": "Insgesamt",
+      "paid": "Bezahlt",
+      "paidHint": "Abgeschlossen",
+      "outstanding": "Ausstehend",
+      "outstandingHint": "Wartet auf Zahlung",
+      "searchPlaceholder": "Rechnungen durchsuchen...",
+      "statusPlaceholder": "Status",
+      "allStatuses": "Alle Status",
+      "issued": "Ausgestellt",
+      "paidStatus": "Bezahlt",
+      "emptyMatchingTitle": "Keine passenden Rechnungen",
+      "emptyMatchingDescription": "Passe deine Suche oder Filter an.",
+      "clearFilters": "Filter zurücksetzen",
+      "emptyTitle": "Noch keine Rechnungen",
+      "emptyDescription": "Eine Rechnung wird ausgestellt, sobald eine Buchung abgeschlossen und bestätigt ist.",
+      "goToInvoices": "Zu den Rechnungen",
+      "columns": {
+        "invoiceNumber": "Rechnungsnr.",
+        "booking": "Buchung",
+        "date": "Datum",
+        "status": "Status",
+        "amount": "Betrag"
+      },
+      "itemLabel": "Rechnungen"
+    }
+  }
+}

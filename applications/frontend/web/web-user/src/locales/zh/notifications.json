@@ -1,0 +1,68 @@
+{
+  "loading": "加载中…",
+  "page": {
+    "title": "通知",
+    "subtitle": "更新、提醒和提示"
+  },
+  "tabs": {
+    "all": "全部",
+    "unread": "未读",
+    "bookings": "预订",
+    "payments": "付款"
+  },
+  "metrics": {
+    "totalNotifications": "通知总数",
+    "thisMonth": "本月",
+    "unread": "未读",
+    "needsAttention": "需要关注",
+    "bookingUpdates": "预订更新",
+    "serviceProgress": "服务进度",
+    "paymentAlerts": "付款提醒",
+    "recentBilling": "近期账单"
+  },
+  "list": {
+    "heading": "最近的通知",
+    "markAllRead": "全部标记为已读",
+    "markedAsRead_other": "已将 {{count}} 条通知标记为已读",
+    "noMatching": "没有匹配的通知",
+    "tryDifferentTab": "请尝试其他标签页。",
+    "showAll": "显示全部",
+    "allCaughtUp": "已全部处理完毕",
+    "noNotificationsYet": "这里还没有通知 — 更新和提醒会在发生时显示在这里。",
+    "new": "新",
+    "paid": "已支付"
+  },
+  "detail": {
+    "notificationType": "通知类型",
+    "bookingReference": "预订编号",
+    "provider": "服务商",
+    "service": "服务",
+    "scheduledVisit": "预约上门时间",
+    "location": "位置",
+    "relatedAmount": "相关金额",
+    "paymentMethod": "付款方式",
+    "invoiceReference": "发票编号",
+    "reference": "参考编号"
+  },
+  "panel": {
+    "title": "通知详情",
+    "whatHappened": "发生了什么",
+    "recordedNote": "此更新已记录在您的预订中。",
+    "downloadInvoice": "下载发票",
+    "findInvoiceToast": "请在发票页面查找对应的发票。",
+    "contactSupport": "联系客服",
+    "done": "完成"
+  },
+  "dialog": {
+    "title": "通知详情",
+    "subtitle": "查看完整更新并采取行动",
+    "bookingLabel": "预订 {{number}}",
+    "message": "消息",
+    "noDetails": "此通知暂无更多详情。",
+    "respondNote": "您可以直接在预订页面回复此更新。",
+    "close": "关闭",
+    "markAsRead": "标记为已读",
+    "viewBooking": "查看预订",
+    "findBookingToast": "请在您的预订列表中查找预订 {{number}}。"
+  }
+}

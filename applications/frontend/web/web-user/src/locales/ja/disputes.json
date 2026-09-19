@@ -1,0 +1,99 @@
+{
+  "loading": "読み込み中…",
+  "itemLabel_one": "件の紛争",
+  "itemLabel_other": "件の紛争",
+  "page": {
+    "title": "紛争",
+    "subtitle": "予約に関して申し立てた紛争を追跡・管理します"
+  },
+  "metrics": {
+    "total": "紛争の総数",
+    "totalHint_one": "{{count}}件の紛争を申し立て済み",
+    "totalHint_other": "{{count}}件の紛争を申し立て済み",
+    "open": "対応中 / 保留中",
+    "openHint": "解決を待っています",
+    "closed": "解決済み",
+    "closedHint": "解決済み、クローズ済み、または取り下げ済み"
+  },
+  "search": {
+    "placeholder": "カテゴリー、説明、予約で検索..."
+  },
+  "filters": {
+    "statusPlaceholder": "ステータス",
+    "all": "すべてのステータス",
+    "open": "対応中",
+    "closed": "クローズ済み"
+  },
+  "columns": {
+    "category": "カテゴリー",
+    "description": "説明",
+    "booking": "予約",
+    "status": "ステータス",
+    "created": "作成日"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "サービス品質",
+    "DAMAGE": "損傷",
+    "BILLING": "請求関連",
+    "NO_SHOW": "無断キャンセル",
+    "OTHER": "その他"
+  },
+  "evidenceKinds": {
+    "PHOTO": "写真",
+    "DOCUMENT": "書類",
+    "OTHER": "その他"
+  },
+  "empty": {
+    "title": "紛争はまだありません",
+    "description": "予約で問題が発生した場合は、こちらから紛争を申し立てることができます。担当チームが対応いたします。",
+    "filteredTitle": "該当する紛争がありません",
+    "filteredDescription": "別の検索キーワードやステータスフィルターをお試しください。",
+    "clearFilters": "フィルターをクリア"
+  },
+  "newDispute": {
+    "trigger": "新しい紛争",
+    "title": "新しい紛争を申し立てる",
+    "subtitle": "予約で何が問題だったかをお知らせください。担当チームが確認します。",
+    "bookingLabel": "予約",
+    "bookingPlaceholder": "予約を選択",
+    "noBookings": "紛争を申し立てられる予約がまだありません。",
+    "serviceFallback": "サービス",
+    "categoryLabel": "カテゴリー",
+    "descriptionLabel": "説明",
+    "descriptionPlaceholder": "何が起きたかを10文字以上で記入してください...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "キャンセル",
+    "submit": "紛争を送信",
+    "submitting": "送信中...",
+    "opened": "紛争を申し立てました — 担当チームが確認します",
+    "errors": {
+      "pickBooking": "先に予約を選択してください",
+      "descriptionLength": "説明は10文字以上2000文字以内で入力してください"
+    }
+  },
+  "detail": {
+    "title": "紛争の詳細",
+    "booking": "予約",
+    "service": "サービス",
+    "description": "説明",
+    "evidence": "証拠",
+    "noEvidence": "まだ証拠が添付されていません。",
+    "withdraw": "紛争を取り下げる",
+    "withdrawing": "取り下げ中...",
+    "withdrawn": "紛争を取り下げました",
+    "alreadyClosed": "この紛争はすでにクローズされています",
+    "withdrawConfirmTitle": "この紛争を取り下げますか？",
+    "withdrawConfirmDescription": "この操作を行うと紛争はクローズされ、元に戻すことはできません。問題が解決した場合のみ取り下げてください。",
+    "addEvidence": {
+      "title": "証拠を追加",
+      "urlPlaceholder": "https://... 写真や書類へのリンク",
+      "notePlaceholder": "メモ（任意）",
+      "add": "証拠を追加",
+      "adding": "追加中...",
+      "added": "証拠を追加しました",
+      "errors": {
+        "url": "有効なURLを入力してください（最大2000文字）"
+      }
+    }
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "loading": "Chargement…",
+  "bookings": {
+    "pageTitle": "Mes réservations",
+    "pageSubtitle": "Suivez vos rendez-vous et votre historique de services",
+    "tabs": {
+      "upcoming": "À venir",
+      "completed": "Terminées",
+      "cancelled": "Annulées"
+    },
+    "stats": {
+      "upcomingBookings": "Réservations à venir",
+      "upcomingBookingsHint": "Programmées",
+      "completedThisMonth": "Terminées ce mois-ci",
+      "completedThisMonthHint": "Ce mois civil",
+      "pendingPayments": "Paiements en attente",
+      "pendingPaymentsHint": "En attente d'autorisation",
+      "totalSpent": "Total dépensé",
+      "totalSpentHint": "Depuis toujours"
+    },
+    "searchPlaceholder": "Rechercher des réservations...",
+    "statusPlaceholder": "Statut",
+    "allStatuses": "Tous les statuts",
+    "servicePlaceholder": "Service",
+    "allServices": "Tous les services",
+    "emptyUpcoming": {
+      "title": "Aucune réservation à venir",
+      "description": "Vous n'avez encore aucun rendez-vous programmé. Réservez un service pour le voir apparaître ici.",
+      "actionLabel": "Réserver un service"
+    },
+    "emptyCompleted": {
+      "title": "Aucune réservation terminée pour l'instant",
+      "description": "Les travaux marqués comme terminés apparaîtront ici.",
+      "actionLabel": "Parcourir les services"
+    },
+    "emptyCancelled": {
+      "title": "Aucune réservation annulée",
+      "description": "Les réservations que vous annulez apparaîtront ici pour vos archives.",
+      "actionLabel": "Voir les réservations à venir"
+    },
+    "emptyFiltered": {
+      "title": "Aucune réservation correspondante",
+      "description": "Essayez d'ajuster votre recherche ou vos filtres pour trouver ce que vous cherchez.",
+      "actionLabel": "Effacer les filtres"
+    },
+    "columns": {
+      "service": "Service",
+      "bookingId": "N° de réservation",
+      "schedule": "Horaire",
+      "provider": "Prestataire",
+      "status": "Statut",
+      "amount": "Montant"
+    },
+    "serviceFallback": "Service",
+    "itemLabel": "réservations"
+  },
+  "calendar": {
+    "pageTitle": "Calendrier",
+    "pageSubtitle": "Vos réservations, organisées par date",
+    "myBookings": "Mes réservations",
+    "noBookingsThisDay": "Aucune réservation ce jour-là.",
+    "serviceFallback": "Service",
+    "footerHint": "Les dates avec un point violet ont au moins une réservation réelle programmée."
+  },
+  "inbox": {
+    "pageTitle": "Messagerie",
+    "pageSubtitle": "Échangez avec les prestataires de vos réservations",
+    "emptyTitle": "Aucune conversation pour l'instant",
+    "emptyDescription": "Une fois qu'un prestataire est affecté à l'une de vos réservations, vous pouvez lui écrire ici.",
+    "browseServices": "Parcourir les services",
+    "serviceFallback": "Service",
+    "noMessagesYet": "Aucun message pour l'instant — dites bonjour !",
+    "messagePlaceholder": "Message..."
+  },
+  "history": {
+    "pageTitle": "Historique",
+    "pageSubtitle": "Tout ce qui s'est passé sur votre compte, au même endroit",
+    "viewing": "Affichage",
+    "detailSheetTitle": "Détails de l'historique",
+    "categories": {
+      "bookings": "Réservations",
+      "payments": "Paiements",
+      "wallet": "Portefeuille",
+      "loyalty": "Fidélité",
+      "invoices": "Factures"
+    },
+    "bookingsSection": {
+      "totalBookings": "Total des réservations",
+      "totalBookingsHint": "Depuis toujours",
+      "paidJobs": "Travaux payés",
+      "paidJobsHint": "Terminés",
+      "cancelled": "Annulées",
+      "cancelledHint": "Depuis toujours",
+      "totalCharged": "Total facturé",
+      "totalChargedHint": "Depuis toujours",
+      "pendingAuthorizations": "Autorisations en attente",
+      "pendingAuthorizationsHint": "En attente de capture",
+      "fullyPaid": "Entièrement payées",
+      "fullyPaidHint": "Terminées",
+      "searchBookings": "Rechercher des réservations...",
+      "searchCharges": "Rechercher des paiements...",
+      "statusPlaceholder": "Statut",
+      "allStatuses": "Tous les statuts",
+      "statusPaid": "Payée",
+      "statusClosed": "Clôturée",
+      "statusCancelled": "Annulée",
+      "statusAuthorized": "Autorisée",
+      "emptyMatchingTitle": "Aucun résultat correspondant",
+      "emptyMatchingDescription": "Essayez d'ajuster votre recherche ou vos filtres.",
+      "clearFilters": "Effacer les filtres",
+      "noBookingsTitle": "Aucune réservation pour l'instant",
+      "noBookingsDescription": "Les travaux terminés et payés apparaîtront ici.",
+      "noChargesTitle": "Aucun paiement pour l'instant",
+      "noChargesDescription": "Les paiements liés à vos réservations apparaîtront ici.",
+      "browseServices": "Parcourir les services",
+      "columns": {
+        "service": "Service",
+        "bookingId": "N° de réservation",
+        "date": "Date",
+        "provider": "Prestataire",
+        "status": "Statut",
+        "amount": "Montant"
+      },
+      "serviceFallback": "Service",
+      "itemLabelBookings": "réservations",
+      "itemLabelCharges": "paiements"
+    },
+    "walletSection": {
+      "totalCredited": "Total crédité",
+      "totalCreditedHint": "Depuis toujours",
+      "totalDebited": "Total débité",
+      "totalDebitedHint": "Depuis toujours",
+      "currentBalance": "Solde actuel",
+      "currentBalanceHint": "En ce moment",
+      "searchPlaceholder": "Rechercher des transactions...",
+      "typePlaceholder": "Type",
+      "allTypes": "Tous les types",
+      "credit": "Crédit",
+      "debit": "Débit",
+      "emptyMatchingTitle": "Aucune transaction correspondante",
+      "emptyMatchingDescription": "Essayez d'ajuster votre recherche ou vos filtres.",
+      "clearFilters": "Effacer les filtres",
+      "emptyTitle": "Aucune activité du portefeuille pour l'instant",
+      "emptyDescription": "Les crédits, débits et blocages apparaîtront ici.",
+      "goToWallet": "Aller au portefeuille",
+      "columns": {
+        "type": "Type",
+        "date": "Date",
+        "amount": "Montant",
+        "balanceAfter": "Solde après"
+      },
+      "itemLabel": "transactions"
+    },
+    "loyaltySection": {
+      "pointsEarned": "Points gagnés",
+      "pointsEarnedHint": "Depuis toujours",
+      "pointsSpent": "Points dépensés",
+      "pointsSpentHint": "Depuis toujours",
+      "currentBalance": "Solde actuel",
+      "currentBalanceHint": "En ce moment",
+      "searchPlaceholder": "Rechercher une activité...",
+      "typePlaceholder": "Type",
+      "all": "Toutes",
+      "earned": "Gagnés",
+      "spent": "Dépensés",
+      "emptyMatchingTitle": "Aucune activité correspondante",
+      "emptyMatchingDescription": "Essayez d'ajuster votre recherche ou vos filtres.",
+      "clearFilters": "Effacer les filtres",
+      "emptyTitle": "Aucune activité de fidélité pour l'instant",
+      "emptyDescription": "Réservez un service pour commencer à gagner des points de fidélité.",
+      "goToLoyalty": "Aller à la fidélité",
+      "columns": {
+        "activity": "Activité",
+        "date": "Date",
+        "points": "Points",
+        "balanceAfter": "Solde après"
+      },
+      "itemLabel": "entrées"
+    },
+    "invoicesSection": {
+      "totalInvoices": "Total des factures",
+      "totalInvoicesHint": "Depuis toujours",
+      "paid": "Payées",
+      "paidHint": "Terminées",
+      "outstanding": "En attente",
+      "outstandingHint": "En attente de paiement",
+      "searchPlaceholder": "Rechercher des factures...",
+      "statusPlaceholder": "Statut",
+      "allStatuses": "Tous les statuts",
+      "issued": "Émise",
+      "paidStatus": "Payée",
+      "emptyMatchingTitle": "Aucune facture correspondante",
+      "emptyMatchingDescription": "Essayez d'ajuster votre recherche ou vos filtres.",
+      "clearFilters": "Effacer les filtres",
+      "emptyTitle": "Aucune facture pour l'instant",
+      "emptyDescription": "Une facture est émise une fois qu'une réservation est terminée et confirmée.",
+      "goToInvoices": "Aller aux factures",
+      "columns": {
+        "invoiceNumber": "N° de facture",
+        "booking": "Réservation",
+        "date": "Date",
+        "status": "Statut",
+        "amount": "Montant"
+      },
+      "itemLabel": "factures"
+    }
+  }
+}

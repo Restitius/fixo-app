@@ -1,0 +1,50 @@
+{
+  "loading": "Loading…",
+  "title": "Welcome to FIXO",
+  "subtitle": "A few quick steps to get your account ready.",
+  "progress": "{{done}} of {{total}} steps complete",
+  "required": "Required",
+  "optional": "Optional",
+  "completed": "Completed",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "Verify contact",
+      "description": "Confirm your phone number or email via the code we sent.",
+      "verifiedNote": "Your contact details are already verified.",
+      "unverifiedNote": "We couldn't confirm your contact details automatically — verify your email or phone from your profile, then come back here.",
+      "markDone": "I've verified my contact details"
+    },
+    "SET_LOCATION": {
+      "title": "Set your location",
+      "description": "Tell us where you live so we can find nearby providers.",
+      "labelLabel": "Label",
+      "recipientNameLabel": "Recipient name",
+      "phoneLabel": "Phone",
+      "cityLabel": "City",
+      "streetLabel": "Street address",
+      "regionLabel": "Region (optional)",
+      "save": "Save location",
+      "saving": "Saving…",
+      "fillRequired": "Fill in recipient, phone, street and city.",
+      "saved": "Location saved"
+    },
+    "ADD_PROPERTY": {
+      "title": "Add a property",
+      "description": "Register the home or property services will be done at.",
+      "nameLabel": "Property name",
+      "namePlaceholder": "e.g. Home, Office",
+      "typeLabel": "Property type",
+      "types": { "HOUSE": "House", "APARTMENT": "Apartment", "CONDO": "Condo", "OFFICE": "Office", "OTHER": "Other" },
+      "bedroomsLabel": "Bedrooms",
+      "bathroomsLabel": "Bathrooms",
+      "save": "Add property",
+      "saving": "Adding…",
+      "skip": "Skip for now",
+      "fillRequired": "Enter a property name.",
+      "saved": "Property added"
+    }
+  },
+  "continueCta": "Continue to Dashboard",
+  "allDoneTitle": "You're all set!",
+  "allDoneSubtitle": "Your account is ready. Let's find you a great provider."
+}

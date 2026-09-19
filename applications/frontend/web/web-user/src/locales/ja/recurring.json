@@ -1,0 +1,98 @@
+{
+  "loading": "読み込み中…",
+  "page": {
+    "title": "定期サービス",
+    "subtitle": "繰り返し予約を設定すれば、スケジュール管理はお任せください"
+  },
+  "metrics": {
+    "total": {
+      "label": "サブスクリプション合計",
+      "hint": "すべてのサービスを対象"
+    },
+    "active": {
+      "label": "実行中",
+      "hint_other": "{{count}} 件のプランが実行中"
+    },
+    "paused": {
+      "label": "一時停止中",
+      "hint_other": "{{count}} 件のプランが一時停止中"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "毎週",
+    "BIWEEKLY": "2週間ごと",
+    "MONTHLY": "毎月",
+    "QUARTERLY": "四半期ごと"
+  },
+  "status": {
+    "ACTIVE": "実行中",
+    "PAUSED": "一時停止中",
+    "CANCELLED": "解約済み"
+  },
+  "timeWindow": {
+    "MORNING": "午前",
+    "AFTERNOON": "午後",
+    "EVENING": "夕方"
+  },
+  "newSubscription": "新規サブスクリプション",
+  "searchPlaceholder": "サービスで検索...",
+  "filterStatus": "ステータス",
+  "filterAllStatuses": "すべてのステータス",
+  "columns": {
+    "service": "サービス",
+    "frequency": "頻度",
+    "nextRun": "次回実施日",
+    "details": "詳細",
+    "status": "ステータス",
+    "actions": "操作"
+  },
+  "noneSet": "—",
+  "pause": "一時停止",
+  "resume": "再開",
+  "cancelPlan": "解約",
+  "pausedToast": "サブスクリプションを一時停止しました",
+  "resumedToast": "サブスクリプションを再開しました",
+  "cancelledToast": "サブスクリプションを解約しました",
+  "itemLabel_other": "件のサブスクリプション",
+  "empty": {
+    "title": "定期サブスクリプションはまだありません",
+    "description": "2週間ごとの掃除のような繰り返し予約を設定すれば、スケジュール管理はお任せください。",
+    "action": "新規サブスクリプション"
+  },
+  "emptyFiltered": {
+    "title": "該当するサブスクリプションがありません",
+    "description": "別の検索語句やステータスフィルターをお試しください。",
+    "action": "フィルターを解除"
+  },
+  "cancelDialog": {
+    "title": "このサブスクリプションを解約しますか？",
+    "description": "{{service}}の今後の予約が停止されます。この操作は元に戻せません。",
+    "keep": "解約しない",
+    "confirm": "サブスクリプションを解約"
+  },
+  "dialog": {
+    "title": "新規サブスクリプション",
+    "subtitle": "ご都合の良いスケジュールで繰り返し予約を設定しましょう。",
+    "categoryLabel": "カテゴリー",
+    "categoryPlaceholder": "カテゴリーを選択",
+    "serviceLabel": "サービス",
+    "servicePlaceholder": "サービスを選択",
+    "servicePlaceholderNoCategory": "先にカテゴリーを選択してください",
+    "addressLabel": "住所",
+    "addressPlaceholder": "住所を選択",
+    "addressNone": "住所を指定しない",
+    "frequencyLabel": "頻度",
+    "nextRunDateLabel": "次回実施日",
+    "nextRunDateHint": "任意 — 空欄にすると、サービス提供者が初回訪問日を調整します",
+    "timeWindowLabel": "希望時間帯",
+    "timeWindowNone": "指定なし",
+    "instructionsLabel": "ご要望・メモ",
+    "instructionsPlaceholder": "例：裏口をご利用ください。キッチンと浴室を重点的にお願いします",
+    "instructionsHint": "{{count}}/500 文字",
+    "cancel": "キャンセル",
+    "create": "サブスクリプションを作成",
+    "creating": "作成中…",
+    "selectServiceError": "続行するにはサービスを選択してください",
+    "createdToast": "サブスクリプションを作成しました"
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "loading": "लोड हो रहा है…",
+  "bookings": {
+    "pageTitle": "मेरी बुकिंग",
+    "pageSubtitle": "अपनी अपॉइंटमेंट और सेवा इतिहास को ट्रैक करें",
+    "tabs": {
+      "upcoming": "आगामी",
+      "completed": "पूर्ण",
+      "cancelled": "रद्द"
+    },
+    "stats": {
+      "upcomingBookings": "आगामी बुकिंग",
+      "upcomingBookingsHint": "निर्धारित",
+      "completedThisMonth": "इस महीने पूर्ण",
+      "completedThisMonthHint": "इस कैलेंडर माह में",
+      "pendingPayments": "लंबित भुगतान",
+      "pendingPaymentsHint": "प्राधिकरण की प्रतीक्षा में",
+      "totalSpent": "कुल खर्च",
+      "totalSpentHint": "सभी समय"
+    },
+    "searchPlaceholder": "बुकिंग खोजें...",
+    "statusPlaceholder": "स्थिति",
+    "allStatuses": "सभी स्थितियाँ",
+    "servicePlaceholder": "सेवा",
+    "allServices": "सभी सेवाएँ",
+    "emptyUpcoming": {
+      "title": "कोई आगामी बुकिंग नहीं",
+      "description": "अभी तक आपकी कोई अपॉइंटमेंट निर्धारित नहीं है। यहां देखने के लिए एक सेवा बुक करें।",
+      "actionLabel": "सेवा बुक करें"
+    },
+    "emptyCompleted": {
+      "title": "अभी तक कोई पूर्ण बुकिंग नहीं",
+      "description": "पूर्ण के रूप में चिह्नित कार्य यहां दिखाई देंगे।",
+      "actionLabel": "सेवाएँ ब्राउज़ करें"
+    },
+    "emptyCancelled": {
+      "title": "कोई रद्द बुकिंग नहीं",
+      "description": "आपके द्वारा रद्द की गई बुकिंग आपके रिकॉर्ड के लिए यहां दिखाई देंगी।",
+      "actionLabel": "आगामी देखें"
+    },
+    "emptyFiltered": {
+      "title": "कोई मेल खाती बुकिंग नहीं",
+      "description": "जो आप खोज रहे हैं उसे खोजने के लिए अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "actionLabel": "फ़िल्टर साफ़ करें"
+    },
+    "columns": {
+      "service": "सेवा",
+      "bookingId": "बुकिंग आईडी",
+      "schedule": "समय-सारणी",
+      "provider": "प्रदाता",
+      "status": "स्थिति",
+      "amount": "राशि"
+    },
+    "serviceFallback": "सेवा",
+    "itemLabel": "बुकिंग"
+  },
+  "calendar": {
+    "pageTitle": "कैलेंडर",
+    "pageSubtitle": "तिथि के अनुसार आपकी बुकिंग",
+    "myBookings": "मेरी बुकिंग",
+    "noBookingsThisDay": "इस दिन कोई बुकिंग नहीं है।",
+    "serviceFallback": "सेवा",
+    "footerHint": "बैंगनी बिंदु वाली तिथियों में कम से कम एक वास्तविक बुकिंग निर्धारित है।"
+  },
+  "inbox": {
+    "pageTitle": "इनबॉक्स",
+    "pageSubtitle": "अपनी बुकिंग के प्रदाताओं को संदेश भेजें",
+    "emptyTitle": "अभी तक कोई बातचीत नहीं",
+    "emptyDescription": "एक बार जब आपकी किसी बुकिंग को कोई प्रदाता सौंपा जाता है, तो आप उन्हें यहां संदेश भेज सकते हैं।",
+    "browseServices": "सेवाएँ ब्राउज़ करें",
+    "serviceFallback": "सेवा",
+    "noMessagesYet": "अभी तक कोई संदेश नहीं — नमस्ते कहें!",
+    "messagePlaceholder": "संदेश..."
+  },
+  "history": {
+    "pageTitle": "इतिहास",
+    "pageSubtitle": "आपके खाते में जो कुछ भी हुआ है, वह एक ही जगह पर",
+    "viewing": "देख रहे हैं",
+    "detailSheetTitle": "इतिहास विवरण",
+    "categories": {
+      "bookings": "बुकिंग",
+      "payments": "भुगतान",
+      "wallet": "वॉलेट",
+      "loyalty": "लॉयल्टी",
+      "invoices": "इनवॉइस"
+    },
+    "bookingsSection": {
+      "totalBookings": "कुल बुकिंग",
+      "totalBookingsHint": "सभी समय",
+      "paidJobs": "भुगतान किए गए कार्य",
+      "paidJobsHint": "पूर्ण",
+      "cancelled": "रद्द",
+      "cancelledHint": "सभी समय",
+      "totalCharged": "कुल शुल्क",
+      "totalChargedHint": "सभी समय",
+      "pendingAuthorizations": "लंबित प्राधिकरण",
+      "pendingAuthorizationsHint": "कैप्चर की प्रतीक्षा में",
+      "fullyPaid": "पूर्ण रूप से भुगतान किया गया",
+      "fullyPaidHint": "पूर्ण",
+      "searchBookings": "बुकिंग खोजें...",
+      "searchCharges": "शुल्क खोजें...",
+      "statusPlaceholder": "स्थिति",
+      "allStatuses": "सभी स्थितियाँ",
+      "statusPaid": "भुगतान किया गया",
+      "statusClosed": "बंद",
+      "statusCancelled": "रद्द",
+      "statusAuthorized": "प्राधिकृत",
+      "emptyMatchingTitle": "कोई मेल खाता परिणाम नहीं",
+      "emptyMatchingDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "noBookingsTitle": "अभी तक कोई बुकिंग नहीं",
+      "noBookingsDescription": "पूर्ण और भुगतान किए गए कार्य यहां दिखाई देंगे।",
+      "noChargesTitle": "अभी तक कोई शुल्क नहीं",
+      "noChargesDescription": "आपकी बुकिंग से होने वाले शुल्क यहां दिखाई देंगे।",
+      "browseServices": "सेवाएँ ब्राउज़ करें",
+      "columns": {
+        "service": "सेवा",
+        "bookingId": "बुकिंग आईडी",
+        "date": "तिथि",
+        "provider": "प्रदाता",
+        "status": "स्थिति",
+        "amount": "राशि"
+      },
+      "serviceFallback": "सेवा",
+      "itemLabelBookings": "बुकिंग",
+      "itemLabelCharges": "शुल्क"
+    },
+    "walletSection": {
+      "totalCredited": "कुल जमा",
+      "totalCreditedHint": "सभी समय",
+      "totalDebited": "कुल डेबिट",
+      "totalDebitedHint": "सभी समय",
+      "currentBalance": "वर्तमान शेष",
+      "currentBalanceHint": "अभी",
+      "searchPlaceholder": "लेन-देन खोजें...",
+      "typePlaceholder": "प्रकार",
+      "allTypes": "सभी प्रकार",
+      "credit": "जमा",
+      "debit": "डेबिट",
+      "emptyMatchingTitle": "कोई मेल खाता लेन-देन नहीं",
+      "emptyMatchingDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "emptyTitle": "अभी तक कोई वॉलेट गतिविधि नहीं",
+      "emptyDescription": "जमा, डेबिट और होल्ड यहां दिखाई देंगे।",
+      "goToWallet": "वॉलेट पर जाएँ",
+      "columns": {
+        "type": "प्रकार",
+        "date": "तिथि",
+        "amount": "राशि",
+        "balanceAfter": "शेष बाद में"
+      },
+      "itemLabel": "लेन-देन"
+    },
+    "loyaltySection": {
+      "pointsEarned": "अर्जित अंक",
+      "pointsEarnedHint": "सभी समय",
+      "pointsSpent": "खर्च किए गए अंक",
+      "pointsSpentHint": "सभी समय",
+      "currentBalance": "वर्तमान शेष",
+      "currentBalanceHint": "अभी",
+      "searchPlaceholder": "गतिविधि खोजें...",
+      "typePlaceholder": "प्रकार",
+      "all": "सभी",
+      "earned": "अर्जित",
+      "spent": "खर्च किए गए",
+      "emptyMatchingTitle": "कोई मेल खाती गतिविधि नहीं",
+      "emptyMatchingDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "emptyTitle": "अभी तक कोई लॉयल्टी गतिविधि नहीं",
+      "emptyDescription": "लॉयल्टी अंक अर्जित करना शुरू करने के लिए एक सेवा बुक करें।",
+      "goToLoyalty": "लॉयल्टी पर जाएँ",
+      "columns": {
+        "activity": "गतिविधि",
+        "date": "तिथि",
+        "points": "अंक",
+        "balanceAfter": "शेष बाद में"
+      },
+      "itemLabel": "प्रविष्टियाँ"
+    },
+    "invoicesSection": {
+      "totalInvoices": "कुल इनवॉइस",
+      "totalInvoicesHint": "सभी समय",
+      "paid": "भुगतान किया गया",
+      "paidHint": "पूर्ण",
+      "outstanding": "बकाया",
+      "outstandingHint": "भुगतान की प्रतीक्षा में",
+      "searchPlaceholder": "इनवॉइस खोजें...",
+      "statusPlaceholder": "स्थिति",
+      "allStatuses": "सभी स्थितियाँ",
+      "issued": "जारी किया गया",
+      "paidStatus": "भुगतान किया गया",
+      "emptyMatchingTitle": "कोई मेल खाता इनवॉइस नहीं",
+      "emptyMatchingDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "emptyTitle": "अभी तक कोई इनवॉइस नहीं",
+      "emptyDescription": "बुकिंग पूर्ण और पुष्टि होने के बाद एक इनवॉइस जारी किया जाता है।",
+      "goToInvoices": "इनवॉइस पर जाएँ",
+      "columns": {
+        "invoiceNumber": "इनवॉइस नंबर",
+        "booking": "बुकिंग",
+        "date": "तिथि",
+        "status": "स्थिति",
+        "amount": "राशि"
+      },
+      "itemLabel": "इनवॉइस"
+    }
+  }
+}

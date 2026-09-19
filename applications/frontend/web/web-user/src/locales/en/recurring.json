@@ -1,0 +1,101 @@
+{
+  "loading": "Loading…",
+  "page": {
+    "title": "Recurring Services",
+    "subtitle": "Set up repeat bookings and let us handle the schedule"
+  },
+  "metrics": {
+    "total": {
+      "label": "Total Subscriptions",
+      "hint": "Across every service"
+    },
+    "active": {
+      "label": "Active",
+      "hint_one": "{{count}} plan running",
+      "hint_other": "{{count}} plans running"
+    },
+    "paused": {
+      "label": "Paused",
+      "hint_one": "{{count}} plan on hold",
+      "hint_other": "{{count}} plans on hold"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "Weekly",
+    "BIWEEKLY": "Every 2 weeks",
+    "MONTHLY": "Monthly",
+    "QUARTERLY": "Quarterly"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "PAUSED": "Paused",
+    "CANCELLED": "Cancelled"
+  },
+  "timeWindow": {
+    "MORNING": "Morning",
+    "AFTERNOON": "Afternoon",
+    "EVENING": "Evening"
+  },
+  "newSubscription": "New Subscription",
+  "searchPlaceholder": "Search by service...",
+  "filterStatus": "Status",
+  "filterAllStatuses": "All statuses",
+  "columns": {
+    "service": "Service",
+    "frequency": "Frequency",
+    "nextRun": "Next Run",
+    "details": "Details",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "noneSet": "—",
+  "pause": "Pause",
+  "resume": "Resume",
+  "cancelPlan": "Cancel",
+  "pausedToast": "Subscription paused",
+  "resumedToast": "Subscription resumed",
+  "cancelledToast": "Subscription cancelled",
+  "itemLabel_one": "subscription",
+  "itemLabel_other": "subscriptions",
+  "empty": {
+    "title": "No recurring subscriptions yet",
+    "description": "Set up a repeat booking, like cleaning every 2 weeks, and we'll take care of the schedule.",
+    "action": "New Subscription"
+  },
+  "emptyFiltered": {
+    "title": "No matching subscriptions",
+    "description": "Try a different search term or status filter.",
+    "action": "Clear filters"
+  },
+  "cancelDialog": {
+    "title": "Cancel this subscription?",
+    "description": "This will stop future bookings for {{service}}. This can't be undone.",
+    "keep": "Keep it",
+    "confirm": "Cancel subscription"
+  },
+  "dialog": {
+    "title": "New Subscription",
+    "subtitle": "Set up a repeat booking on a schedule that works for you.",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Select a category",
+    "serviceLabel": "Service",
+    "servicePlaceholder": "Select a service",
+    "servicePlaceholderNoCategory": "Choose a category first",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Select an address",
+    "addressNone": "No specific address",
+    "frequencyLabel": "Frequency",
+    "nextRunDateLabel": "Next run date",
+    "nextRunDateHint": "Optional — leave blank to let the provider schedule the first visit",
+    "timeWindowLabel": "Preferred time",
+    "timeWindowNone": "Any time",
+    "instructionsLabel": "Instructions",
+    "instructionsPlaceholder": "e.g. Use the back door, focus on kitchen and bathrooms",
+    "instructionsHint": "{{count}}/500 characters",
+    "cancel": "Cancel",
+    "create": "Create Subscription",
+    "creating": "Creating…",
+    "selectServiceError": "Select a service to continue",
+    "createdToast": "Subscription created"
+  }
+}

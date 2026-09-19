@@ -1,0 +1,101 @@
+{
+  "loading": "Chargement…",
+  "page": {
+    "title": "Services récurrents",
+    "subtitle": "Configurez des réservations récurrentes et laissez-nous gérer le calendrier"
+  },
+  "metrics": {
+    "total": {
+      "label": "Total des abonnements",
+      "hint": "Tous services confondus"
+    },
+    "active": {
+      "label": "Actifs",
+      "hint_one": "{{count}} abonnement en cours",
+      "hint_other": "{{count}} abonnements en cours"
+    },
+    "paused": {
+      "label": "En pause",
+      "hint_one": "{{count}} abonnement en pause",
+      "hint_other": "{{count}} abonnements en pause"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "Hebdomadaire",
+    "BIWEEKLY": "Toutes les 2 semaines",
+    "MONTHLY": "Mensuel",
+    "QUARTERLY": "Trimestriel"
+  },
+  "status": {
+    "ACTIVE": "Actif",
+    "PAUSED": "En pause",
+    "CANCELLED": "Annulé"
+  },
+  "timeWindow": {
+    "MORNING": "Matin",
+    "AFTERNOON": "Après-midi",
+    "EVENING": "Soir"
+  },
+  "newSubscription": "Nouvel abonnement",
+  "searchPlaceholder": "Rechercher par service...",
+  "filterStatus": "Statut",
+  "filterAllStatuses": "Tous les statuts",
+  "columns": {
+    "service": "Service",
+    "frequency": "Fréquence",
+    "nextRun": "Prochaine date",
+    "details": "Détails",
+    "status": "Statut",
+    "actions": "Actions"
+  },
+  "noneSet": "—",
+  "pause": "Mettre en pause",
+  "resume": "Reprendre",
+  "cancelPlan": "Annuler",
+  "pausedToast": "Abonnement mis en pause",
+  "resumedToast": "Abonnement repris",
+  "cancelledToast": "Abonnement annulé",
+  "itemLabel_one": "abonnement",
+  "itemLabel_other": "abonnements",
+  "empty": {
+    "title": "Aucun abonnement récurrent pour le moment",
+    "description": "Configurez une réservation récurrente, comme un ménage toutes les 2 semaines, et nous gérerons le calendrier.",
+    "action": "Nouvel abonnement"
+  },
+  "emptyFiltered": {
+    "title": "Aucun abonnement correspondant",
+    "description": "Essayez un autre terme de recherche ou un autre filtre de statut.",
+    "action": "Effacer les filtres"
+  },
+  "cancelDialog": {
+    "title": "Annuler cet abonnement ?",
+    "description": "Cela arrêtera les prochaines réservations pour {{service}}. Cette action est irréversible.",
+    "keep": "Le conserver",
+    "confirm": "Annuler l'abonnement"
+  },
+  "dialog": {
+    "title": "Nouvel abonnement",
+    "subtitle": "Configurez une réservation récurrente selon un calendrier qui vous convient.",
+    "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Sélectionner une catégorie",
+    "serviceLabel": "Service",
+    "servicePlaceholder": "Sélectionner un service",
+    "servicePlaceholderNoCategory": "Choisissez d'abord une catégorie",
+    "addressLabel": "Adresse",
+    "addressPlaceholder": "Sélectionner une adresse",
+    "addressNone": "Aucune adresse précise",
+    "frequencyLabel": "Fréquence",
+    "nextRunDateLabel": "Prochaine date",
+    "nextRunDateHint": "Facultatif — laissez vide pour que le prestataire planifie la première visite",
+    "timeWindowLabel": "Créneau préféré",
+    "timeWindowNone": "N'importe quand",
+    "instructionsLabel": "Instructions",
+    "instructionsPlaceholder": "ex. Utilisez la porte arrière, concentrez-vous sur la cuisine et les salles de bain",
+    "instructionsHint": "{{count}}/500 caractères",
+    "cancel": "Annuler",
+    "create": "Créer l'abonnement",
+    "creating": "Création…",
+    "selectServiceError": "Sélectionnez un service pour continuer",
+    "createdToast": "Abonnement créé"
+  }
+}

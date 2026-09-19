@@ -1,0 +1,183 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "close": "Close",
+    "bookNow": "Book Now",
+    "topRated": "Top Rated",
+    "reviewsCount_one": "{{formatted}} review",
+    "reviewsCount_other": "{{formatted}} reviews",
+    "jobsDoneCount_one": "{{formatted}} job done",
+    "jobsDoneCount_other": "{{formatted}} jobs done",
+    "toast": {
+      "savedToBookmarks": "Saved to bookmarks",
+      "removedFromBookmarks": "Removed from bookmarks"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "Browse Services",
+      "subtitle": "Find the right service for your home or office"
+    },
+    "metrics": {
+      "availableServices": { "label": "Available Services", "hint": "Across all categories" },
+      "averageRating": { "label": "Average Rating", "hint": "From real provider ratings" },
+      "trustedProviders": { "label": "Trusted Providers", "hint": "Across all categories" },
+      "emergencyReady": { "label": "Emergency Ready", "hint": "Emergency services listed" }
+    },
+    "searchPlaceholder": "Search for services (e.g. Plumbing, Electrical)...",
+    "sort": {
+      "popular": "Popular",
+      "topRated": "Top Rated",
+      "az": "A–Z"
+    },
+    "emptyState": {
+      "title": "No services found",
+      "description": "We couldn't find any services matching \"{{query}}\". Try a different keyword.",
+      "action": "Clear Search"
+    },
+    "fromPrice": "From {{price}}",
+    "askProvider": "Ask a provider",
+    "jobsDoneCount_one": "{{formatted}} job done",
+    "jobsDoneCount_other": "{{formatted}} jobs done",
+    "serviceCount_one": "{{count}} service",
+    "serviceCount_other": "{{count}} services",
+    "findProviders": "Find Providers",
+    "popularCategories": "Popular Categories",
+    "providerCount_one": "{{count}} provider",
+    "providerCount_other": "{{count}} providers",
+    "quickMatch": {
+      "title": "Quick Service Match",
+      "description": "Tell us what you need and we'll match you with the best providers.",
+      "cta": "Get Matched Now"
+    },
+    "dialog": {
+      "title": "Service Details",
+      "jobsCompleted_one": "{{formatted}} job completed",
+      "jobsCompleted_other": "{{formatted}} jobs completed",
+      "startingFrom": "Starting from",
+      "providersAvailable": "Providers available",
+      "whatsIncluded": "What's included",
+      "noServicesYet": "Real services for this category will show up here.",
+      "priceRange": "Average price range",
+      "priceFrom": "{{price}}+",
+      "varies": "Varies",
+      "priceVariesNote": "Price varies based on task complexity and materials required.",
+      "whyChooseFixo": "Why customers choose FIXO",
+      "reasons": {
+        "skilled": "Skilled and experienced providers",
+        "quickResponse": "Quick response and reliable service",
+        "qualityWork": "Quality work backed by real reviews",
+        "transparentPricing": "Transparent, upfront pricing"
+      },
+      "features": {
+        "realReviews": { "title": "Real Reviews", "hint": "From real customers" },
+        "upfrontPricing": { "title": "Upfront Pricing", "hint": "No hidden charges" },
+        "onTimeService": { "title": "On-time Service", "hint": "Respecting your time" },
+        "providersReadyCount_one": "{{count}} Provider",
+        "providersReadyCount_other": "{{count}} Providers",
+        "readyToHelp": "Ready to help"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "Find Providers",
+    "pageTitleWithCategory": "{{category}} Providers",
+    "subtitle": "Choose a trusted professional for your service",
+    "backToServices": "Back to Services",
+    "thisService": "this service",
+    "noCategory": {
+      "title": "Pick a service first",
+      "description": "Choose a service category to see the real providers who offer it.",
+      "action": "Browse Services"
+    },
+    "metrics": {
+      "providersFound": { "label": "Providers Found", "hint": "Matching this category" },
+      "averageRating": {
+        "label": "Average Rating",
+        "hint_one": "Based on {{formatted}} review",
+        "hint_other": "Based on {{formatted}} reviews"
+      },
+      "totalReviews": { "label": "Total Reviews", "hint": "Across these providers" },
+      "startingFrom": { "label": "Starting From", "hint": "Competitive pricing" }
+    },
+    "searchPlaceholder": "Search providers...",
+    "allLocations": "All Locations",
+    "anyRating": "Any Rating",
+    "sort": {
+      "recommended": "Recommended",
+      "topRated": "Top Rated",
+      "lowestPrice": "Lowest Price",
+      "mostJobs": "Most Jobs"
+    },
+    "noResults": {
+      "title": "No {{category}} providers right now",
+      "description": "We don't have anyone matching your filters yet. Try widening your search.",
+      "action": "Clear Filters"
+    },
+    "startingFromPrice": "Starting from {{price}}",
+    "removeBookmark": "Remove bookmark",
+    "saveBookmark": "Save bookmark",
+    "viewProfile": "View Profile",
+    "serviceArea": {
+      "title": "Service Area",
+      "empty": "No location data yet for these providers."
+    },
+    "recommendation": {
+      "title": "Our Recommendation",
+      "description": "These providers are ranked by real customer ratings for {{category}}.",
+      "items": {
+        "reviews": "Real reviews from real customers",
+        "pricing": "Transparent, per-job pricing",
+        "security": "Secure booking & payments",
+        "support": "Support available if anything goes wrong"
+      }
+    },
+    "dialog": {
+      "title": "Provider Profile",
+      "activeSince": "Active Since",
+      "completedJobs": "Completed Jobs",
+      "servicesOffered": "Services Offered",
+      "avgPrice": "Avg. Price",
+      "servicesPricing": "Services & Pricing",
+      "allPricesInTZS": "All prices in TZS",
+      "noServices": "No services listed yet.",
+      "localFallback": "Local",
+      "features": {
+        "transparentPricing": { "title": "Transparent Pricing", "hint": "No hidden charges" },
+        "realReviewsCount_one": "{{formatted}} Real Review",
+        "realReviewsCount_other": "{{formatted}} Real Reviews",
+        "realReviews": { "hint": "From real customers" },
+        "coverageTitle": "{{city}} Coverage",
+        "coverage": { "hint": "Local expert near you" },
+        "securePayments": { "title": "Secure Payments", "hint": "Processed safely" }
+      },
+      "saved": "Saved",
+      "save": "Save",
+      "messageUnavailable": "Direct messaging opens once you have an active booking with this provider.",
+      "messageProvider": "Message Provider"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "Bookmarks",
+    "subtitle": "Your saved, favorite providers",
+    "empty": {
+      "title": "No bookmarks yet",
+      "description": "Save providers you like from their profile, and they'll show up here for quick access later.",
+      "action": "Browse Providers"
+    },
+    "remove": "Remove"
+  },
+  "search": {
+    "pageTitle": "Search",
+    "subtitle": "Find a service across our real catalog",
+    "placeholder": "Search services, e.g. Plumbing, Cleaning, AC repair...",
+    "searchButton": "Search",
+    "prompt": "Type a keyword and press Enter or Search.",
+    "empty": {
+      "title": "No results found",
+      "description": "Nothing matched \"{{query}}\". Try a different keyword."
+    },
+    "resultsCount_one": "{{count}} result for \"{{query}}\"",
+    "resultsCount_other": "{{count}} results for \"{{query}}\""
+  }
+}

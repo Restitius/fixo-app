@@ -1,0 +1,208 @@
+{
+  "loading": "جارٍ التحميل…",
+  "bookings": {
+    "pageTitle": "حجوزاتي",
+    "pageSubtitle": "تابع مواعيدك وسجل الخدمات الخاص بك",
+    "tabs": {
+      "upcoming": "القادمة",
+      "completed": "المكتملة",
+      "cancelled": "الملغاة"
+    },
+    "stats": {
+      "upcomingBookings": "الحجوزات القادمة",
+      "upcomingBookingsHint": "مجدولة",
+      "completedThisMonth": "المكتملة هذا الشهر",
+      "completedThisMonthHint": "هذا الشهر الميلادي",
+      "pendingPayments": "المدفوعات المعلّقة",
+      "pendingPaymentsHint": "بانتظار التفويض",
+      "totalSpent": "إجمالي المصروف",
+      "totalSpentHint": "طوال الوقت"
+    },
+    "searchPlaceholder": "ابحث في الحجوزات...",
+    "statusPlaceholder": "الحالة",
+    "allStatuses": "كل الحالات",
+    "servicePlaceholder": "الخدمة",
+    "allServices": "كل الخدمات",
+    "emptyUpcoming": {
+      "title": "لا توجد حجوزات قادمة",
+      "description": "ليس لديك أي مواعيد مجدولة بعد. احجز خدمة لتظهر هنا.",
+      "actionLabel": "احجز خدمة"
+    },
+    "emptyCompleted": {
+      "title": "لا توجد حجوزات مكتملة بعد",
+      "description": "الأعمال المحددة كمنتهية ستظهر هنا.",
+      "actionLabel": "تصفح الخدمات"
+    },
+    "emptyCancelled": {
+      "title": "لا توجد حجوزات ملغاة",
+      "description": "الحجوزات التي تلغيها ستظهر هنا لسجلاتك.",
+      "actionLabel": "عرض القادمة"
+    },
+    "emptyFiltered": {
+      "title": "لا توجد حجوزات مطابقة",
+      "description": "حاول تعديل بحثك أو عوامل التصفية للعثور على ما تبحث عنه.",
+      "actionLabel": "مسح عوامل التصفية"
+    },
+    "columns": {
+      "service": "الخدمة",
+      "bookingId": "رقم الحجز",
+      "schedule": "الموعد",
+      "provider": "مزود الخدمة",
+      "status": "الحالة",
+      "amount": "المبلغ"
+    },
+    "serviceFallback": "خدمة",
+    "itemLabel": "حجوزات"
+  },
+  "calendar": {
+    "pageTitle": "التقويم",
+    "pageSubtitle": "حجوزاتك، مرتبة حسب التاريخ",
+    "myBookings": "حجوزاتي",
+    "noBookingsThisDay": "لا توجد حجوزات في هذا اليوم.",
+    "serviceFallback": "خدمة",
+    "footerHint": "التواريخ التي تحمل نقطة أرجوانية تحتوي على حجز حقيقي واحد على الأقل."
+  },
+  "inbox": {
+    "pageTitle": "صندوق الوارد",
+    "pageSubtitle": "راسل مزودي الخدمة في حجوزاتك",
+    "emptyTitle": "لا توجد محادثات بعد",
+    "emptyDescription": "بمجرد تعيين مزود خدمة لأحد حجوزاتك، يمكنك مراسلته من هنا.",
+    "browseServices": "تصفح الخدمات",
+    "serviceFallback": "خدمة",
+    "noMessagesYet": "لا توجد رسائل بعد — قل مرحبًا!",
+    "messagePlaceholder": "رسالة..."
+  },
+  "history": {
+    "pageTitle": "السجل",
+    "pageSubtitle": "كل ما حدث في حسابك، في مكان واحد",
+    "viewing": "عرض",
+    "detailSheetTitle": "تفاصيل السجل",
+    "categories": {
+      "bookings": "الحجوزات",
+      "payments": "المدفوعات",
+      "wallet": "المحفظة",
+      "loyalty": "الولاء",
+      "invoices": "الفواتير"
+    },
+    "bookingsSection": {
+      "totalBookings": "إجمالي الحجوزات",
+      "totalBookingsHint": "طوال الوقت",
+      "paidJobs": "الأعمال المدفوعة",
+      "paidJobsHint": "مكتملة",
+      "cancelled": "ملغاة",
+      "cancelledHint": "طوال الوقت",
+      "totalCharged": "إجمالي المبلغ المحصّل",
+      "totalChargedHint": "طوال الوقت",
+      "pendingAuthorizations": "تفويضات معلّقة",
+      "pendingAuthorizationsHint": "بانتظار التحصيل",
+      "fullyPaid": "مدفوعة بالكامل",
+      "fullyPaidHint": "مكتملة",
+      "searchBookings": "ابحث في الحجوزات...",
+      "searchCharges": "ابحث في المدفوعات...",
+      "statusPlaceholder": "الحالة",
+      "allStatuses": "كل الحالات",
+      "statusPaid": "مدفوعة",
+      "statusClosed": "مغلقة",
+      "statusCancelled": "ملغاة",
+      "statusAuthorized": "مفوّضة",
+      "emptyMatchingTitle": "لا توجد نتائج مطابقة",
+      "emptyMatchingDescription": "حاول تعديل بحثك أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "noBookingsTitle": "لا توجد حجوزات بعد",
+      "noBookingsDescription": "الأعمال المكتملة والمدفوعة ستظهر هنا.",
+      "noChargesTitle": "لا توجد مدفوعات بعد",
+      "noChargesDescription": "المدفوعات المرتبطة بحجوزاتك ستظهر هنا.",
+      "browseServices": "تصفح الخدمات",
+      "columns": {
+        "service": "الخدمة",
+        "bookingId": "رقم الحجز",
+        "date": "التاريخ",
+        "provider": "مزود الخدمة",
+        "status": "الحالة",
+        "amount": "المبلغ"
+      },
+      "serviceFallback": "خدمة",
+      "itemLabelBookings": "حجوزات",
+      "itemLabelCharges": "مدفوعات"
+    },
+    "walletSection": {
+      "totalCredited": "إجمالي المضاف",
+      "totalCreditedHint": "طوال الوقت",
+      "totalDebited": "إجمالي المخصوم",
+      "totalDebitedHint": "طوال الوقت",
+      "currentBalance": "الرصيد الحالي",
+      "currentBalanceHint": "الآن",
+      "searchPlaceholder": "ابحث في المعاملات...",
+      "typePlaceholder": "النوع",
+      "allTypes": "كل الأنواع",
+      "credit": "إضافة",
+      "debit": "خصم",
+      "emptyMatchingTitle": "لا توجد معاملات مطابقة",
+      "emptyMatchingDescription": "حاول تعديل بحثك أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "emptyTitle": "لا يوجد نشاط في المحفظة بعد",
+      "emptyDescription": "الإضافات والخصومات والحجوزات المؤقتة ستظهر هنا.",
+      "goToWallet": "الذهاب إلى المحفظة",
+      "columns": {
+        "type": "النوع",
+        "date": "التاريخ",
+        "amount": "المبلغ",
+        "balanceAfter": "الرصيد بعد العملية"
+      },
+      "itemLabel": "معاملات"
+    },
+    "loyaltySection": {
+      "pointsEarned": "النقاط المكتسبة",
+      "pointsEarnedHint": "طوال الوقت",
+      "pointsSpent": "النقاط المستخدمة",
+      "pointsSpentHint": "طوال الوقت",
+      "currentBalance": "الرصيد الحالي",
+      "currentBalanceHint": "الآن",
+      "searchPlaceholder": "ابحث في الأنشطة...",
+      "typePlaceholder": "النوع",
+      "all": "الكل",
+      "earned": "مكتسبة",
+      "spent": "مستخدمة",
+      "emptyMatchingTitle": "لا توجد أنشطة مطابقة",
+      "emptyMatchingDescription": "حاول تعديل بحثك أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "emptyTitle": "لا يوجد نشاط ولاء بعد",
+      "emptyDescription": "احجز خدمة لتبدأ في كسب نقاط الولاء.",
+      "goToLoyalty": "الذهاب إلى الولاء",
+      "columns": {
+        "activity": "النشاط",
+        "date": "التاريخ",
+        "points": "النقاط",
+        "balanceAfter": "الرصيد بعد العملية"
+      },
+      "itemLabel": "سجلات"
+    },
+    "invoicesSection": {
+      "totalInvoices": "إجمالي الفواتير",
+      "totalInvoicesHint": "طوال الوقت",
+      "paid": "مدفوعة",
+      "paidHint": "مكتملة",
+      "outstanding": "مستحقة",
+      "outstandingHint": "بانتظار الدفع",
+      "searchPlaceholder": "ابحث في الفواتير...",
+      "statusPlaceholder": "الحالة",
+      "allStatuses": "كل الحالات",
+      "issued": "صادرة",
+      "paidStatus": "مدفوعة",
+      "emptyMatchingTitle": "لا توجد فواتير مطابقة",
+      "emptyMatchingDescription": "حاول تعديل بحثك أو عوامل التصفية.",
+      "clearFilters": "مسح عوامل التصفية",
+      "emptyTitle": "لا توجد فواتير بعد",
+      "emptyDescription": "تصدر الفاتورة بمجرد اكتمال الحجز وتأكيده.",
+      "goToInvoices": "الذهاب إلى الفواتير",
+      "columns": {
+        "invoiceNumber": "رقم الفاتورة",
+        "booking": "الحجز",
+        "date": "التاريخ",
+        "status": "الحالة",
+        "amount": "المبلغ"
+      },
+      "itemLabel": "فواتير"
+    }
+  }
+}
