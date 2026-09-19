@@ -1,0 +1,1 @@
+"""Integration adapters — implement business ports via IntegrationManager INT-* IDs."""

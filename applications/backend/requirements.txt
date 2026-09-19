@@ -1,0 +1,47 @@
+# =============================================================================
+# FIXO-APP dependencies
+# Sections mirror the architecture layers; trim drivers you do not deploy.
+# =============================================================================
+
+# --- Web core ---------------------------------------------------------------
+fastapi==0.115.*
+uvicorn[standard]==0.32.*
+pydantic==2.9.*
+pydantic-settings==2.6.*
+email-validator==2.2.*
+python-multipart==0.0.17
+
+# --- Configuration / data formats ---------------------------------------------
+PyYAML==6.0.*
+
+# --- Database layer (section 14-15) ---------------------------------------------
+SQLAlchemy==2.0.*
+alembic==1.14.*
+asyncpg==0.30.*          # PostgreSQL driver
+aiomysql==0.2.*          # MySQL driver
+oracledb==2.5.*          # Oracle thin driver (LEGACY_ORACLE)
+aiosqlite==0.20.*        # SQLite driver (development/tests)
+
+# --- Cache / queues / brokers -----------------------------------------------------
+redis==5.2.*
+celery==5.4.*
+aiokafka==0.12.*
+aio-pika==9.5.*
+
+# --- Outbound HTTP ------------------------------------------------------------------
+httpx==0.28.*
+
+# --- Security --------------------------------------------------------------------------
+PyJWT==2.10.*
+passlib[bcrypt]==1.7.*
+cryptography==43.*
+
+# --- Observability ------------------------------------------------------------------------
+prometheus-client==0.21.*
+
+# --- Development / testing ------------------------------------------------------------------
+pytest==8.3.*
+pytest-asyncio==0.24.*
+httpx>=0.27                  # test client transport
+ruff==0.8.*
+mypy==1.13.*

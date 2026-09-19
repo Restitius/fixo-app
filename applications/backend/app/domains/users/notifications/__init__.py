@@ -1,0 +1,1 @@
+"""Users notification definitions."""

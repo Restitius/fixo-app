@@ -1,0 +1,1 @@
+"""Persistence adapters — implement ports with governed SQL via SQLQueryManager."""

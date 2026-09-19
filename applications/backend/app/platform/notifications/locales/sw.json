@@ -1,0 +1,30 @@
+{
+  "NTF.BOOKING.CONFIRMED.V1": {
+    "customer": {"title": "Uwekaji nafasi umethibitishwa", "body": "{booking_number} — mtoa huduma wako ameshapangiwa."},
+    "assigned_provider": {"title": "Umepangiwa kazi mpya", "body": "Umepangiwa kazi ya {booking_number}."}
+  },
+  "NTF.PAYMENT.AUTHORIZED.V1": {
+    "customer": {"title": "Malipo yameidhinishwa", "body": "{booking_number} — fedha zimehifadhiwa kwa ajili ya kazi hii."}
+  },
+  "NTF.BOOKING.ON_THE_WAY.V1": {
+    "customer": {"title": "Mtoa huduma wako yuko njiani", "body": "Uwekaji nafasi {booking_number}"}
+  },
+  "NTF.BOOKING.ARRIVED.V1": {
+    "customer": {"title": "Mtoa huduma wako amefika", "body": "Uwekaji nafasi {booking_number}"}
+  },
+  "NTF.SERVICE.COMPLETION_REQUESTED.V1": {
+    "customer": {"title": "Mtoa huduma amemaliza kazi", "body": "{booking_number} — tafadhali kagua na uthibitishe kukamilika."}
+  },
+  "NTF.SERVICE.COMPLETED.V1": {
+    "customer": {"title": "Huduma imekamilika", "body": "{booking_number} — asante kwa kuthibitisha."}
+  },
+  "NTF.PAYMENT.CAPTURED.V1": {
+    "customer": {"title": "Malipo yamepokelewa", "body": "{booking_number} — fedha zimekamilika."}
+  },
+  "NTF.INVOICE.ISSUED.V1": {
+    "customer": {"title": "Ankara {invoice_number}", "body": "{total_amount} {currency} inadaiwa."}
+  },
+  "NTF.MAINTENANCE.OVERDUE.V1": {
+    "customer": {"title": "Matengenezo yamechelewa", "body": "Mpango {plan_number} umepitisha tarehe yake ya mwisho."}
+  }
+}

@@ -1,0 +1,4 @@
+-- PROV.ACCOUNT.CLOSURE.SCHEDULE
+-- Uses SP_DELETE_PROVIDER_ACCOUNT (inserts PROVIDER_ACCOUNT_CLOSURES + soft-deletes provider)
+SELECT * FROM SP_DELETE_PROVIDER_ACCOUNT(CAST(:user_id AS uuid))
+  AS t(closed, reversible);

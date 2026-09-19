@@ -1,0 +1,10 @@
+"""Placeholder tests for authentication unit (implementation phase fills these)."""
+from __future__ import annotations
+
+import pytest
+
+pytestmark = pytest.mark.skip(reason="scaffold - implement with the authentication unit feature work")
+
+
+def test_placeholder() -> None:
+    assert True
