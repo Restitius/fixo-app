@@ -1303,3 +1303,51 @@ export const businessCustomersApi = {
     apiClient.patch<BusinessCustomer>(`/providers/me/business-customers/${recordId}`, data).then((r) => r.data),
   deactivate: (recordId: string) => apiClient.post<BusinessCustomer>(`/providers/me/business-customers/${recordId}/deactivate`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Support — real /providers/me/support/* (support_router.py): tickets + a
+// message sub-thread. Wrapped in the standard envelope. list_tickets/
+// list_messages return bare arrays directly (confirmed against
+// provider_support_service.py — NOT {tickets:[...]}/{messages:[...]}
+// wrappers, unlike other paginated endpoints; this was a real bug caught
+// live wiring web-provider). No ticket-close endpoint on the provider
+// side; messages just get rejected (409) once CLOSED.
+// ---------------------------------------------------------------------------
+
+export type TicketCategory = "GENERAL" | "BILLING" | "ACCOUNT" | "TECHNICAL" | "BOOKING" | "PAYOUT" | "OTHER";
+export type TicketPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
+export interface SupportTicket {
+  ticket_id: string;
+  ticket_number: string;
+  subject: string;
+  category: TicketCategory;
+  priority: TicketPriority;
+  status: string;
+  resolution?: string | null;
+  created_at: string;
+  updated_at: string;
+  message_count?: number;
+  first_response_at?: string | null;
+  last_support_message_at?: string | null;
+}
+
+export interface SupportMessage {
+  message_id: string;
+  ticket_id?: string;
+  sender: "PROVIDER" | "SUPPORT";
+  body: string;
+  created_at: string;
+}
+
+export const supportApi = {
+  createTicket: (data: { subject: string; category?: TicketCategory | undefined; priority?: TicketPriority | undefined }) =>
+    apiClient.post<SupportTicket>("/providers/me/support/tickets", data).then((r) => r.data),
+  listTickets: (limit = 20, offset = 0) =>
+    apiClient.get<SupportTicket[]>(`/providers/me/support/tickets${qs({ limit, offset })}`).then((r) => r.data),
+  getTicket: (ticketId: string) => apiClient.get<SupportTicket>(`/providers/me/support/tickets/${ticketId}`).then((r) => r.data),
+  addMessage: (ticketId: string, body: string) =>
+    apiClient.post<SupportMessage>(`/providers/me/support/tickets/${ticketId}/messages`, { body }).then((r) => r.data),
+  listMessages: (ticketId: string, limit = 100, offset = 0) =>
+    apiClient.get<SupportMessage[]>(`/providers/me/support/tickets/${ticketId}/messages${qs({ limit, offset })}`).then((r) => r.data),
+};
