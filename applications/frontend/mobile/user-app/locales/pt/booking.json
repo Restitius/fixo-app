@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "Escolha um Serviço",
+    "details": "Detalhes da Reserva",
+    "address": "Seu Endereço",
+    "review": "Resumo da Revisão",
+    "provider": "Escolha um Prestador",
+    "payment": "Pagamento",
+    "pin": "Confirmar Pagamento"
+  },
+  "service": {
+    "realServicesBy": "Serviços reais oferecidos por {{name}}.",
+    "noServices": "Este prestador ainda não tem serviços listados.",
+    "continue": "Continuar"
+  },
+  "details": {
+    "describeJob": "Descreva o serviço",
+    "placeholder": "O que você precisa fazer? (mín. 10 caracteres)",
+    "minChars": "{{count}}/10 caracteres mín.",
+    "preferredDate": "Data Preferida",
+    "preferredTime": "Horário Preferido",
+    "continue": "Continuar",
+    "weekdayMo": "Seg",
+    "weekdayTu": "Ter",
+    "weekdayWe": "Qua",
+    "weekdayTh": "Qui",
+    "weekdayFr": "Sex",
+    "weekdaySa": "Sáb",
+    "weekdaySu": "Dom",
+    "morning": "Manhã",
+    "morningHint": "8h – 12h",
+    "afternoon": "Tarde",
+    "afternoonHint": "12h – 17h",
+    "evening": "Noite",
+    "eveningHint": "17h – 21h",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "Adicionar novo endereço",
+    "labelPlaceholder": "Rótulo (ex. Casa)",
+    "recipientPlaceholder": "Nome do destinatário",
+    "phonePlaceholder": "Telefone",
+    "streetPlaceholder": "Endereço",
+    "cityPlaceholder": "Cidade",
+    "regionPlaceholder": "Região (opcional)",
+    "saveAddress": "Salvar endereço",
+    "cancel": "Cancelar",
+    "continue": "Continuar"
+  },
+  "review": {
+    "labelService": "Serviço",
+    "labelProvider": "Prestador",
+    "labelDate": "Data",
+    "labelTime": "Horário",
+    "labelAddress": "Endereço",
+    "notSet": "Não definido",
+    "promoCode": "Código Promocional",
+    "promoPlaceholder": "Digite o código",
+    "apply": "Aplicar",
+    "promoInvalid": "Este código não é válido ou expirou",
+    "promo": "Promoção",
+    "total": "Total",
+    "submitRequest": "Enviar Solicitação",
+    "genericError": "Não foi possível enviar esta solicitação"
+  },
+  "provider": {
+    "finding": "Buscando os melhores profissionais perto de você…",
+    "noneAvailableTitle": "Nenhum prestador disponível no momento",
+    "noneAvailableSubtitle": "Tente novamente em breve ou confira Minhas Reservas mais tarde.",
+    "errorTitle": "Algo deu errado",
+    "retry": "Tentar Novamente",
+    "noQuotesTitle": "Ainda não há orçamentos instantâneos",
+    "noQuotesSubtitle": "Os prestadores correspondentes ainda não enviaram um orçamento. Confira Minhas Reservas em breve.",
+    "notMatchedNotice": "{{name}} não foi correspondido para esta solicitação — aqui estão seus prestadores correspondentes.",
+    "leadTime": "{{rating}} · prazo de {{days}}d",
+    "confirming": "Confirmando…",
+    "acceptAndContinue": "Aceitar e Continuar"
+  },
+  "payment": {
+    "booking": "Reserva",
+    "amountDue": "Valor Devido",
+    "yourMethods": "Seus métodos de pagamento",
+    "wallet": "Carteira FIXO",
+    "default": "Padrão",
+    "authorizeNotice": "Autorizar executa o processo real de autorização de pagamento para esta reserva.",
+    "authorizePayment": "Autorizar Pagamento"
+  },
+  "pin": {
+    "enterToConfirm": "Digite seu PIN para confirmar",
+    "continue": "Continuar"
+  },
+  "success": {
+    "title": "Reserva Realizada!",
+    "body": "Seu pagamento foi autorizado e a reserva está confirmada.",
+    "viewReceipt": "Ver Recibo Eletrônico",
+    "backToBookings": "Voltar às Reservas"
+  },
+  "receipt": {
+    "title": "Recibo Eletrônico",
+    "share": "Compartilhar Recibo",
+    "download": "Baixar Recibo",
+    "print": "Imprimir",
+    "labelService": "Serviço",
+    "labelProvider": "Prestador",
+    "labelDate": "Data",
+    "labelTime": "Horário",
+    "labelAddress": "Endereço",
+    "amount": "Valor",
+    "arrivalCode": "Código de Chegada",
+    "paymentId": "ID do Pagamento",
+    "status": "Status",
+    "serviceFallback": "Serviço"
+  },
+  "cancel": {
+    "title": "Cancelar Reserva",
+    "confirmTitle": "Confirmar Cancelamento",
+    "whyCancelling": "Por que você está cancelando?",
+    "reasonChangeOfPlans": "Mudança de planos",
+    "reasonBetterPrice": "Encontrei um preço melhor",
+    "reasonMistake": "Reservado por engano",
+    "reasonUnavailable": "Prestador indisponível",
+    "reasonOther": "Outro",
+    "continue": "Continuar",
+    "cancelling": "Cancelando sua reserva…",
+    "enterPinToConfirm": "Digite seu PIN para confirmar o cancelamento",
+    "genericError": "Não foi possível cancelar esta reserva — o prazo de cancelamento pode já ter passado.",
+    "cancelledTitle": "Reserva Cancelada",
+    "cancelledBody": "Sua reserva com {{provider}} foi cancelada.",
+    "cancelledBodyRelease": " Sua autorização de {{amount}} será liberada.",
+    "providerFallback": "o prestador",
+    "backToBookings": "Voltar às Reservas"
+  }
+}

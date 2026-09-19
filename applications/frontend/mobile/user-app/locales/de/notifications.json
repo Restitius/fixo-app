@@ -1,0 +1,69 @@
+{
+  "loading": "Wird geladen…",
+  "page": {
+    "title": "Benachrichtigungen",
+    "subtitle": "Updates, Erinnerungen und Hinweise"
+  },
+  "tabs": {
+    "all": "Alle",
+    "unread": "Ungelesen",
+    "bookings": "Buchungen",
+    "payments": "Zahlungen"
+  },
+  "metrics": {
+    "totalNotifications": "Benachrichtigungen Gesamt",
+    "thisMonth": "Diesen Monat",
+    "unread": "Ungelesen",
+    "needsAttention": "Erfordert Aufmerksamkeit",
+    "bookingUpdates": "Buchungsaktualisierungen",
+    "serviceProgress": "Fortschritt der Dienstleistung",
+    "paymentAlerts": "Zahlungswarnungen",
+    "recentBilling": "Aktuelle Abrechnung"
+  },
+  "list": {
+    "heading": "Aktuelle Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "markedAsRead_one": "{{count}} Benachrichtigung als gelesen markiert",
+    "markedAsRead_other": "{{count}} Benachrichtigungen als gelesen markiert",
+    "noMatching": "Keine passenden Benachrichtigungen",
+    "tryDifferentTab": "Versuche einen anderen Tab.",
+    "showAll": "Alle anzeigen",
+    "allCaughtUp": "Du bist auf dem neuesten Stand",
+    "noNotificationsYet": "Hier gibt es noch keine Benachrichtigungen — Updates und Erinnerungen erscheinen, sobald sie eintreffen.",
+    "new": "Neu",
+    "paid": "Bezahlt"
+  },
+  "detail": {
+    "notificationType": "Benachrichtigungstyp",
+    "bookingReference": "Buchungsreferenz",
+    "provider": "Anbieter",
+    "service": "Dienstleistung",
+    "scheduledVisit": "Geplanter Besuch",
+    "location": "Standort",
+    "relatedAmount": "Zugehöriger Betrag",
+    "paymentMethod": "Zahlungsmethode",
+    "invoiceReference": "Rechnungsreferenz",
+    "reference": "Referenz"
+  },
+  "panel": {
+    "title": "Benachrichtigungsdetails",
+    "whatHappened": "Was ist passiert",
+    "recordedNote": "Dieses Update wurde in deiner Buchung erfasst.",
+    "downloadInvoice": "Rechnung herunterladen",
+    "findInvoiceToast": "Finde die passende Rechnung auf der Rechnungen-Seite.",
+    "contactSupport": "Support kontaktieren",
+    "done": "Fertig"
+  },
+  "dialog": {
+    "title": "Benachrichtigungsdetails",
+    "subtitle": "Sieh dir das vollständige Update an und handle entsprechend",
+    "bookingLabel": "Buchung {{number}}",
+    "message": "Nachricht",
+    "noDetails": "Keine zusätzlichen Details für diese Benachrichtigung.",
+    "respondNote": "Du kannst direkt von deiner Buchungsseite aus auf dieses Update antworten.",
+    "close": "Schließen",
+    "markAsRead": "Als gelesen markieren",
+    "viewBooking": "Buchung ansehen",
+    "findBookingToast": "Finde die Buchung {{number}} in deiner Buchungsliste."
+  }
+}

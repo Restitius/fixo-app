@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "Choose a Service",
+    "details": "Booking Details",
+    "address": "Your Address",
+    "review": "Review Summary",
+    "provider": "Choose a Provider",
+    "payment": "Payment",
+    "pin": "Confirm Payment"
+  },
+  "service": {
+    "realServicesBy": "Real services offered by {{name}}.",
+    "noServices": "This provider has no services listed yet.",
+    "continue": "Continue"
+  },
+  "details": {
+    "describeJob": "Describe the job",
+    "placeholder": "What do you need done? (min. 10 characters)",
+    "minChars": "{{count}}/10 min characters",
+    "preferredDate": "Preferred Date",
+    "preferredTime": "Preferred Time",
+    "continue": "Continue",
+    "weekdayMo": "Mo",
+    "weekdayTu": "Tu",
+    "weekdayWe": "We",
+    "weekdayTh": "Th",
+    "weekdayFr": "Fr",
+    "weekdaySa": "Sa",
+    "weekdaySu": "Su",
+    "morning": "Morning",
+    "morningHint": "8am – 12pm",
+    "afternoon": "Afternoon",
+    "afternoonHint": "12pm – 5pm",
+    "evening": "Evening",
+    "eveningHint": "5pm – 9pm",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "Add a new address",
+    "labelPlaceholder": "Label (e.g. Home)",
+    "recipientPlaceholder": "Recipient name",
+    "phonePlaceholder": "Phone",
+    "streetPlaceholder": "Street address",
+    "cityPlaceholder": "City",
+    "regionPlaceholder": "Region (optional)",
+    "saveAddress": "Save address",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  },
+  "review": {
+    "labelService": "Service",
+    "labelProvider": "Provider",
+    "labelDate": "Date",
+    "labelTime": "Time",
+    "labelAddress": "Address",
+    "notSet": "Not set",
+    "promoCode": "Promo Code",
+    "promoPlaceholder": "Enter code",
+    "apply": "Apply",
+    "promoInvalid": "This code is not valid or has expired",
+    "promo": "Promo",
+    "total": "Total",
+    "submitRequest": "Submit Request",
+    "genericError": "Could not submit this request"
+  },
+  "provider": {
+    "finding": "Finding the best-rated pros near you…",
+    "noneAvailableTitle": "No providers available right now",
+    "noneAvailableSubtitle": "Try again shortly, or check My Bookings later.",
+    "errorTitle": "Something went wrong",
+    "retry": "Retry",
+    "noQuotesTitle": "No instant quotes yet",
+    "noQuotesSubtitle": "Matched providers haven't sent an estimate yet. Check My Bookings shortly.",
+    "notMatchedNotice": "{{name}} wasn't matched for this request — here are your matched providers instead.",
+    "leadTime": "{{rating}} · {{days}}d lead time",
+    "confirming": "Confirming…",
+    "acceptAndContinue": "Accept & Continue"
+  },
+  "payment": {
+    "booking": "Booking",
+    "amountDue": "Amount Due",
+    "yourMethods": "Your payment methods",
+    "wallet": "FIXO Wallet",
+    "default": "Default",
+    "authorizeNotice": "Authorizing runs the real payment-authorization workflow against this booking.",
+    "authorizePayment": "Authorize Payment"
+  },
+  "pin": {
+    "enterToConfirm": "Enter your PIN to confirm",
+    "continue": "Continue"
+  },
+  "success": {
+    "title": "Booking Successful!",
+    "body": "Your payment was authorized and the booking is confirmed.",
+    "viewReceipt": "View E-Receipt",
+    "backToBookings": "Back to Bookings"
+  },
+  "receipt": {
+    "title": "E-Receipt",
+    "share": "Share E-Receipt",
+    "download": "Download E-Receipt",
+    "print": "Print",
+    "labelService": "Service",
+    "labelProvider": "Provider",
+    "labelDate": "Date",
+    "labelTime": "Time",
+    "labelAddress": "Address",
+    "amount": "Amount",
+    "arrivalCode": "Arrival Code",
+    "paymentId": "Payment ID",
+    "status": "Status",
+    "serviceFallback": "Service"
+  },
+  "cancel": {
+    "title": "Cancel Booking",
+    "confirmTitle": "Confirm Cancellation",
+    "whyCancelling": "Why are you cancelling?",
+    "reasonChangeOfPlans": "Change of plans",
+    "reasonBetterPrice": "Found a better price",
+    "reasonMistake": "Booked by mistake",
+    "reasonUnavailable": "Provider unavailable",
+    "reasonOther": "Other",
+    "continue": "Continue",
+    "cancelling": "Cancelling your booking…",
+    "enterPinToConfirm": "Enter your PIN to confirm cancellation",
+    "genericError": "Could not cancel this booking — it may already be past cancellation.",
+    "cancelledTitle": "Booking Cancelled",
+    "cancelledBody": "Your booking with {{provider}} has been cancelled.",
+    "cancelledBodyRelease": " Your {{amount}} authorization will be released.",
+    "providerFallback": "the provider",
+    "backToBookings": "Back to Bookings"
+  }
+}

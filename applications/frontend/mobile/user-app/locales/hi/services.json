@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "सभी सेवाएं"
+  },
+  "category": {
+    "titleFallback": "सेवाएं",
+    "noProviders": "अभी तक कोई प्रदाता उपलब्ध नहीं है।"
+  },
+  "detail": {
+    "reviewsCount": "({{count}} समीक्षाएं)",
+    "activeSince": "इससे सक्रिय",
+    "jobsDone": "पूर्ण किए गए कार्य",
+    "services": "सेवाएं",
+    "about": "के बारे में",
+    "readMore": "और पढ़ें...",
+    "servicesPricing": "सेवाएं और मूल्य",
+    "noServices": "अभी तक कोई सेवा सूचीबद्ध नहीं है।",
+    "bookNow": "अभी बुक करें"
+  },
+  "chat": {
+    "providerFallback": "प्रदाता",
+    "loading": "लोड हो रहा है…",
+    "noMessages": "अभी तक कोई संदेश नहीं — नमस्ते कहें!",
+    "placeholder": "संदेश..."
+  }
+}
