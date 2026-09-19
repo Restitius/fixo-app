@@ -1,15 +1,18 @@
-import { useState } from "react";
+// Job calendar — wired to the real /providers/me/calendar/* endpoints.
+// Event shape (source/event_id/title/start_at/end_at/status) read
+// directly from provider_calendar_service.py's governed SQL this session.
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
 import { StatusPill } from "@/components/dashboard/StatusPill";
-import { fmtMoney } from "@/lib/format";
-import { availability, bookings } from "@/lib/mock-data";
+import { availabilityApi, calendarApi, type CalendarEvent, type WorkingHoursRow } from "@/lib/api-client";
 
 const title = "Job Calendar — FIXO Provider";
-const description = "Week and month view of confirmed jobs, blocked time and working hours.";
+const description = "Month view of confirmed jobs, blocked time and working hours.";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({
@@ -24,105 +27,106 @@ export const Route = createFileRoute("/calendar")({
   component: CalendarPage,
 });
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const weekDates = ["2026-08-31", "2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06"];
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 function CalendarPage() {
-  const [view, setView] = useState<"WEEK" | "MONTH">("WEEK");
+  const now = new Date();
+  const [year] = useState(now.getFullYear());
+  const [month] = useState(now.getMonth() + 1);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [agenda, setAgenda] = useState<CalendarEvent[]>([]);
+  const [hours, setHours] = useState<WorkingHoursRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const todayIso = now.toISOString().slice(0, 10);
+    Promise.all([
+      calendarApi.month(year, month),
+      calendarApi.agenda(todayIso, 4),
+      availabilityApi.listHours(),
+    ])
+      .then(([ev, ag, hrs]) => {
+        setEvents(ev);
+        setAgenda(ag);
+        setHours(hrs);
+      })
+      .catch((err) => toast.error(err instanceof Error ? err.message : "Could not load the calendar."))
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year, month]);
+
+  const eventsByDate = new Map<string, CalendarEvent[]>();
+  for (const e of events) {
+    const day = e.start_at.slice(0, 10);
+    eventsByDate.set(day, [...(eventsByDate.get(day) ?? []), e]);
+  }
+
+  if (loading) {
+    return (
+      <ProviderPage title="Calendar" subtitle="Your scheduled jobs, blocked slots and working hours.">
+        <div className="flex h-64 items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-primary" />
+        </div>
+      </ProviderPage>
+    );
+  }
+
+  const firstOfMonth = new Date(year, month - 1, 1);
+  const startWeekday = (firstOfMonth.getDay() + 6) % 7; // 0=Monday
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const monthLabel = firstOfMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
   return (
     <ProviderPage title="Calendar" subtitle="Your scheduled jobs, blocked slots and working hours.">
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <button className="flex size-10 items-center justify-center rounded-xl bg-card shadow-[var(--shadow-xs)] hover:bg-muted">
-            <ChevronLeft className="size-4" />
-          </button>
-          <span className="text-sm font-semibold">31 Aug – 6 Sep 2026</span>
-          <button className="flex size-10 items-center justify-center rounded-xl bg-card shadow-[var(--shadow-xs)] hover:bg-muted">
-            <ChevronRight className="size-4" />
-          </button>
-        </div>
-        <div className="flex rounded-xl bg-card p-1 shadow-[var(--shadow-xs)]">
-          {(["WEEK", "MONTH"] as const).map((v) => (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-                view === v ? "text-primary-foreground" : "text-muted-foreground hover:bg-muted"
-              }`}
-              style={view === v ? { backgroundImage: "var(--gradient-primary)" } : undefined}
-            >
-              {v === "WEEK" ? "Week" : "Month"}
-            </button>
-          ))}
-        </div>
+      <div className="mt-6 flex items-center gap-3">
+        <span className="text-sm font-semibold">{monthLabel}</span>
       </div>
 
       <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-[1fr_300px]">
-        {view === "WEEK" ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-7">
-            {weekDates.map((d, i) => {
-              const dayBookings = bookings.filter((b) => b.date === d);
+        <div className="rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
+          <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {DAY_LABELS.map((d) => (
+              <span key={d} className="py-2">
+                {d}
+              </span>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-1">
+            {Array.from({ length: startWeekday }, (_, i) => (
+              <div key={`pad-${i}`} />
+            ))}
+            {Array.from({ length: daysInMonth }, (_, i) => {
+              const day = i + 1;
+              const iso = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+              const dayEvents = eventsByDate.get(iso) ?? [];
               return (
-                <div key={d} className="min-h-44 rounded-2xl bg-card p-3 shadow-[var(--shadow-card)]">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{days[i]}</p>
-                  <p className="text-lg font-bold">{d.slice(8)}</p>
-                  <div className="mt-2 space-y-2">
-                    {dayBookings.map((b) => (
-                      <div key={b.id} className="rounded-xl bg-primary/10 p-2">
-                        <p className="text-xs font-bold text-primary">{b.time}</p>
-                        <p className="truncate text-xs font-medium">{b.service}</p>
-                        <p className="truncate text-[11px] text-muted-foreground">{b.customer}</p>
-                      </div>
-                    ))}
-                    {dayBookings.length === 0 && <p className="text-xs text-muted-foreground">No jobs</p>}
-                  </div>
+                <div
+                  key={day}
+                  className={`flex aspect-square flex-col items-center justify-center rounded-xl text-sm ${
+                    dayEvents.length ? "bg-primary/10 font-semibold text-primary" : "hover:bg-muted"
+                  }`}
+                  title={dayEvents.map((e) => e.title).join(", ")}
+                >
+                  {day}
+                  {dayEvents.length > 0 && <span className="mt-0.5 size-1.5 rounded-full bg-primary" />}
                 </div>
               );
             })}
           </div>
-        ) : (
-          <div className="rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
-            <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {days.map((d) => (
-                <span key={d} className="py-2">
-                  {d}
-                </span>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 gap-1">
-              {Array.from({ length: 35 }, (_, i) => {
-                const dayNum = i - 1;
-                const iso = dayNum >= 1 && dayNum <= 30 ? `2026-09-${String(dayNum).padStart(2, "0")}` : "";
-                const count = bookings.filter((b) => b.date === iso).length;
-                return (
-                  <div
-                    key={i}
-                    className={`flex aspect-square flex-col items-center justify-center rounded-xl text-sm ${
-                      dayNum < 1 || dayNum > 30 ? "text-muted-foreground/30" : count ? "bg-primary/10 font-semibold text-primary" : "hover:bg-muted"
-                    }`}
-                  >
-                    {dayNum >= 1 && dayNum <= 30 ? dayNum : ""}
-                    {count > 0 && <span className="mt-0.5 size-1.5 rounded-full bg-primary" />}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        </div>
 
         <div className="space-y-4">
           <Panel title="Upcoming">
             <div className="space-y-3">
-              {bookings.slice(0, 4).map((b) => (
-                <div key={b.id} className="rounded-2xl bg-muted/50 p-3">
+              {agenda.length === 0 && <p className="text-sm text-muted-foreground">Nothing scheduled.</p>}
+              {agenda.map((e) => (
+                <div key={e.event_id} className="rounded-2xl bg-muted/50 p-3">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-sm font-semibold">{b.service}</p>
-                    <StatusPill status={b.stage} />
+                    <p className="truncate text-sm font-semibold">{e.title}</p>
+                    <StatusPill status={e.status} />
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {b.date} · {b.time} · {fmtMoney(b.price)}
-                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">{e.start_at.replace("T", " ").slice(0, 16)}</p>
                 </div>
               ))}
             </div>
@@ -130,16 +134,16 @@ function CalendarPage() {
 
           <Panel title="Working hours">
             <ul className="space-y-2 text-sm">
-              {availability.map((d) => (
-                <li key={d.day} className="flex items-center justify-between">
-                  <span className="text-muted-foreground">{d.day}</span>
-                  <span className="font-semibold">{d.available ? `${d.from}–${d.to}` : "Off"}</span>
-                </li>
-              ))}
+              {DAY_NAMES.map((label, i) => {
+                const h = hours.find((x) => x.day_of_week === i);
+                return (
+                  <li key={label} className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{label}</span>
+                    <span className="font-semibold">{h?.is_available ? `${h.start_time}–${h.end_time}` : "Off"}</span>
+                  </li>
+                );
+              })}
             </ul>
-            <button className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card py-2.5 text-sm font-semibold hover:bg-muted">
-              <CalendarDays className="size-4 text-primary" /> Block time off
-            </button>
           </Panel>
         </div>
       </div>
