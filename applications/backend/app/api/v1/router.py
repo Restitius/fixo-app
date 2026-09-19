@@ -42,6 +42,7 @@ from app.api.v1.support import router as support_router  # noqa: E402
 from app.api.v1.system import router as system_router
 from app.api.v1.tracking import router as tracking_router
 from app.api.v1.transactions import router as transactions_router
+from app.api.v1.uploads import router as uploads_router
 from app.api.v1.users import router as users_router
 from app.api.v1.wallet import router as wallet_router
 from app.api.v1.warranties import router as warranties_router
@@ -118,6 +119,7 @@ api_v1_router = APIRouter()
 
 api_v1_router.include_router(system_router)
 api_v1_router.include_router(public_router)
+api_v1_router.include_router(uploads_router)
 api_v1_router.include_router(auth_router)
 api_v1_router.include_router(onboarding_router)
 api_v1_router.include_router(home_router)
