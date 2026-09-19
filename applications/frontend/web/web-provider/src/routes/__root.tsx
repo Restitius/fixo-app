@@ -1,4 +1,4 @@
-// Root layout — provides the mock provider session to the whole app.
+// Root layout — provides the provider session (ProviderAuthProvider) to the whole app.
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -14,6 +14,7 @@ import { Home, RefreshCw, Wrench, HelpCircle } from "lucide-react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ProviderAuthProvider } from "@/lib/provider-auth";
+import { Toaster } from "@/components/ui/sonner";
 
 function ErrorPageChrome({
   code,
@@ -195,6 +196,7 @@ function RootComponent() {
       <ProviderAuthProvider>
         {/* Required: nested routes render here. */}
         <Outlet />
+        <Toaster />
       </ProviderAuthProvider>
     </QueryClientProvider>
   );
