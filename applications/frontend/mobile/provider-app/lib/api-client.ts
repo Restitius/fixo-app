@@ -1129,3 +1129,43 @@ export const kpisApi = {
       .then((r) => r.data.kpis),
   summary: () => apiClient.getRaw<KpiSummary>("/providers/me/kpis/summary").then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Reviews — real /providers/me/ratings/* (ratings_router.py), the actual
+// customer star-rating domain. NOT the same as onboarding's reviews_router.py
+// (job sign-off evidence, unrelated to star ratings — a deceptively similar
+// name for a different backend feature). Read-only: no reply endpoint
+// exists. No joined customer name field either, only a raw customer_id.
+// ---------------------------------------------------------------------------
+
+export interface ProviderReview {
+  id: string;
+  booking_id: string;
+  customer_id: string;
+  rating: number;
+  title: string;
+  body: string;
+  status: "published" | "hidden" | "flagged";
+  created_at: string;
+}
+
+export interface ReviewSummary {
+  total_count: number;
+  average_rating: number;
+  five_star: number;
+  four_star: number;
+  three_star: number;
+  two_star: number;
+  one_star: number;
+  this_month: number;
+}
+
+export const ratingsApi = {
+  list: (minRating?: number, limit = 50, offset = 0) =>
+    apiClient
+      .getRaw<{ reviews: ProviderReview[]; limit: number; offset: number }>(
+        `/providers/me/ratings/${qs({ status: "published", min_rating: minRating, limit, offset })}`,
+      )
+      .then((r) => r.data.reviews),
+  summary: () => apiClient.getRaw<ReviewSummary>("/providers/me/ratings/summary").then((r) => r.data),
+};
