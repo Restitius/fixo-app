@@ -1,6 +1,6 @@
 import Svg, { Circle, Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
 
-type IconProps = { size?: number; color?: string }
+export type IconProps = { size?: number; color?: string }
 type FillableIconProps = IconProps & { filled?: boolean }
 
 export function HomeIcon({ size = 24, color = '#0B111F', filled = false }: FillableIconProps) {
