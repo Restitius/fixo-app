@@ -6,6 +6,7 @@ import { Redirect } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../components/ScreenHeader'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Select from '../components/Select'
 import Sheet from '../components/Sheet'
 import StatusBadge from '../components/StatusBadge'
@@ -165,8 +166,14 @@ function ConfigureForm({ option, onSaved }: { option: CatalogServiceOption; onSa
       <Text className="text-[13px] text-muted mt-0.5">{option.category_name}</Text>
       <View className="mt-4" style={{ gap: 12 }}>
         <Select value={pricingModel} onChange={(v) => setPricingModel(v as typeof pricingModel)} options={['Quoted per job', 'Fixed', 'Hourly']} />
-        {modelCode === 'FIXED' && <TextInput className={fieldCls} placeholder="Minimum charge" keyboardType="numeric" value={minimumCharge} onChangeText={setMinimumCharge} />}
-        <TextInput className={fieldCls} placeholder="Duration in minutes (optional)" keyboardType="numeric" value={durationMinutes} onChangeText={setDurationMinutes} />
+        {modelCode === 'FIXED' && (
+          <Field label="Minimum charge">
+            <TextInput className={fieldCls} keyboardType="numeric" value={minimumCharge} onChangeText={setMinimumCharge} />
+          </Field>
+        )}
+        <Field label="Duration in minutes (optional)">
+          <TextInput className={fieldCls} keyboardType="numeric" value={durationMinutes} onChangeText={setDurationMinutes} />
+        </Field>
       </View>
       {error && (
         <Text className="text-[13px] mt-3" style={{ color: '#DC2626' }}>
