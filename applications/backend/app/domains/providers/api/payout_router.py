@@ -11,6 +11,7 @@ Prefix: /providers/me/payouts
 - GET    /{payout_id}             one payout
 - POST   /{payout_id}/cancel      cancel a REQUESTED payout (release funds)
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -19,6 +20,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_payout_service import (
     ProviderPayoutService,
 )
@@ -50,41 +52,47 @@ class WithdrawBody(BaseModel):
 @router.post("/methods", status_code=201)
 async def add_method(body: AddMethodBody, provider: dict = Depends(get_current_provider)) -> dict[str, Any]:
     svc = _service()
-    return await svc.add_method(
-        str(provider["provider_id"]),
-        method_type=body.method_type,
-        provider_name=body.provider_name,
-        account_holder=body.account_holder,
-        account_number=body.account_number,
-        mobile_number=body.mobile_number,
-        currency=body.currency,
-        is_default=body.is_default,
+    return ok(
+        await svc.add_method(
+            str(provider["provider_id"]),
+            method_type=body.method_type,
+            provider_name=body.provider_name,
+            account_holder=body.account_holder,
+            account_number=body.account_number,
+            mobile_number=body.mobile_number,
+            currency=body.currency,
+            is_default=body.is_default,
+        )
     )
 
 
 @router.get("/methods")
 async def list_methods(provider: dict = Depends(get_current_provider)) -> list[dict[str, Any]]:
-    return await _service().list_methods(str(provider["provider_id"]))
+    return ok(await _service().list_methods(str(provider["provider_id"])))
 
 
 @router.post("/methods/{method_id}/default")
-async def set_default_method(method_id: str, provider: dict = Depends(get_current_provider)) -> dict[str, Any]:
-    return await _service().set_default_method(str(provider["provider_id"]), method_id)
+async def set_default_method(
+    method_id: str, provider: dict = Depends(get_current_provider)
+) -> dict[str, Any]:
+    return ok(await _service().set_default_method(str(provider["provider_id"]), method_id))
 
 
 @router.delete("/methods/{method_id}")
 async def delete_method(method_id: str, provider: dict = Depends(get_current_provider)) -> dict[str, Any]:
-    return await _service().delete_method(str(provider["provider_id"]), method_id)
+    return ok(await _service().delete_method(str(provider["provider_id"]), method_id))
 
 
 @router.post("/withdraw", status_code=201)
 async def withdraw(body: WithdrawBody, provider: dict = Depends(get_current_provider)) -> dict[str, Any]:
     svc = _service()
-    return await svc.withdraw(
-        str(provider["provider_id"]),
-        method_id=body.method_id,
-        amount=body.amount,
-        currency=body.currency,
+    return ok(
+        await svc.withdraw(
+            str(provider["provider_id"]),
+            method_id=body.method_id,
+            amount=body.amount,
+            currency=body.currency,
+        )
     )
 
 
@@ -94,16 +102,14 @@ async def list_payouts(
     offset: int = 0,
     provider: dict = Depends(get_current_provider),
 ) -> dict[str, Any]:
-    return await _service().list(
-        str(provider["provider_id"]), limit=limit, offset=offset
-    )
+    return ok(await _service().list(str(provider["provider_id"]), limit=limit, offset=offset))
 
 
 @router.get("/{payout_id}")
 async def get_payout(payout_id: str, provider: dict = Depends(get_current_provider)) -> dict[str, Any]:
-    return await _service().get(str(provider["provider_id"]), payout_id)
+    return ok(await _service().get(str(provider["provider_id"]), payout_id))
 
 
 @router.post("/{payout_id}/cancel")
 async def cancel_payout(payout_id: str, provider: dict = Depends(get_current_provider)) -> dict[str, Any]:
-    return await _service().cancel(str(provider["provider_id"]), payout_id)
+    return ok(await _service().cancel(str(provider["provider_id"]), payout_id))
