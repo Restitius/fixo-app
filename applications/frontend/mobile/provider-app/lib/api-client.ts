@@ -1351,3 +1351,295 @@ export const supportApi = {
   listMessages: (ticketId: string, limit = 100, offset = 0) =>
     apiClient.get<SupportMessage[]>(`/providers/me/support/tickets/${ticketId}/messages${qs({ limit, offset })}`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Disputes — real /providers/me/disputes/* (disputes_router.py). This
+// router never calls ok() — every success response is raw/unwrapped, so
+// every method here uses getRaw/postRaw. Read + respond only; resolution
+// is admin/platform-side. List rows have null resolution/0 evidence_count
+// (list.sql doesn't select those columns) — only GET /{id} has them.
+// ---------------------------------------------------------------------------
+
+export type DisputeStatus = "open" | "under_review" | "resolved" | "withdrawn";
+export type DisputeResponseKind = "acknowledgment" | "explanation" | "refund_offer";
+
+export interface Dispute {
+  dispute_id: string;
+  dispute_number: string;
+  booking_id: string;
+  booking_number: string;
+  category: string;
+  status: string;
+  description: string;
+  resolution: string | null;
+  created_at: string;
+  resolved_at: string | null;
+  evidence_count: number;
+}
+
+export interface DisputeEvidenceItem {
+  evidence_id: string;
+  kind: string;
+  url: string;
+  note: string | null;
+  created_at: string;
+}
+
+export interface DisputeResponse {
+  response_id: string;
+  dispute_id: string;
+  kind: DisputeResponseKind;
+  body: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export const disputesApi = {
+  list: (status?: DisputeStatus | "all", bookingId?: string, limit = 50, offset = 0) =>
+    apiClient
+      .getRaw<{ disputes: Dispute[]; limit: number; offset: number }>(`/providers/me/disputes/${qs({ status, booking_id: bookingId, limit, offset })}`)
+      .then((r) => r.data.disputes),
+  get: (disputeId: string) => apiClient.getRaw<Dispute>(`/providers/me/disputes/${disputeId}`).then((r) => r.data),
+  listEvidence: (disputeId: string) =>
+    apiClient.getRaw<{ dispute_id: string; evidence: DisputeEvidenceItem[] }>(`/providers/me/disputes/${disputeId}/evidence`).then((r) => r.data.evidence),
+  respond: (disputeId: string, kind: DisputeResponseKind, body: string) =>
+    apiClient.postRaw<DisputeResponse>(`/providers/me/disputes/${disputeId}/responses`, { kind, body }).then((r) => r.data),
+  listResponses: (disputeId: string) =>
+    apiClient.getRaw<{ dispute_id: string; responses: DisputeResponse[] }>(`/providers/me/disputes/${disputeId}/responses`).then((r) => r.data.responses),
+};
+
+// ---------------------------------------------------------------------------
+// Job assignments — real /providers/me/job-assignments/* (job_assignments_
+// router.py). Standard envelope. Both booking_id and member_id must belong
+// to the calling provider, and the member must be ACTIVE (same
+// PROVIDER_TEAM_MEMBERS table/status the Team screen uses). Response
+// shapes differ per endpoint — create/update/cancel return fewer columns
+// than list/get (verified against the real SQL, not assumed uniform).
+// ---------------------------------------------------------------------------
+
+export type JobAssignmentStatus = "ASSIGNED" | "ACKNOWLEDGED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+
+export interface JobAssignment {
+  assignment_id: string;
+  booking_id: string;
+  booking_number: string;
+  member_id: string;
+  member_name: string;
+  status: JobAssignmentStatus;
+  notes: string | null;
+  assigned_at: string;
+  updated_at: string;
+}
+
+export const jobAssignmentsApi = {
+  create: (data: { booking_id: string; member_id: string; notes?: string | undefined }) =>
+    apiClient.post<{ assignment_id: string; provider_id: string; booking_id: string; member_id: string; status: JobAssignmentStatus; notes: string | null; assigned_at: string }>("/providers/me/job-assignments/", data).then((r) => r.data),
+  list: (status?: JobAssignmentStatus, memberId?: string, limit = 50, offset = 0) =>
+    apiClient.get<JobAssignment[]>(`/providers/me/job-assignments/${qs({ status, member_id: memberId, limit, offset })}`).then((r) => r.data),
+  get: (assignmentId: string) => apiClient.get<JobAssignment>(`/providers/me/job-assignments/${assignmentId}`).then((r) => r.data),
+  update: (assignmentId: string, data: { member_id?: string | undefined; status?: JobAssignmentStatus | undefined; notes?: string | undefined }) =>
+    apiClient.patch<{ assignment_id: string; member_id: string; status: JobAssignmentStatus; notes: string | null; updated_at: string }>(`/providers/me/job-assignments/${assignmentId}`, data).then((r) => r.data),
+  cancel: (assignmentId: string) =>
+    apiClient.post<{ assignment_id: string; status: JobAssignmentStatus; updated_at: string }>(`/providers/me/job-assignments/${assignmentId}/cancel`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Equipment — real /providers/me/equipment/* (equipment_router.py).
+// Standard envelope. assigned_member_id FKs the same PROVIDER_TEAM_MEMBERS
+// table the Team screen uses. Response shapes differ per endpoint.
+// ---------------------------------------------------------------------------
+
+export type EquipmentCategory = "POWER_TOOL" | "VEHICLE" | "SAFETY_GEAR" | "DIAGNOSTIC" | "OTHER";
+export type EquipmentCondition = "NEW" | "GOOD" | "FAIR" | "POOR";
+export type EquipmentStatus = "AVAILABLE" | "IN_USE" | "MAINTENANCE" | "RETIRED";
+
+export interface Equipment {
+  equipment_id: string;
+  name: string;
+  category: EquipmentCategory;
+  serial_number: string | null;
+  condition: EquipmentCondition;
+  status: EquipmentStatus;
+  assigned_member_id: string | null;
+  assigned_member_name: string | null;
+  purchase_date: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export const equipmentApi = {
+  create: (data: { name: string; category?: EquipmentCategory | undefined; serial_number?: string | undefined; condition?: EquipmentCondition | undefined; purchase_date?: string | undefined; notes?: string | undefined }) =>
+    apiClient.post<Omit<Equipment, "assigned_member_name" | "updated_at">>("/providers/me/equipment/", data).then((r) => r.data),
+  list: (status?: EquipmentStatus, category?: EquipmentCategory, limit = 50, offset = 0) =>
+    apiClient.get<Equipment[]>(`/providers/me/equipment/${qs({ status, category, limit, offset })}`).then((r) => r.data),
+  get: (equipmentId: string) => apiClient.get<Equipment>(`/providers/me/equipment/${equipmentId}`).then((r) => r.data),
+  update: (equipmentId: string, data: { name?: string | undefined; category?: EquipmentCategory | undefined; serial_number?: string | undefined; condition?: EquipmentCondition | undefined; status?: EquipmentStatus | undefined; notes?: string | undefined }) =>
+    apiClient
+      .patch<{ equipment_id: string; name: string; category: EquipmentCategory; serial_number: string | null; condition: EquipmentCondition; status: EquipmentStatus; notes: string | null; updated_at: string }>(`/providers/me/equipment/${equipmentId}`, data)
+      .then((r) => r.data),
+  assign: (equipmentId: string, memberId: string | null) =>
+    apiClient
+      .post<{ equipment_id: string; assigned_member_id: string | null; status: EquipmentStatus; updated_at: string }>(`/providers/me/equipment/${equipmentId}/assign`, { member_id: memberId })
+      .then((r) => r.data),
+  retire: (equipmentId: string) => apiClient.post<{ equipment_id: string; status: EquipmentStatus; updated_at: string }>(`/providers/me/equipment/${equipmentId}/retire`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Safety — real /providers/me/safety/* (safety_router.py). Standard
+// envelope. Create + list + escalate only; resolution is platform-side.
+// ---------------------------------------------------------------------------
+
+export type SafetyCategory = "UNSAFE_CUSTOMER" | "PROPERTY_HAZARD" | "INJURY" | "HARASSMENT" | "OTHER";
+export type SafetySeverity = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+
+export interface SafetyReport {
+  report_id: string;
+  report_number: string;
+  booking_id: string | null;
+  category: SafetyCategory;
+  severity: SafetySeverity;
+  description: string;
+  status: string;
+  escalated_at: string | null;
+  resolution?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export const safetyApi = {
+  createReport: (data: { booking_id?: string | undefined; category?: SafetyCategory | undefined; severity?: SafetySeverity | undefined; description: string }) =>
+    apiClient.post<Omit<SafetyReport, "escalated_at" | "resolution" | "updated_at">>("/providers/me/safety/reports", data).then((r) => r.data),
+  listReports: (status?: string, category?: SafetyCategory, limit = 50, offset = 0) =>
+    apiClient.get<SafetyReport[]>(`/providers/me/safety/reports${qs({ status, category, limit, offset })}`).then((r) => r.data),
+  getReport: (reportId: string) => apiClient.get<SafetyReport>(`/providers/me/safety/reports/${reportId}`).then((r) => r.data),
+  escalate: (reportId: string) =>
+    apiClient.post<{ report_id: string; status: string; escalated_at: string; updated_at: string }>(`/providers/me/safety/reports/${reportId}/escalate`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Promotions — real /providers/me/promotions/* (promotions_router.py).
+// Standard envelope. redeem() does NOT itself check amount/min_amount —
+// call validate() first, then redeem() by id, matching the real backend's
+// disconnected two-step design (not a frontend simplification).
+// ---------------------------------------------------------------------------
+
+export type DiscountType = "PERCENT" | "FIXED_AMOUNT";
+
+export interface Promotion {
+  promo_id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  discount_type: DiscountType;
+  discount_value: number;
+  min_amount: number;
+  max_discount: number | null;
+  usage_limit: number | null;
+  used_count: number;
+  valid_from: string;
+  valid_until: string;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export const promotionsApi = {
+  create: (data: {
+    code: string;
+    name: string;
+    description?: string | undefined;
+    discount_type?: DiscountType | undefined;
+    discount_value: number;
+    min_amount?: number | undefined;
+    max_discount?: number | undefined;
+    usage_limit?: number | undefined;
+    valid_from: string;
+    valid_until: string;
+  }) => apiClient.post<Omit<Promotion, "updated_at">>("/providers/me/promotions/", data).then((r) => r.data),
+  list: (active?: boolean, limit = 50, offset = 0) =>
+    apiClient.get<Promotion[]>(`/providers/me/promotions/${qs({ active, limit, offset })}`).then((r) => r.data),
+  get: (promoId: string) => apiClient.get<Promotion>(`/providers/me/promotions/${promoId}`).then((r) => r.data),
+  update: (
+    promoId: string,
+    data: Partial<{
+      code: string;
+      name: string;
+      description: string;
+      discount_type: DiscountType;
+      discount_value: number;
+      min_amount: number;
+      max_discount: number;
+      usage_limit: number;
+      valid_from: string;
+      valid_until: string;
+    }>,
+  ) => apiClient.patch<Omit<Promotion, "used_count" | "active" | "created_at">>(`/providers/me/promotions/${promoId}`, data).then((r) => r.data),
+  deactivate: (promoId: string) => apiClient.post<{ promo_id: string; active: boolean; updated_at: string }>(`/providers/me/promotions/${promoId}/deactivate`).then((r) => r.data),
+  validate: (code: string, amount: number) =>
+    apiClient
+      .post<{
+        promo_id: string;
+        code: string;
+        name: string;
+        discount_type: DiscountType;
+        discount_value: number;
+        min_amount: number;
+        max_discount: number | null;
+        usage_limit: number | null;
+        used_count: number;
+        valid_from: string;
+        valid_until: string;
+        discount_amount: number;
+      }>("/providers/me/promotions/validate", { code, amount })
+      .then((r) => r.data),
+  redeem: (promoId: string) => apiClient.post<{ promo_id: string; code: string; used_count: number; usage_limit: number | null; updated_at: string }>(`/providers/me/promotions/${promoId}/redeem`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Subscriptions — real /providers/me/subscription/* (subscriptions_
+// router.py). Standard envelope. subscribe() also switches plans if
+// already subscribed (atomically cancels the old one). Response shapes
+// differ per endpoint — subscribe/cancel/history return fewer columns
+// than the current-subscription GET.
+// ---------------------------------------------------------------------------
+
+export interface SubscriptionPlan {
+  plan_id: string;
+  code: string;
+  name: string;
+  description: string | null;
+  price_monthly: number;
+  max_team_members: number | null;
+}
+
+export interface CurrentSubscription {
+  subscription_id: string;
+  status: string;
+  started_at: string;
+  current_period_end: string | null;
+  plan_id: string;
+  plan_code: string;
+  plan_name: string;
+  price_monthly: number;
+  max_team_members: number | null;
+}
+
+export interface SubscriptionHistoryRow {
+  subscription_id: string;
+  status: string;
+  started_at: string;
+  current_period_end: string | null;
+  cancelled_at: string | null;
+  plan_code: string;
+  plan_name: string;
+}
+
+export const subscriptionsApi = {
+  listPlans: () => apiClient.get<SubscriptionPlan[]>("/providers/me/subscription/plans").then((r) => r.data),
+  current: () => apiClient.get<CurrentSubscription>("/providers/me/subscription/").then((r) => r.data),
+  subscribe: (planId: string) =>
+    apiClient.post<{ subscription_id: string; plan_id: string; status: string; started_at: string }>("/providers/me/subscription/subscribe", { plan_id: planId }).then((r) => r.data),
+  cancel: () => apiClient.post<{ subscription_id: string; status: string; cancelled_at: string }>("/providers/me/subscription/cancel").then((r) => r.data),
+  history: (limit = 50, offset = 0) => apiClient.get<SubscriptionHistoryRow[]>(`/providers/me/subscription/history${qs({ limit, offset })}`).then((r) => r.data),
+};

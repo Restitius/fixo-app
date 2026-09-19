@@ -70,17 +70,10 @@ export default function Support() {
       <ScreenHeader title="Support" back="/(tabs)/profile" />
       <ScrollView className="flex-1 px-6" contentContainerStyle={{ paddingBottom: 40 }}>
         <View className="flex-row" style={{ gap: 10 }}>
-          <Pressable
-            onPress={() => {
-              setCategory('GENERAL')
-              setPriority('URGENT')
-              setSubject('Unsafe job site — ')
-            }}
-            className="flex-1 rounded-2xl bg-[#f5f5f5] p-4"
-          >
+          <Pressable onPress={() => router.push('/safety?urgent=1' as any)} className="flex-1 rounded-2xl bg-[#f5f5f5] p-4">
             <ShieldIcon size={20} color="#7210FF" />
             <Text className="text-[13px] font-semibold text-ink mt-2">Report unsafe site</Text>
-            <Text className="text-[11px] text-muted mt-0.5">Opens an urgent ticket</Text>
+            <Text className="text-[11px] text-muted mt-0.5">Opens a real safety report</Text>
           </Pressable>
           <Pressable onPress={() => Linking.openURL('tel:+255800110220')} className="flex-1 rounded-2xl bg-[#f5f5f5] p-4">
             <PhoneIcon size={20} color="#7210FF" />
