@@ -1,0 +1,1 @@
+"""Invoices notification definitions."""

@@ -1,0 +1,1 @@
+{"success":true,"message":{"type":"success","title":"Invoice drafted","body":""},"data":{"invoice_id":"4def001d-5b30-4e83-8cee-9ffccb2412ad","invoice_number":"INV-2608261008-3A5B","subtotal":42000.0,"tax_amount":7560.0,"total_amount":49560.0,"currency":"TZS","status":"DRAFT"},"meta":{},"request_id":null}
