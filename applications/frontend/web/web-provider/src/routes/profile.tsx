@@ -133,7 +133,7 @@ function ProfilePage() {
             <h2 className="text-lg font-bold tracking-tight">
               {session?.first_name} {session?.last_name}
             </h2>
-            {verification && <StatusPill status={verification.status} />}
+            {verification && <StatusPill status={verification.verification_status} />}
           </div>
           <p className="text-sm text-muted-foreground">
             {profile.professional_title ?? "—"} {session?.email ? `· ${session.email}` : ""}
@@ -261,7 +261,7 @@ function ProfilePage() {
             <div className="mb-4 flex items-center gap-3 rounded-2xl bg-primary/5 p-4">
               <BadgeCheck className="size-5 text-primary" />
               <p className="text-sm text-muted-foreground">
-                Status: <strong className="text-foreground">{verification?.status ?? "NOT_SUBMITTED"}</strong>
+                Status: <strong className="text-foreground">{verification?.verification_status ?? "NOT_SUBMITTED"}</strong>
                 {verification && verification.required_missing.length > 0 && ` — missing: ${verification.required_missing.join(", ")}`}
               </p>
             </div>
@@ -270,7 +270,7 @@ function ProfilePage() {
               {documents.map((d) => (
                 <div key={d.doc_id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-muted/50 p-4">
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold">{docTypes.find((t) => t.code === d.doc_type)?.label ?? d.doc_type}</p>
+                    <p className="text-sm font-semibold">{docTypes.find((t) => t.code === d.doc_type)?.name ?? d.doc_type}</p>
                     <p className="text-xs text-muted-foreground">{d.doc_number ?? "—"}</p>
                   </div>
                   <StatusPill status={d.status} />
