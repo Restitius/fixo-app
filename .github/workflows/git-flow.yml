@@ -1,0 +1,46 @@
+name: Git Flow
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  git-flow-gate:
+    name: git-flow-gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate promotion path and review evidence
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+          SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+          BODY: ${{ github.event.pull_request.body }}
+        shell: python
+        run: |
+          import os, re, sys
+          base, head = os.environ['BASE'], os.environ['HEAD']
+          same = os.environ['SAME_REPO'] == 'true'
+          temporary = lambda ref, kind: re.fullmatch(kind + r'/[a-z0-9][a-z0-9._/-]*', ref) is not None
+          if base == 'main':
+              allowed, stage = same and head == 'staging', 'Staging'
+          elif base == 'staging':
+              allowed, stage = same and head == 'dev', 'Module'
+          elif base == 'dev':
+              allowed, stage = same and temporary(head, 'module'), 'Module'
+          elif temporary(base, 'module'):
+              allowed, stage = temporary(head, 'page'), 'Page'
+          elif temporary(base, 'page'):
+              allowed, stage = temporary(head, '(fix|feature)'), 'Fix'
+          else:
+              allowed, stage = False, None
+          if not allowed:
+              sys.exit('Invalid promotion. Required: fix/feature -> page -> module -> dev -> staging -> main.')
+          body = os.environ.get('BODY', '')
+          if not re.search(r'^- \[[xX]\] ' + stage + r' validation complete\s*$', body, re.M):
+              sys.exit(f'Missing checked attestation: {stage} validation complete')
+          if not re.search(r'^Validation evidence: \S.{9,}$', body, re.M):
+              sys.exit('Provide Validation evidence: followed by test results or an evidence link.')
+          print(f'Valid promotion: {head} -> {base}. Reviewers must verify the supplied evidence.')
