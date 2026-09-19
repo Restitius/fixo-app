@@ -26,7 +26,7 @@ aiosqlite==0.20.*        # SQLite driver (development/tests)
 redis==5.2.*
 celery==5.4.*
 aiokafka==0.12.*
-aio-pika==9.5.*
+aio-pika==10.0.*
 
 # --- Outbound HTTP ------------------------------------------------------------------
 httpx==0.28.*
