@@ -5,9 +5,10 @@ toggle with emergency/same-day/holiday availability, vacation mode and
 temporary unavailable periods. Only available providers receive immediate
 jobs — the matching engine (Phase 12) consumes ``GET /summary``.
 """
+
 from __future__ import annotations
 
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Path
 from pydantic import BaseModel, Field
@@ -53,10 +54,6 @@ def _service() -> Any:
     return get_composition().provider_availability_service()
 
 
-def _day(day_of_week: int) -> int:
-    return Path(day_of_week, ge=0, le=6, description="0=Monday .. 6=Sunday")
-
-
 @router.get("/settings")
 async def get_settings(provider: CurrentProvider) -> Any:
     """The provider's availability settings (404 until configured)."""
@@ -64,14 +61,10 @@ async def get_settings(provider: CurrentProvider) -> Any:
 
 
 @router.put("/settings")
-async def save_settings(
-    payload: AvailabilitySettingsRequest, provider: CurrentProvider
-) -> Any:
+async def save_settings(payload: AvailabilitySettingsRequest, provider: CurrentProvider) -> Any:
     """Create or replace the availability toggles + vacation window."""
     return ok(
-        await _service().save_settings(
-            str(provider["provider_id"]), payload.model_dump(exclude_unset=True)
-        )
+        await _service().save_settings(str(provider["provider_id"]), payload.model_dump(exclude_unset=True))
     )
 
 
@@ -81,14 +74,16 @@ async def list_hours(provider: CurrentProvider) -> Any:
     return ok(await _service().list_hours(str(provider["provider_id"])))
 
 
+DayOfWeek = Annotated[int, Path(ge=0, le=6, description="0=Monday .. 6=Sunday")]
+
+
 @router.put("/hours/{day_of_week}")
 async def set_day(
-    day_of_week: int,
+    day_of_week: DayOfWeek,
     payload: WorkingHoursRequest,
     provider: CurrentProvider,
 ) -> Any:
     """Upsert one day's working window (e.g. Monday 08:00-18:00)."""
-    _day(day_of_week)
     return ok(
         await _service().set_day(
             str(provider["provider_id"]),
@@ -99,9 +94,8 @@ async def set_day(
 
 
 @router.delete("/hours/{day_of_week}")
-async def clear_day(day_of_week: int, provider: CurrentProvider) -> Any:
+async def clear_day(day_of_week: DayOfWeek, provider: CurrentProvider) -> Any:
     """Reset one day's working window (day becomes unset/unavailable)."""
-    _day(day_of_week)
     return ok(await _service().clear_day(str(provider["provider_id"]), day_of_week))
 
 
@@ -115,18 +109,14 @@ async def list_time_off(provider: CurrentProvider) -> Any:
 async def add_time_off(payload: TimeOffRequest, provider: CurrentProvider) -> Any:
     """Declare a temporary unavailable period (vacation, closure, ...)."""
     return ok(
-        await _service().add_time_off(
-            str(provider["provider_id"]), payload.model_dump(exclude_unset=True)
-        )
+        await _service().add_time_off(str(provider["provider_id"]), payload.model_dump(exclude_unset=True))
     )
 
 
 @router.delete("/time-off/{time_off_id}")
 async def remove_time_off(time_off_id: str, provider: CurrentProvider) -> Any:
     """Remove one unavailable period."""
-    return ok(
-        await _service().remove_time_off(str(provider["provider_id"]), time_off_id)
-    )
+    return ok(await _service().remove_time_off(str(provider["provider_id"]), time_off_id))
 
 
 @router.get("/summary")
