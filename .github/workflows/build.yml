@@ -91,7 +91,7 @@ jobs:
           push: false
 
       - name: Vulnerability scan (blocks push on CRITICAL/HIGH)
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2   # v0.28.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25   # v0.36.0
         with:
           image-ref: ${{ env.BACKEND_IMAGE }}:git-${{ github.sha }}
           severity: CRITICAL,HIGH
@@ -151,7 +151,7 @@ jobs:
       - run: npm ci
 
       - name: Dependency vulnerability scan (blocks package on CRITICAL/HIGH)
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2   # v0.28.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25   # v0.36.0
         with:
           scan-type: fs
           scan-ref: applications/frontend/web/${{ matrix.app }}
