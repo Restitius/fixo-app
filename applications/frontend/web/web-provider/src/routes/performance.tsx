@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Activity, CheckCircle2, Clock, Trophy } from "lucide-react";
 
@@ -5,11 +6,11 @@ import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { StatusPill } from "@/components/dashboard/StatusPill";
-import { fmtDate } from "@/lib/format";
-import { disputes, performance, provider } from "@/lib/mock-data";
+import { fmtDate, fmtMoney } from "@/lib/format";
+import { kpisApi, rankingApi, type KpiPeriod, type KpiSummary, type ProviderRanking } from "@/lib/api-client";
 
-const title = "Performance & Ranking — FIXO Provider";
-const description = "Acceptance and completion rates, response time, provider level, ranking factors and open disputes.";
+const title = "Performance — FIXO Provider";
+const description = "Your real ranking, completion/on-time rates and period-by-period KPI history.";
 
 export const Route = createFileRoute("/performance")({
   head: () => ({
@@ -24,105 +25,99 @@ export const Route = createFileRoute("/performance")({
   component: PerformancePage,
 });
 
-const levels = [
-  { name: "New", need: "0 jobs", done: true },
-  { name: "Rising", need: "25 jobs · 4.3★", done: true },
-  { name: "Established", need: "100 jobs · 4.5★", done: true },
-  { name: "Top Provider", need: "250 jobs · 4.7★", done: true },
-  { name: "Elite", need: "750 jobs · 4.85★", done: false },
-];
-
-const rankingFactors = [
-  { label: "Rating", weight: 30, score: 96 },
-  { label: "Completion rate", weight: 25, score: 95 },
-  { label: "Response time", weight: 20, score: 92 },
-  { label: "Proximity to job", weight: 15, score: 80 },
-  { label: "Verification level", weight: 10, score: 88 },
-];
-
 function PerformancePage() {
+  const [ranking, setRanking] = useState<ProviderRanking | null>(null);
+  const [rankingChecked, setRankingChecked] = useState(false);
+  const [summary, setSummary] = useState<KpiSummary | null>(null);
+  const [periods, setPeriods] = useState<KpiPeriod[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // ranking_router raises 404 until a batch job first computes this
+    // provider's ranking — not an error state, just "not ranked yet".
+    rankingApi
+      .mine()
+      .then(setRanking)
+      .catch(() => setRanking(null))
+      .finally(() => setRankingChecked(true));
+    Promise.all([kpisApi.summary(), kpisApi.list("monthly", 12, 0)])
+      .then(([s, k]) => {
+        setSummary(s);
+        setPeriods(k);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <ProviderPage title="Performance" subtitle="Your standing in the FIXO matching engine.">
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Trophy} label="Provider level" value={provider.level} hint={`${provider.completedJobs} jobs completed`} hero />
-        <MetricCard icon={CheckCircle2} label="Acceptance rate" value={`${performance.acceptanceRate}%`} hint={`${performance.accepted} of ${performance.offered} offers`} tone="success" tintValue />
-        <MetricCard icon={Activity} label="Completion rate" value={`${performance.completionRate}%`} hint={`${performance.cancellationRate}% cancelled`} tone="primary" tintValue />
-        <MetricCard icon={Clock} label="Avg. response" value={`${performance.responseMinutes} min`} hint="Target under 10 minutes" tone="amber" tintValue />
+        <MetricCard
+          icon={Trophy}
+          label="Rank level"
+          value={rankingChecked ? (ranking ? ranking.rank_level : "Not ranked yet") : "…"}
+          hint={ranking ? `${ranking.completed_jobs} jobs completed` : "Computed periodically, not in real time"}
+          hero
+        />
+        <MetricCard icon={CheckCircle2} label="Completion rate" value={`${(summary?.avg_completion_rate ?? 0).toFixed(0)}%`} hint={`${summary?.total_jobs_completed ?? 0} jobs completed`} tone="success" tintValue />
+        <MetricCard icon={Activity} label="On-time rate" value={`${(summary?.avg_on_time_rate ?? 0).toFixed(0)}%`} hint={`${summary?.total_jobs_cancelled ?? 0} cancelled`} tone="primary" tintValue />
+        <MetricCard icon={Clock} label="Avg. response" value={`${Math.round(summary?.avg_response_time_minutes ?? 0)} min`} hint={`${(summary?.avg_rating ?? 0).toFixed(1)}★ avg rating`} tone="amber" tintValue />
       </div>
 
       <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-[1fr_340px]">
-        <div className="space-y-4">
-          <Panel title="Ranking factors">
-            <div className="space-y-3">
-              {rankingFactors.map((f) => (
-                <div key={f.label}>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {f.label} <span className="text-xs">({f.weight}%)</span>
-                    </span>
-                    <span className="font-semibold">{f.score}</span>
-                  </div>
-                  <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full" style={{ width: `${f.score}%`, backgroundImage: "var(--gradient-primary)" }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              Ranking decides which providers a customer sees first for a matching request.
-            </p>
-          </Panel>
-
-          <Panel title="Cancellations & disputes">
-            <div className="space-y-3">
-              {disputes.map((d) => (
-                <div key={d.id} className="flex flex-wrap items-center gap-3 rounded-2xl bg-muted/50 p-4">
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold">
-                      {d.id} · booking {d.booking}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {d.reason} · opened {fmtDate(d.opened)}
-                    </p>
-                  </div>
-                  <StatusPill tone={d.stage.startsWith("Closed") ? "muted" : "amber"} label={d.stage} />
-                </div>
-              ))}
-            </div>
-            <p className="mt-4 text-xs text-muted-foreground">
-              {performance.cancelled} cancellations in the last 90 days. Cancelling an accepted job within 2 hours of the
-              slot affects your ranking.
-            </p>
-          </Panel>
-        </div>
-
-        <Panel title="Level progression">
+        <Panel title="Monthly KPI history">
           <div className="space-y-3">
-            {levels.map((l) => (
-              <div
-                key={l.name}
-                className={`flex items-center gap-3 rounded-2xl p-4 ${l.done ? "bg-primary/5" : "bg-muted/50"}`}
-              >
-                <span
-                  className={`flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                    l.done ? "text-primary-foreground" : "bg-muted text-muted-foreground"
-                  }`}
-                  style={l.done ? { backgroundImage: "var(--gradient-primary)" } : undefined}
-                >
-                  {l.done ? "✓" : ""}
-                </span>
-                <div>
-                  <p className="text-sm font-semibold">{l.name}</p>
-                  <p className="text-xs text-muted-foreground">{l.need}</p>
+            {!loading && periods.length === 0 && <p className="py-6 text-center text-sm text-muted-foreground">No KPI periods recorded yet.</p>}
+            {periods.map((p) => (
+              <div key={p.id} className="rounded-2xl bg-muted/50 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">
+                    {fmtDate(p.period_start)} – {fmtDate(p.period_end)}
+                  </p>
+                  <span className="text-sm font-semibold text-primary">{fmtMoney(p.revenue)}</span>
                 </div>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {p.jobs_completed} completed · {p.jobs_cancelled} cancelled · {p.completion_rate.toFixed(0)}% completion · {p.on_time_rate.toFixed(0)}% on-time · {p.avg_rating.toFixed(1)}★ · {p.response_time_minutes} min response
+                </p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            Elite unlocks an 8% commission rate, priority matching and a featured badge.
-          </p>
+        </Panel>
+
+        <Panel title="Ranking signals">
+          {!ranking ? (
+            <p className="text-sm text-muted-foreground">
+              Your ranking hasn't been computed yet. It updates periodically based on completed jobs, ratings and
+              response time.
+            </p>
+          ) : (
+            <div className="space-y-3 text-sm">
+              <Row label="Rank score" value={String(ranking.rank_score)} />
+              <Row label="Recurring customers" value={String(ranking.recurring_customers)} />
+              <Row label="Referrals" value={String(ranking.referrals)} />
+              <Row label="Avg completion rate" value={`${ranking.avg_completion_rate.toFixed(0)}%`} />
+              <Row label="Avg on-time rate" value={`${ranking.avg_on_time_rate.toFixed(0)}%`} />
+              <Row label="Avg rating" value={`${ranking.avg_rating.toFixed(1)}★`} />
+              {ranking.badges.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {ranking.badges.map((b) => (
+                    <StatusPill key={b} tone="primary" label={b} />
+                  ))}
+                </div>
+              )}
+              {ranking.last_computed_at && <p className="text-xs text-muted-foreground">Last computed {fmtDate(ranking.last_computed_at)}</p>}
+            </div>
+          )}
         </Panel>
       </div>
     </ProviderPage>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between border-b border-border/60 pb-2 last:border-0">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-semibold">{value}</span>
+    </div>
   );
 }
