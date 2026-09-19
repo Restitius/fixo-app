@@ -39,6 +39,7 @@ const MENU = [
   { icon: LocationIcon, label: 'Service areas', to: '/service-areas' },
   { icon: ShieldCheckIcon, label: 'Documents', to: '/documents' },
   { icon: UserIcon, label: 'Team', to: '/team' },
+  { icon: UserIcon, label: 'Customers', to: '/customers' },
   { icon: ImageIcon, label: 'Portfolio', to: '/portfolio' },
   { icon: StarIcon, label: 'Reviews', to: '/reviews' },
   { icon: AwardIcon, label: 'Performance', to: '/performance' },
