@@ -23,18 +23,13 @@ export const Route = createFileRoute("/login")({
 function LoginPage() {
   const { login } = useProviderAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("john.m@fixo.co.tz");
-  const [password, setPassword] = useState("password123");
-  const [mode, setMode] = useState<"PASSWORD" | "OTP">("PASSWORD");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (mode === "OTP") {
-      navigate({ to: "/verify-otp" });
-      return;
-    }
     setError("");
     setSubmitting(true);
     try {
@@ -69,16 +64,14 @@ function LoginPage() {
 
           <form onSubmit={submit} className="mt-6 space-y-4">
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium">Email or phone</span>
-              <input className={field} value={email} onChange={(e) => setEmail(e.target.value)} />
+              <span className="mb-1.5 block text-sm font-medium">Email</span>
+              <input type="email" className={field} value={email} onChange={(e) => setEmail(e.target.value)} />
             </label>
 
-            {mode === "PASSWORD" && (
-              <label className="block">
-                <span className="mb-1.5 block text-sm font-medium">Password</span>
-                <input type="password" className={field} value={password} onChange={(e) => setPassword(e.target.value)} />
-              </label>
-            )}
+            <label className="block">
+              <span className="mb-1.5 block text-sm font-medium">Password</span>
+              <input type="password" className={field} value={password} onChange={(e) => setPassword(e.target.value)} />
+            </label>
 
             {error && (
               <p className="rounded-xl bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">{error}</p>
@@ -90,16 +83,9 @@ function LoginPage() {
               className="w-full rounded-xl py-3 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-transform hover:scale-[1.01] disabled:opacity-60"
               style={{ backgroundImage: "var(--gradient-primary)" }}
             >
-              {mode === "PASSWORD" ? (submitting ? "Signing in…" : "Sign in") : "Send OTP code"}
+              {submitting ? "Signing in…" : "Sign in"}
             </button>
           </form>
-
-          <button
-            onClick={() => setMode(mode === "PASSWORD" ? "OTP" : "PASSWORD")}
-            className="mt-4 w-full text-center text-sm font-semibold text-primary hover:underline"
-          >
-            {mode === "PASSWORD" ? "Use a one-time code instead" : "Use password instead"}
-          </button>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             New to FIXO?{" "}

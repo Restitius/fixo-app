@@ -1,6 +1,5 @@
-// Real provider session — wired to /providers/auth/*. Registration/OTP
-// verification (register.tsx, verify-otp.tsx) is still a separate demo
-// walkthrough; only login/refresh/logout are real so far.
+// Real provider session — wired to /providers/auth/* (login, register,
+// otp request/verify, refresh, logout).
 import {
   createContext,
   useCallback,
@@ -11,6 +10,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 import { apiClient } from "./api-client";
 
@@ -35,11 +35,33 @@ interface ProviderAuthState {
   loading: boolean;
 }
 
+export interface ProviderRegisterData {
+  first_name: string;
+  middle_name?: string | undefined;
+  last_name: string;
+  display_name?: string | undefined;
+  email: string;
+  phone?: string | undefined;
+  password: string;
+  account_type: "INDIVIDUAL" | "BUSINESS";
+  country?: string | undefined;
+  region?: string | undefined;
+  city?: string | undefined;
+  district?: string | undefined;
+  preferred_language?: string | undefined;
+  referral_code?: string | undefined;
+  terms_accepted: boolean;
+  privacy_accepted: boolean;
+}
+
 interface ProviderAuthValue extends ProviderAuthState {
   session: ProviderProfile | null;
   online: boolean;
   setOnline: (v: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
+  register: (data: ProviderRegisterData) => Promise<void>;
+  requestOtp: (email: string) => Promise<string | null>;
+  verifyOtp: (email: string, code: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<boolean>;
 }
@@ -47,6 +69,7 @@ interface ProviderAuthValue extends ProviderAuthState {
 const Ctx = createContext<ProviderAuthValue | null>(null);
 
 export function ProviderAuthProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const [state, setState] = useState<ProviderAuthState>({
     access_token: null,
     refresh_token: null,
@@ -140,6 +163,35 @@ export function ProviderAuthProvider({ children }: { children: ReactNode }) {
     setState({ access_token, refresh_token, provider, loading: false });
   }, []);
 
+  // Registration only creates the account and sends an OTP — no session yet
+  // (mirrors web-user's real /auth/register behavior). The dev-mode OTP
+  // code, when the backend returns one, is passed through as a search param
+  // so verify-otp.tsx can surface it, same as web-user's verify-otp page.
+  const register = useCallback(
+    async (data: ProviderRegisterData) => {
+      const resp = await apiClient.post("/providers/auth/register", data);
+      const otp = resp.data?.otp_code;
+      navigate({
+        to: "/verify-otp",
+        search: otp ? { email: data.email, otp_from_register: otp } : { email: data.email },
+      });
+    },
+    [navigate],
+  );
+
+  const requestOtp = useCallback(async (email: string): Promise<string | null> => {
+    const resp = await apiClient.post("/providers/auth/otp/request", { email });
+    return resp.data?.otp_code ?? null;
+  }, []);
+
+  const verifyOtp = useCallback(
+    async (email: string, code: string) => {
+      await apiClient.post("/providers/auth/otp/verify", { email, code });
+      navigate({ to: "/login" });
+    },
+    [navigate],
+  );
+
   const logout = useCallback(async () => {
     try {
       await apiClient.post("/providers/auth/logout");
@@ -161,10 +213,13 @@ export function ProviderAuthProvider({ children }: { children: ReactNode }) {
       online,
       setOnline,
       login,
+      register,
+      requestOtp,
+      verifyOtp,
       logout,
       refreshAccessToken,
     }),
-    [state, online, setOnline, login, logout],
+    [state, online, setOnline, login, register, requestOtp, verifyOtp, logout],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
