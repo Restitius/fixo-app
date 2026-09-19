@@ -54,6 +54,9 @@ from app.domains.providers.api.analytics_router import router as provider_analyt
 from app.domains.providers.api.areas_router import router as provider_areas_router
 from app.domains.providers.api.arrival_router import router as provider_arrival_router
 from app.domains.providers.api.auth_router import router as provider_auth_router
+from app.domains.providers.api.availability_router import (
+    router as provider_availability_router,
+)
 from app.domains.providers.api.billing_router import router as provider_billing_router
 from app.domains.providers.api.booking_router import router as provider_booking_router
 from app.domains.providers.api.business_customers_router import (
@@ -130,6 +133,11 @@ api_v1_router.include_router(service_requests_router)
 api_v1_router.include_router(matching_router)
 api_v1_router.include_router(quotations_router)
 api_v1_router.include_router(provider_auth_router)
+# availability_router.py was a complete, valid router (settings/hours/
+# time-off/summary) that had simply never been registered here at all —
+# every one of its endpoints 404'd unconditionally. Found via live
+# end-to-end testing while wiring web-provider's availability.tsx.
+api_v1_router.include_router(provider_availability_router)
 api_v1_router.include_router(provider_onboarding_router)
 api_v1_router.include_router(provider_profile_router)
 api_v1_router.include_router(provider_business_router)
