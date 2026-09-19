@@ -137,13 +137,23 @@ class AuthService:
     # -- login / tokens --------------------------------------------------------
 
     async def login(self, email: str, password: str, device_info: str = "", ip: str = "") -> dict[str, Any]:
-        customer = await self._customers.get_by_email(email.strip().lower())
-        if not customer or not self._hasher.verify(password, customer["password_hash"]):
+        auth_row = await self._customers.get_by_email(email.strip().lower())
+        if not auth_row or not self._hasher.verify(password, auth_row["password_hash"]):
             raise AuthenticationError("Invalid email or password")
-        if customer["status"] != "ACTIVE":
+        if auth_row["status"] != "ACTIVE":
             raise AuthenticationError(
-                f"Account status '{customer['status']}' does not permit login"
+                f"Account status '{auth_row['status']}' does not permit login"
             )
+        # by_email.sql's row includes password_hash (needed above to verify
+        # it) — re-fetch the safe representation (by_id.sql has no hash
+        # column at all) rather than passing the raw auth row's hash to the
+        # client. Same real bug found and fixed on the provider side this
+        # session: the login response's embedded "customer"/"provider"
+        # object was being stored client-side with a real bcrypt hash
+        # inside it.
+        customer = await self._customers.get_by_id(str(auth_row["customer_id"]))
+        if not customer:
+            raise AuthenticationError("Account no longer exists")
         return await self._issue_tokens(customer, device_info, ip)
 
     async def refresh(self, refresh_token: str) -> dict[str, Any]:
