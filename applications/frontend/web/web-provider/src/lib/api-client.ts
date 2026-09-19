@@ -131,6 +131,7 @@ export interface ProviderBookingFeedRow {
   booking_id: string;
   booking_number: string;
   status: string;
+  customer_id: string;
   customer_name: string;
   customer_phone?: string;
   service_name?: string;
@@ -685,6 +686,7 @@ export interface BookingFeedRow {
   status: string;
   scheduled_date: string;
   time_window?: string | null;
+  customer_id: string;
   agreed_amount: number;
   currency: string;
   payment_attempts?: number;
@@ -1266,4 +1268,44 @@ export const teamApi = {
   update: (memberId: string, data: { full_name?: string | undefined; phone?: string | undefined; email?: string | undefined; role?: TeamRole | undefined; notes?: string | undefined }) =>
     apiClient.patch<TeamMember>(`/providers/me/team/${memberId}`, data).then((r) => r.data),
   deactivate: (memberId: string) => apiClient.post<TeamMember>(`/providers/me/team/${memberId}/deactivate`).then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Customers — real /providers/me/business-customers/* (business_customers_
+// router.py): recurring/business customers with negotiated rates. Wrapped
+// in the standard envelope. No search-by-name endpoint — create requires a
+// customer_id that must already exist, so the picker sources real
+// customer_ids from the provider's own booking history (bookingsApi.feed),
+// not free text. No hard delete, only deactivate (one-way, like Team).
+// The mock's "Jobs"/"Last service"/"Next visit"/"Revenue" columns and
+// "Maintenance contracts" panel don't exist on this real record at all —
+// dropped rather than fabricated.
+// ---------------------------------------------------------------------------
+
+export type NegotiatedRateType = "PERCENT_DISCOUNT" | "FIXED_RATE";
+
+export interface BusinessCustomer {
+  record_id: string;
+  customer_id: string;
+  full_name: string;
+  phone: string;
+  company_name: string | null;
+  negotiated_rate_type: NegotiatedRateType;
+  negotiated_rate_value: number;
+  notes: string | null;
+  status: "ACTIVE" | "INACTIVE";
+  created_at: string;
+  updated_at?: string;
+}
+
+export const businessCustomersApi = {
+  list: (status?: "ACTIVE" | "INACTIVE", limit = 50, offset = 0) =>
+    apiClient
+      .get<BusinessCustomer[]>(`/providers/me/business-customers/${qs({ status, limit, offset })}`)
+      .then((r) => r.data),
+  create: (data: { customer_id: string; company_name?: string | undefined; negotiated_rate_type?: NegotiatedRateType | undefined; negotiated_rate_value: number; notes?: string | undefined }) =>
+    apiClient.post<BusinessCustomer>("/providers/me/business-customers/", data).then((r) => r.data),
+  update: (recordId: string, data: { company_name?: string | undefined; negotiated_rate_type?: NegotiatedRateType | undefined; negotiated_rate_value?: number | undefined; notes?: string | undefined }) =>
+    apiClient.patch<BusinessCustomer>(`/providers/me/business-customers/${recordId}`, data).then((r) => r.data),
+  deactivate: (recordId: string) => apiClient.post<BusinessCustomer>(`/providers/me/business-customers/${recordId}/deactivate`).then((r) => r.data),
 };
