@@ -19,6 +19,7 @@ import { Route as DisputesRouteImport } from './routes/disputes'
 import { Route as DocumentsRouteImport } from './routes/documents'
 import { Route as EarningsRouteImport } from './routes/earnings'
 import { Route as InvoicesRouteImport } from './routes/invoices'
+import { Route as JobAssignmentsRouteImport } from './routes/job-assignments'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as NotificationsRouteImport } from './routes/notifications'
@@ -89,6 +90,11 @@ const EarningsRoute = EarningsRouteImport.update({
 const InvoicesRoute = InvoicesRouteImport.update({
   id: '/invoices',
   path: '/invoices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobAssignmentsRoute = JobAssignmentsRouteImport.update({
+  id: '/job-assignments',
+  path: '/job-assignments',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/documents': typeof DocumentsRoute
   '/earnings': typeof EarningsRoute
   '/invoices': typeof InvoicesRoute
+  '/job-assignments': typeof JobAssignmentsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/documents': typeof DocumentsRoute
   '/earnings': typeof EarningsRoute
   '/invoices': typeof InvoicesRoute
+  '/job-assignments': typeof JobAssignmentsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/documents': typeof DocumentsRoute
   '/earnings': typeof EarningsRoute
   '/invoices': typeof InvoicesRoute
+  '/job-assignments': typeof JobAssignmentsRoute
   '/login': typeof LoginRoute
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/earnings'
     | '/invoices'
+    | '/job-assignments'
     | '/login'
     | '/messages'
     | '/notifications'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/earnings'
     | '/invoices'
+    | '/job-assignments'
     | '/login'
     | '/messages'
     | '/notifications'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/documents'
     | '/earnings'
     | '/invoices'
+    | '/job-assignments'
     | '/login'
     | '/messages'
     | '/notifications'
@@ -410,6 +422,7 @@ export interface RootRouteChildren {
   DocumentsRoute: typeof DocumentsRoute
   EarningsRoute: typeof EarningsRoute
   InvoicesRoute: typeof InvoicesRoute
+  JobAssignmentsRoute: typeof JobAssignmentsRoute
   LoginRoute: typeof LoginRoute
   MessagesRoute: typeof MessagesRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -503,6 +516,13 @@ declare module '@tanstack/react-router' {
       path: '/invoices'
       fullPath: '/invoices'
       preLoaderRoute: typeof InvoicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/job-assignments': {
+      id: '/job-assignments'
+      path: '/job-assignments'
+      fullPath: '/job-assignments'
+      preLoaderRoute: typeof JobAssignmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -666,6 +686,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocumentsRoute: DocumentsRoute,
   EarningsRoute: EarningsRoute,
   InvoicesRoute: InvoicesRoute,
+  JobAssignmentsRoute: JobAssignmentsRoute,
   LoginRoute: LoginRoute,
   MessagesRoute: MessagesRoute,
   NotificationsRoute: NotificationsRoute,
