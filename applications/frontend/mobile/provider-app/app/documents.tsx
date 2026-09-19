@@ -11,6 +11,7 @@ import ScreenHeader from '../components/ScreenHeader'
 import MetricCard from '../components/MetricCard'
 import StatusBadge from '../components/StatusBadge'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Select from '../components/Select'
 import Sheet from '../components/Sheet'
 import { CameraIcon, ShieldCheckIcon } from '../components/icons'
@@ -195,7 +196,9 @@ function UploadForm({ docTypes, onSaved }: { docTypes: VerificationDocType[]; on
       <Text className="text-[18px] font-bold text-ink">Upload document</Text>
       <View className="mt-4" style={{ gap: 12 }}>
         <Select value={docType} onChange={setDocType} options={docTypes.map((t) => t.name)} />
-        <TextInput className="rounded-2xl bg-[#f5f5f5] px-4 py-3.5 text-[15px] text-ink" placeholder="Document number (optional)" value={docNumber} onChangeText={setDocNumber} />
+        <Field label="Document number (optional)">
+          <TextInput className="rounded-2xl bg-[#f5f5f5] px-4 py-3.5 text-[15px] text-ink" value={docNumber} onChangeText={setDocNumber} />
+        </Field>
         <Pressable onPress={() => void pickFront()} className="rounded-2xl bg-[#f5f5f5] px-4 py-3.5 flex-row items-center gap-2">
           <CameraIcon size={18} color="#7210FF" />
           <Text className="text-[14px] text-ink">{frontUri ? 'Photo selected' : 'Choose front image'}</Text>

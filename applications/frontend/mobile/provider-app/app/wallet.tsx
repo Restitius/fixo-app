@@ -10,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../components/ScreenHeader'
 import MetricCard from '../components/MetricCard'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import { WalletIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
 import { payoutsApi, walletApi, type PayoutMethod, type WalletOverview, type WalletTransaction } from '../lib/api-client'
@@ -84,13 +85,9 @@ export default function Wallet() {
               </Pressable>
             ) : (
               <View className="mt-3" style={{ gap: 10 }}>
-                <TextInput
-                  placeholder={`Amount (${currency})`}
-                  keyboardType="numeric"
-                  value={amount}
-                  onChangeText={setAmount}
-                  className="rounded-2xl bg-[#f5f5f5] px-4 py-3.5 text-[15px] text-ink"
-                />
+                <Field label={`Amount (${currency})`}>
+                  <TextInput keyboardType="numeric" value={amount} onChangeText={setAmount} className="rounded-2xl bg-[#f5f5f5] px-4 py-3.5 text-[15px] text-ink" />
+                </Field>
                 <View style={{ gap: 6 }}>
                   {methods.map((m) => (
                     <Pressable
