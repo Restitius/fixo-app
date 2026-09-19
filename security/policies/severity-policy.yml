@@ -1,0 +1,29 @@
+# security/policies/severity-policy.yml
+#
+# Dependency vulnerability severity policy (handbook section 6.4). Written
+# down so "can we merge with this advisory open" isn't decided ad hoc.
+severity_policy:
+  - severity: critical
+    fix_available: true
+    behavior: "Fail the pull request and the nightly run."
+    deadline: "Same day"
+  - severity: critical
+    fix_available: false
+    behavior: "Fail; require a documented mitigation and security approval to proceed."
+    deadline: "Same-day decision"
+  - severity: high
+    fix_available: true
+    behavior: "Fail the pull request."
+    deadline: "3 working days"
+  - severity: high
+    fix_available: false
+    behavior: "Warn, open a tracked issue, require sign-off for tier 3 paths."
+    deadline: "7 days"
+  - severity: medium
+    fix_available: any
+    behavior: "Warn and open an issue."
+    deadline: "Next dependency cycle"
+  - severity: low
+    fix_available: any
+    behavior: "Report only."
+    deadline: "Monitored"

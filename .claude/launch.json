@@ -1,0 +1,10 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web-provider",
+      "url": "http://localhost:5192",
+      "port": 5192
+    }
+  ]
+}

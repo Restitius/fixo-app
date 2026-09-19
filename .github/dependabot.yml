@@ -1,0 +1,57 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/applications/frontend/web/web-user"
+    schedule: { interval: "weekly", day: "monday", time: "04:00" }
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "frontend", "web-user"]
+    groups:
+      web-user-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "npm"
+    directory: "/applications/frontend/web/web-provider"
+    schedule: { interval: "weekly", day: "monday", time: "04:00" }
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "frontend", "web-provider"]
+    groups:
+      web-provider-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "npm"
+    directory: "/applications/frontend/mobile"
+    schedule: { interval: "weekly", day: "monday", time: "04:00" }
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "mobile"]
+    groups:
+      mobile-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "pip"
+    directory: "/applications/backend"
+    schedule: { interval: "weekly", day: "monday", time: "04:00" }
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "backend"]
+    groups:
+      backend-minor-patch:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "docker"
+    directory: "/applications/backend"
+    schedule: { interval: "weekly" }
+    labels: ["dependencies", "container", "backend"]
+
+  - package-ecosystem: "docker"
+    directory: "/applications/frontend/web/web-user"
+    schedule: { interval: "weekly" }
+    labels: ["dependencies", "container", "web-user"]
+
+  - package-ecosystem: "docker"
+    directory: "/applications/frontend/web/web-provider"
+    schedule: { interval: "weekly" }
+    labels: ["dependencies", "container", "web-provider"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule: { interval: "weekly" }
+    labels: ["dependencies", "ci"]
