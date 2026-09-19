@@ -1,0 +1,159 @@
+# .github/workflows/security.yml
+#
+# Answers: is it safe to ship? Separated from pr-checks.yml so a failing
+# scan never looks like a broken test, and so it can run on a schedule
+# against code nobody is touching.
+name: Security
+
+on:
+  pull_request:
+    branches: [main, staging, dev, 'page/**', 'module/**']
+  push:
+    branches: [main, staging, dev, 'page/**', 'module/**']
+  schedule:
+    - cron: "17 3 * * *"   # nightly: new advisories against unchanged code
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+        with:
+          fetch-depth: 0        # full history: a secret in an old commit is still live
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7  # v2
+        env:
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  sast-codeql:
+    name: SAST (CodeQL)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      matrix:
+        language: [javascript-typescript, python]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+      - uses: github/codeql-action/init@3ea06614dafe36dec890db3446326e0d40ce53d4
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended
+      - uses: github/codeql-action/analyze@3ea06614dafe36dec890db3446326e0d40ce53d4
+
+  sast-semgrep:
+    name: SAST (Semgrep + FIXO rules)
+    runs-on: ubuntu-latest
+    container: returntocorp/semgrep:<pin-to-digest>
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+      - name: Community security rules
+        run: semgrep --config p/security-audit --config p/owasp-top-ten --error --quiet
+      - name: FIXO security rules
+        run: semgrep --config security/semgrep/fixo-security.yml --error --quiet
+
+  dependencies:
+    name: Dependency scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+      - name: Filesystem scan (lock files, OS-level manifests)
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+        with:
+          scan-type: fs
+          scanners: vuln,license,secret
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          trivyignores: security/allowlists/dependency-exceptions.yml
+      - name: Python advisories
+        run: |
+          pip install pip-audit
+          pip-audit -r applications/backend/requirements.txt --strict
+      - name: Node advisories (web-user)
+        run: npm audit --audit-level=high
+        working-directory: applications/frontend/web/web-user
+      - name: Node advisories (web-provider)
+        run: npm audit --audit-level=high
+        working-directory: applications/frontend/web/web-provider
+      - name: Node advisories (mobile)
+        run: npm audit --audit-level=high
+        working-directory: applications/frontend/mobile
+
+  dependency-review:
+    name: Dependency review (PR only)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48
+        with:
+          fail-on-severity: high
+          deny-licenses: AGPL-3.0, SSPL-1.0
+
+  iac:
+    name: Infrastructure as code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+      # infra/ doesn't have real Terraform/Kubernetes manifests yet (this
+      # repo's "pipeline code only" scope: the pipeline is real, the cloud
+      # resources it will one day provision aren't). Checkov erroring on a
+      # near-empty directory isn't a security finding, it's a tooling
+      # error — that would block security-gate on every single run for a
+      # reason unrelated to any real risk. Skip Checkov until real IaC
+      # exists; remove this check once it does.
+      - name: Check for infrastructure-as-code files
+        id: infra_files
+        run: |
+          if find infra \( -name '*.tf' -o -iname 'Dockerfile*' -o -iname 'docker-compose*.yml' -o -iname '*.k8s.yml' -o -iname '*.k8s.yaml' \) 2>/dev/null | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Terraform/Kubernetes misconfiguration (Checkov)
+        if: steps.infra_files.outputs.present == 'true'
+        uses: bridgecrewio/checkov-action@444c9db6fa75e2d9c19ebf1fde7322089be9009e
+        with:
+          directory: infra/
+          framework: terraform,dockerfile,docker_compose,kubernetes
+          soft_fail: false
+      - name: No infrastructure-as-code yet — nothing to scan
+        if: steps.infra_files.outputs.present == 'false'
+        run: echo "::notice::infra/ has no IaC files yet. This step will start enforcing once real Terraform/Kubernetes manifests land."
+      - name: Dockerfile and compose misconfiguration
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+
+  security-gate:
+    name: security-gate
+    if: always()
+    needs: [secrets, sast-codeql, sast-semgrep, dependencies, dependency-review, iac]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required job did not succeed
+        run: |
+          results='${{ toJSON(needs) }}'
+          echo "$results"
+          echo "$results" | python3 -c '
+          import json, sys
+          needs = json.load(sys.stdin)
+          bad = {k: v["result"] for k, v in needs.items()
+                 if v["result"] not in ("success", "skipped")}
+          if bad:
+              print("Blocking gate. Failed jobs:", bad)
+              sys.exit(1)
+          print("Security gate passed.")
+          '
