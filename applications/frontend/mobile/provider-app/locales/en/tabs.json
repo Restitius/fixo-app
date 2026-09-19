@@ -1,0 +1,9 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "requests": "Requests",
+    "bookings": "Bookings",
+    "calendar": "Calendar",
+    "profile": "Profile"
+  }
+}
