@@ -1,9 +1,8 @@
 """UpdateAssetDTO — internal transport for UpdateAsset update input (section 24)."""
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
 
 from app.shared.dtos.base import BaseDTO
 

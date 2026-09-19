@@ -56,7 +56,7 @@ for d in DOMAINS:
     port_methods = methods_of(d["port"])
     svc_cls = f"{d['cap']}Service"
 
-    ctor = [f"        self._repo = repo"]
+    ctor = ["        self._repo = repo"]
     ctor_args = ["self", "repo"]
     init_imports = [f"from app.ports.persistence.{d['mod']}_repository import {port_cls}"]
     ann = [f"        repo: {port_cls},"]
@@ -80,7 +80,7 @@ for d in DOMAINS:
         + "\n".join(sorted(set(init_imports)))
         + f"from app.shared.protection_errors import {ERR}\n\n\n"
         + f"class {svc_cls}:\n"
-        + f"    def __init__(\n"
+        + "    def __init__(\n"
         + "\n".join(ann)
         + "    ):\n"
         + "\n".join(ctor)
@@ -113,7 +113,7 @@ for d in DOMAINS:
     router = (
         "\n".join(sorted(set(imports))) + "\n"
         + f"from app.domains.{d['mod']}.services.{d['mod']}_service import {svc_cls}\n"
-        + f"from app.startup.composition import compose\n\n"
+        + "from app.startup.composition import compose\n\n"
         + f'router = APIRouter(prefix="/{d["key"]}", tags=["{d["title"]}"])\n'
         + f"svc = compose.{d['mod']}_service()\n"
         + ep_src + "\n"

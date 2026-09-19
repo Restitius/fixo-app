@@ -12,7 +12,7 @@ class StorageManager:
         self._default: Any = None
 
     def register(self, name: str, backend: Any, *, default: bool = False) -> None:
-        setattr(backend, "backend_name", name)
+        backend.backend_name = name
         if default:
             self._default = backend
         else:

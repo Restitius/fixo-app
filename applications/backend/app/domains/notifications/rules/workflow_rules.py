@@ -1,6 +1,7 @@
 """Notification workflow/state-transition rules (pure predicates)."""
 from __future__ import annotations
 
+
 def dedupe_window_respected(seconds_since_last: float, window_seconds: int) -> bool:
     """Suppress duplicates inside the configured window."""
     return seconds_since_last >= window_seconds

@@ -1,6 +1,7 @@
 """Notification business rules (pure predicates — enforce BEFORE persistence)."""
 from __future__ import annotations
 
+
 def critical_never_auto_expired(priority: str) -> bool:
     """CRITICAL alerts bypass expiry until acknowledged."""
     return priority != "CRITICAL"

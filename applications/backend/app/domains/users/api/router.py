@@ -5,11 +5,12 @@ from fastapi import APIRouter
 
 from app.api.deps.request_context import GetRequestContext
 from app.domains.users.api.controller import UserController
-
+from app.domains.users.requests.change_password_user import (
+    ChangePasswordUserRequest as UserChangePasswordRequest,
+)
 from app.domains.users.requests.create_user import CreateUserRequest as UserCreateRequest
-from app.domains.users.requests.update_user import UpdateUserRequest as UserUpdateRequest
-from app.domains.users.requests.change_password_user import ChangePasswordUserRequest as UserChangePasswordRequest
 from app.domains.users.requests.deactivate_user import DeactivateUserRequest as UserDeactivateRequest
+from app.domains.users.requests.update_user import UpdateUserRequest as UserUpdateRequest
 
 router = APIRouter(prefix="/users", tags=["users"])
 

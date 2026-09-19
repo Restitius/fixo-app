@@ -6,6 +6,7 @@ Business rules:
   - rating 1-5
 """
 from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.phase16_ports import RatingRepositoryPort

@@ -1,7 +1,7 @@
 """Tracking domain router — Modules 21 & 22 customer-side endpoints."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.api.deps.auth import CurrentCustomer

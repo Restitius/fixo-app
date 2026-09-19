@@ -5,11 +5,14 @@ from fastapi import APIRouter
 
 from app.api.deps.request_context import GetRequestContext
 from app.domains.liabilities.api.controller import LiabilityController
-
 from app.domains.liabilities.requests.create_liability import CreateLiabilityRequest as LiabilityCreateRequest
+from app.domains.liabilities.requests.record_payment_liability import (
+    RecordPaymentLiabilityRequest as LiabilityRecordPaymentRequest,
+)
+from app.domains.liabilities.requests.restructure_liability import (
+    RestructureLiabilityRequest as LiabilityRestructureRequest,
+)
 from app.domains.liabilities.requests.update_liability import UpdateLiabilityRequest as LiabilityUpdateRequest
-from app.domains.liabilities.requests.restructure_liability import RestructureLiabilityRequest as LiabilityRestructureRequest
-from app.domains.liabilities.requests.record_payment_liability import RecordPaymentLiabilityRequest as LiabilityRecordPaymentRequest
 
 router = APIRouter(prefix="/liabilities", tags=["liabilities"])
 

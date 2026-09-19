@@ -1,6 +1,8 @@
 """Favorites domain router — Phase 10 module 30."""
 from __future__ import annotations
+
 from fastapi import APIRouter, Query
+
 from app.api.deps.auth import CurrentCustomer
 from app.api.responses.response import ok
 from app.startup.composition import get_composition

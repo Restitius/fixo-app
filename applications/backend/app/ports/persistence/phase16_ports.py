@@ -1,5 +1,6 @@
 """Ports for Phase 16 — Completion (Module 51: Ratings, Module 53: Booking Close)."""
 from __future__ import annotations
+
 from typing import Any, Protocol
 
 

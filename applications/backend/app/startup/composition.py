@@ -101,23 +101,15 @@ class Composition:
 
     def wire(self, *, registry_manager: Any, databases: Any) -> None:
         """Build adapter chains from registered plumbing."""
-        from app.infrastructure.database.query_executor import QueryExecutor
-        from app.infrastructure.database.result_mapper import ResultMapper
-        from app.platform.query.sql_query_manager import SQLQueryManager
-        from app.platform.search.search_manager import SearchManager
-        from app.platform.files.file_manager import FileManager
-        from app.platform.notifications.notification_manager import NotificationManager
-        from app.platform.workflow.workflow_manager import WorkflowManager
-        from app.infrastructure.storage.local import LocalStorage
-        from app.infrastructure.storage.storage_manager import StorageManager
         from app.adapters.persistence.asset_sql_adapter import AssetSqlAdapter
         from app.adapters.persistence.booking_sql_adapter import BookingSqlAdapter
-        from app.adapters.persistence.change_request_sql_adapter import ChangeRequestSqlAdapter
         from app.adapters.persistence.cancellation_sql_adapter import CancellationSqlAdapter
-        from app.adapters.persistence.support_sql_adapter import SupportSqlAdapter
-        from app.adapters.persistence.dispute_sql_adapter import DisputeSqlAdapter
         from app.adapters.persistence.catalog_sql_adapter import CatalogSqlAdapter
+        from app.adapters.persistence.change_request_sql_adapter import ChangeRequestSqlAdapter
         from app.adapters.persistence.customer_sql_adapter import CustomerSqlAdapter
+        from app.adapters.persistence.dispute_sql_adapter import DisputeSqlAdapter
+        from app.adapters.persistence.evidence_sql_adapter import EvidenceSqlAdapter
+        from app.adapters.persistence.favorite_sql_adapter import FavoriteSqlAdapter
         from app.adapters.persistence.home_read_adapter import (
             ActiveBookingStubReader,
             HomeCatalogReadAdapter,
@@ -127,25 +119,33 @@ class Composition:
             WalletStubReader,
         )
         from app.adapters.persistence.invoice_sql_adapter import InvoiceSqlAdapter
-        from app.adapters.persistence.review_sql_adapter import ReviewSqlAdapter
-        from app.adapters.persistence.warranty_sql_adapter import WarrantySqlAdapter
-        from app.adapters.persistence.favorite_sql_adapter import FavoriteSqlAdapter
-        from app.adapters.persistence.rebook_sql_adapter import RebookSqlAdapter
         from app.adapters.persistence.location_sql_adapter import LocationSqlAdapter
         from app.adapters.persistence.matching_sql_adapter import MatchingSqlAdapter
         from app.adapters.persistence.messaging_sql_adapter import MessagingSqlAdapter
-        from app.adapters.persistence.tracking_sql_adapter import TrackingSqlAdapter
         from app.adapters.persistence.onboarding_sql_adapter import OnboardingSqlAdapter
         from app.adapters.persistence.otp_sql_adapter import OtpSqlAdapter
         from app.adapters.persistence.payment_sql_adapter import PaymentSqlAdapter
-        from app.adapters.persistence.provider_read_adapter import ProviderReadAdapter
         from app.adapters.persistence.property_sql_adapter import PropertySqlAdapter
+        from app.adapters.persistence.provider_read_adapter import ProviderReadAdapter
         from app.adapters.persistence.public_content_sql_adapter import PublicContentSqlAdapter
         from app.adapters.persistence.quotation_sql_adapter import QuotationSqlAdapter
+        from app.adapters.persistence.rebook_sql_adapter import RebookSqlAdapter
         from app.adapters.persistence.request_sql_adapter import RequestSqlAdapter
-        from app.adapters.persistence.evidence_sql_adapter import EvidenceSqlAdapter
+        from app.adapters.persistence.review_sql_adapter import ReviewSqlAdapter
         from app.adapters.persistence.service_area_sql_adapter import ServiceAreaSqlAdapter
         from app.adapters.persistence.session_sql_adapter import SessionSqlAdapter
+        from app.adapters.persistence.support_sql_adapter import SupportSqlAdapter
+        from app.adapters.persistence.tracking_sql_adapter import TrackingSqlAdapter
+        from app.adapters.persistence.warranty_sql_adapter import WarrantySqlAdapter
+        from app.infrastructure.database.query_executor import QueryExecutor
+        from app.infrastructure.database.result_mapper import ResultMapper
+        from app.infrastructure.storage.local import LocalStorage
+        from app.infrastructure.storage.storage_manager import StorageManager
+        from app.platform.files.file_manager import FileManager
+        from app.platform.notifications.notification_manager import NotificationManager
+        from app.platform.query.sql_query_manager import SQLQueryManager
+        from app.platform.search.search_manager import SearchManager
+        from app.platform.workflow.workflow_manager import WorkflowManager
         from app.registries.queries.query_loader import QueryLoader
         from app.registries.queries.query_validator import QueryValidator
         from app.security.jwt import JwtService
@@ -594,8 +594,8 @@ class Composition:
         self.dispute_repository = DisputeSqlAdapter(self.sql_query_manager)
         self.messaging_repository = MessagingSqlAdapter(self.sql_query_manager)
         self._tracking = TrackingSqlAdapter(self.sql_query_manager)
-        from app.integrations.external.manager import IntegrationManager
         from app.adapters.integrations.messaging_adapter import MessagingIntegrationAdapter
+        from app.integrations.external.manager import IntegrationManager
 
         self.integration_manager = IntegrationManager(registry_manager.integrations)
         self.messaging_adapter = MessagingIntegrationAdapter(self.integration_manager)
@@ -613,19 +613,19 @@ class Composition:
         self.rebook_repository = RebookSqlAdapter(self.sql_query_manager)
 
         # Phase 11 - retention repositories + scheduler.
-        from app.adapters.persistence.recurring_sql_adapter import RecurringSqlAdapter
         from app.adapters.persistence.maintenance_sql_adapter import MaintenanceSqlAdapter
+        from app.adapters.persistence.recurring_sql_adapter import RecurringSqlAdapter
 
         self.recurring_repository = RecurringSqlAdapter(self.sql_query_manager)
         self.maintenance_repository = MaintenanceSqlAdapter(self.sql_query_manager)
 
         # Phase 15 - account management adapters.
         from app.adapters.persistence.account_sql_adapter import (
+            AccountClosureSqlAdapter,
             PaymentMethodSqlAdapter,
             PreferenceSqlAdapter,
-            SecuritySqlAdapter,
             PrivacySqlAdapter,
-            AccountClosureSqlAdapter,
+            SecuritySqlAdapter,
         )
 
         self.payment_method_repository = PaymentMethodSqlAdapter(self.sql_query_manager)
@@ -635,12 +635,12 @@ class Composition:
         self.account_closure_repository = AccountClosureSqlAdapter(self.sql_query_manager)
 
         # Phase 12/14 - value + history adapters.
-        from app.adapters.persistence.value_sql_adapter import (
-            WalletSqlAdapter,
-            PromotionSqlAdapter,
-            LoyaltySqlAdapter,
-        )
         from app.adapters.persistence.history_sql_adapter import HistorySqlAdapter
+        from app.adapters.persistence.value_sql_adapter import (
+            LoyaltySqlAdapter,
+            PromotionSqlAdapter,
+            WalletSqlAdapter,
+        )
 
         self.wallet_repository = WalletSqlAdapter(self.sql_query_manager)
         self.promotion_repository = PromotionSqlAdapter(self.sql_query_manager)
@@ -649,7 +649,7 @@ class Composition:
         self.scheduler = None
 
         # Phase 16 - completion (ratings + booking close).
-        from app.adapters.persistence.ratings_sql_adapter import RatingSqlAdapter, BookingCloseSqlAdapter
+        from app.adapters.persistence.ratings_sql_adapter import BookingCloseSqlAdapter, RatingSqlAdapter
         self.rating_repository = RatingSqlAdapter(self.sql_query_manager)
         self.close_repository = BookingCloseSqlAdapter(self.sql_query_manager)
 

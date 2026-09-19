@@ -1,5 +1,6 @@
 """Phase 15 - Account Management: payment methods, preferences, security, privacy, account closure."""
 from __future__ import annotations
+
 from alembic import op
 
 revision = "0017_phase15_account"

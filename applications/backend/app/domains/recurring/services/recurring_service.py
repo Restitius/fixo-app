@@ -1,10 +1,10 @@
 """RecurringService - Module 31: subscription lifecycle + scheduler generation."""
 from __future__ import annotations
+
 import logging
 from datetime import date, timedelta
 from typing import Any
 
-from app.ports.persistence.recurring_repository import RecurringRepositoryPort
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
 
 logger = logging.getLogger(__name__)

@@ -1,6 +1,7 @@
 """Transaction workflow/state-transition rules (pure predicates)."""
 from __future__ import annotations
 
+
 def only_pending_can_settle(status: str) -> bool:
     """Transitions to SETTLED are legal only from PENDING."""
     return status == "PENDING"

@@ -1,5 +1,6 @@
 """Accounts domain router — Modules 43-50 (profile / payment methods / preferences / security / privacy)."""
 from __future__ import annotations
+
 from typing import Any
 
 from fastapi import APIRouter, Body, Query

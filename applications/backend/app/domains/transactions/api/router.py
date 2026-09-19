@@ -5,10 +5,15 @@ from fastapi import APIRouter
 
 from app.api.deps.request_context import GetRequestContext
 from app.domains.transactions.api.controller import TransactionController
-
-from app.domains.transactions.requests.create_transaction import CreateTransactionRequest as TransactionCreateRequest
-from app.domains.transactions.requests.update_transaction import UpdateTransactionRequest as TransactionUpdateRequest
-from app.domains.transactions.requests.categorize_transaction import CategorizeTransactionRequest as TransactionCategorizeRequest
+from app.domains.transactions.requests.categorize_transaction import (
+    CategorizeTransactionRequest as TransactionCategorizeRequest,
+)
+from app.domains.transactions.requests.create_transaction import (
+    CreateTransactionRequest as TransactionCreateRequest,
+)
+from app.domains.transactions.requests.update_transaction import (
+    UpdateTransactionRequest as TransactionUpdateRequest,
+)
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 

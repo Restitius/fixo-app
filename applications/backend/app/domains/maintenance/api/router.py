@@ -1,5 +1,6 @@
 """Maintenance domain router - Phase 11, Module 33."""
 from __future__ import annotations
+
 from datetime import date
 
 from fastapi import APIRouter, Query

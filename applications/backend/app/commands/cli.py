@@ -50,7 +50,7 @@ def build_parser(registry: CommandRegistry | None = None) -> argparse.ArgumentPa
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    handler = getattr(args, "_handler")
+    handler = args._handler
     return int(handler(args) or 0)
 
 

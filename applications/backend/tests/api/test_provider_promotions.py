@@ -66,7 +66,7 @@ async def _cleanup_promos():
 async def test_full_promotion_flow(_providers, _cleanup_promos):
     pid, other_pid = _providers["provider_id"], _providers["other_provider_id"]
     svc = _comp.provider_promotions_service()
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.UTC)
 
     promo = await svc.create(
         pid, code="welcome10", name="Welcome Discount", description="New customer discount",
@@ -114,7 +114,7 @@ async def test_full_promotion_flow(_providers, _cleanup_promos):
 async def test_invalid_terms_rejected(_providers):
     pid = _providers["provider_id"]
     svc = _comp.provider_promotions_service()
-    now = datetime.datetime.now(datetime.timezone.utc)
+    now = datetime.datetime.now(datetime.UTC)
 
     with pytest.raises(ValidationError):
         await svc.create(

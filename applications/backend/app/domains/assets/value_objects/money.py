@@ -21,12 +21,12 @@ class Money:
         except (InvalidOperation, TypeError) as exc:
             raise ValueError(f"Invalid money amount: {self.amount!r}") from exc
 
-    def add(self, other: "Money") -> "Money":
+    def add(self, other: Money) -> Money:
         if self.currency != other.currency:
             raise ValueError(f"Currency mismatch: {self.currency} vs {other.currency}")
         return Money(self.amount + other.amount, self.currency)
 
-    def subtract(self, other: "Money") -> "Money":
+    def subtract(self, other: Money) -> Money:
         if self.currency != other.currency:
             raise ValueError(f"Currency mismatch: {self.currency} vs {other.currency}")
         return Money(self.amount - other.amount, self.currency)

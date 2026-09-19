@@ -1,7 +1,7 @@
 """Ratings domain router — Module 51 (ratings/reviews)."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
 from app.api.deps.auth import CurrentCustomer

@@ -4,8 +4,9 @@ handlers/metadata. Backs both the cross-domain command bus
 management CLI (app/commands/cli.py)."""
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any
 
 from app.shared.exceptions.hierarchy import ConfigurationError
 
