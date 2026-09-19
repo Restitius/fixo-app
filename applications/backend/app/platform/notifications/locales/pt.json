@@ -1,0 +1,30 @@
+{
+  "NTF.BOOKING.CONFIRMED.V1": {
+    "customer": {"title": "Reserva confirmada", "body": "{booking_number} — o seu prestador foi reservado."},
+    "assigned_provider": {"title": "Nova reserva atribuída", "body": "Você foi reservado para {booking_number}."}
+  },
+  "NTF.PAYMENT.AUTHORIZED.V1": {
+    "customer": {"title": "Pagamento autorizado", "body": "{booking_number} — fundos reservados para o serviço."}
+  },
+  "NTF.BOOKING.ON_THE_WAY.V1": {
+    "customer": {"title": "O seu prestador está a caminho", "body": "Reserva {booking_number}"}
+  },
+  "NTF.BOOKING.ARRIVED.V1": {
+    "customer": {"title": "O seu prestador chegou", "body": "Reserva {booking_number}"}
+  },
+  "NTF.SERVICE.COMPLETION_REQUESTED.V1": {
+    "customer": {"title": "O prestador concluiu o serviço", "body": "{booking_number} — reveja e confirme a conclusão."}
+  },
+  "NTF.SERVICE.COMPLETED.V1": {
+    "customer": {"title": "Serviço concluído", "body": "{booking_number} — obrigado por confirmar."}
+  },
+  "NTF.PAYMENT.CAPTURED.V1": {
+    "customer": {"title": "Pagamento recebido", "body": "{booking_number} — fundos captados."}
+  },
+  "NTF.INVOICE.ISSUED.V1": {
+    "customer": {"title": "Fatura {invoice_number}", "body": "{total_amount} {currency} a pagar."}
+  },
+  "NTF.MAINTENANCE.OVERDUE.V1": {
+    "customer": {"title": "Manutenção em atraso", "body": "O plano {plan_number} ultrapassou a data de vencimento."}
+  }
+}

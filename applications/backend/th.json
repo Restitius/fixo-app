@@ -1,0 +1,1 @@
+{"success":false,"message":{"type":"error","title":"Error","body":"Governed query failed validation"},"data":{},"meta":{},"request_id":"req-89de5d2e72c8","error":{"code":"QUERY.VALIDATION_FAILED","details":{"query_id":"CUS.MESSAGES.UNREAD_COUNT","issues":["CUS.MESSAGES.UNREAD_COUNT: ownership filter required (expected :user_id, :customer_id or :tenant_id bind parameter)"]}}}

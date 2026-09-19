@@ -1,0 +1,1 @@
+{"success":true,"message":{"type":"success","title":"Success","body":""},"data":{"booking_status":"ON_THE_WAY","on_the_way":true,"latest_position":{"latitude":-6.79,"longitude":39.21,"recorded_at":"2026-08-26T08:19:22.564970+00:00","ping_count":1}},"meta":{},"request_id":null}
