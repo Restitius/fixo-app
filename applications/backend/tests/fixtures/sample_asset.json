@@ -1,0 +1,7 @@
+{
+  "name": "Reference Laptop",
+  "asset_type": "EQUIPMENT",
+  "purchase_value": "1250.00",
+  "currency": "USD",
+  "notes": "Fixture used by integration tests."
+}
