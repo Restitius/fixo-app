@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "एक सेवा चुनें",
+    "details": "बुकिंग विवरण",
+    "address": "आपका पता",
+    "review": "समीक्षा सारांश",
+    "provider": "एक प्रदाता चुनें",
+    "payment": "भुगतान",
+    "pin": "भुगतान की पुष्टि करें"
+  },
+  "service": {
+    "realServicesBy": "{{name}} द्वारा प्रदान की जाने वाली वास्तविक सेवाएं।",
+    "noServices": "इस प्रदाता ने अभी तक कोई सेवा सूचीबद्ध नहीं की है।",
+    "continue": "जारी रखें"
+  },
+  "details": {
+    "describeJob": "काम का विवरण दें",
+    "placeholder": "आपको क्या करवाना है? (न्यूनतम 10 अक्षर)",
+    "minChars": "{{count}}/10 न्यूनतम अक्षर",
+    "preferredDate": "पसंदीदा तारीख",
+    "preferredTime": "पसंदीदा समय",
+    "continue": "जारी रखें",
+    "weekdayMo": "सो",
+    "weekdayTu": "मं",
+    "weekdayWe": "बु",
+    "weekdayTh": "गु",
+    "weekdayFr": "शु",
+    "weekdaySa": "श",
+    "weekdaySu": "र",
+    "morning": "सुबह",
+    "morningHint": "सुबह 8 – दोपहर 12",
+    "afternoon": "दोपहर",
+    "afternoonHint": "दोपहर 12 – शाम 5",
+    "evening": "शाम",
+    "eveningHint": "शाम 5 – रात 9",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "नया पता जोड़ें",
+    "labelPlaceholder": "लेबल (जैसे घर)",
+    "recipientPlaceholder": "प्राप्तकर्ता का नाम",
+    "phonePlaceholder": "फ़ोन",
+    "streetPlaceholder": "सड़क का पता",
+    "cityPlaceholder": "शहर",
+    "regionPlaceholder": "क्षेत्र (वैकल्पिक)",
+    "saveAddress": "पता सहेजें",
+    "cancel": "रद्द करें",
+    "continue": "जारी रखें"
+  },
+  "review": {
+    "labelService": "सेवा",
+    "labelProvider": "प्रदाता",
+    "labelDate": "तारीख",
+    "labelTime": "समय",
+    "labelAddress": "पता",
+    "notSet": "सेट नहीं है",
+    "promoCode": "प्रोमो कोड",
+    "promoPlaceholder": "कोड दर्ज करें",
+    "apply": "लागू करें",
+    "promoInvalid": "यह कोड मान्य नहीं है या समाप्त हो गया है",
+    "promo": "प्रोमो",
+    "total": "कुल",
+    "submitRequest": "अनुरोध जमा करें",
+    "genericError": "यह अनुरोध जमा नहीं किया जा सका"
+  },
+  "provider": {
+    "finding": "आपके आस-पास सर्वश्रेष्ठ रेटेड पेशेवरों को खोजा जा रहा है…",
+    "noneAvailableTitle": "अभी कोई प्रदाता उपलब्ध नहीं है",
+    "noneAvailableSubtitle": "कुछ देर बाद पुनः प्रयास करें, या बाद में मेरी बुकिंग्स देखें।",
+    "errorTitle": "कुछ गलत हो गया",
+    "retry": "पुनः प्रयास करें",
+    "noQuotesTitle": "अभी तक कोई तत्काल कोटेशन नहीं",
+    "noQuotesSubtitle": "मिलान किए गए प्रदाताओं ने अभी तक अनुमान नहीं भेजा है। जल्द ही मेरी बुकिंग्स देखें।",
+    "notMatchedNotice": "{{name}} इस अनुरोध के लिए मेल नहीं खाया — इसके बजाय यहां आपके मिलान किए गए प्रदाता हैं।",
+    "leadTime": "{{rating}} · {{days}} दिन की प्रतीक्षा अवधि",
+    "confirming": "पुष्टि हो रही है…",
+    "acceptAndContinue": "स्वीकार करें और जारी रखें"
+  },
+  "payment": {
+    "booking": "बुकिंग",
+    "amountDue": "देय राशि",
+    "yourMethods": "आपके भुगतान के तरीके",
+    "wallet": "FIXO वॉलेट",
+    "default": "डिफ़ॉल्ट",
+    "authorizeNotice": "अधिकृत करना इस बुकिंग के लिए वास्तविक भुगतान-प्राधिकरण प्रक्रिया चलाता है।",
+    "authorizePayment": "भुगतान अधिकृत करें"
+  },
+  "pin": {
+    "enterToConfirm": "पुष्टि के लिए अपना पिन दर्ज करें",
+    "continue": "जारी रखें"
+  },
+  "success": {
+    "title": "बुकिंग सफल!",
+    "body": "आपका भुगतान अधिकृत हो गया है और बुकिंग की पुष्टि हो गई है।",
+    "viewReceipt": "ई-रसीद देखें",
+    "backToBookings": "बुकिंग्स पर वापस जाएं"
+  },
+  "receipt": {
+    "title": "ई-रसीद",
+    "share": "ई-रसीद साझा करें",
+    "download": "ई-रसीद डाउनलोड करें",
+    "print": "प्रिंट करें",
+    "labelService": "सेवा",
+    "labelProvider": "प्रदाता",
+    "labelDate": "तारीख",
+    "labelTime": "समय",
+    "labelAddress": "पता",
+    "amount": "राशि",
+    "arrivalCode": "आगमन कोड",
+    "paymentId": "भुगतान आईडी",
+    "status": "स्थिति",
+    "serviceFallback": "सेवा"
+  },
+  "cancel": {
+    "title": "बुकिंग रद्द करें",
+    "confirmTitle": "रद्दीकरण की पुष्टि करें",
+    "whyCancelling": "आप क्यों रद्द कर रहे हैं?",
+    "reasonChangeOfPlans": "योजनाओं में बदलाव",
+    "reasonBetterPrice": "बेहतर कीमत मिली",
+    "reasonMistake": "गलती से बुक हो गया",
+    "reasonUnavailable": "प्रदाता उपलब्ध नहीं है",
+    "reasonOther": "अन्य",
+    "continue": "जारी रखें",
+    "cancelling": "आपकी बुकिंग रद्द की जा रही है…",
+    "enterPinToConfirm": "रद्दीकरण की पुष्टि के लिए अपना पिन दर्ज करें",
+    "genericError": "यह बुकिंग रद्द नहीं की जा सकी — रद्दीकरण की समयसीमा पहले ही बीत चुकी होगी।",
+    "cancelledTitle": "बुकिंग रद्द की गई",
+    "cancelledBody": "{{provider}} के साथ आपकी बुकिंग रद्द कर दी गई है।",
+    "cancelledBodyRelease": " आपका {{amount}} प्राधिकरण जारी किया जाएगा।",
+    "providerFallback": "प्रदाता",
+    "backToBookings": "बुकिंग्स पर वापस जाएं"
+  }
+}

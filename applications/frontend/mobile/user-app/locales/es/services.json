@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "Todos los Servicios"
+  },
+  "category": {
+    "titleFallback": "Servicios",
+    "noProviders": "Aún no hay proveedores disponibles."
+  },
+  "detail": {
+    "reviewsCount": "({{count}} reseñas)",
+    "activeSince": "Activo Desde",
+    "jobsDone": "Trabajos Realizados",
+    "services": "Servicios",
+    "about": "Acerca de",
+    "readMore": "Leer más...",
+    "servicesPricing": "Servicios y Precios",
+    "noServices": "Aún no hay servicios listados.",
+    "bookNow": "Reservar Ahora"
+  },
+  "chat": {
+    "providerFallback": "Proveedor",
+    "loading": "Cargando…",
+    "noMessages": "Aún no hay mensajes — ¡saluda!",
+    "placeholder": "Mensaje..."
+  }
+}

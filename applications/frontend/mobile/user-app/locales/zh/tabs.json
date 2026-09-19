@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "首页",
+    "bookings": "预订",
+    "calendar": "日历",
+    "inbox": "消息",
+    "profile": "我的"
+  },
+  "home": {
+    "greetingMorning": "早上好",
+    "greetingAfternoon": "下午好",
+    "greetingEvening": "晚上好",
+    "searchPlaceholder": "搜索服务...",
+    "specialOffers": "特别优惠",
+    "seeAll": "查看全部",
+    "offAmount": "优惠 {{amount}}",
+    "services": "服务",
+    "more": "更多",
+    "mostPopular": "最受欢迎的服务",
+    "noProviders": "暂无服务商。",
+    "serviceFallback": "服务"
+  },
+  "bookings": {
+    "title": "我的预订",
+    "tabUpcoming": "即将到来",
+    "tabCompleted": "已完成",
+    "tabCancelled": "已取消",
+    "emptyTitle": "暂无{{tab}}预订",
+    "emptySubtitle": "您的{{tab}}预订将显示在这里。",
+    "serviceFallback": "服务",
+    "loadingDetails": "正在加载详情…",
+    "totalPaid": "已付总额",
+    "viewProvider": "查看服务商",
+    "cancelBooking": "取消预订",
+    "eReceipt": "电子收据"
+  },
+  "calendar": {
+    "title": "我的日历",
+    "loading": "加载中…",
+    "bookingsOn": "{{date}}的预订",
+    "noBookingsThisDay": "这一天没有预订",
+    "dotHint": "下方有圆点的日期表示有真实预订。",
+    "serviceFallback": "服务"
+  },
+  "inbox": {
+    "title": "消息",
+    "subtitle": "与您真实预订的服务商联系。",
+    "emptyTitle": "暂无对话",
+    "emptySubtitle": "一旦有服务商被分配到预订，您就可以在这里给他们发消息。",
+    "serviceFallback": "服务"
+  },
+  "profileHub": {
+    "title": "个人资料与设置",
+    "menu": {
+      "editProfile": "编辑资料",
+      "notificationSettings": "通知设置",
+      "wallet": "钱包",
+      "paymentMethods": "支付方式",
+      "invoices": "账单",
+      "history": "历史记录",
+      "loyaltyRewards": "会员与奖励",
+      "promotions": "促销活动",
+      "activity": "活动记录",
+      "feedback": "反馈",
+      "security": "安全",
+      "language": "语言",
+      "privacyPolicy": "隐私政策",
+      "inviteFriends": "邀请好友",
+      "helpCenter": "帮助中心"
+    },
+    "logOut": "退出登录",
+    "logoutConfirmTitle": "退出您的账户？",
+    "logoutConfirmBody": "您需要重新登录才能访问您的预订。",
+    "cancel": "取消"
+  }
+}

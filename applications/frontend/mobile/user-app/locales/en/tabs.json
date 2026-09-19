@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Home",
+    "bookings": "Bookings",
+    "calendar": "Calendar",
+    "inbox": "Inbox",
+    "profile": "Profile"
+  },
+  "home": {
+    "greetingMorning": "Good Morning",
+    "greetingAfternoon": "Good Afternoon",
+    "greetingEvening": "Good Evening",
+    "searchPlaceholder": "Search services...",
+    "specialOffers": "Special Offers",
+    "seeAll": "See All",
+    "offAmount": "{{amount}} OFF",
+    "services": "Services",
+    "more": "More",
+    "mostPopular": "Most Popular Services",
+    "noProviders": "No providers listed yet.",
+    "serviceFallback": "Service"
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "tabUpcoming": "Upcoming",
+    "tabCompleted": "Completed",
+    "tabCancelled": "Cancelled",
+    "emptyTitle": "No {{tab}} bookings",
+    "emptySubtitle": "Your {{tab}} bookings will show up here.",
+    "serviceFallback": "Service",
+    "loadingDetails": "Loading details…",
+    "totalPaid": "Total paid",
+    "viewProvider": "View Provider",
+    "cancelBooking": "Cancel Booking",
+    "eReceipt": "E-Receipt"
+  },
+  "calendar": {
+    "title": "My Calendar",
+    "loading": "Loading…",
+    "bookingsOn": "Bookings on {{date}}",
+    "noBookingsThisDay": "No bookings this day",
+    "dotHint": "Dates with a dot below them have a real booking.",
+    "serviceFallback": "Service"
+  },
+  "inbox": {
+    "title": "Inbox",
+    "subtitle": "Message the providers on your real bookings.",
+    "emptyTitle": "No conversations yet",
+    "emptySubtitle": "Once a provider is assigned to a booking, you can message them here.",
+    "serviceFallback": "Service"
+  },
+  "profileHub": {
+    "title": "Profile & Settings",
+    "menu": {
+      "editProfile": "Edit Profile",
+      "notificationSettings": "Notification Settings",
+      "wallet": "Wallet",
+      "paymentMethods": "Payment Methods",
+      "invoices": "Invoices",
+      "history": "History",
+      "loyaltyRewards": "Loyalty & Rewards",
+      "promotions": "Promotions",
+      "activity": "Activity",
+      "feedback": "Feedback",
+      "security": "Security",
+      "language": "Language",
+      "privacyPolicy": "Privacy Policy",
+      "inviteFriends": "Invite Friends",
+      "helpCenter": "Help Center"
+    },
+    "logOut": "Log Out",
+    "logoutConfirmTitle": "Log out of your account?",
+    "logoutConfirmBody": "You'll need to sign in again to access your bookings.",
+    "cancel": "Cancel"
+  }
+}
