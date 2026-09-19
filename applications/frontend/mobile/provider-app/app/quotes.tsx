@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import ScreenHeader from '../components/ScreenHeader'
 import StatusBadge from '../components/StatusBadge'
 import Button from '../components/Button'
+import Field from '../components/Field'
 import Sheet from '../components/Sheet'
 import { useAuth } from '../lib/auth-context'
 import { quotesApi, type QuoteDetail, type QuoteRow } from '../lib/api-client'
@@ -217,10 +218,18 @@ function CreateQuoteForm({ requestId, onSaved }: { requestId: string; onSaved: (
     <View>
       <Text className="text-[18px] font-bold text-ink">New quotation</Text>
       <View className="mt-4" style={{ gap: 12 }}>
-        <TextInput className={fieldCls} placeholder="Total amount" keyboardType="numeric" value={totalAmount} onChangeText={setTotalAmount} />
-        <TextInput className={fieldCls} placeholder="Labour cost (optional)" keyboardType="numeric" value={labourCost} onChangeText={setLabourCost} />
-        <TextInput className={fieldCls} placeholder="Materials cost (optional)" keyboardType="numeric" value={materialsCost} onChangeText={setMaterialsCost} />
-        <TextInput className={fieldCls} placeholder="Notes (optional)" value={notes} onChangeText={setNotes} multiline />
+        <Field label="Total amount">
+          <TextInput className={fieldCls} keyboardType="numeric" value={totalAmount} onChangeText={setTotalAmount} />
+        </Field>
+        <Field label="Labour cost (optional)">
+          <TextInput className={fieldCls} keyboardType="numeric" value={labourCost} onChangeText={setLabourCost} />
+        </Field>
+        <Field label="Materials cost (optional)">
+          <TextInput className={fieldCls} keyboardType="numeric" value={materialsCost} onChangeText={setMaterialsCost} />
+        </Field>
+        <Field label="Notes (optional)">
+          <TextInput className={fieldCls} value={notes} onChangeText={setNotes} multiline />
+        </Field>
       </View>
       {error && (
         <Text className="text-[13px] mt-3" style={{ color: '#DC2626' }}>
