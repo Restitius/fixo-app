@@ -19,6 +19,7 @@ import {
   CalendarIcon,
   ChevronRightIcon,
   FileTextIcon,
+  HelpCircleIcon,
   HistoryIcon,
   ImageIcon,
   LocationIcon,
@@ -48,6 +49,7 @@ const MENU = [
   { icon: WalletIcon, label: 'Payouts', to: '/payouts' },
   { icon: FileTextIcon, label: 'Invoices', to: '/invoices' },
   { icon: CalendarIcon, label: 'Availability', to: '/availability' },
+  { icon: HelpCircleIcon, label: 'Support', to: '/support' },
   { icon: SettingsIcon, label: 'Settings', to: '/settings' },
 ] as const
 

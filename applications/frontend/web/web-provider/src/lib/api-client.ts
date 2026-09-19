@@ -1309,3 +1309,52 @@ export const businessCustomersApi = {
     apiClient.patch<BusinessCustomer>(`/providers/me/business-customers/${recordId}`, data).then((r) => r.data),
   deactivate: (recordId: string) => apiClient.post<BusinessCustomer>(`/providers/me/business-customers/${recordId}/deactivate`).then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Support — real /providers/me/support/* (support_router.py): tickets +
+// a message sub-thread. Wrapped in the standard envelope. No ticket-close
+// endpoint exists on the provider side (closing/resolving is admin/support-
+// side) — messages just stop being acceptable once a ticket is CLOSED
+// (409). No "related booking" field on the real CreateTicketRequest — the
+// mock had one, dropped. Category/priority are real fixed vocabularies,
+// not the mock's invented ones (Payment/Dispute/Verification/Safety aren't
+// real categories).
+// ---------------------------------------------------------------------------
+
+export type TicketCategory = "GENERAL" | "BILLING" | "ACCOUNT" | "TECHNICAL" | "BOOKING" | "PAYOUT" | "OTHER";
+export type TicketPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
+export interface SupportTicket {
+  ticket_id: string;
+  ticket_number: string;
+  subject: string;
+  category: TicketCategory;
+  priority: TicketPriority;
+  status: string;
+  resolution?: string | null;
+  created_at: string;
+  updated_at: string;
+  message_count?: number;
+  first_response_at?: string | null;
+  last_support_message_at?: string | null;
+}
+
+export interface SupportMessage {
+  message_id: string;
+  ticket_id?: string;
+  sender: "PROVIDER" | "SUPPORT";
+  body: string;
+  created_at: string;
+}
+
+export const supportApi = {
+  createTicket: (data: { subject: string; category?: TicketCategory | undefined; priority?: TicketPriority | undefined }) =>
+    apiClient.post<SupportTicket>("/providers/me/support/tickets", data).then((r) => r.data),
+  listTickets: (limit = 20, offset = 0) =>
+    apiClient.get<SupportTicket[]>(`/providers/me/support/tickets${qs({ limit, offset })}`).then((r) => r.data),
+  getTicket: (ticketId: string) => apiClient.get<SupportTicket>(`/providers/me/support/tickets/${ticketId}`).then((r) => r.data),
+  addMessage: (ticketId: string, body: string) =>
+    apiClient.post<SupportMessage>(`/providers/me/support/tickets/${ticketId}/messages`, { body }).then((r) => r.data),
+  listMessages: (ticketId: string, limit = 100, offset = 0) =>
+    apiClient.get<SupportMessage[]>(`/providers/me/support/tickets/${ticketId}/messages${qs({ limit, offset })}`).then((r) => r.data),
+};
