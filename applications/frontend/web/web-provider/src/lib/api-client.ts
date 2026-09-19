@@ -250,6 +250,9 @@ export interface VerificationStatus {
 export interface CatalogServiceOption {
   service_id: string;
   name: string;
+  slug?: string | null | undefined;
+  description?: string | null | undefined;
+  category_code?: string | null | undefined;
   category_name: string;
 }
 
@@ -262,7 +265,11 @@ export interface ProviderServiceConfig {
   minimum_charge?: number | null | undefined;
   duration_minutes?: number | null | undefined;
   is_emergency_available: boolean;
-  approval_status?: string | null | undefined;
+  status?: string | null | undefined;
+  service_name?: string | null | undefined;
+  service_slug?: string | null | undefined;
+  category_code?: string | null | undefined;
+  category_name?: string | null | undefined;
 }
 
 export interface ProviderServicePricing {
@@ -358,6 +365,8 @@ export const onboardingApi = {
   configureService: (serviceId: string, data: Partial<ProviderServiceConfig>) =>
     apiClient.put<ProviderServiceConfig>(`/providers/services/${serviceId}`, data).then((r) => r.data),
   removeService: (serviceId: string) => apiClient.delete(`/providers/services/${serviceId}`).then((r) => r.data),
+  submitService: (serviceId: string) =>
+    apiClient.post<ProviderServiceConfig>(`/providers/services/${serviceId}/submit`).then((r) => r.data),
 
   listPricing: () => apiClient.get<ProviderServicePricing[]>("/providers/pricing").then((r) => r.data),
   upsertPricing: (serviceId: string, data: Partial<ProviderServicePricing>) =>
