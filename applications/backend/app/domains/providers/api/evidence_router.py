@@ -1,10 +1,12 @@
 """Provider Job Evidence — API routes (Requirement Phase 22)."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, Field
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_job_evidence_service import (
     ProviderJobEvidenceService,
 )
@@ -34,16 +36,18 @@ async def add_evidence(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.add(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        phase=body.phase,
-        kind=body.kind,
-        title=body.title,
-        body=body.body,
-        media_url=body.media_url,
-        quantity=body.quantity,
-        unit=body.unit,
+    return ok(
+        await svc.add(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            phase=body.phase,
+            kind=body.kind,
+            title=body.title,
+            body=body.body,
+            media_url=body.media_url,
+            quantity=body.quantity,
+            unit=body.unit,
+        )
     )
 
 
@@ -55,11 +59,13 @@ async def list_evidence(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.list_for_booking(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        phase=phase,
-        kind=kind,
+    return ok(
+        await svc.list_for_booking(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            phase=phase,
+            kind=kind,
+        )
     )
 
 
@@ -69,9 +75,11 @@ async def evidence_summary(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.summary(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.summary(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -82,8 +90,10 @@ async def delete_evidence(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.delete(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        evidence_id=evidence_id,
+    return ok(
+        await svc.delete(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            evidence_id=evidence_id,
+        )
     )

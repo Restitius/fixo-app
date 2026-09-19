@@ -1,10 +1,12 @@
 """Provider Job Checklist — API routes (Requirement Phase 21)."""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_job_checklist_service import (
     ProviderJobChecklistService,
 )
@@ -37,11 +39,13 @@ async def upsert_template(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.upsert_template(
-        provider_id=str(provider["provider_id"]),
-        service_id=service_id,
-        title=body.title,
-        items=body.items,
+    return ok(
+        await svc.upsert_template(
+            provider_id=str(provider["provider_id"]),
+            service_id=service_id,
+            title=body.title,
+            items=body.items,
+        )
     )
 
 
@@ -51,9 +55,11 @@ async def get_template(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.get_template(
-        provider_id=str(provider["provider_id"]),
-        service_id=service_id,
+    return ok(
+        await svc.get_template(
+            provider_id=str(provider["provider_id"]),
+            service_id=service_id,
+        )
     )
 
 
@@ -63,9 +69,11 @@ async def delete_template(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.delete_template(
-        provider_id=str(provider["provider_id"]),
-        service_id=service_id,
+    return ok(
+        await svc.delete_template(
+            provider_id=str(provider["provider_id"]),
+            service_id=service_id,
+        )
     )
 
 
@@ -76,10 +84,12 @@ async def instantiate(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.instantiate(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        service_id=body.service_id,
+    return ok(
+        await svc.instantiate(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            service_id=body.service_id,
+        )
     )
 
 
@@ -89,9 +99,11 @@ async def list_for_booking(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.list_for_booking(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.list_for_booking(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -103,11 +115,13 @@ async def set_completed(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.set_completed(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        item_id=item_id,
-        is_completed=body.is_completed if body else True,
+    return ok(
+        await svc.set_completed(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            item_id=item_id,
+            is_completed=body.is_completed if body else True,
+        )
     )
 
 
@@ -117,7 +131,9 @@ async def progress(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.progress(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.progress(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )

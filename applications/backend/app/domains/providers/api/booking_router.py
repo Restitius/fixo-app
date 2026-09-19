@@ -1,10 +1,22 @@
-"""Provider Booking Confirmation — API routes (Phases 14, 16, 20)."""
+"""Provider Booking Confirmation — API routes (Phases 14, 16, 20).
+
+Every other provider router wraps its responses in the standard
+{success, data, message} envelope via app.api.responses.response.ok() —
+this one didn't (returned raw service results), which is incompatible
+with every real API client in this codebase (web-provider's, web-user's
+and the mobile app's api-client.ts all check `json.success` and unwrap
+`json.data`). Found via live end-to-end testing while wiring
+web-provider's bookings.tsx to this router; fixed by wrapping every
+endpoint the same way the rest of the app already does.
+"""
+
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
 
 from app.api.deps.provider_auth import get_current_provider
+from app.api.responses.response import ok
 from app.domains.providers.services.provider_booking_service import ProviderBookingService
 from app.startup.composition import get_composition
 
@@ -28,11 +40,13 @@ async def feed(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.feed(
-        provider_id=str(provider["provider_id"]),
-        status=status,
-        limit=limit,
-        offset=offset,
+    return ok(
+        await svc.feed(
+            provider_id=str(provider["provider_id"]),
+            status=status,
+            limit=limit,
+            offset=offset,
+        )
     )
 
 
@@ -42,9 +56,11 @@ async def get(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.get(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.get(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -54,9 +70,11 @@ async def acknowledge(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.acknowledge(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.acknowledge(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -66,9 +84,11 @@ async def ack_status(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.ack_status(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.ack_status(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -78,9 +98,11 @@ async def details(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.details(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.details(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -90,9 +112,11 @@ async def timeline(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.timeline(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.timeline(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -102,9 +126,11 @@ async def message_count(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.message_count(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.message_count(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
 
 
@@ -115,11 +141,13 @@ async def start_service(
     body: StartServiceBody | None = None,
 ):
     svc = _service()
-    return await svc.start_service(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
-        gps_lat=(body.gps_lat if body else None),
-        gps_lng=(body.gps_lng if body else None),
+    return ok(
+        await svc.start_service(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+            gps_lat=(body.gps_lat if body else None),
+            gps_lng=(body.gps_lng if body else None),
+        )
     )
 
 
@@ -129,7 +157,9 @@ async def start_status(
     provider: dict = Depends(get_current_provider),
 ):
     svc = _service()
-    return await svc.start_status(
-        provider_id=str(provider["provider_id"]),
-        booking_id=booking_id,
+    return ok(
+        await svc.start_status(
+            provider_id=str(provider["provider_id"]),
+            booking_id=booking_id,
+        )
     )
