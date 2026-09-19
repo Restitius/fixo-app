@@ -30,6 +30,7 @@ import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PromotionsRouteImport } from './routes/promotions'
 import { Route as QuotesRouteImport } from './routes/quotes'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RequestsRouteImport } from './routes/requests'
@@ -148,6 +149,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromotionsRoute = PromotionsRouteImport.update({
+  id: '/promotions',
+  path: '/promotions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuotesRoute = QuotesRouteImport.update({
   id: '/quotes',
   path: '/quotes',
@@ -231,6 +237,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/promotions': typeof PromotionsRoute
   '/quotes': typeof QuotesRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/promotions': typeof PromotionsRoute
   '/quotes': typeof QuotesRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -302,6 +310,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
+  '/promotions': typeof PromotionsRoute
   '/quotes': typeof QuotesRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -339,6 +348,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/profile'
+    | '/promotions'
     | '/quotes'
     | '/register'
     | '/requests'
@@ -374,6 +384,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/profile'
+    | '/promotions'
     | '/quotes'
     | '/register'
     | '/requests'
@@ -409,6 +420,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/pricing'
     | '/profile'
+    | '/promotions'
     | '/quotes'
     | '/register'
     | '/requests'
@@ -445,6 +457,7 @@ export interface RootRouteChildren {
   PortfolioRoute: typeof PortfolioRoute
   PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
+  PromotionsRoute: typeof PromotionsRoute
   QuotesRoute: typeof QuotesRoute
   RegisterRoute: typeof RegisterRoute
   RequestsRoute: typeof RequestsRoute
@@ -608,6 +621,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/promotions': {
+      id: '/promotions'
+      path: '/promotions'
+      fullPath: '/promotions'
+      preLoaderRoute: typeof PromotionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quotes': {
       id: '/quotes'
       path: '/quotes'
@@ -717,6 +737,7 @@ const rootRouteChildren: RootRouteChildren = {
   PortfolioRoute: PortfolioRoute,
   PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
+  PromotionsRoute: PromotionsRoute,
   QuotesRoute: QuotesRoute,
   RegisterRoute: RegisterRoute,
   RequestsRoute: RequestsRoute,
