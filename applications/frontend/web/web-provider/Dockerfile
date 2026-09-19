@@ -1,6 +1,6 @@
 # FIXO-APP web frontend (TanStack Start / React + Vite).
 # Dev-style runtime so the whole team can open the app immediately.
-FROM node:22-alpine
+FROM node:25-alpine
 WORKDIR /app
 ENV NODE_ENV=development
 
