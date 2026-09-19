@@ -121,6 +121,11 @@ function LoginPage() {
               {passwordError && (
                 <p className="text-xs text-destructive">{passwordError}</p>
               )}
+              <div className="text-right">
+                <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                  {t("login.forgotPasswordCta")}
+                </Link>
+              </div>
             </div>
           )}
 

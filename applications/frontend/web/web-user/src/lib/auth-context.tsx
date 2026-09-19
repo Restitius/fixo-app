@@ -35,6 +35,8 @@ interface AuthContextValue extends AuthState {
   register: (data: RegisterData) => Promise<void>;
   requestOtp: (email: string) => Promise<string | null>;
   verifyOtp: (email: string, code: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<string | null>;
+  resetPassword: (email: string, code: string, newPassword: string) => Promise<void>;
   updateProfile: (data: { full_name?: string; phone?: string; preferred_language?: string }) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<boolean>;
@@ -215,6 +217,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     navigate({ to: "/login" });
   };
 
+  const forgotPassword = async (email: string): Promise<string | null> => {
+    const resp = await apiClient.post("/auth/password/forgot", { email });
+    // Dev mode returns otp_code in response.
+    return resp.data.otp_code ?? null;
+  };
+
+  const resetPassword = async (email: string, code: string, newPassword: string) => {
+    await apiClient.post("/auth/password/reset", { email, code, new_password: newPassword });
+    toast.success("Password reset. Log in with your new password.");
+    navigate({ to: "/login" });
+  };
+
   const updateProfile = async (data: { full_name?: string; phone?: string; preferred_language?: string }) => {
     const resp = await apiClient.patch("/auth/me", data);
     setState((prev) => ({ ...prev, customer: resp.data }));
@@ -243,6 +257,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       requestOtp,
       verifyOtp,
+      forgotPassword,
+      resetPassword,
       updateProfile,
       logout,
       refreshAccessToken,
