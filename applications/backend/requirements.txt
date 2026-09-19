@@ -16,7 +16,7 @@ PyYAML==6.0.*
 
 # --- Database layer (section 14-15) ---------------------------------------------
 SQLAlchemy==2.0.*
-alembic==1.14.*
+alembic==1.20.*
 asyncpg==0.30.*          # PostgreSQL driver
 aiomysql==0.2.*          # MySQL driver
 oracledb==2.5.*          # Oracle thin driver (LEGACY_ORACLE)
