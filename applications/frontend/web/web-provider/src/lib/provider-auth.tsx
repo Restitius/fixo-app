@@ -201,9 +201,33 @@ export function ProviderAuthProvider({ children }: { children: ReactNode }) {
     setState({ access_token: null, refresh_token: null, provider: null, loading: false });
   }, []);
 
+  // Real backend state (PUT /providers/availability/settings) — localStorage
+  // is just an instant-UI cache so the header toggle doesn't flash on
+  // reload while the real value loads. Previously this was localStorage-only
+  // with no backend call at all, so "Online" here and the real
+  // is_online the matching engine actually reads (see
+  // provider_dashboard_service.py's OFFLINE attention item) could silently
+  // disagree.
+  useEffect(() => {
+    if (!state.access_token) return;
+    apiClient
+      .get<{ is_online?: boolean }>("/providers/availability/settings")
+      .then((r) => {
+        if (typeof r.data.is_online === "boolean") setOnlineState(r.data.is_online);
+      })
+      .catch(() => {
+        // 404 until the provider has ever saved settings — local default stands.
+      });
+  }, [state.access_token]);
+
   const setOnline = useCallback((v: boolean) => {
     localStorage.setItem(ONLINE_KEY, String(v));
     setOnlineState(v);
+    apiClient.put("/providers/availability/settings", { is_online: v }).catch(() => {
+      // Revert the optimistic UI update if the real save failed.
+      setOnlineState(!v);
+      localStorage.setItem(ONLINE_KEY, String(!v));
+    });
   }, []);
 
   const value = useMemo<ProviderAuthValue>(
