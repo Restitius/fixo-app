@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "اختر خدمة",
+    "details": "تفاصيل الحجز",
+    "address": "عنوانك",
+    "review": "مراجعة الملخص",
+    "provider": "اختر مزود خدمة",
+    "payment": "الدفع",
+    "pin": "تأكيد الدفع"
+  },
+  "service": {
+    "realServicesBy": "خدمات حقيقية يقدمها {{name}}.",
+    "noServices": "لا يوجد لدى مزود الخدمة هذا خدمات مدرجة بعد.",
+    "continue": "متابعة"
+  },
+  "details": {
+    "describeJob": "صف العمل المطلوب",
+    "placeholder": "ما الذي تحتاج إنجازه؟ (10 أحرف على الأقل)",
+    "minChars": "{{count}}/10 حروف كحد أدنى",
+    "preferredDate": "التاريخ المفضل",
+    "preferredTime": "الوقت المفضل",
+    "continue": "متابعة",
+    "weekdayMo": "ن",
+    "weekdayTu": "ث",
+    "weekdayWe": "ر",
+    "weekdayTh": "خ",
+    "weekdayFr": "ج",
+    "weekdaySa": "س",
+    "weekdaySu": "ح",
+    "morning": "صباحًا",
+    "morningHint": "8ص – 12م",
+    "afternoon": "ظهرًا",
+    "afternoonHint": "12م – 5م",
+    "evening": "مساءً",
+    "eveningHint": "5م – 9م",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "إضافة عنوان جديد",
+    "labelPlaceholder": "التسمية (مثل المنزل)",
+    "recipientPlaceholder": "اسم المستلم",
+    "phonePlaceholder": "الهاتف",
+    "streetPlaceholder": "عنوان الشارع",
+    "cityPlaceholder": "المدينة",
+    "regionPlaceholder": "المنطقة (اختياري)",
+    "saveAddress": "حفظ العنوان",
+    "cancel": "إلغاء",
+    "continue": "متابعة"
+  },
+  "review": {
+    "labelService": "الخدمة",
+    "labelProvider": "مزود الخدمة",
+    "labelDate": "التاريخ",
+    "labelTime": "الوقت",
+    "labelAddress": "العنوان",
+    "notSet": "غير محدد",
+    "promoCode": "رمز الخصم",
+    "promoPlaceholder": "أدخل الرمز",
+    "apply": "تطبيق",
+    "promoInvalid": "هذا الرمز غير صالح أو منتهي الصلاحية",
+    "promo": "خصم",
+    "total": "الإجمالي",
+    "submitRequest": "إرسال الطلب",
+    "genericError": "تعذّر إرسال هذا الطلب"
+  },
+  "provider": {
+    "finding": "جارٍ البحث عن أفضل المحترفين تقييمًا بالقرب منك…",
+    "noneAvailableTitle": "لا يوجد مزودو خدمة متاحون الآن",
+    "noneAvailableSubtitle": "حاول مرة أخرى قريبًا، أو تحقق من حجوزاتي لاحقًا.",
+    "errorTitle": "حدث خطأ ما",
+    "retry": "إعادة المحاولة",
+    "noQuotesTitle": "لا توجد عروض أسعار فورية بعد",
+    "noQuotesSubtitle": "لم يرسل مزودو الخدمة المتطابقون عرض سعر بعد. تحقق من حجوزاتي قريبًا.",
+    "notMatchedNotice": "لم تتم مطابقة {{name}} لهذا الطلب — إليك مزودي الخدمة المتطابقين بدلاً من ذلك.",
+    "leadTime": "{{rating}} · مدة {{days}} يوم",
+    "confirming": "جارٍ التأكيد…",
+    "acceptAndContinue": "قبول ومتابعة"
+  },
+  "payment": {
+    "booking": "الحجز",
+    "amountDue": "المبلغ المستحق",
+    "yourMethods": "طرق الدفع الخاصة بك",
+    "wallet": "محفظة FIXO",
+    "default": "افتراضي",
+    "authorizeNotice": "تشغّل عملية التفويض عملية تفويض الدفع الحقيقية لهذا الحجز.",
+    "authorizePayment": "تفويض الدفع"
+  },
+  "pin": {
+    "enterToConfirm": "أدخل رمز PIN للتأكيد",
+    "continue": "متابعة"
+  },
+  "success": {
+    "title": "تم الحجز بنجاح!",
+    "body": "تم تفويض دفعتك وتأكيد الحجز.",
+    "viewReceipt": "عرض الإيصال الإلكتروني",
+    "backToBookings": "العودة إلى الحجوزات"
+  },
+  "receipt": {
+    "title": "إيصال إلكتروني",
+    "share": "مشاركة الإيصال",
+    "download": "تنزيل الإيصال",
+    "print": "طباعة",
+    "labelService": "الخدمة",
+    "labelProvider": "مزود الخدمة",
+    "labelDate": "التاريخ",
+    "labelTime": "الوقت",
+    "labelAddress": "العنوان",
+    "amount": "المبلغ",
+    "arrivalCode": "رمز الوصول",
+    "paymentId": "معرّف الدفعة",
+    "status": "الحالة",
+    "serviceFallback": "خدمة"
+  },
+  "cancel": {
+    "title": "إلغاء الحجز",
+    "confirmTitle": "تأكيد الإلغاء",
+    "whyCancelling": "لماذا تقوم بالإلغاء؟",
+    "reasonChangeOfPlans": "تغيير الخطط",
+    "reasonBetterPrice": "وجدت سعرًا أفضل",
+    "reasonMistake": "حجزت عن طريق الخطأ",
+    "reasonUnavailable": "مزود الخدمة غير متاح",
+    "reasonOther": "أخرى",
+    "continue": "متابعة",
+    "cancelling": "جارٍ إلغاء حجزك…",
+    "enterPinToConfirm": "أدخل رمز PIN لتأكيد الإلغاء",
+    "genericError": "تعذّر إلغاء هذا الحجز — قد يكون قد تجاوز فترة الإلغاء.",
+    "cancelledTitle": "تم إلغاء الحجز",
+    "cancelledBody": "تم إلغاء حجزك مع {{provider}}.",
+    "cancelledBodyRelease": " سيتم الإفراج عن تفويض {{amount}} الخاص بك.",
+    "providerFallback": "مزود الخدمة",
+    "backToBookings": "العودة إلى الحجوزات"
+  }
+}

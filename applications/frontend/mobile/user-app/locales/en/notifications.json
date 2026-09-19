@@ -1,0 +1,69 @@
+{
+  "loading": "Loading…",
+  "page": {
+    "title": "Notifications",
+    "subtitle": "Updates, reminders and alerts"
+  },
+  "tabs": {
+    "all": "All",
+    "unread": "Unread",
+    "bookings": "Bookings",
+    "payments": "Payments"
+  },
+  "metrics": {
+    "totalNotifications": "Total Notifications",
+    "thisMonth": "This month",
+    "unread": "Unread",
+    "needsAttention": "Needs attention",
+    "bookingUpdates": "Booking Updates",
+    "serviceProgress": "Service progress",
+    "paymentAlerts": "Payment Alerts",
+    "recentBilling": "Recent billing"
+  },
+  "list": {
+    "heading": "Recent notifications",
+    "markAllRead": "Mark all read",
+    "markedAsRead_one": "{{count}} notification marked as read",
+    "markedAsRead_other": "{{count}} notifications marked as read",
+    "noMatching": "No matching notifications",
+    "tryDifferentTab": "Try a different tab.",
+    "showAll": "Show all",
+    "allCaughtUp": "All caught up",
+    "noNotificationsYet": "No notifications here — updates and reminders will show up as they happen.",
+    "new": "New",
+    "paid": "Paid"
+  },
+  "detail": {
+    "notificationType": "Notification type",
+    "bookingReference": "Booking reference",
+    "provider": "Provider",
+    "service": "Service",
+    "scheduledVisit": "Scheduled visit",
+    "location": "Location",
+    "relatedAmount": "Related amount",
+    "paymentMethod": "Payment method",
+    "invoiceReference": "Invoice reference",
+    "reference": "Reference"
+  },
+  "panel": {
+    "title": "Notification details",
+    "whatHappened": "What happened",
+    "recordedNote": "This update has been recorded against your booking.",
+    "downloadInvoice": "Download invoice",
+    "findInvoiceToast": "Find the matching invoice on the Invoices page.",
+    "contactSupport": "Contact support",
+    "done": "Done"
+  },
+  "dialog": {
+    "title": "Notification details",
+    "subtitle": "Review the full update and take action",
+    "bookingLabel": "Booking {{number}}",
+    "message": "Message",
+    "noDetails": "No additional details for this notification.",
+    "respondNote": "You can respond to this update directly from your booking page.",
+    "close": "Close",
+    "markAsRead": "Mark as read",
+    "viewBooking": "View booking",
+    "findBookingToast": "Find booking {{number}} in your bookings list."
+  }
+}

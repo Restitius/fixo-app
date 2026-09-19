@@ -1,0 +1,133 @@
+{
+  "header": {
+    "service": "Dienstleistung wählen",
+    "details": "Buchungsdetails",
+    "address": "Deine Adresse",
+    "review": "Zusammenfassung",
+    "provider": "Anbieter wählen",
+    "payment": "Zahlung",
+    "pin": "Zahlung Bestätigen"
+  },
+  "service": {
+    "realServicesBy": "Echte Dienstleistungen von {{name}}.",
+    "noServices": "Dieser Anbieter hat noch keine Dienstleistungen gelistet.",
+    "continue": "Weiter"
+  },
+  "details": {
+    "describeJob": "Beschreibe den Auftrag",
+    "placeholder": "Was muss erledigt werden? (mind. 10 Zeichen)",
+    "minChars": "{{count}}/10 Zeichen min.",
+    "preferredDate": "Bevorzugtes Datum",
+    "preferredTime": "Bevorzugte Zeit",
+    "continue": "Weiter",
+    "weekdayMo": "Mo",
+    "weekdayTu": "Di",
+    "weekdayWe": "Mi",
+    "weekdayTh": "Do",
+    "weekdayFr": "Fr",
+    "weekdaySa": "Sa",
+    "weekdaySu": "So",
+    "morning": "Morgens",
+    "morningHint": "8–12 Uhr",
+    "afternoon": "Nachmittags",
+    "afternoonHint": "12–17 Uhr",
+    "evening": "Abends",
+    "eveningHint": "17–21 Uhr",
+    "timeWindowLabel": "{{label}} · {{hint}}"
+  },
+  "address": {
+    "addNew": "Neue Adresse hinzufügen",
+    "labelPlaceholder": "Bezeichnung (z. B. Zuhause)",
+    "recipientPlaceholder": "Name des Empfängers",
+    "phonePlaceholder": "Telefon",
+    "streetPlaceholder": "Straße",
+    "cityPlaceholder": "Stadt",
+    "regionPlaceholder": "Region (optional)",
+    "saveAddress": "Adresse speichern",
+    "cancel": "Abbrechen",
+    "continue": "Weiter"
+  },
+  "review": {
+    "labelService": "Dienstleistung",
+    "labelProvider": "Anbieter",
+    "labelDate": "Datum",
+    "labelTime": "Zeit",
+    "labelAddress": "Adresse",
+    "notSet": "Nicht festgelegt",
+    "promoCode": "Aktionscode",
+    "promoPlaceholder": "Code eingeben",
+    "apply": "Anwenden",
+    "promoInvalid": "Dieser Code ist ungültig oder abgelaufen",
+    "promo": "Aktion",
+    "total": "Gesamt",
+    "submitRequest": "Anfrage Senden",
+    "genericError": "Diese Anfrage konnte nicht gesendet werden"
+  },
+  "provider": {
+    "finding": "Suche nach den bestbewerteten Profis in deiner Nähe…",
+    "noneAvailableTitle": "Derzeit keine Anbieter verfügbar",
+    "noneAvailableSubtitle": "Versuche es später erneut oder schau später bei Meine Buchungen vorbei.",
+    "errorTitle": "Etwas ist schiefgelaufen",
+    "retry": "Erneut Versuchen",
+    "noQuotesTitle": "Noch keine Sofortangebote",
+    "noQuotesSubtitle": "Zugeordnete Anbieter haben noch kein Angebot gesendet. Schau bald bei Meine Buchungen vorbei.",
+    "notMatchedNotice": "{{name}} wurde dieser Anfrage nicht zugeordnet — hier sind stattdessen deine zugeordneten Anbieter.",
+    "leadTime": "{{rating}} · {{days}} Tage Vorlaufzeit",
+    "confirming": "Wird bestätigt…",
+    "acceptAndContinue": "Annehmen & Weiter"
+  },
+  "payment": {
+    "booking": "Buchung",
+    "amountDue": "Fälliger Betrag",
+    "yourMethods": "Deine Zahlungsmethoden",
+    "wallet": "FIXO Wallet",
+    "default": "Standard",
+    "authorizeNotice": "Die Autorisierung führt den echten Zahlungsautorisierungsprozess für diese Buchung aus.",
+    "authorizePayment": "Zahlung Autorisieren"
+  },
+  "pin": {
+    "enterToConfirm": "Gib deine PIN zur Bestätigung ein",
+    "continue": "Weiter"
+  },
+  "success": {
+    "title": "Buchung Erfolgreich!",
+    "body": "Deine Zahlung wurde autorisiert und die Buchung ist bestätigt.",
+    "viewReceipt": "Beleg Ansehen",
+    "backToBookings": "Zurück zu Buchungen"
+  },
+  "receipt": {
+    "title": "E-Beleg",
+    "share": "Beleg Teilen",
+    "download": "Beleg Herunterladen",
+    "print": "Drucken",
+    "labelService": "Dienstleistung",
+    "labelProvider": "Anbieter",
+    "labelDate": "Datum",
+    "labelTime": "Zeit",
+    "labelAddress": "Adresse",
+    "amount": "Betrag",
+    "arrivalCode": "Ankunftscode",
+    "paymentId": "Zahlungs-ID",
+    "status": "Status",
+    "serviceFallback": "Dienstleistung"
+  },
+  "cancel": {
+    "title": "Buchung Stornieren",
+    "confirmTitle": "Stornierung Bestätigen",
+    "whyCancelling": "Warum stornierst du?",
+    "reasonChangeOfPlans": "Planänderung",
+    "reasonBetterPrice": "Besseren Preis gefunden",
+    "reasonMistake": "Versehentlich gebucht",
+    "reasonUnavailable": "Anbieter nicht verfügbar",
+    "reasonOther": "Sonstiges",
+    "continue": "Weiter",
+    "cancelling": "Buchung wird storniert…",
+    "enterPinToConfirm": "Gib deine PIN zur Bestätigung der Stornierung ein",
+    "genericError": "Diese Buchung konnte nicht storniert werden — die Stornierungsfrist ist möglicherweise bereits abgelaufen.",
+    "cancelledTitle": "Buchung Storniert",
+    "cancelledBody": "Deine Buchung mit {{provider}} wurde storniert.",
+    "cancelledBodyRelease": " Deine Autorisierung über {{amount}} wird freigegeben.",
+    "providerFallback": "dem Anbieter",
+    "backToBookings": "Zurück zu Buchungen"
+  }
+}
