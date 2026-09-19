@@ -430,7 +430,7 @@ function OnboardingPage() {
                     <select className={field} value={docType} onChange={(e) => setDocType(e.target.value)}>
                       <option value="">Select…</option>
                       {docTypes.map((t) => (
-                        <option key={t.code} value={t.code}>{t.label}</option>
+                        <option key={t.code} value={t.code}>{t.name}</option>
                       ))}
                     </select>
                   </Field>
