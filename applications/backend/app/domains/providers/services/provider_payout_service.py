@@ -166,3 +166,40 @@ class ProviderPayoutService:
             "currency": str(row.get("currency") or ""),
             "status": str(row.get("status") or ""),
         }
+
+    # -- encoding ----------------------------------------------------------------
+
+    @staticmethod
+    def _encode_method(row: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "method_id": str(row.get("method_id") or ""),
+            "method_type": str(row.get("method_type") or ""),
+            "provider_name": row.get("provider_name"),
+            "account_holder": row.get("account_holder"),
+            "account_number": row.get("account_number"),
+            "mobile_number": row.get("mobile_number"),
+            "currency": str(row.get("currency") or ""),
+            "is_default": bool(row.get("is_default")),
+            "created_at": row.get("created_at"),
+        }
+
+    @staticmethod
+    def _encode_payout(row: dict[str, Any]) -> dict[str, Any]:
+        # withdraw()'s own RETURNING clause is narrower than list()/get()'s
+        # (no join against PROVIDER_PAYOUT_METHODS yet at that point) — every
+        # field beyond the shared core is optional here.
+        return {
+            "payout_id": str(row.get("payout_id") or ""),
+            "payout_number": str(row.get("payout_number") or ""),
+            "method_id": str(row.get("method_id") or ""),
+            "amount": float(row.get("amount") or 0),
+            "currency": str(row.get("currency") or ""),
+            "status": str(row.get("status") or ""),
+            "failure_reason": row.get("failure_reason"),
+            "requested_at": row.get("requested_at"),
+            "processed_at": row.get("processed_at"),
+            "completed_at": row.get("completed_at"),
+            "method_type": row.get("method_type"),
+            "provider_name": row.get("provider_name"),
+            "destination": row.get("destination"),
+        }
