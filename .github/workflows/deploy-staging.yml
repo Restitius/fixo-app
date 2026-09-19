@@ -149,7 +149,7 @@ jobs:
           name: ${{ matrix.app }}-verified-git-${{ github.sha }}
       - run: tar -xzf ${{ matrix.app }}-git-${{ github.sha }}.tar.gz -C .
       - name: wrangler deploy (Cloudflare Workers)
-        uses: cloudflare/wrangler-action@392082e81ffbcb9ebdde27400634aa004b35ea37   # v3.14.0
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0   # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
