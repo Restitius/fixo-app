@@ -1,0 +1,99 @@
+{
+  "loading": "Cargando…",
+  "itemLabel_one": "disputa",
+  "itemLabel_other": "disputas",
+  "page": {
+    "title": "Disputas",
+    "subtitle": "Consulta y gestiona las disputas que has presentado sobre tus reservas"
+  },
+  "metrics": {
+    "total": "Disputas totales",
+    "totalHint_one": "{{count}} disputa presentada",
+    "totalHint_other": "{{count}} disputas presentadas",
+    "open": "Abiertas / Pendientes",
+    "openHint": "En espera de resolución",
+    "closed": "Resueltas",
+    "closedHint": "Resueltas, cerradas o retiradas"
+  },
+  "search": {
+    "placeholder": "Buscar por categoría, descripción o reserva..."
+  },
+  "filters": {
+    "statusPlaceholder": "Estado",
+    "all": "Todos los estados",
+    "open": "Abierta",
+    "closed": "Cerrada"
+  },
+  "columns": {
+    "category": "Categoría",
+    "description": "Descripción",
+    "booking": "Reserva",
+    "status": "Estado",
+    "created": "Creada"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "Calidad del servicio",
+    "DAMAGE": "Daño",
+    "BILLING": "Facturación",
+    "NO_SHOW": "Inasistencia",
+    "OTHER": "Otro"
+  },
+  "evidenceKinds": {
+    "PHOTO": "Foto",
+    "DOCUMENT": "Documento",
+    "OTHER": "Otro"
+  },
+  "empty": {
+    "title": "Aún no hay disputas",
+    "description": "Si algo sale mal con una reserva, puedes presentar una disputa aquí y nuestro equipo intervendrá.",
+    "filteredTitle": "No hay disputas coincidentes",
+    "filteredDescription": "Prueba con otro término de búsqueda o filtro de estado.",
+    "clearFilters": "Borrar filtros"
+  },
+  "newDispute": {
+    "trigger": "Nueva disputa",
+    "title": "Presentar una nueva disputa",
+    "subtitle": "Cuéntanos qué salió mal con una reserva y lo revisaremos.",
+    "bookingLabel": "Reserva",
+    "bookingPlaceholder": "Selecciona una reserva",
+    "noBookings": "Aún no tienes reservas sobre las que presentar una disputa.",
+    "serviceFallback": "Servicio",
+    "categoryLabel": "Categoría",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe lo ocurrido con al menos 10 caracteres...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "Cancelar",
+    "submit": "Enviar disputa",
+    "submitting": "Enviando...",
+    "opened": "Disputa abierta — nuestro equipo la revisará",
+    "errors": {
+      "pickBooking": "Selecciona primero una reserva",
+      "descriptionLength": "La descripción debe tener entre 10 y 2000 caracteres"
+    }
+  },
+  "detail": {
+    "title": "Detalles de la disputa",
+    "booking": "Reserva",
+    "service": "Servicio",
+    "description": "Descripción",
+    "evidence": "Evidencia",
+    "noEvidence": "Aún no se ha adjuntado evidencia.",
+    "withdraw": "Retirar disputa",
+    "withdrawing": "Retirando...",
+    "withdrawn": "Disputa retirada",
+    "alreadyClosed": "Esta disputa ya está cerrada",
+    "withdrawConfirmTitle": "¿Retirar esta disputa?",
+    "withdrawConfirmDescription": "Esto cerrará la disputa y no se puede deshacer. Retírala solo si el problema ya se ha resuelto.",
+    "addEvidence": {
+      "title": "Agregar evidencia",
+      "urlPlaceholder": "https://... enlace a una foto o documento",
+      "notePlaceholder": "Nota opcional",
+      "add": "Agregar evidencia",
+      "adding": "Agregando...",
+      "added": "Evidencia agregada",
+      "errors": {
+        "url": "Ingresa una URL válida (máx. 2000 caracteres)"
+      }
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "loading": "लोड हो रहा है…",
+  "help": {
+    "page": {
+      "title": "सहायता",
+      "subtitle": "सहायता टिकट और हेल्पडेस्क"
+    },
+    "metrics": {
+      "openTickets": "खुले टिकट",
+      "viewAllOpen": "सभी खुले देखें",
+      "resolved": "हल किए गए",
+      "viewResolved": "हल किए गए देखें",
+      "avgResponse": "औसत प्रतिक्रिया समय",
+      "thisMonth": "इस महीने",
+      "unreadReplies": "अपठित उत्तर",
+      "viewReplies": "उत्तर देखें",
+      "durationMinutes": "{{count}} मिनट",
+      "durationHours": "{{count}} घंटे",
+      "durationHoursMinutes": "{{hours}} घंटे {{minutes}} मिनट"
+    },
+    "search": {
+      "placeholder": "टिकट खोजें..."
+    },
+    "filters": {
+      "allStatuses": "सभी स्थितियां",
+      "open": "खुला",
+      "resolved": "हल किया गया",
+      "closed": "बंद",
+      "allCategories": "सभी श्रेणियां"
+    },
+    "newTicket": "नया टिकट",
+    "empty": {
+      "noMatchingTitle": "कोई मेल खाता टिकट नहीं",
+      "noMatchingDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "noTicketsTitle": "कोई सहायता टिकट नहीं",
+      "noTicketsDescription": "बुकिंग, भुगतान या अपने खाते में मदद चाहिए? एक टिकट खोलें और हम आपसे संपर्क करेंगे।"
+    },
+    "table": {
+      "ticketNumber": "टिकट #",
+      "subject": "विषय",
+      "category": "श्रेणी",
+      "priority": "प्राथमिकता",
+      "status": "स्थिति",
+      "updated": "अपडेट किया गया",
+      "messages": "संदेश",
+      "showing": "{{total}} टिकटों में से {{from}} से {{to}} दिखा रहे हैं"
+    },
+    "sidebar": {
+      "needHelpTitle": "मदद चाहिए?",
+      "needHelpDescription": "त्वरित उत्तर पाएं या हमारी सहायता टीम से संपर्क करें।",
+      "faqShortcuts": "सामान्य प्रश्न शॉर्टकट",
+      "faqs": {
+        "createTicket": "टिकट कैसे बनाएं",
+        "ticketStatus": "टिकट की स्थिति को समझना",
+        "refunds": "धनवापसी और रद्दीकरण",
+        "paymentBilling": "भुगतान और बिलिंग सहायता"
+      },
+      "faqToasts": {
+        "createTicket": "ऊपर \"नया टिकट\" पर क्लिक करें, विषय और संदेश भरें, और सबमिट करें।",
+        "ticketStatus": "खुला = उत्तर की प्रतीक्षा में। हल किया गया = टीम इसे सुलझा हुआ मानती है। बंद = बातचीत संग्रहित कर दी गई है।"
+      },
+      "stillNeedHelpTitle": "फिर भी मदद चाहिए?",
+      "stillNeedHelpDescription": "हमारी सहायता टीम आपके लिए यहां है।",
+      "contactSupport": "सहायता से संपर्क करें"
+    },
+    "detail": {
+      "category": "श्रेणी",
+      "priority": "प्राथमिकता",
+      "status": "स्थिति",
+      "lastUpdated": "अंतिम अपडेट",
+      "relatedTo": "इससे संबंधित",
+      "bookingFallback": "बुकिंग",
+      "provider": "प्रदाता",
+      "conversation": "बातचीत",
+      "loadingMessages": "लोड हो रहा है…",
+      "noMessages": "अभी तक कोई संदेश नहीं।",
+      "timeline": {
+        "title": "टिकट समयरेखा",
+        "ticketCreated": "टिकट बनाया गया",
+        "supportReplied": "सहायता टीम ने उत्तर दिया",
+        "youReplied": "आपने उत्तर दिया",
+        "awaitingCustomer": "ग्राहक की प्रतीक्षा में",
+        "respondToContinue": "जारी रखने के लिए उत्तर दें",
+        "resolved": "हल किया गया",
+        "pending": "लंबित"
+      },
+      "replyToCustomer": "ग्राहक को उत्तर दें",
+      "attachmentsNotAvailable": "टिकट उत्तरों में अभी अटैचमेंट उपलब्ध नहीं हैं।",
+      "replyPlaceholder": "अपना संदेश टाइप करें...",
+      "closedNotice": "यह टिकट बंद है। यदि आपको और मदद चाहिए तो नया टिकट खोलें।"
+    },
+    "dialog": {
+      "title": "नया सहायता टिकट",
+      "subtitle": "हमें बताएं क्या गलत हुआ, हमारी टीम आपकी मदद करेगी।",
+      "subjectLabel": "विषय *",
+      "subjectPlaceholder": "अपनी समस्या का संक्षेप में वर्णन करें",
+      "bookingReferenceLabel": "बुकिंग संदर्भ",
+      "bookingReferencePlaceholder": "जैसे BK-123456",
+      "optional": "वैकल्पिक",
+      "categoryLabel": "श्रेणी *",
+      "priorityLabel": "प्राथमिकता *",
+      "messageLabel": "संदेश *",
+      "messagePlaceholder": "जितना हो सके उतना विवरण प्रदान करें...",
+      "attachmentLabel": "अटैचमेंट (वैकल्पिक)",
+      "filesSelected_one": "{{count}} फ़ाइल चुनी गई",
+      "filesSelected_other": "{{count}} फ़ाइलें चुनी गईं",
+      "dragDropPrefix": "फ़ाइलें यहां खींचें और छोड़ें या",
+      "browse": "ब्राउज़ करें",
+      "maxFileSize": "प्रति फ़ाइल अधिकतम 5MB (PDF, JPG, PNG)",
+      "contactMethodLabel": "हम आपसे कैसे संपर्क करें? *",
+      "contactEmailTitle": "ईमेल",
+      "contactEmailHint": "हम आपके ईमेल पर उत्तर देंगे",
+      "contactInAppTitle": "ऐप में",
+      "contactInAppHint": "हम आपके इनबॉक्स में उत्तर देंगे",
+      "responseTimeNote": "हमारी टीम आमतौर पर 1-2 कार्य घंटों के भीतर जवाब देती है।",
+      "cancel": "रद्द करें",
+      "submit": "टिकट सबमिट करें",
+      "submitting": "सबमिट हो रहा है...",
+      "subjectTooShort": "विषय कम से कम 3 अक्षरों का होना चाहिए",
+      "describeIssue": "सबमिट करने से पहले समस्या का वर्णन करें",
+      "attachmentsNotAvailable": "अटैचमेंट अभी उपलब्ध नहीं हैं — आपका टिकट और संदेश सहेज लिया गया है।",
+      "ticketOpened": "सहायता टिकट खोला गया"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "प्रतिक्रिया",
+      "subtitle": "अपने पूर्ण किए गए कार्यों के लिए प्रदाताओं को रेट करें"
+    },
+    "metrics": {
+      "totalReviews": "कुल समीक्षाएं",
+      "allTimeReviews": "अब तक की सभी समीक्षाएं",
+      "pendingReviews": "लंबित समीक्षाएं",
+      "bookingsToRate": "रेट करने के लिए बुकिंग",
+      "averageRating": "औसत रेटिंग",
+      "acrossAllProviders": "सभी प्रदाताओं में",
+      "providersRated": "रेट किए गए प्रदाता",
+      "distinctProviders": "अलग-अलग प्रदाता"
+    },
+    "tabs": {
+      "all": "सभी",
+      "pending": "लंबित",
+      "submitted": "सबमिट किए गए"
+    },
+    "search": {
+      "placeholder": "बुकिंग, सेवाएं या प्रदाता खोजें..."
+    },
+    "sort": {
+      "oldestFirst": "पहले सबसे पुराना",
+      "newestFirst": "पहले सबसे नया"
+    },
+    "empty": {
+      "pendingTitle": "कुछ भी लंबित नहीं है",
+      "submittedTitle": "अभी तक कोई समीक्षा नहीं",
+      "allTitle": "अभी रेट करने के लिए कुछ नहीं है",
+      "description": "एक बार बुकिंग पूर्ण और बंद हो जाने पर, आप यहां अपने प्रदाता को रेट कर सकेंगे।",
+      "viewMyBookings": "मेरी बुकिंग देखें"
+    },
+    "serviceFallback": "सेवा",
+    "providerFallback": "प्रदाता",
+    "row": {
+      "submitted": "सबमिट किया गया",
+      "rateNow": "अभी रेट करें"
+    },
+    "recent": {
+      "title": "हाल की प्रतिक्रिया",
+      "viewAll": "सभी देखें",
+      "emptyDescription": "आपकी सबमिट की गई समीक्षाएं यहां दिखाई देंगी।"
+    },
+    "starAriaLabel_one": "{{count}} सितारा",
+    "starAriaLabel_other": "{{count}} सितारे",
+    "detail": {
+      "title": "समीक्षा विवरण",
+      "yourReview": "आपकी समीक्षा",
+      "noWrittenFeedback": "इस बुकिंग के लिए कोई लिखित प्रतिक्रिया नहीं है।",
+      "bookingInformation": "बुकिंग जानकारी",
+      "bookingId": "बुकिंग आईडी",
+      "service": "सेवा",
+      "dateTime": "दिनांक और समय",
+      "amountPaid": "भुगतान की गई राशि",
+      "editReview": "समीक्षा संपादित करें",
+      "viewBooking": "बुकिंग देखें"
+    },
+    "aspects": {
+      "quality": "गुणवत्ता",
+      "punctuality": "समयपालन",
+      "communication": "संचार",
+      "value": "मूल्य"
+    },
+    "highlightTags": {
+      "professional": "पेशेवर",
+      "onTime": "समय पर",
+      "cleanWork": "साफ-सुथरा काम",
+      "friendly": "मिलनसार"
+    },
+    "dialog": {
+      "title": "अपने प्रदाता को रेट करें",
+      "subtitle": "इस पूर्ण की गई बुकिंग के लिए अपना अनुभव साझा करें।",
+      "bookingCode": "बुकिंग कोड",
+      "serviceDate": "सेवा की तारीख",
+      "totalAmount": "कुल राशि",
+      "overallQuestion": "आप अपने समग्र अनुभव को कैसे रेट करेंगे?",
+      "tapToRate": "रेट करने के लिए एक सितारे पर टैप करें",
+      "rateAspects": "विशिष्ट पहलुओं को रेट करें",
+      "shareFeedback": "अपनी प्रतिक्रिया साझा करें",
+      "feedbackPlaceholder": "हमें अपने अनुभव के बारे में बताएं...",
+      "whatStoodOut": "क्या चीज़ खास लगी?",
+      "optional": "वैकल्पिक",
+      "addPhotos": "फ़ोटो जोड़ें",
+      "uploadUpTo5": "काम की 5 तक फ़ोटो अपलोड करें",
+      "photosSelected_one": "{{count}} चुनी गई",
+      "photosSelected_other": "{{count}} चुनी गईं",
+      "chooseFiles": "फ़ाइलें चुनें",
+      "cancel": "रद्द करें",
+      "submit": "समीक्षा सबमिट करें",
+      "submitting": "सबमिट हो रहा है...",
+      "pickStarRating": "पहले एक स्टार रेटिंग चुनें",
+      "photoAttachmentsNotAvailable": "फ़ोटो अटैचमेंट अभी उपलब्ध नहीं हैं — आपकी रेटिंग और टिप्पणियां सहेज ली गई हैं।",
+      "thanksForFeedback": "आपकी प्रतिक्रिया के लिए धन्यवाद!"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "loading": "جارٍ التحميل…",
+  "page": {
+    "title": "الصيانة",
+    "subtitle": "خطط الصيانة الدورية لممتلكاتك المنزلية"
+  },
+  "metrics": {
+    "total": "إجمالي الخطط",
+    "totalHint": "منذ البداية",
+    "active": "الخطط النشطة",
+    "activeHint": "مجدولة حاليًا",
+    "dueSoon": "تقترب موعدها",
+    "dueSoonHint_zero": "خلال أقل من يوم",
+    "dueSoonHint_one": "خلال يوم واحد",
+    "dueSoonHint_two": "خلال يومين",
+    "dueSoonHint_few": "خلال {{count}} أيام",
+    "dueSoonHint_many": "خلال {{count}} يومًا",
+    "dueSoonHint_other": "خلال {{count}} يوم",
+    "overdue": "المتأخرة",
+    "overdueHint": "تحتاج إلى اهتمام"
+  },
+  "filterBar": {
+    "searchPlaceholder": "ابحث حسب الممتلكات أو الخدمة...",
+    "statusPlaceholder": "الحالة",
+    "allStatuses": "جميع الحالات",
+    "addPlan": "إضافة خطة"
+  },
+  "table": {
+    "asset": "الممتلكات",
+    "service": "الخدمة",
+    "interval": "الفاصل الزمني",
+    "nextDue": "الموعد القادم",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "intervalValue_zero": "كل أقل من يوم",
+    "intervalValue_one": "كل يوم",
+    "intervalValue_two": "كل يومين",
+    "intervalValue_few": "كل {{count}} أيام",
+    "intervalValue_many": "كل {{count}} يومًا",
+    "intervalValue_other": "كل {{count}} يوم"
+  },
+  "statuses": {
+    "ACTIVE": "نشطة",
+    "OVERDUE": "متأخرة",
+    "CANCELLED": "ملغاة"
+  },
+  "assetFallback": "ممتلكات",
+  "serviceFallback": "خدمة",
+  "actions": {
+    "markDone": "وضع علامة مكتمل",
+    "markingDone": "جارٍ التسجيل…",
+    "cancel": "إلغاء",
+    "cancelling": "جارٍ الإلغاء…",
+    "cancelledNote": "تم إلغاء الخطة",
+    "markedDone": "تم تسجيل \"{{asset}}\" كخدمة مُنجزة"
+  },
+  "cancelConfirm": {
+    "title": "هل تريد إلغاء خطة الصيانة هذه؟",
+    "description": "سيؤدي هذا إلى إيقاف التذكيرات المستقبلية لـ \"{{asset}}\" — {{service}}. لا يمكن التراجع عن هذا الإجراء.",
+    "keep": "الإبقاء على الخطة",
+    "confirm": "إلغاء الخطة",
+    "cancelled": "تم إلغاء خطة الصيانة"
+  },
+  "itemLabel": "خطط الصيانة",
+  "empty": {
+    "title": "لا توجد خطط صيانة بعد",
+    "description": "أنشئ خطة دورية لنذكّرك قبل أن تتأخر ممتلكاتك عن موعد صيانتها.",
+    "action": "إضافة خطة",
+    "filteredTitle": "لا توجد خطط مطابقة",
+    "filteredDescription": "جرّب مصطلح بحث أو حالة مختلفة.",
+    "clearFilters": "مسح عوامل التصفية"
+  },
+  "addDialog": {
+    "title": "إضافة خطة صيانة",
+    "assetLabel": "الممتلكات",
+    "assetPlaceholder": "اختر ممتلكات",
+    "noAssetsHint": "ليس لديك أي ممتلكات بعد.",
+    "noAssetsCta": "إضافة ممتلكات",
+    "categoryLabel": "الفئة",
+    "categoryPlaceholder": "اختر فئة",
+    "serviceLabel": "الخدمة",
+    "servicePlaceholder": "اختر خدمة",
+    "loadingServices": "جارٍ تحميل الخدمات…",
+    "noServicesFound": "لم يتم العثور على خدمات في هذه الفئة",
+    "intervalLabel": "التكرار كل (أيام)",
+    "intervalHint": "بين 1 و1095 يومًا",
+    "nextDueLabel": "الموعد القادم (اختياري)",
+    "nextDueHint_zero": "سيكون تلقائيًا أقل من يوم من اليوم إذا تُرك فارغًا",
+    "nextDueHint_one": "سيكون تلقائيًا يومًا واحدًا من اليوم إذا تُرك فارغًا",
+    "nextDueHint_two": "سيكون تلقائيًا يومين من اليوم إذا تُرك فارغًا",
+    "nextDueHint_few": "سيكون تلقائيًا خلال {{count}} أيام من اليوم إذا تُرك فارغًا",
+    "nextDueHint_many": "سيكون تلقائيًا خلال {{count}} يومًا من اليوم إذا تُرك فارغًا",
+    "nextDueHint_other": "سيكون تلقائيًا خلال {{count}} يوم من اليوم إذا تُرك فارغًا",
+    "notesLabel": "ملاحظات (اختياري)",
+    "notesPlaceholder": "أي معلومة تستحق التذكّر حول هذه الخطة",
+    "cancel": "إلغاء",
+    "save": "إضافة الخطة",
+    "saving": "جارٍ الإضافة…",
+    "selectAsset": "اختر ممتلكات أولًا.",
+    "selectService": "اختر خدمة أولًا.",
+    "intervalRange": "يجب أن يكون الفاصل الزمني بين 1 و1095 يومًا.",
+    "created": "تمت إضافة خطة الصيانة"
+  }
+}

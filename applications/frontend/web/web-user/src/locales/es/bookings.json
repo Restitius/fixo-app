@@ -1,0 +1,208 @@
+{
+  "loading": "Cargando…",
+  "bookings": {
+    "pageTitle": "Mis Reservas",
+    "pageSubtitle": "Sigue tus citas e historial de servicios",
+    "tabs": {
+      "upcoming": "Próximas",
+      "completed": "Completadas",
+      "cancelled": "Canceladas"
+    },
+    "stats": {
+      "upcomingBookings": "Reservas Próximas",
+      "upcomingBookingsHint": "Programadas",
+      "completedThisMonth": "Completadas Este Mes",
+      "completedThisMonthHint": "Este mes calendario",
+      "pendingPayments": "Pagos Pendientes",
+      "pendingPaymentsHint": "En espera de autorización",
+      "totalSpent": "Total Gastado",
+      "totalSpentHint": "Desde siempre"
+    },
+    "searchPlaceholder": "Buscar reservas...",
+    "statusPlaceholder": "Estado",
+    "allStatuses": "Todos los Estados",
+    "servicePlaceholder": "Servicio",
+    "allServices": "Todos los Servicios",
+    "emptyUpcoming": {
+      "title": "Sin reservas próximas",
+      "description": "Aún no tienes ninguna cita programada. Reserva un servicio para verlo aquí.",
+      "actionLabel": "Reservar un Servicio"
+    },
+    "emptyCompleted": {
+      "title": "Todavía no hay reservas completadas",
+      "description": "Los trabajos marcados como finalizados aparecerán aquí.",
+      "actionLabel": "Explorar Servicios"
+    },
+    "emptyCancelled": {
+      "title": "Sin reservas canceladas",
+      "description": "Las reservas que canceles aparecerán aquí para tus registros.",
+      "actionLabel": "Ver Próximas"
+    },
+    "emptyFiltered": {
+      "title": "Sin reservas coincidentes",
+      "description": "Intenta ajustar tu búsqueda o filtros para encontrar lo que buscas.",
+      "actionLabel": "Borrar Filtros"
+    },
+    "columns": {
+      "service": "Servicio",
+      "bookingId": "ID de Reserva",
+      "schedule": "Horario",
+      "provider": "Proveedor",
+      "status": "Estado",
+      "amount": "Monto"
+    },
+    "serviceFallback": "Servicio",
+    "itemLabel": "reservas"
+  },
+  "calendar": {
+    "pageTitle": "Calendario",
+    "pageSubtitle": "Tus reservas, organizadas por fecha",
+    "myBookings": "Mis Reservas",
+    "noBookingsThisDay": "No hay reservas este día.",
+    "serviceFallback": "Servicio",
+    "footerHint": "Las fechas con un punto morado tienen al menos una reserva real programada."
+  },
+  "inbox": {
+    "pageTitle": "Bandeja de Entrada",
+    "pageSubtitle": "Escribe a los proveedores de tus reservas",
+    "emptyTitle": "Aún no hay conversaciones",
+    "emptyDescription": "Una vez que se asigne un proveedor a una de tus reservas, podrás escribirle aquí.",
+    "browseServices": "Explorar Servicios",
+    "serviceFallback": "Servicio",
+    "noMessagesYet": "Aún no hay mensajes — ¡saluda!",
+    "messagePlaceholder": "Mensaje..."
+  },
+  "history": {
+    "pageTitle": "Historial",
+    "pageSubtitle": "Todo lo que ha pasado en tu cuenta, en un solo lugar",
+    "viewing": "Viendo",
+    "detailSheetTitle": "Detalles del historial",
+    "categories": {
+      "bookings": "Reservas",
+      "payments": "Pagos",
+      "wallet": "Billetera",
+      "loyalty": "Fidelidad",
+      "invoices": "Facturas"
+    },
+    "bookingsSection": {
+      "totalBookings": "Total de Reservas",
+      "totalBookingsHint": "Desde siempre",
+      "paidJobs": "Trabajos Pagados",
+      "paidJobsHint": "Completados",
+      "cancelled": "Canceladas",
+      "cancelledHint": "Desde siempre",
+      "totalCharged": "Total Cobrado",
+      "totalChargedHint": "Desde siempre",
+      "pendingAuthorizations": "Autorizaciones Pendientes",
+      "pendingAuthorizationsHint": "En espera de captura",
+      "fullyPaid": "Totalmente Pagadas",
+      "fullyPaidHint": "Completadas",
+      "searchBookings": "Buscar reservas...",
+      "searchCharges": "Buscar cargos...",
+      "statusPlaceholder": "Estado",
+      "allStatuses": "Todos los Estados",
+      "statusPaid": "Pagada",
+      "statusClosed": "Cerrada",
+      "statusCancelled": "Cancelada",
+      "statusAuthorized": "Autorizada",
+      "emptyMatchingTitle": "Sin resultados coincidentes",
+      "emptyMatchingDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "noBookingsTitle": "Todavía no hay reservas",
+      "noBookingsDescription": "Los trabajos completados y pagados aparecerán aquí.",
+      "noChargesTitle": "Todavía no hay cargos",
+      "noChargesDescription": "Los cargos de tus reservas aparecerán aquí.",
+      "browseServices": "Explorar Servicios",
+      "columns": {
+        "service": "Servicio",
+        "bookingId": "ID de Reserva",
+        "date": "Fecha",
+        "provider": "Proveedor",
+        "status": "Estado",
+        "amount": "Monto"
+      },
+      "serviceFallback": "Servicio",
+      "itemLabelBookings": "reservas",
+      "itemLabelCharges": "cargos"
+    },
+    "walletSection": {
+      "totalCredited": "Total Acreditado",
+      "totalCreditedHint": "Desde siempre",
+      "totalDebited": "Total Debitado",
+      "totalDebitedHint": "Desde siempre",
+      "currentBalance": "Saldo Actual",
+      "currentBalanceHint": "Ahora mismo",
+      "searchPlaceholder": "Buscar transacciones...",
+      "typePlaceholder": "Tipo",
+      "allTypes": "Todos los Tipos",
+      "credit": "Crédito",
+      "debit": "Débito",
+      "emptyMatchingTitle": "Sin transacciones coincidentes",
+      "emptyMatchingDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "emptyTitle": "Todavía no hay actividad en la billetera",
+      "emptyDescription": "Los créditos, débitos y retenciones aparecerán aquí.",
+      "goToWallet": "Ir a la Billetera",
+      "columns": {
+        "type": "Tipo",
+        "date": "Fecha",
+        "amount": "Monto",
+        "balanceAfter": "Saldo Después"
+      },
+      "itemLabel": "transacciones"
+    },
+    "loyaltySection": {
+      "pointsEarned": "Puntos Ganados",
+      "pointsEarnedHint": "Desde siempre",
+      "pointsSpent": "Puntos Gastados",
+      "pointsSpentHint": "Desde siempre",
+      "currentBalance": "Saldo Actual",
+      "currentBalanceHint": "Ahora mismo",
+      "searchPlaceholder": "Buscar actividad...",
+      "typePlaceholder": "Tipo",
+      "all": "Todas",
+      "earned": "Ganados",
+      "spent": "Gastados",
+      "emptyMatchingTitle": "Sin actividad coincidente",
+      "emptyMatchingDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "emptyTitle": "Todavía no hay actividad de fidelidad",
+      "emptyDescription": "Reserva un servicio para empezar a ganar puntos de fidelidad.",
+      "goToLoyalty": "Ir a Fidelidad",
+      "columns": {
+        "activity": "Actividad",
+        "date": "Fecha",
+        "points": "Puntos",
+        "balanceAfter": "Saldo Después"
+      },
+      "itemLabel": "registros"
+    },
+    "invoicesSection": {
+      "totalInvoices": "Total de Facturas",
+      "totalInvoicesHint": "Desde siempre",
+      "paid": "Pagadas",
+      "paidHint": "Completadas",
+      "outstanding": "Pendientes",
+      "outstandingHint": "En espera de pago",
+      "searchPlaceholder": "Buscar facturas...",
+      "statusPlaceholder": "Estado",
+      "allStatuses": "Todos los Estados",
+      "issued": "Emitida",
+      "paidStatus": "Pagada",
+      "emptyMatchingTitle": "Sin facturas coincidentes",
+      "emptyMatchingDescription": "Intenta ajustar tu búsqueda o filtros.",
+      "clearFilters": "Borrar Filtros",
+      "emptyTitle": "Todavía no hay facturas",
+      "emptyDescription": "Se emite una factura una vez que una reserva se completa y confirma.",
+      "goToInvoices": "Ir a Facturas",
+      "columns": {
+        "invoiceNumber": "N.º de Factura",
+        "booking": "Reserva",
+        "date": "Fecha",
+        "status": "Estado",
+        "amount": "Monto"
+      },
+      "itemLabel": "facturas"
+    }
+  }
+}

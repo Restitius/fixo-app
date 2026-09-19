@@ -1,0 +1,233 @@
+{
+  "loyalty": {
+    "loading": "جارٍ التحميل…",
+    "page": {
+      "title": "الولاء",
+      "subtitle": "مكافآت للعملاء الدائمين"
+    },
+    "ptsValue": "{{points}} نقطة",
+    "metrics": {
+      "pointsBalance": "رصيد النقاط",
+      "availableNow": "متاحة الآن",
+      "tierStatus": "حالة المستوى",
+      "ptsToTier": "{{points}} نقطة حتى {{tier}}",
+      "topTier": "أعلى مستوى",
+      "earnedThisMonth": "المكتسبة هذا الشهر",
+      "fromActivities_zero": "لا توجد أنشطة",
+      "fromActivities_one": "من نشاط واحد",
+      "fromActivities_two": "من نشاطين",
+      "fromActivities_few": "من {{count}} أنشطة",
+      "fromActivities_many": "من {{count}} نشاطًا",
+      "fromActivities_other": "من {{count}} نشاط",
+      "redeemed": "المستبدلة",
+      "rewardsUsed_zero": "لا توجد مكافآت مستخدمة",
+      "rewardsUsed_one": "مكافأة واحدة مستخدمة",
+      "rewardsUsed_two": "مكافأتان مستخدمتان",
+      "rewardsUsed_few": "{{count}} مكافآت مستخدمة",
+      "rewardsUsed_many": "{{count}} مكافأة مستخدمة",
+      "rewardsUsed_other": "{{count}} مكافأة مستخدمة"
+    },
+    "tierCard": {
+      "currentTier": "المستوى الحالي",
+      "tierName": "مستوى {{tier}}",
+      "progressToTier": "التقدم نحو {{tier}}",
+      "reachedTopTier": "لقد وصلت إلى أعلى مستوى",
+      "ptsOfPts": "{{balance}} / {{target}} نقطة",
+      "quickActions": "إجراءات سريعة",
+      "earnPoints": "اكسب نقاطًا",
+      "redeemReward": "استبدل مكافأة",
+      "viewRules": "عرض القواعد",
+      "conversionNote": "100 نقطة = 1,000 شلن تنزاني كرصيد مكافأة"
+    },
+    "activity": {
+      "recentActivity": "نشاط النقاط الأخير",
+      "viewAll": "عرض الكل",
+      "noActivityYet": "لا يوجد نشاط نقاط بعد",
+      "noActivityHint": "احجز خدمة لتبدأ في كسب نقاط الولاء.",
+      "columnActivity": "النشاط",
+      "columnDate": "التاريخ",
+      "columnPoints": "النقاط",
+      "columnStatus": "الحالة",
+      "earned": "مكتسبة",
+      "redeemed": "مستبدلة"
+    },
+    "rewards": {
+      "availableRewards": "المكافآت المتاحة",
+      "viewAllRewards": "عرض كل المكافآت",
+      "minPts": "الحد الأدنى {{points}} نقطة"
+    },
+    "earnDialog": {
+      "title": "اكسب نقاطًا",
+      "pointsLabel": "النقاط",
+      "placeholder": "مثال: 100",
+      "enterPointsFirst": "أدخل النقاط أولاً",
+      "adding": "جارٍ الإضافة...",
+      "addPoints": "إضافة نقاط",
+      "earnedToast": "تم اكتساب {{points}} نقطة — الرصيد {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "استبدل مكافأة",
+      "subtitle": "استخدم نقاطك للحصول على المزايا المتاحة",
+      "currentBalance": "الرصيد الحالي",
+      "notEnoughPoints": "لا توجد نقاط كافية لهذه المكافأة",
+      "confirmDeduction": "يرجى تأكيد أنك تفهم أنه سيتم خصم النقاط",
+      "notEnoughPointsBadge": "نقاط غير كافية",
+      "selectedReward": "المكافأة المختارة",
+      "pointsRequired": "النقاط المطلوبة",
+      "remainingAfter": "النقاط المتبقية بعد الاستبدال",
+      "consentLabel": "أفهم أنه سيتم خصم النقاط فورًا",
+      "instantNote": "تُطبَّق المكافآت المستبدلة فورًا على حسابك.",
+      "cancel": "إلغاء",
+      "redeeming": "جارٍ الاستبدال...",
+      "redeemNow": "استبدل الآن",
+      "redeemedToast": "تم استبدال {{reward}}!"
+    },
+    "detailSheet": {
+      "title": "تفاصيل الولاء",
+      "memberSince": "عضو منذ",
+      "tierBenefits": "مزايا المستوى",
+      "benefitsValue": "مزايا {{tier}}",
+      "rewardConversion": "تحويل المكافآت",
+      "conversionValue": "100 نقطة = 1,000 شلن تنزاني",
+      "nextMilestone": "معلم المكافأة التالي",
+      "milestoneValue": "{{points}} نقطة (مستوى {{tier}})",
+      "topTierReached": "تم الوصول إلى أعلى مستوى",
+      "selectedActivity": "النشاط المختار",
+      "referenceCode": "رمز المرجع",
+      "pointsEarned": "النقاط المكتسبة",
+      "pointsSpent": "النقاط المستخدمة",
+      "balanceAfter": "الرصيد بعد ذلك",
+      "timeline": "الجدول الزمني",
+      "recorded": "تم تسجيل {{activity}}",
+      "viewRules": "عرض القواعد",
+      "share": "مشاركة",
+      "copiedToClipboard": "تم النسخ إلى الحافظة",
+      "done": "تم"
+    },
+    "tierBenefits": {
+      "Bronze": ["اكسب نقطة واحدة عن كل 1,000 شلن تنزاني يتم إنفاقها", "أولوية حجز قياسية"],
+      "Silver": ["اكسب نقطة واحدة عن كل 1,000 شلن تنزاني يتم إنفاقها", "دعم عملاء ذو أولوية"],
+      "Gold": ["10% نقاط إضافية على كل حجز", "أولوية في مطابقة مزودي الخدمة"],
+      "Platinum": ["20% نقاط إضافية على كل حجز", "خط دعم مخصص", "إضافة حجز ذات أولوية مجانية"]
+    },
+    "rewardCatalog": {
+      "discount5000": "خصم {{amount}} شلن تنزاني",
+      "priorityBooking": "حجز ذو أولوية",
+      "freeInspection": "فحص مجاني"
+    },
+    "share": {
+      "title": "ولاء FIXO",
+      "message": "{{activity}} — {{sign}}{{points}} نقطة",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} نقطة (المرجع {{ref}})"
+    }
+  },
+  "promotions": {
+    "loading": "جارٍ التحميل…",
+    "page": {
+      "title": "العروض الترويجية",
+      "subtitle": "عروض وخصومات على خدمتك القادمة"
+    },
+    "metrics": {
+      "activePromotions": "العروض النشطة",
+      "currentlyAvailable": "متاحة حاليًا",
+      "totalSavings": "إجمالي التوفير",
+      "acrossRedemptions": "عبر جميع الاستخدامات",
+      "usedThisMonth": "المستخدمة هذا الشهر",
+      "appliedOnBookings": "مطبّقة على الحجوزات",
+      "expiringSoon": "تنتهي قريبًا",
+      "within7Days": "خلال 7 أيام"
+    },
+    "categories": {
+      "plumbing": "السباكة",
+      "cleaning": "التنظيف",
+      "painting": "الدهان",
+      "acCooling": "التكييف والتبريد",
+      "electrical": "الكهرباء",
+      "moving": "النقل",
+      "general": "خدمات عامة"
+    },
+    "discount": {
+      "percentOff": "خصم {{value}}%",
+      "amountOff": "خصم {{amount}}"
+    },
+    "labels": {
+      "noCap": "بلا حد أقصى",
+      "noMinimum": "بلا حد أدنى",
+      "unlimited": "غير محدود",
+      "usageOfLimit": "تم استخدام {{used}} من {{limit}}"
+    },
+    "promoCode": {
+      "title": "كود الخصم",
+      "enterCode": "أدخل كود الخصم",
+      "placeholder": "مثال: WELCOME10",
+      "orderAmount": "قيمة الطلب (شلن تنزاني)",
+      "validateCode": "تحقق من الكود",
+      "enterCodeFirst": "أدخل كود عرض ترويجي",
+      "enterAmountFirst": "أدخل قيمة الطلب",
+      "appliesSave": "{{code}} صالح — وفّر {{amount}}",
+      "save": "وفّر {{amount}}",
+      "savePercent": "وفّر {{amount}} ({{percent}}%)",
+      "disclaimer": "تُطبَّق أكواد الخصم فقط على الخدمات المؤهلة ولا يمكن دمجها مع عروض أخرى."
+    },
+    "availablePromotions": {
+      "title": "العروض المتاحة",
+      "subtitle": "اختر عرضًا لتطبيقه على حجزك.",
+      "noneTitle": "لا توجد عروض نشطة",
+      "noneDescription": "عد قريبًا — ستظهر عروض جديدة هنا.",
+      "expires": "تنتهي في {{date}}",
+      "details": "التفاصيل",
+      "useNow": "استخدم الآن",
+      "showLess": "عرض أقل",
+      "viewAll": "عرض كل العروض"
+    },
+    "redemptions": {
+      "title": "الاستخدامات الأخيرة",
+      "showLess": "عرض أقل",
+      "viewAll": "عرض الكل",
+      "noneTitle": "لا توجد استخدامات بعد",
+      "noneDescription": "ستظهر هنا العروض التي تستخدمها فعليًا مع مبلغ التوفير الحقيقي.",
+      "columnCode": "كود الخصم",
+      "columnDate": "التاريخ",
+      "columnSavings": "التوفير",
+      "columnStatus": "الحالة",
+      "applied": "مطبّق"
+    },
+    "details": {
+      "title": "تفاصيل العرض",
+      "active": "نشط",
+      "expired": "منتهي",
+      "maxSavings": "أقصى توفير: {{amount}}",
+      "promoCode": "كود الخصم",
+      "category": "الفئة",
+      "validity": "الصلاحية",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "الحد الأدنى للطلب",
+      "usageLimit": "حد الاستخدام",
+      "eligibleAreas": "المناطق المؤهلة",
+      "allAreas": "جميع المناطق",
+      "conditionsTitle": "الشروط",
+      "conditionGeneral": "صالح فقط على الخدمات المؤهلة.",
+      "conditionCategory": "صالح فقط على خدمات {{category}} المؤهلة.",
+      "conditionNoCombine": "لا يمكن دمجه مع أكواد خصم أخرى.",
+      "conditionAppliedImmediately": "يُطبَّق فورًا عند استخدام هذا العرض.",
+      "recentUseTitle": "الاستخدام الأخير",
+      "noRecentUse": "لا توجد استخدامات بعد لهذا الكود.",
+      "columnBookingRef": "مرجع الحجز",
+      "columnDate": "التاريخ",
+      "columnSavings": "التوفير",
+      "shareCode": "مشاركة الكود",
+      "viewTerms": "عرض الشروط",
+      "useThisPromotion": "استخدم هذا العرض",
+      "termsComingSoon": "ستُدرج الشروط الكاملة هنا قريبًا — راجع الشروط أعلاه في الوقت الحالي."
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "أدخل قيمة الطلب أعلاه حتى نتمكن من حساب التوفير الحقيقي.",
+      "appliedSaved": "تم تطبيق {{code}} — تم توفير {{amount}}",
+      "copiedToClipboard": "تم نسخ كود الخصم إلى الحافظة"
+    },
+    "share": {
+      "title": "عرض FIXO",
+      "message": "استخدم كود الخصم {{code}} على FIXO — {{discount}}"
+    }
+  }
+}

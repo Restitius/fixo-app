@@ -1,0 +1,99 @@
+{
+  "loading": "Inapakia…",
+  "itemLabel_one": "mgogoro",
+  "itemLabel_other": "migogoro",
+  "page": {
+    "title": "Migogoro",
+    "subtitle": "Fuatilia na simamia migogoro uliyofungua kuhusu miadi yako"
+  },
+  "metrics": {
+    "total": "Jumla ya Migogoro",
+    "totalHint_one": "Mgogoro {{count}} umewasilishwa",
+    "totalHint_other": "Migogoro {{count}} imewasilishwa",
+    "open": "Wazi / Inasubiri",
+    "openHint": "Inasubiri utatuzi",
+    "closed": "Iliyotatuliwa",
+    "closedHint": "Iliyotatuliwa, kufungwa au kuondolewa"
+  },
+  "search": {
+    "placeholder": "Tafuta kwa aina, maelezo au miadi..."
+  },
+  "filters": {
+    "statusPlaceholder": "Hali",
+    "all": "Hali zote",
+    "open": "Wazi",
+    "closed": "Imefungwa"
+  },
+  "columns": {
+    "category": "Aina",
+    "description": "Maelezo",
+    "booking": "Miadi",
+    "status": "Hali",
+    "created": "Ilianzishwa"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "Ubora wa Huduma",
+    "DAMAGE": "Uharibifu",
+    "BILLING": "Malipo",
+    "NO_SHOW": "Kutokuja",
+    "OTHER": "Nyingine"
+  },
+  "evidenceKinds": {
+    "PHOTO": "Picha",
+    "DOCUMENT": "Hati",
+    "OTHER": "Nyingine"
+  },
+  "empty": {
+    "title": "Bado hakuna migogoro",
+    "description": "Ikiwa kitu kimekwenda vibaya kwenye miadi, unaweza kufungua mgogoro hapa na timu yetu itashughulikia.",
+    "filteredTitle": "Hakuna migogoro inayolingana",
+    "filteredDescription": "Jaribu neno lingine la utafutaji au kichujio cha hali.",
+    "clearFilters": "Futa vichujio"
+  },
+  "newDispute": {
+    "trigger": "Mgogoro Mpya",
+    "title": "Fungua Mgogoro Mpya",
+    "subtitle": "Tuambie kilichoenda vibaya kwenye miadi na tutakagua.",
+    "bookingLabel": "Miadi",
+    "bookingPlaceholder": "Chagua miadi",
+    "noBookings": "Bado huna miadi yoyote ya kufungua mgogoro.",
+    "serviceFallback": "Huduma",
+    "categoryLabel": "Aina",
+    "descriptionLabel": "Maelezo",
+    "descriptionPlaceholder": "Eleza kilichotokea kwa angalau herufi 10...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "Ghairi",
+    "submit": "Wasilisha Mgogoro",
+    "submitting": "Inawasilisha...",
+    "opened": "Mgogoro umefunguliwa — timu yetu itaukagua",
+    "errors": {
+      "pickBooking": "Chagua miadi kwanza",
+      "descriptionLength": "Maelezo yanapaswa kuwa kati ya herufi 10 na 2000"
+    }
+  },
+  "detail": {
+    "title": "Maelezo ya Mgogoro",
+    "booking": "Miadi",
+    "service": "Huduma",
+    "description": "Maelezo",
+    "evidence": "Ushahidi",
+    "noEvidence": "Bado hakuna ushahidi ulioambatanishwa.",
+    "withdraw": "Ondoa Mgogoro",
+    "withdrawing": "Inaondoa...",
+    "withdrawn": "Mgogoro umeondolewa",
+    "alreadyClosed": "Mgogoro huu tayari umefungwa",
+    "withdrawConfirmTitle": "Je, uondoe mgogoro huu?",
+    "withdrawConfirmDescription": "Hatua hii itafunga mgogoro na haiwezi kutenduliwa. Ondoa tu ikiwa tatizo limeshatatuliwa.",
+    "addEvidence": {
+      "title": "Ongeza Ushahidi",
+      "urlPlaceholder": "https://... kiungo cha picha au hati",
+      "notePlaceholder": "Maelezo ya hiari",
+      "add": "Ongeza Ushahidi",
+      "adding": "Inaongeza...",
+      "added": "Ushahidi umeongezwa",
+      "errors": {
+        "url": "Weka kiungo (URL) sahihi (herufi 2000 kiwango cha juu)"
+      }
+    }
+  }
+}

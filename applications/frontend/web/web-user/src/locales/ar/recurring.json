@@ -1,0 +1,113 @@
+{
+  "loading": "جارٍ التحميل…",
+  "page": {
+    "title": "الخدمات المتكررة",
+    "subtitle": "أنشئ حجوزات متكررة ودعنا نتولى الجدولة"
+  },
+  "metrics": {
+    "total": {
+      "label": "إجمالي الاشتراكات",
+      "hint": "عبر جميع الخدمات"
+    },
+    "active": {
+      "label": "نشطة",
+      "hint_zero": "لا خطط نشطة",
+      "hint_one": "خطة نشطة واحدة",
+      "hint_two": "خطتان نشطتان",
+      "hint_few": "{{count}} خطط نشطة",
+      "hint_many": "{{count}} خطة نشطة",
+      "hint_other": "{{count}} خطة نشطة"
+    },
+    "paused": {
+      "label": "متوقفة مؤقتًا",
+      "hint_zero": "لا خطط متوقفة",
+      "hint_one": "خطة واحدة متوقفة",
+      "hint_two": "خطتان متوقفتان",
+      "hint_few": "{{count}} خطط متوقفة",
+      "hint_many": "{{count}} خطة متوقفة",
+      "hint_other": "{{count}} خطة متوقفة"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "أسبوعي",
+    "BIWEEKLY": "كل أسبوعين",
+    "MONTHLY": "شهري",
+    "QUARTERLY": "ربع سنوي"
+  },
+  "status": {
+    "ACTIVE": "نشط",
+    "PAUSED": "متوقف مؤقتًا",
+    "CANCELLED": "ملغى"
+  },
+  "timeWindow": {
+    "MORNING": "صباحًا",
+    "AFTERNOON": "بعد الظهر",
+    "EVENING": "مساءً"
+  },
+  "newSubscription": "اشتراك جديد",
+  "searchPlaceholder": "البحث حسب الخدمة...",
+  "filterStatus": "الحالة",
+  "filterAllStatuses": "جميع الحالات",
+  "columns": {
+    "service": "الخدمة",
+    "frequency": "التكرار",
+    "nextRun": "الموعد القادم",
+    "details": "التفاصيل",
+    "status": "الحالة",
+    "actions": "الإجراءات"
+  },
+  "noneSet": "—",
+  "pause": "إيقاف مؤقت",
+  "resume": "استئناف",
+  "cancelPlan": "إلغاء",
+  "pausedToast": "تم إيقاف الاشتراك مؤقتًا",
+  "resumedToast": "تم استئناف الاشتراك",
+  "cancelledToast": "تم إلغاء الاشتراك",
+  "itemLabel_zero": "اشتراكات",
+  "itemLabel_one": "اشتراك",
+  "itemLabel_two": "اشتراكان",
+  "itemLabel_few": "اشتراكات",
+  "itemLabel_many": "اشتراكًا",
+  "itemLabel_other": "اشتراك",
+  "empty": {
+    "title": "لا توجد اشتراكات متكررة بعد",
+    "description": "أنشئ حجزًا متكررًا، مثل تنظيف كل أسبوعين، وسنتولى الجدولة نيابة عنك.",
+    "action": "اشتراك جديد"
+  },
+  "emptyFiltered": {
+    "title": "لا توجد اشتراكات مطابقة",
+    "description": "جرّب كلمة بحث مختلفة أو غيّر عامل تصفية الحالة.",
+    "action": "مسح عوامل التصفية"
+  },
+  "cancelDialog": {
+    "title": "هل تريد إلغاء هذا الاشتراك؟",
+    "description": "سيؤدي هذا إلى إيقاف الحجوزات القادمة لخدمة {{service}}. لا يمكن التراجع عن هذا الإجراء.",
+    "keep": "الإبقاء عليه",
+    "confirm": "إلغاء الاشتراك"
+  },
+  "dialog": {
+    "title": "اشتراك جديد",
+    "subtitle": "أنشئ حجزًا متكررًا وفق جدول زمني يناسبك.",
+    "categoryLabel": "الفئة",
+    "categoryPlaceholder": "اختر فئة",
+    "serviceLabel": "الخدمة",
+    "servicePlaceholder": "اختر خدمة",
+    "servicePlaceholderNoCategory": "اختر فئة أولًا",
+    "addressLabel": "العنوان",
+    "addressPlaceholder": "اختر عنوانًا",
+    "addressNone": "بلا عنوان محدد",
+    "frequencyLabel": "التكرار",
+    "nextRunDateLabel": "تاريخ الموعد القادم",
+    "nextRunDateHint": "اختياري — اتركه فارغًا ليتولى مزود الخدمة جدولة الزيارة الأولى",
+    "timeWindowLabel": "الوقت المفضل",
+    "timeWindowNone": "أي وقت",
+    "instructionsLabel": "التعليمات",
+    "instructionsPlaceholder": "مثال: استخدم الباب الخلفي، ركّز على المطبخ والحمامات",
+    "instructionsHint": "{{count}}/500 حرفًا",
+    "cancel": "إلغاء",
+    "create": "إنشاء الاشتراك",
+    "creating": "جارٍ الإنشاء…",
+    "selectServiceError": "اختر خدمة للمتابعة",
+    "createdToast": "تم إنشاء الاشتراك"
+  }
+}

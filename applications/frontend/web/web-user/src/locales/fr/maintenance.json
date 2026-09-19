@@ -1,0 +1,92 @@
+{
+  "loading": "Chargement…",
+  "page": {
+    "title": "Entretien",
+    "subtitle": "Plans d'entretien récurrents pour vos équipements du foyer"
+  },
+  "metrics": {
+    "total": "Total des Plans",
+    "totalHint": "Depuis le début",
+    "active": "Plans Actifs",
+    "activeHint": "Actuellement programmés",
+    "dueSoon": "Bientôt Dus",
+    "dueSoonHint_one": "Dans {{count}} jour",
+    "dueSoonHint_other": "Dans {{count}} jours",
+    "overdue": "En Retard",
+    "overdueHint": "Nécessite une action"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Rechercher par équipement ou service...",
+    "statusPlaceholder": "Statut",
+    "allStatuses": "Tous les Statuts",
+    "addPlan": "Ajouter un Plan"
+  },
+  "table": {
+    "asset": "Équipement",
+    "service": "Service",
+    "interval": "Fréquence",
+    "nextDue": "Prochaine Échéance",
+    "status": "Statut",
+    "actions": "Actions",
+    "intervalValue_one": "Tous les {{count}} jour",
+    "intervalValue_other": "Tous les {{count}} jours"
+  },
+  "statuses": {
+    "ACTIVE": "Actif",
+    "OVERDUE": "En retard",
+    "CANCELLED": "Annulé"
+  },
+  "assetFallback": "Équipement",
+  "serviceFallback": "Service",
+  "actions": {
+    "markDone": "Marquer comme Fait",
+    "markingDone": "Enregistrement…",
+    "cancel": "Annuler",
+    "cancelling": "Annulation…",
+    "cancelledNote": "Plan annulé",
+    "markedDone": "« {{asset}} » marqué comme entretenu"
+  },
+  "cancelConfirm": {
+    "title": "Annuler ce plan d'entretien ?",
+    "description": "Cela arrête les futurs rappels pour « {{asset}} » — {{service}}. Cette action est irréversible.",
+    "keep": "Conserver le Plan",
+    "confirm": "Annuler le Plan",
+    "cancelled": "Plan d'entretien annulé"
+  },
+  "itemLabel": "plans d'entretien",
+  "empty": {
+    "title": "Aucun plan d'entretien pour l'instant",
+    "description": "Configurez un plan récurrent pour être averti avant qu'un équipement ne prenne du retard sur son entretien.",
+    "action": "Ajouter un Plan",
+    "filteredTitle": "Aucun plan correspondant",
+    "filteredDescription": "Essayez un autre terme de recherche ou un autre statut.",
+    "clearFilters": "Effacer les Filtres"
+  },
+  "addDialog": {
+    "title": "Ajouter un Plan d'Entretien",
+    "assetLabel": "Équipement",
+    "assetPlaceholder": "Choisir un équipement",
+    "noAssetsHint": "Vous n'avez encore aucun équipement.",
+    "noAssetsCta": "Ajouter un équipement",
+    "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Choisir une catégorie",
+    "serviceLabel": "Service",
+    "servicePlaceholder": "Choisir un service",
+    "loadingServices": "Chargement des services…",
+    "noServicesFound": "Aucun service trouvé dans cette catégorie",
+    "intervalLabel": "Répéter tous les (jours)",
+    "intervalHint": "Entre 1 et 1095 jours",
+    "nextDueLabel": "Prochaine échéance (optionnel)",
+    "nextDueHint_one": "Par défaut, {{count}} jour à partir d'aujourd'hui si laissé vide",
+    "nextDueHint_other": "Par défaut, {{count}} jours à partir d'aujourd'hui si laissé vide",
+    "notesLabel": "Notes (optionnel)",
+    "notesPlaceholder": "Toute information utile sur ce plan",
+    "cancel": "Annuler",
+    "save": "Ajouter le Plan",
+    "saving": "Ajout…",
+    "selectAsset": "Choisissez d'abord un équipement.",
+    "selectService": "Choisissez d'abord un service.",
+    "intervalRange": "La fréquence doit être comprise entre 1 et 1095 jours.",
+    "created": "Plan d'entretien ajouté"
+  }
+}

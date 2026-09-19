@@ -1,0 +1,50 @@
+{
+  "loading": "加载中…",
+  "page": {
+    "title": "保修",
+    "subtitle": "已完成工作的保修信息，以及您提交的任何理赔申请"
+  },
+  "metrics": {
+    "total": "保修总数",
+    "totalHint": "累计",
+    "active": "生效中的保修",
+    "activeHint": "当前有效",
+    "expiringSoon": "即将到期",
+    "expiringSoonHint_other": "{{count}} 天内到期",
+    "claimsSubmitted": "已提交的理赔",
+    "claimsSubmittedHint_other": "已提交 {{count}} 项理赔"
+  },
+  "filterBar": {
+    "searchPlaceholder": "按服务或服务商搜索..."
+  },
+  "table": {
+    "service": "服务",
+    "provider": "服务商",
+    "expires": "到期日",
+    "status": "状态",
+    "claim": "理赔",
+    "actions": "操作"
+  },
+  "serviceFallback": "服务",
+  "fileClaim": "提交理赔",
+  "claimAlreadyFiled": "理赔已提交",
+  "itemLabel": "项保修",
+  "empty": {
+    "title": "暂无保修",
+    "description": "预订完成后，保修信息会自动显示在这里。",
+    "action": "查看我的预订",
+    "filteredTitle": "没有匹配的保修",
+    "filteredDescription": "请尝试其他搜索词。",
+    "clearFilters": "清除搜索"
+  },
+  "claimDialog": {
+    "title": "提交保修理赔",
+    "placeholder": "请详细描述此工作存在的问题...",
+    "hint": "{{count}}/2000 字符（至少 10 个字符）",
+    "tooShort": "请至少输入 10 个字符描述问题。",
+    "cancel": "取消",
+    "submit": "提交理赔",
+    "submitting": "正在提交...",
+    "submitted": "您的理赔已提交"
+  }
+}

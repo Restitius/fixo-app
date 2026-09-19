@@ -1,0 +1,60 @@
+{
+  "loading": "جارٍ التحميل…",
+  "page": {
+    "title": "الضمانات",
+    "subtitle": "ضمانات على أعمالك المكتملة، وأي مطالبات قدّمتها"
+  },
+  "metrics": {
+    "total": "إجمالي الضمانات",
+    "totalHint": "منذ البداية",
+    "active": "الضمانات النشطة",
+    "activeHint": "سارية حاليًا",
+    "expiringSoon": "تنتهي قريبًا",
+    "expiringSoonHint_zero": "لا تنتهي خلال أي أيام",
+    "expiringSoonHint_one": "خلال يوم واحد",
+    "expiringSoonHint_two": "خلال يومين",
+    "expiringSoonHint_few": "خلال {{count}} أيام",
+    "expiringSoonHint_many": "خلال {{count}} يومًا",
+    "expiringSoonHint_other": "خلال {{count}} يوم",
+    "claimsSubmitted": "المطالبات المُقدَّمة",
+    "claimsSubmittedHint_zero": "لا توجد مطالبات مُقدَّمة",
+    "claimsSubmittedHint_one": "مطالبة واحدة مُقدَّمة",
+    "claimsSubmittedHint_two": "مطالبتان مُقدَّمتان",
+    "claimsSubmittedHint_few": "{{count}} مطالبات مُقدَّمة",
+    "claimsSubmittedHint_many": "{{count}} مطالبةً مُقدَّمة",
+    "claimsSubmittedHint_other": "{{count}} مطالبة مُقدَّمة"
+  },
+  "filterBar": {
+    "searchPlaceholder": "ابحث حسب الخدمة أو مزود الخدمة..."
+  },
+  "table": {
+    "service": "الخدمة",
+    "provider": "مزود الخدمة",
+    "expires": "تنتهي في",
+    "status": "الحالة",
+    "claim": "المطالبة",
+    "actions": "الإجراءات"
+  },
+  "serviceFallback": "خدمة",
+  "fileClaim": "تقديم مطالبة",
+  "claimAlreadyFiled": "تم تقديم المطالبة",
+  "itemLabel": "ضمانات",
+  "empty": {
+    "title": "لا توجد ضمانات بعد",
+    "description": "تظهر الضمانات هنا تلقائيًا بمجرد اكتمال الحجز.",
+    "action": "عرض حجوزاتي",
+    "filteredTitle": "لا توجد ضمانات مطابقة",
+    "filteredDescription": "جرّب مصطلح بحث مختلف.",
+    "clearFilters": "مسح البحث"
+  },
+  "claimDialog": {
+    "title": "تقديم مطالبة ضمان",
+    "placeholder": "صف المشكلة المتعلقة بهذا العمل بالتفصيل...",
+    "hint": "{{count}}/2000 حرف (10 أحرف كحد أدنى)",
+    "tooShort": "يرجى وصف المشكلة بـ 10 أحرف على الأقل.",
+    "cancel": "إلغاء",
+    "submit": "تقديم المطالبة",
+    "submitting": "جارٍ التقديم...",
+    "submitted": "تم تقديم مطالبتك"
+  }
+}
