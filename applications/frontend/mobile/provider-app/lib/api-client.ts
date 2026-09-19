@@ -89,8 +89,16 @@ class ApiClient {
     return this.request<T>(path, { method: "POST", body: JSON.stringify(body) });
   }
 
+  postRaw<T = any>(path: string, body: unknown = {}) {
+    return this.request<T>(path, { method: "POST", body: JSON.stringify(body) }, true, true);
+  }
+
   patch<T = any>(path: string, body: unknown = {}) {
     return this.request<T>(path, { method: "PATCH", body: JSON.stringify(body) });
+  }
+
+  patchRaw<T = any>(path: string, body: unknown = {}) {
+    return this.request<T>(path, { method: "PATCH", body: JSON.stringify(body) }, true, true);
   }
 
   put<T = any>(path: string, body: unknown = {}) {
@@ -99,6 +107,10 @@ class ApiClient {
 
   delete<T = any>(path: string) {
     return this.request<T>(path, { method: "DELETE" });
+  }
+
+  deleteRaw<T = any>(path: string) {
+    return this.request<T>(path, { method: "DELETE" }, true, true);
   }
 
   // multipart — sendJsonHeader=false lets the browser set its own
@@ -1168,4 +1180,54 @@ export const ratingsApi = {
       )
       .then((r) => r.data.reviews),
   summary: () => apiClient.getRaw<ReviewSummary>("/providers/me/ratings/summary").then((r) => r.data),
+};
+
+// ---------------------------------------------------------------------------
+// Portfolio — real /providers/me/portfolio/* CRUD (portfolio_router.py).
+// Raw (unwrapped) on success. No status_code=201 on create — it returns 200.
+// ---------------------------------------------------------------------------
+
+export interface PortfolioItem {
+  id: string;
+  title: string;
+  description: string;
+  service_category: string;
+  before_image_url: string;
+  after_image_url: string;
+  completed_on: string;
+  is_featured: boolean;
+  status: "published" | "draft" | "archived";
+  created_at: string;
+  updated_at: string;
+}
+
+export const portfolioApi = {
+  list: (status?: string, limit = 50, offset = 0) =>
+    apiClient
+      .getRaw<{ items: PortfolioItem[]; limit: number; offset: number }>(`/providers/me/portfolio/${qs({ status, limit, offset })}`)
+      .then((r) => r.data.items),
+  create: (data: {
+    title: string;
+    description?: string | undefined;
+    service_category?: string | undefined;
+    before_image_url?: string | undefined;
+    after_image_url?: string | undefined;
+    completed_on?: string | undefined;
+    is_featured?: boolean | undefined;
+    status?: PortfolioItem["status"] | undefined;
+  }) => apiClient.postRaw<PortfolioItem>("/providers/me/portfolio/", data).then((r) => r.data),
+  update: (
+    itemId: string,
+    data: {
+      title?: string | undefined;
+      description?: string | undefined;
+      service_category?: string | undefined;
+      before_image_url?: string | undefined;
+      after_image_url?: string | undefined;
+      completed_on?: string | undefined;
+      is_featured?: boolean | undefined;
+      status?: PortfolioItem["status"] | undefined;
+    },
+  ) => apiClient.patchRaw<PortfolioItem>(`/providers/me/portfolio/${itemId}`, data).then((r) => r.data),
+  remove: (itemId: string) => apiClient.deleteRaw<{ id: string }>(`/providers/me/portfolio/${itemId}`).then((r) => r.data),
 };
