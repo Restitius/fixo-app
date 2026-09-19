@@ -504,3 +504,54 @@ export const dashboardApi = {
   wallet: () => apiClient.get<WalletOverview>("/providers/me/wallet").then((r) => r.data),
   requestsFeed: () => apiClient.get<RequestFeedItem[]>("/providers/requests").then((r) => r.data),
 };
+
+// ---------------------------------------------------------------------------
+// Requests (respond) + quotations. Field names read directly from
+// requests_router.py / quotations_router.py this session.
+// ---------------------------------------------------------------------------
+
+export interface QuoteRow {
+  quote_id: string;
+  request_id: string;
+  request_number: string;
+  service_name: string;
+  service_slug: string;
+  total_amount: number;
+  currency: string;
+  status: string;
+  valid_until?: string | null;
+  submitted_at?: string | null;
+  updated_at?: string | null;
+  created_at: string;
+}
+
+export interface QuoteDetail extends QuoteRow {
+  labour_cost?: number | null;
+  materials_cost?: number | null;
+  transport_cost?: number | null;
+  inspection_fee?: number | null;
+  additional_charges?: number | null;
+  tax_amount?: number | null;
+  discount_amount?: number | null;
+  platform_fee?: number | null;
+  lead_time_days?: number;
+  estimated_hours?: number | null;
+  proposed_start_date?: string | null;
+  notes?: string | null;
+  terms?: string | null;
+}
+
+export const requestsApi = {
+  respond: (requestId: string, data: { response_type: "ACCEPTED" | "DECLINED" | "QUESTION"; question_text?: string; response_message?: string }) =>
+    apiClient.post(`/providers/requests/${requestId}/respond`, data).then((r) => r.data),
+  get: (requestId: string) => apiClient.get<RequestFeedItem>(`/providers/requests/${requestId}`).then((r) => r.data),
+};
+
+export const quotesApi = {
+  list: () => apiClient.get<QuoteRow[]>("/providers/quotations").then((r) => r.data),
+  get: (quoteId: string) => apiClient.get<QuoteDetail>(`/providers/quotations/${quoteId}`).then((r) => r.data),
+  save: (requestId: string, data: Partial<QuoteDetail> & { total_amount: number }) =>
+    apiClient.post<QuoteDetail>(`/providers/quotations/${requestId}`, data).then((r) => r.data),
+  submit: (quoteId: string) => apiClient.post<QuoteDetail>(`/providers/quotations/${quoteId}/submit`).then((r) => r.data),
+  withdraw: (quoteId: string) => apiClient.post<QuoteDetail>(`/providers/quotations/${quoteId}/withdraw`).then((r) => r.data),
+};
