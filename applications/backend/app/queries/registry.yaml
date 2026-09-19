@@ -1,0 +1,3087 @@
+# =============================================================================
+# FIXO-APP Query Registry manifest
+#
+# Every SQL statement is registered here with a stable ID mapped to exactly
+# one file under app/queries/. Services NEVER embed SQL.
+# =============================================================================
+defaults:
+  database: PRIMARY_DB
+  security:
+    ownership_filter_required: true
+    requires_auth: true
+  timeout_ms: 5000
+queries:
+  ASSET.ARCHIVE:
+    description: ASSET.ARCHIVE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/delete/archive_asset.sql
+  ASSET.CREATE:
+    description: ASSET.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/create/insert_asset.sql
+  ASSET.GET_BY_ID:
+    description: ASSET.GET_BY_ID registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/read/find_asset.sql
+  ASSET.LIST:
+    description: ASSET.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/read/list_assets.sql
+  ASSET.REVALUE:
+    description: ASSET.REVALUE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/update/revalue_asset.sql
+  ASSET.SUMMARY:
+    description: ASSET.SUMMARY registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/read/asset_summary.sql
+  ASSET.UPDATE:
+    description: ASSET.UPDATE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: assets/update/update_asset.sql
+  CUS.ACCOUNT.CLOSURE.SCHEDULE:
+    description: Uses SP_DELETE_ACCOUNT (inserts ACCOUNT_CLOSURES + soft-deletes customer)
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/profile/closure_schedule.sql
+  CUS.ACTIVITY.LIST:
+    description: CUS.ACTIVITY.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/history/activity.sql
+  CUS.AUTH.CUSTOMER.BY_EMAIL:
+    description: CUS.AUTH.CUSTOMER.BY_EMAIL registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/by_email.sql
+  CUS.AUTH.CUSTOMER.BY_ID:
+    description: CUS.AUTH.CUSTOMER.BY_ID registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/auth/by_id.sql
+  CUS.AUTH.CUSTOMER.BY_ID_WITH_HASH:
+    description: Internal-only — includes password_hash for change-password verification. Never returned to a client.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/auth/by_id_with_hash.sql
+  CUS.AUTH.CUSTOMER.CREATE:
+    description: CUS.AUTH.CUSTOMER.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/create_customer.sql
+  CUS.AUTH.CUSTOMER.MARK_VERIFIED:
+    description: CUS.AUTH.CUSTOMER.MARK_VERIFIED registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/mark_verified.sql
+  CUS.AUTH.CUSTOMER.UPDATE_PASSWORD:
+    description: Sets a new password hash — used by both authenticated change-password and OTP-verified forgot-password reset.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/update_password.sql
+  CUS.AUTH.OTP.ISSUE:
+    description: CUS.AUTH.OTP.ISSUE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/otp_issue.sql
+  CUS.AUTH.OTP.VERIFY:
+    description: CUS.AUTH.OTP.VERIFY registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/otp_verify.sql
+  CUS.AUTH.SESSION.CREATE:
+    description: CUS.AUTH.SESSION.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/session_create.sql
+  CUS.AUTH.SESSION.GET_VALID:
+    cache:
+      enabled: true
+      key_template: 30
+      ttl_seconds: sess:{refresh_token_hash}
+    description: CUS.AUTH.SESSION.GET_VALID registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/session_get_valid.sql
+  CUS.AUTH.SESSION.REVOKE:
+    description: CUS.AUTH.SESSION.REVOKE registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/session_revoke.sql
+  CUS.AUTH.SESSION.LIST_FOR_CUSTOMER:
+    description: CUS.AUTH.SESSION.LIST_FOR_CUSTOMER registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/auth/list_sessions.sql
+  CUS.AUTH.SESSION.REVOKE_ALL:
+    description: CUS.AUTH.SESSION.REVOKE_ALL registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/session_revoke_all.sql
+  CUS.BOOKING.CLOSE:
+    description: CUS.BOOKING.CLOSE registered query.
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/close.sql
+  CUS.BOOKING.CREATE:
+    description: CUS.BOOKING.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/create.sql
+  CUS.BOOKING.GET:
+    description: CUS.BOOKING.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/get.sql
+  CUS.BOOKING.GET_INTERNAL:
+    description: CUS.BOOKING.GET_INTERNAL registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/bookings/get_internal.sql
+  CUS.BOOKING.LIST:
+    description: CUS.BOOKING.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/list.sql
+  CUS.BOOKING.MARK_COMPLETED:
+    description: CUS.BOOKING.MARK_COMPLETED registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/mark_completed.sql
+  CUS.BOOKING.MARK_STARTED:
+    description: CUS.BOOKING.MARK_STARTED registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/mark_started.sql
+  CUS.BOOKING.SET_ARRIVED:
+    description: CUS.BOOKING.SET_ARRIVED registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/set_arrived.sql
+  CUS.BOOKING.SET_SCHEDULE:
+    description: CUS.BOOKING.SET_SCHEDULE registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/set_scheduled_date.sql
+  CUS.BOOKING.SET_STATUS:
+    description: CUS.BOOKING.SET_STATUS registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/set_status.sql
+  CUS.BOOKING.TIMELINE.ADD:
+    description: CUS.BOOKING.TIMELINE.ADD registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/timeline_add.sql
+  CUS.BOOKING.TIMELINE.LIST:
+    description: CUS.BOOKING.TIMELINE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/timeline_list.sql
+  CUS.BOOKING.SET_SCOPE:
+    description: Apply an approved SCOPE change request's notes to the booking.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/set_scope_notes.sql
+  CUS.BOOKING.UPDATE_AMOUNT:
+    description: CUS.BOOKING.UPDATE_AMOUNT registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/bookings/update_amount.sql
+  CUS.BOOKING.VERIFY_ARRIVAL:
+    description: CUS.BOOKING.VERIFY_ARRIVAL registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/verify_arrival.sql
+  CUS.CANCEL.LIST:
+    description: CUS.CANCEL.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/cancellations/list.sql
+  CUS.CANCEL.PREVIEW:
+    description: CUS.CANCEL.PREVIEW registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/cancellations/preview.sql
+  CUS.CANCEL.RECORD:
+    description: CUS.CANCEL.RECORD registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/cancellations/record.sql
+  CUS.CANCEL.REQUEST:
+    description: CUS.CANCEL.REQUEST registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/cancellations/request.sql
+  CUS.CATALOG.CATEGORIES:
+    cache:
+      enabled: true
+      key_template: 300
+      ttl_seconds: categories
+    description: CUS.CATALOG.CATEGORIES registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/catalog/categories.sql
+  CUS.CATALOG.SERVICE.GET:
+    cache:
+      enabled: true
+      key_template: service:{slug}
+      ttl_seconds: 600
+    description: CUS.CATALOG.SERVICE.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/catalog/service_get.sql
+  CUS.CHANGE.CREATE:
+    description: CUS.CHANGE.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/change_requests/create.sql
+  CUS.CHANGE.DECIDE:
+    description: CUS.CHANGE.DECIDE registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/change_requests/decide.sql
+  CUS.CHANGE.GET_OWNED:
+    description: CUS.CHANGE.GET_OWNED registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/change_requests/get_owned.sql
+  CUS.CHANGE.LIST:
+    description: CUS.CHANGE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/change_requests/list_for_booking.sql
+  CUS.DISPUTE.CREATE:
+    description: CUS.DISPUTE.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/disputes/create.sql
+  CUS.DISPUTE.EVIDENCE.ADD:
+    description: CUS.DISPUTE.EVIDENCE.ADD registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/disputes/evidence_add.sql
+  CUS.DISPUTE.EVIDENCE.LIST:
+    description: CUS.DISPUTE.EVIDENCE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/disputes/evidence_list.sql
+  CUS.DISPUTE.GET:
+    description: CUS.DISPUTE.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/disputes/get.sql
+  CUS.DISPUTE.LIST:
+    description: CUS.DISPUTE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/disputes/list.sql
+  CUS.DISPUTE.WITHDRAW:
+    description: CUS.DISPUTE.WITHDRAW registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/disputes/withdraw.sql
+  CUS.FAVORITE.LIST:
+    description: CUS.FAVORITE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/favorites/list.sql
+  CUS.FAVORITE.TOGGLE:
+    description: DELETE wins when the pair exists (returning its row), otherwise INSERT.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/favorites/toggle.sql
+  CUS.HISTORY.BOOKINGS:
+    description: CUS.HISTORY.BOOKINGS registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/history/bookings.sql
+  CUS.HISTORY.BOOKING_TIMELINE:
+    description: CUS.HISTORY.BOOKING_TIMELINE registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/history/booking_timeline.sql
+  CUS.HOME.DASHBOARD:
+    cache:
+      enabled: true
+      key_template: dashboard:{user_id}
+      ttl_seconds: 60
+    description: 'Home is an aggregator: counts + curated picks, no cross-domain table writes.'
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/home/dashboard.sql
+  CUS.INVOICE.FINALIZE:
+    description: CUS.INVOICE.FINALIZE registered query.
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/invoices/finalize.sql
+  CUS.INVOICE.GET_BY_BOOKING:
+    description: CUS.INVOICE.GET_BY_BOOKING registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/invoices/get_by_booking.sql
+  CUS.INVOICE.GET_OWNED:
+    description: CUS.INVOICE.GET_OWNED registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/invoices/get_owned.sql
+  CUS.INVOICE.ISSUE:
+    description: CUS.INVOICE.ISSUE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/invoices/issue.sql
+  CUS.INVOICE.LIST:
+    description: CUS.INVOICE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/invoices/list.sql
+  CUS.INVOICE.MARK_PAID:
+    description: CUS.INVOICE.MARK_PAID registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/invoices/mark_paid.sql
+  CUS.LOCATION.ADDRESS.CREATE:
+    description: CUS.LOCATION.ADDRESS.CREATE registered query.
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/locations/create_address.sql
+  CUS.LOCATION.ADDRESS.DELETE:
+    description: CUS.LOCATION.ADDRESS.DELETE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/locations/delete_address.sql
+  CUS.LOCATION.ADDRESS.GET:
+    description: CUS.LOCATION.ADDRESS.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/locations/get_address.sql
+  CUS.LOCATION.ADDRESS.LIST:
+    description: CUS.LOCATION.ADDRESS.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/locations/list_addresses.sql
+  CUS.LOCATION.ADDRESS.SET_DEFAULT:
+    description: CUS.LOCATION.ADDRESS.SET_DEFAULT registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/locations/set_default_address.sql
+  CUS.LOCATION.ADDRESS.UPDATE:
+    description: CUS.LOCATION.ADDRESS.UPDATE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/locations/update_address.sql
+  CUS.LOYALTY.EARN:
+    description: Positive points earn; negative points spend (guarded against negative balance).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/loyalty/earn.sql
+  CUS.LOYALTY.ENSURE:
+    description: CUS.LOYALTY.ENSURE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/loyalty/ensure.sql
+  CUS.LOYALTY.GET_ACCOUNT:
+    description: CUS.LOYALTY.GET_ACCOUNT registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/loyalty/get_account.sql
+  CUS.LOYALTY.LIST_TRANSACTIONS:
+    description: CUS.LOYALTY.LIST_TRANSACTIONS registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/loyalty/list_transactions.sql
+  CUS.MAINTENANCE.CANCEL:
+    description: CUS.MAINTENANCE.CANCEL registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/maintenance/cancel_plan.sql
+  CUS.MAINTENANCE.CREATE:
+    description: CUS.MAINTENANCE.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/maintenance/create_plan.sql
+  CUS.MAINTENANCE.DONE:
+    description: 'Atomic: lock the owned ACTIVE/OVERDUE plan, stamp last_serviced_at on the'
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/maintenance/mark_done.sql
+  CUS.MAINTENANCE.FLAG_OVERDUE:
+    description: Scheduler runs this before notifying so each plan is announced once.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/maintenance/flag_overdue.sql
+  CUS.MAINTENANCE.GET:
+    description: CUS.MAINTENANCE.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/maintenance/get_plan.sql
+  CUS.MAINTENANCE.LIST:
+    description: CUS.MAINTENANCE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/maintenance/list_plans.sql
+  CUS.MAINTENANCE.OVERDUE:
+    description: CUS.MAINTENANCE.OVERDUE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/maintenance/overdue.sql
+  CUS.MATCH.CANDIDATE.ADD:
+    description: CUS.MATCH.CANDIDATE.ADD registered query.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/matching/candidate_add.sql
+  CUS.MATCH.LIST:
+    description: CUS.MATCH.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/matching/list.sql
+  CUS.MATCH.PROVIDERS.SEARCH:
+    description: located in the request's city or region. repeat_customer flags prior
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/matching/search_candidates.sql
+  CUS.MESSAGES.CONVERSATION.GET:
+    description: CUS.MESSAGES.CONVERSATION.GET registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/messaging/upsert_conversation.sql
+  CUS.MESSAGES.LIST:
+    description: CUS.MESSAGES.LIST registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/messaging/list_messages.sql
+  CUS.MESSAGES.SEND:
+    description: CUS.MESSAGES.SEND registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/messaging/send_message.sql
+  CUS.MESSAGES.UNREAD_COUNT:
+    description: CUS.MESSAGES.UNREAD_COUNT registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/messaging/unread_count.sql
+  CUS.NOTIFICATION.LIST:
+    description: CUS.NOTIFICATION.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/notifications/list_customer.sql
+  CUS.NOTIFICATIONS.CREATE:
+    description: CUS.NOTIFICATIONS.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/notifications/create.sql
+  CUS.NOTIFICATIONS.LIST:
+    cache:
+      enabled: true
+      key_template: notif:{user_id}
+      ttl_seconds: 30
+    description: CUS.NOTIFICATIONS.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/notifications/list.sql
+  CUS.NOTIFICATIONS.MARK_ALL:
+    description: CUS.NOTIFICATIONS.MARK_ALL registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/notifications/mark_all.sql
+  CUS.NOTIFICATIONS.MARK_READ:
+    description: CUS.NOTIFICATIONS.MARK_READ registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/notifications/mark_read.sql
+  CUS.NOTIFICATIONS.UNREAD_COUNT:
+    description: CUS.NOTIFICATIONS.UNREAD_COUNT registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/notifications/unread_count.sql
+  NTF.OUTBOX.CREATE:
+    description: Durable outbox row for a notification to deliver (catalogue).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_create.sql
+  NTF.OUTBOX.CLAIM_PENDING:
+    description: Atomically claim a batch of pending outbox rows for the dispatch job.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_claim_pending.sql
+  NTF.OUTBOX.MARK_DISPATCHED:
+    description: Mark an outbox row fully processed.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_mark_dispatched.sql
+  NTF.OUTBOX.MARK_FAILED:
+    description: Mark an outbox row as failed to process (e.g. unknown catalogue key).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/outbox_mark_failed.sql
+  NTF.DELIVERY_ATTEMPTS.CREATE:
+    description: Record one delivery-channel attempt for an outbox item.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_create.sql
+  NTF.DELIVERY_ATTEMPTS.UPDATE_STATUS:
+    description: Reconcile a delivery attempt after a send or a webhook callback.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_update_status.sql
+  NTF.DELIVERY_ATTEMPTS.FIND_BY_REFERENCE:
+    description: Locate the delivery attempt a provider webhook callback refers to.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_find_by_reference.sql
+  NTF.WEBHOOK_RECEIPTS.CREATE:
+    description: Durable, deduplicated record of an inbound delivery callback.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/webhook_receipt_create.sql
+  NTF.CUSTOMER_LANGUAGE.GET:
+    description: Recipient's preferred_language, for locale-aware notification rendering.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/customer_language_get.sql
+  NTF.PROVIDER_LANGUAGE.GET:
+    description: Recipient's preferred_language, for locale-aware notification rendering.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/provider_language_get.sql
+  CUS.ONBOARDING.STATUS:
+    description: CUS.ONBOARDING.STATUS registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/onboarding/status.sql
+  CUS.ONBOARDING.STEP.COMPLETE:
+    description: CUS.ONBOARDING.STEP.COMPLETE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/onboarding/complete_step.sql
+  CUS.ONBOARDING.STEPS.LIST:
+    description: CUS.ONBOARDING.STEPS.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/onboarding/steps.sql
+  CUS.PAYMENT.CREATE_ATTEMPT:
+    description: CUS.PAYMENT.CREATE_ATTEMPT registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/payments/create_attempt.sql
+  CUS.PAYMENT.GET_AUTHORIZATION:
+    description: CUS.PAYMENT.GET_AUTHORIZATION registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/payments/get_authorization.sql
+  CUS.PAYMENT.MARK_CAPTURED:
+    description: record capture_ref; ownership via booking.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/payments/mark_captured.sql
+  CUS.PAYMENT.SET_RESULT:
+    description: CUS.PAYMENT.SET_RESULT registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/payments/set_result.sql
+  CUS.PAYMENT_METHOD.ADD:
+    description: CUS.PAYMENT_METHOD.ADD registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/payment_methods/add.sql
+  CUS.PAYMENT_METHOD.LIST:
+    description: CUS.PAYMENT_METHOD.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/payment_methods/list.sql
+  CUS.PAYMENT_METHOD.REMOVE:
+    description: Cannot delete the last/default method — service layer enforces
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/payment_methods/remove.sql
+  CUS.PAYMENT_METHOD.SET_DEFAULT:
+    description: 'Sequential statements: demote all then promote the chosen one (CTE snapshot fix)'
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/payment_methods/set_default.sql
+  CUS.PREFERENCE.LIST:
+    description: CUS.PREFERENCE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/preferences/list.sql
+  CUS.PREFERENCE.SET:
+    description: CUS.PREFERENCE.SET registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/preferences/set.sql
+  CUS.PRIVACY.CONSENT.LIST:
+    description: CUS.PRIVACY.CONSENT.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/privacy/consent_list.sql
+  CUS.PRIVACY.CONSENT.SET:
+    description: CUS.PRIVACY.CONSENT.SET registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/privacy/consent_set.sql
+  CUS.PRIVACY.EXPORT.LIST:
+    description: CUS.PRIVACY.EXPORT.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/privacy/export_list.sql
+  CUS.PRIVACY.EXPORT.REQUEST:
+    description: Uses the SP to insert + return request_id/status atomically
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/privacy/export_request.sql
+  CUS.PROFILE.UPDATE:
+    description: CUS.PROFILE.UPDATE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/auth/update_profile.sql
+  CUS.PROMOTION.LIST_ACTIVE:
+    description: CUS.PROMOTION.LIST_ACTIVE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/promotions/list_active.sql
+  CUS.PROMOTION.USE:
+    description: CUS.PROMOTION.USE registered query.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/promotions/use.sql
+  CUS.PROMOTION.VALIDATE:
+    description: CUS.PROMOTION.VALIDATE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/promotions/validate.sql
+  CUS.PROPERTY.CREATE:
+    description: CUS.PROPERTY.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/create_property.sql
+  CUS.PROPERTY.DELETE:
+    description: rows stay so historical bookings keep their room references.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/delete_property.sql
+  CUS.PROPERTY.GET:
+    description: CUS.PROPERTY.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/get_property.sql
+  CUS.PROPERTY.LIST:
+    description: CUS.PROPERTY.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/list_properties.sql
+  CUS.PROPERTY.ROOMS.ADD:
+    description: CUS.PROPERTY.ROOMS.ADD registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/add_room.sql
+  CUS.PROPERTY.ROOMS.REMOVE:
+    description: CUS.PROPERTY.ROOMS.REMOVE registered query.
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/remove_room.sql
+  CUS.PROPERTY.UPDATE:
+    description: clear_address=TRUE unlinks the attached address; otherwise a provided
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/properties/update_property.sql
+  CUS.PROVIDER.LIST_BY_CATEGORY:
+    description: CUS.PROVIDER.LIST_BY_CATEGORY registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/providers/list_by_category.sql
+  CUS.PROVIDER.LIST_BY_SERVICE:
+    description: CUS.PROVIDER.LIST_BY_SERVICE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/providers/list_by_service.sql
+  CUS.PROVIDER.PROFILE:
+    description: CUS.PROVIDER.PROFILE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/providers/profile.sql
+  CUS.PUBLIC.CATEGORIES:
+    description: CUS.PUBLIC.CATEGORIES registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: public/categories.sql
+  CUS.PUBLIC.CONTENT:
+    description: CUS.PUBLIC.CONTENT registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: public/content_blocks.sql
+  CUS.PUBLIC.FAQS:
+    description: CUS.PUBLIC.FAQS registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: public/faqs.sql
+  CUS.PUBLIC.SERVICES.BY_CATEGORY:
+    description: CUS.PUBLIC.SERVICES.BY_CATEGORY registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: public/services_by_category.sql
+  CUS.PUBLIC.SERVICES.SEARCH:
+    description: CUS.PUBLIC.SERVICES.SEARCH registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: public/search_services.sql
+  CUS.QUOTES.ACCEPT:
+    description: CUS.QUOTES.ACCEPT registered query.
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/quotes/accept.sql
+  CUS.QUOTES.AUTO_CREATE:
+    description: CUS.QUOTES.AUTO_CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/quotes/auto_create.sql
+  CUS.QUOTES.GET:
+    description: CUS.QUOTES.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/quotes/get_owned.sql
+  CUS.QUOTES.LIST:
+    description: CUS.QUOTES.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/quotes/list.sql
+  CUS.RATING.BOOKING_GET:
+    description: Returns the existing rating for a booking, or NULL if not yet rated
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/ratings/booking_get.sql
+  CUS.RATING.LIST_MINE:
+    description: All ratings this customer has submitted, newest first.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/ratings/list_mine.sql
+  CUS.RATING.PROVIDER_STARS:
+    description: CUS.RATING.PROVIDER_STARS registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/ratings/provider_stars.sql
+  CUS.RATING.SUBMIT:
+    description: CUS.RATING.SUBMIT registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/ratings/submit.sql
+  CUS.REBOOK.CREATE:
+    description: Prefills service/address from the booking; description notes the origin.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/rebook/create.sql
+  CUS.REBOOK.PREVIEW:
+    description: Preview of a rebook's prefilled service/address before creating it.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/rebook/preview.sql
+  CUS.RECURRING.CREATE:
+    description: CUS.RECURRING.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/recurring/create.sql
+  CUS.RECURRING.DUE:
+    description: CUS.RECURRING.DUE registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/recurring/due.sql
+  CUS.RECURRING.GENERATE_REQUEST:
+    description: 'Atomic: lock the row, open a DRAFT request, advance the cycle. If the row'
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/recurring/generate_request.sql
+  CUS.RECURRING.GET:
+    description: CUS.RECURRING.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/recurring/get.sql
+  CUS.RECURRING.LIST:
+    description: CUS.RECURRING.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/recurring/list.sql
+  CUS.RECURRING.SET_STATUS:
+    description: CUS.RECURRING.SET_STATUS registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/recurring/set_status.sql
+  CUS.REQUEST.AREA.CHECK:
+    description: Served when the city matches a CITY row, or the region matches a REGION row.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/service_requests/is_location_served.sql
+  CUS.REQUEST.CREATE:
+    description: CUS.REQUEST.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/create_request.sql
+  CUS.REQUEST.EVIDENCE.ADD:
+    description: CUS.REQUEST.EVIDENCE.ADD registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/add_evidence.sql
+  CUS.REQUEST.EVIDENCE.COUNT:
+    description: CUS.REQUEST.EVIDENCE.COUNT registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/count_evidence.sql
+  CUS.REQUEST.EVIDENCE.DELETE:
+    description: CUS.REQUEST.EVIDENCE.DELETE registered query.
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/delete_evidence.sql
+  CUS.REQUEST.EVIDENCE.LIST:
+    description: CUS.REQUEST.EVIDENCE.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/list_evidence.sql
+  CUS.REQUEST.GET:
+    description: CUS.REQUEST.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/get_request.sql
+  CUS.REQUEST.LIST:
+    description: CUS.REQUEST.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/list_requests.sql
+  CUS.REQUEST.SET_PROVIDER:
+    description: CUS.REQUEST.SET_PROVIDER registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/set_provider.sql
+  CUS.REQUEST.SET_STATUS:
+    description: CUS.REQUEST.SET_STATUS registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/set_status.sql
+  CUS.REQUEST.UPDATE:
+    description: CUS.REQUEST.UPDATE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/service_requests/update_request.sql
+  CUS.REVIEW.CREATE:
+    description: One review per booking (UNIQUE); re-submitting refreshes rating/comment.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/reviews/create.sql
+  CUS.REVIEW.LIST:
+    description: Paginated list of the customer's own submitted reviews.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/reviews/list.sql
+  CUS.REVIEW.SERVICE_LIST:
+    description: Public reviews for a given provider/service.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/reviews/service_list.sql
+  CUS.REVIEW.STATS:
+    description: Aggregate rating stats for a given provider/service.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/reviews/stats.sql
+  CUS.SEARCH.SERVICES:
+    description: CUS.SEARCH.SERVICES registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/search/services.sql
+  CUS.SEARCH.SUGGESTIONS:
+    description: CUS.SEARCH.SUGGESTIONS registered query.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/search/suggestions.sql
+  CUS.SECURITY.PASSWORD.CHANGE:
+    description: CUS.SECURITY.PASSWORD.CHANGE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/security/change_password.sql
+  CUS.SECURITY.SESSIONS.REVOKE_ALL:
+    description: Revoke all active sessions; the session validation query checks this table
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/account/security/revoke_sessions.sql
+  CUS.SUPPORT.MESSAGE.ADD:
+    description: CUS.SUPPORT.MESSAGE.ADD registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/support/message_add.sql
+  CUS.SUPPORT.MESSAGES.LIST:
+    description: CUS.SUPPORT.MESSAGES.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/support/messages_list.sql
+  CUS.SUPPORT.TICKET.CREATE:
+    description: CUS.SUPPORT.TICKET.CREATE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/support/create.sql
+  CUS.SUPPORT.TICKET.GET:
+    description: CUS.SUPPORT.TICKET.GET registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/support/get.sql
+  CUS.SUPPORT.TICKET.LIST:
+    description: CUS.SUPPORT.TICKET.LIST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/support/list.sql
+  CUS.TRACKING.LATEST:
+    description: CUS.TRACKING.LATEST registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/tracking/latest.sql
+  CUS.TRACKING.SET_LOCATION:
+    description: CUS.TRACKING.SET_LOCATION registered query.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: customers/tracking/set_location.sql
+  CUS.WALLET.CREDIT:
+    description: CUS.WALLET.CREDIT registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/wallet/credit.sql
+  CUS.WALLET.DEBIT:
+    description: CUS.WALLET.DEBIT registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/wallet/debit.sql
+  CUS.WALLET.ENSURE:
+    description: CUS.WALLET.ENSURE registered query.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/wallet/ensure.sql
+  CUS.WALLET.GET_BALANCE:
+    description: CUS.WALLET.GET_BALANCE registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/wallet/get_balance.sql
+  CUS.WALLET.LIST_TRANSACTIONS:
+    description: CUS.WALLET.LIST_TRANSACTIONS registered query.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/wallet/list_transactions.sql
+  CUS.WARRANTY.CLAIM:
+    description: Marks the warranty CLAIMED and opens the claim row atomically.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/warranties/claim.sql
+  CUS.WARRANTY.CREATE:
+    description: Normally invoked by TR_BOOKING_WARRANTY; kept registered for backfills/support.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/warranties/create.sql
+  CUS.WARRANTY.GET:
+    description: Single owned warranty by id.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/warranties/get.sql
+  CUS.WARRANTY.LIST:
+    description: Paginated list of the customer's warranties.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/warranties/list.sql
+  PROV.AUTH.PROVIDER.REGISTER:
+    description: Creates a provider principal with credentials (Provider Phase 1).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/register.sql
+  PROV.AUTH.PROVIDER.BY_EMAIL:
+    description: Resolves a provider by email for login / OTP (Provider Phase 1).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/by_email.sql
+  PROV.AUTH.PROVIDER.BY_ID:
+    description: Provider principal by id for authenticated /me (Provider Phase 1).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/by_id.sql
+  PROV.AUTH.PROVIDER.BY_ID_WITH_HASH:
+    description: Internal-only — includes password_hash for change-password verification (Provider Phase 50). Never returned to a client.
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/by_id_with_hash.sql
+  PROV.AUTH.PROVIDER.MARK_VERIFIED:
+    description: Confirms email/phone verification flags (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/mark_verified.sql
+  PROV.AUTH.PROVIDER.UPDATE_PASSWORD:
+    description: Sets a new password hash for a provider (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/update_password.sql
+  PROV.AUTH.OTP.ISSUE:
+    description: Issues an OTP for a provider via SP_PROVIDER_ISSUE_OTP (Provider Phase 1).
+    operation: execute
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/otp_issue.sql
+  PROV.AUTH.OTP.VERIFY:
+    description: Verifies a provider OTP via SP_PROVIDER_VERIFY_OTP (Provider Phase 1).
+    operation: execute
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/otp_verify.sql
+  PROV.AUTH.SESSION.CREATE:
+    description: Opens a provider refresh session after login (Provider Phase 1).
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/session_create.sql
+  PROV.AUTH.SESSION.GET_VALID:
+    description: Returns a live provider session by refresh token hash (Provider Phase 1).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/auth/session_get_valid.sql
+  PROV.AUTH.SESSION.REVOKE:
+    description: Revokes a single provider refresh session (rotation) (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/auth/session_revoke.sql
+  PROV.AUTH.SESSION.REVOKE_ALL:
+    description: Ends all of a provider's sessions (logout/reset) (Provider Phase 1).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/auth/session_revoke_all.sql
+  PROV.ONBOARD.STEPS.LIST:
+    description: Provider onboarding step catalogue (Provider Phase 2).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/onboarding/steps.sql
+  PROV.ONBOARD.STATUS:
+    description: Onboarding steps with this provider's saved progress (Provider Phase 2).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/onboarding/status.sql
+  PROV.ONBOARD.STEP.SAVE:
+    description: Auto-saves one onboarding step's data without completing (Provider Phase 2).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/onboarding/save_step.sql
+  PROV.ONBOARD.STEP.COMPLETE:
+    description: Marks one onboarding step completed with its saved data (Provider Phase 2).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/onboarding/complete_step.sql
+  PROV.BOOKING.FEED:
+    description: Provider's booking list with optional status filter (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/feed.sql
+  PROV.BOOKING.GET:
+    description: Provider booking detail with customer, service, address, ack (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/get.sql
+  PROV.BOOKING.ACK:
+    description: Provider acknowledges a booking (idempotent upsert) (Provider Phase 14).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/ack.sql
+  PROV.BOOKING.ACK_STATUS:
+    description: Check whether a provider acknowledged a booking (Provider Phase 14).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/ack_status.sql
+  PROV.BOOKING.START_SERVICE:
+    description: Provider starts the service — records start time, begins hourly timer, optional GPS (Provider Phase 20).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/start_service.sql
+  PROV.BOOKING.START_STATUS:
+    description: Start-service state for a provider booking (Provider Phase 20).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/start_status.sql
+  PROV.ARRIVAL.ARRIVE:
+    description: Provider records arrival with GPS on an on-the-way booking (Provider Phase 19).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/arrival/arrive.sql
+  PROV.ARRIVAL.VERIFY_PIN:
+    description: Provider enters the customer's arrival PIN to verify on-site presence (Provider Phase 19).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/arrival/verify_pin.sql
+  PROV.ARRIVAL.STATUS:
+    description: Arrival state for a provider's booking (Provider Phase 19).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/arrival/status.sql
+  PROV.TRIP.START:
+    description: Provider begins travel to customer — sets ON_THE_WAY (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/start_trip.sql
+  PROV.TRIP.UPDATE_LOCATION:
+    description: Stream GPS position + ETA to the live booking snapshot (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/update_location.sql
+  PROV.TRIP.RECORD_LOCATION:
+    description: Append a GPS trace point to PROVIDER_LOCATIONS history (Provider Phase 18).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/record_location.sql
+  PROV.TRIP.END:
+    description: Provider arrives / stops sharing location (Provider Phase 18).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/end_trip.sql
+  PROV.TRIP.GET_LOCATION:
+    description: Customer views provider's live position and ETA (Provider Phase 18).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/get_location.sql
+  PROV.TRIP.GET_NAV_INFO:
+    description: Provider views customer address + trip context for navigation (Provider Phase 18).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/tracking/get_nav_info.sql
+  PROV.BOOKING.DETAILS:
+    description: Full operational screen for a provider booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/details.sql
+  PROV.BOOKING.TIMELINE:
+    description: Chronological trail of a provider booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/timeline.sql
+  PROV.BOOKING.MESSAGE_COUNT:
+    description: Unread/total messages for a booking (Provider Phase 16).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/bookings/message_count.sql
+  PROV.MESSAGES.CONVERSATION.GET:
+    description: Open-or-fetch the booking's conversation (Provider Phase 17).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/upsert_conversation.sql
+  PROV.MESSAGES.LIST:
+    description: Chronological thread; marks customer messages read (Provider Phase 17).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/list_messages.sql
+  PROV.MESSAGES.SEND:
+    description: Provider posts to the booking's conversation (Provider Phase 17).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/send_message.sql
+  PROV.MESSAGES.UNREAD_COUNT:
+    description: Customer messages not yet read by the provider (Provider Phase 17).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/messaging/unread_count.sql
+  PROV.CALENDAR.RANGE:
+    description: Provider's calendar events in a date range (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/range.sql
+  PROV.CALENDAR.DAY:
+    description: Single-day calendar view with bookings + blocked + working hours (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/day.sql
+  PROV.CALENDAR.OVERLAP_CHECK:
+    description: Detect overlapping bookings on a given date (Provider Phase 15).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/calendar/overlap_check.sql
+  PRV.PROFILE.GET:
+    description: Provider's own full profile, personal + professional (Provider Phase 3).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/profile/get.sql
+  PRV.PROFILE.UPDATE:
+    description: Curate profile fields; absent params keep current values (Provider Phase 3).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/profile/update.sql
+  PRV.PROFILE.PUBLIC:
+    description: Public-safe profile projection for customer preview (Provider Phase 3).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/profile/public.sql
+  PRV.BUSINESS.GET:
+    description: Provider's own business profile, 1:1 (Provider Phase 4).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business/get.sql
+  PRV.BUSINESS.UPSERT:
+    description: Create or partially update the business profile (Provider Phase 4).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business/upsert.sql
+  PRV.BUSINESS.DELETE:
+    description: Remove the business profile (Provider Phase 4).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business/delete.sql
+  PRV.VER.DOC.TYPES:
+    description: Acceptable verification documents catalogue (Provider Phase 5).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/verification/doc_types.sql
+  PRV.VER.DOCS.LIST:
+    description: Provider's own active verification documents (Provider Phase 5).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/list.sql
+  PRV.VER.DOCS.EXPIRING:
+    description: Provider's verified documents nearing or past expiry (Provider Phase 47).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/expiring.sql
+  PRV.VER.DOC.ADD:
+    description: Upload one verification document (Provider Phase 5).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/add.sql
+  PRV.VER.DOC.DELETE:
+    description: Withdraw a not-yet-verified document (Provider Phase 5).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/delete.sql
+  PRV.VER.STATUS:
+    description: Verification progress aggregate for the dashboard (Provider Phase 5).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/status.sql
+  PRV.VER.SUBMIT:
+    description: Declare the verification package submitted (Provider Phase 5).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/submit.sql
+  PRV.VER.DOC.REVIEW:
+    description: Platform-side verification officer decision (Provider Phase 5; admin module wires the guard).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/verification/review.sql
+  PRV.VER.PROVIDER.STATUS.SET:
+    description: Platform-side provider verification_status transition (Provider Phase 5; admin module wires the guard).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/verification/provider_status.sql
+  PRV.SERVICE.CATALOG:
+    description: Active catalogue services a provider can configure (Provider Phase 6).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/services/catalog.sql
+  PRV.SERVICE.LIST:
+    description: The provider's configured services with catalogue context (Provider Phase 6).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/list.sql
+  PRV.SERVICE.GET:
+    description: One configured service with catalogue context (Provider Phase 6).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/get.sql
+  PRV.SERVICE.UPSERT:
+    description: Create/replace one service configuration; any edit resets approval to DRAFT (Provider Phase 6).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/upsert.sql
+  PRV.SERVICE.DELETE:
+    description: Archive a service configuration (soft delete; history preserved) (Provider Phase 6).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/delete.sql
+  PRV.SERVICE.SUBMIT:
+    description: Submit a DRAFT/REJECTED configuration for platform approval (Provider Phase 6).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/services/submit.sql
+  PRV.SERVICE.REVIEW:
+    description: Platform-side APPROVED/REJECTED decision on a submitted configuration (Provider Phase 6; admin module wires the guard).
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/services/review.sql
+  PRV.PRICING.LIST:
+    description: Structured pricing for all of the provider's configured services (Provider Phase 7).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/list.sql
+  PRV.PRICING.GET:
+    description: One service's structured pricing (owner view) (Provider Phase 7).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/get.sql
+  PRV.PRICING.UPSERT:
+    description: Full replace of one service's structured pricing; atomically re-syncs the parent configuration (Provider Phase 7).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/upsert.sql
+  PRV.PRICING.CLEAR:
+    description: Remove a service's structured pricing and reset the parent configuration to quote-based (Provider Phase 7).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/pricing/clear.sql
+  PRV.AREAS.SETTINGS.GET:
+    description: Provider travel policy + base location (Provider Phase 8).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/settings_get.sql
+  PRV.AREAS.SETTINGS.UPSERT:
+    description: Create or replace the travel/area policy (Provider Phase 8).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/settings_upsert.sql
+  PRV.AREAS.LIST:
+    description: All service-area entries of the provider (Provider Phase 8).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/list.sql
+  PRV.AREAS.ADD:
+    description: Add one service-area entry, LOCATION or RADIUS (Provider Phase 8).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/add.sql
+  PRV.AREAS.UPDATE:
+    description: Partially edit one owned service-area entry (Provider Phase 8).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/update.sql
+  PRV.AREAS.REMOVE:
+    description: Delete one owned service-area entry (Provider Phase 8).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/remove.sql
+  PRV.AREAS.EXCLUSIONS.LIST:
+    description: Areas the provider does not serve (Provider Phase 8).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/exclusions_list.sql
+  PRV.AREAS.EXCLUSIONS.ADD:
+    description: Add one excluded area (Provider Phase 8).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/exclusions_add.sql
+  PRV.AREAS.EXCLUSIONS.REMOVE:
+    description: Delete one owned exclusion (Provider Phase 8).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/areas/exclusions_remove.sql
+  PRV.AVAIL.SETTINGS.GET:
+    description: Availability toggles + vacation window (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/settings_get.sql
+  PRV.AVAIL.SETTINGS.UPSERT:
+    description: Create or replace availability toggles (Provider Phase 9).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/settings_upsert.sql
+  PRV.AVAIL.HOURS.LIST:
+    description: Weekly recurring working-hours schedule (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/hours_list.sql
+  PRV.AVAIL.HOURS.SET:
+    description: Upsert one day's working window, 0=Monday..6=Sunday (Provider Phase 9).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/hours_set.sql
+  PRV.AVAIL.HOURS.DELETE:
+    description: Reset one day's working window (Provider Phase 9).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/hours_delete.sql
+  PRV.AVAIL.TIMEOFF.LIST:
+    description: Temporary unavailable periods (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/timeoff_list.sql
+  PRV.AVAIL.TIMEOFF.ADD:
+    description: Add one unavailable period (Provider Phase 9).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/timeoff_add.sql
+  PRV.AVAIL.TIMEOFF.REMOVE:
+    description: Delete one owned unavailable period (Provider Phase 9).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/timeoff_remove.sql
+  PRV.AVAIL.SUMMARY:
+    description: Effective availability snapshot for dashboard/matching (Provider Phase 9).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/availability/summary.sql
+  PRV.DASH.STATS:
+    description: Dashboard primary statistics (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/stats.sql
+  PRV.DASH.SETUP:
+    description: Dashboard setup state for the attention list (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/setup.sql
+  PRV.DASH.EARNINGS:
+    description: Dashboard earnings snapshot, today/week/month (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/earnings.sql
+  PRV.DASH.PERFORMANCE:
+    description: Dashboard performance rates from booking history (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/performance.sql
+  PRV.DASH.UPCOMING:
+    description: Dashboard schedule, today plus 7 days (Provider Phase 10).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dashboard/upcoming.sql
+  PRV.REQUESTS.FEED:
+    description: Incoming job requests awaiting this provider (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/feed.sql
+  PRV.REQUESTS.GET:
+    description: One incoming request's full detail (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/get.sql
+  PRV.REQUESTS.RESPOND:
+    description: Accept/decline/ask on a matched request (Provider Phase 11).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/respond.sql
+  PRV.REQUESTS.RESPONSES.LIST:
+    description: This provider's request-response ledger (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/responses_list.sql
+  PRV.REQUESTS.QUOTE.SUBMIT:
+    description: Submit this provider's quote for a matched request (Provider Phase 11).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/quote_submit.sql
+  PRV.REQUESTS.QUOTES.LIST:
+    description: This provider's submitted quotes (Provider Phase 11).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/requests/quotes_list.sql
+  PRV.MATCH.ELIGIBILITY:
+    description: Provider-facing matching eligibility signals (Provider Phase 12).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/matching/eligibility.sql
+  PRV.MATCH.INSIGHTS:
+    description: Provider match history with score/rank/reasons (Provider Phase 12).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/matching/insights.sql
+  PRV.MATCH.SUMMARY:
+    description: Match-opportunity counts for the provider (Provider Phase 12).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/matching/summary.sql
+  PRV.QUOTE.SAVE:
+    description: Create a DRAFT or upgrade my quote with a professional breakdown (Provider Phase 13).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/save.sql
+  PRV.QUOTE.SUBMIT:
+    description: Publish a DRAFT quote into the marketplace (Provider Phase 13).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/submit.sql
+  PRV.QUOTE.WITHDRAW:
+    description: Withdraw a submitted quote (Provider Phase 13).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/withdraw.sql
+  PRV.QUOTE.EXPIRE:
+    description: Mark this provider's stale submitted quotes expired (Provider Phase 13).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/expire.sql
+  PRV.QUOTE.GET:
+    description: One of this provider's quotations with full breakdown (Provider Phase 13).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/get.sql
+  PRV.QUOTE.LIST:
+    description: This provider's quotations, newest first (Provider Phase 13).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/list.sql
+  PRV.QUOTE.ATTACHMENTS.LIST:
+    description: Photos/documents on one of my quotations (Provider Phase 13).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/attachments_list.sql
+  PRV.QUOTE.ATTACHMENTS.ADD:
+    description: Attach a photo/document to my own quote (Provider Phase 13).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/attachments_add.sql
+  PRV.QUOTE.ATTACHMENTS.REMOVE:
+    description: Delete one attachment from my own quote (Provider Phase 13).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/quotations/attachments_remove.sql
+  PROV.CHECKLIST.TEMPLATE.UPSERT:
+    description: Save or replace a provider's checklist template for a service (Provider Phase 21).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/template_upsert.sql
+  PROV.CHECKLIST.TEMPLATE.GET:
+    description: Read the provider's checklist template for a service (Provider Phase 21).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/template_get.sql
+  PROV.CHECKLIST.TEMPLATE.DELETE:
+    description: Deactivate the provider's checklist template for a service (Provider Phase 21).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/template_delete.sql
+  PROV.CHECKLIST.INSTANTIATE:
+    description: Copy a service's checklist template onto a booking (idempotent) (Provider Phase 21).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/instantiate.sql
+  PROV.CHECKLIST.BOOKING_LIST:
+    description: Checklist items for one of the provider's bookings (Provider Phase 21).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/booking_list.sql
+  PROV.CHECKLIST.BOOKING_SET_COMPLETED:
+    description: Provider marks a checklist task completed (Provider Phase 21).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/booking_set_completed.sql
+  PROV.CHECKLIST.BOOKING_PROGRESS:
+    description: Checklist completion summary for a booking (Provider Phase 21).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/checklist/booking_progress.sql
+  PROV.EVIDENCE.ADD:
+    description: Provider attaches an evidence item (photo/video/note/measurement/instruction/part) to a booking (Provider Phase 22).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/add.sql
+  PROV.EVIDENCE.LIST:
+    description: Evidence items for one of the provider's bookings, optionally filtered by phase/kind (Provider Phase 22).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/list.sql
+  PROV.EVIDENCE.DELETE:
+    description: Provider removes one of its evidence items (Provider Phase 22).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/delete.sql
+  PROV.EVIDENCE.SUMMARY:
+    description: Evidence counts per phase/kind for a booking (Provider Phase 22).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/evidence/summary.sql
+  PROV.CHANGE.SUBMIT:
+    description: Provider submits a change request (reason, new work, additional labour/materials/time/price, supporting photos) on an active booking (Provider Phase 23).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/submit.sql
+  PROV.CHANGE.LIST:
+    description: Change requests for one of the provider's bookings (Provider Phase 23).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/list.sql
+  PROV.CHANGE.GET:
+    description: One change request owned through the provider's booking (Provider Phase 23).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/get.sql
+  PROV.CHANGE.WITHDRAW:
+    description: Provider withdraws its own PROPOSED change request (audit kept) (Provider Phase 23).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/change_requests/withdraw.sql
+  PROV.MATERIALS.ADD:
+    description: Provider records a material used on a booking (item/qty/cost + receipt/photo/invoice attachment) (Provider Phase 24).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/add.sql
+  PROV.MATERIALS.LIST:
+    description: Material lines for one of the provider's bookings (Provider Phase 24).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/list.sql
+  PROV.MATERIALS.DELETE:
+    description: Provider removes one of its material lines (Provider Phase 24).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/delete.sql
+  PROV.MATERIALS.SUMMARY:
+    description: Material totals per currency for a booking (feeds the final invoice) (Provider Phase 24).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/materials/summary.sql
+  PROV.COMPLETION.SUBMIT:
+    description: Provider completes the job - atomic completion report + booking transition to COMPLETION_REQUESTED (Provider Phase 25).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/completion/submit.sql
+  PROV.COMPLETION.GET:
+    description: The completion report of one of the provider's bookings (Provider Phase 25).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/completion/get.sql
+  PROV.REVIEW.SUBMIT:
+    description: Record the customer sign-off / approval evidence for a provider booking - digital signature, completion PIN or app confirmation + evidence, customer, provider, date/time, booking (Provider Phase 26). One approval record per booking (UNIQUE); guarded to COMPLETION_REQUESTED only.
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/submit.sql
+  PROV.REVIEW.GET:
+    description: The sign-off / approval record for one of the provider's bookings (Provider Phase 26).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/get.sql
+  PROV.REVIEW.WAITING:
+    description: Provider's bookings still awaiting customer sign-off beyond the 24h silent-effectiveness window - triage list to follow up before the approval silently becomes ineffective (Provider Phase 26).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/waiting.sql
+  PROV.REVIEW.DELETE:
+    description: Withdraw / delete the sign-off record (Provider Phase 26).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/delete.sql
+  PROV.BILLING.PREVIEW:
+    description: Provider view of the final bill — original price + approved additional work + logged materials (Provider Phase 27, read-only breakdown).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/billing/preview.sql
+  PROV.BILLING.CHANGES:
+    description: Approved change rows behind a provider bill (Provider Phase 27).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/billing/changes.sql
+  PROV.EARNINGS.SUMMARY:
+    description: Provider earnings statistics - available/pending/total/withdrawn + today/week/month/year views (Provider Phase 28).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/earnings/summary.sql
+  PROV.EARNINGS.TRANSACTIONS:
+    description: The provider's full earnings transaction ledger (invoice events, newest first) (Provider Phase 28).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/earnings/transactions.sql
+  PROV.WALLET.GET_OR_CREATE:
+    description: Get-or-create the provider's wallet row (Provider Phase 29).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/wallet/get_or_create.sql
+  PROV.WALLET.SUMMARY:
+    description: Provider wallet overview - available/pending/reserved + withdrawals/refund deductions/bonuses/adjustments (Provider Phase 29).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/wallet/summary.sql
+  PROV.WALLET.LEDGER:
+    description: The provider's full wallet transaction history (newest first) (Provider Phase 29).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/wallet/ledger.sql
+  PROV.PAYOUT.METHODS.ADD:
+    description: Register a payout method for a provider (Provider Phase 30).
+    sql: providers/payouts/method_add.sql
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.COMMISSION.RATE:
+    description: Current active commission + tax rate configuration for a provider (Provider Phase 31).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/rate.sql
+  PROV.COMMISSION.FEES.APPLY:
+    description: Record a commission/fee application event for a provider (Provider Phase 31).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/fees_apply.sql
+  PROV.COMMISSION.FEES.LIST:
+    description: Provider commission/fee application history, newest first (Provider Phase 31).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/fees_list.sql
+  PROV.INVOICES.LIST:
+    description: Provider invoices list, newest period first (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/invoices/list.sql
+  PROV.INVOICES.GET:
+    description: Single provider invoice by id (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/invoices/get.sql
+  PROV.REVIEWS.LIST:
+    description: Provider reviews list with optional filters (Provider Phase 33).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/list.sql
+  PROV.REVIEWS.DETAIL:
+    description: Single provider review by id (Provider Phase 33).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/detail.sql
+  PROV.KPIS.LIST:
+    description: Provider performance KPIs list by period (Provider Phase 34).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/kpis/list.sql
+  PROV.RANKING.GET:
+    description: Current ranking signals for a provider (Provider Phase 35).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/ranking/get.sql
+  PROV.PORTFOLIO.LIST:
+    description: Provider portfolio items, featured first then newest (Provider Phase 36).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/list.sql
+  PROV.PORTFOLIO.GET:
+    description: Single provider portfolio item by id (Provider Phase 36).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/get.sql
+  PROV.PORTFOLIO.ADD:
+    description: Add a portfolio item for a provider (Provider Phase 36).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/add.sql
+  PROV.PORTFOLIO.UPDATE:
+    description: Update a provider portfolio item (Provider Phase 36).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/update.sql
+
+  PROV.SAFETY.REPORTS.CREATE:
+    description: Create a provider safety/incident report (Phase 41).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/create.sql
+  PROV.SAFETY.REPORTS.LIST:
+    description: Provider safety/incident reports list (Phase 41).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/list.sql
+  PROV.SAFETY.REPORTS.GET:
+    description: Single provider safety report by id (Phase 41).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/get.sql
+  PROV.SAFETY.REPORTS.ESCALATE:
+    description: Escalate a serious provider safety report to platform administrators (Phase 41).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/safety/escalate.sql
+  PROV.NOTIFICATIONS.LIST:
+    description: Provider notifications list, unread first then newest (Provider Phase 37).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/list.sql
+  PROV.NOTIFICATIONS.GET:
+    description: Single provider notification by id (Provider Phase 37).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/get.sql
+  PROV.NOTIFICATIONS.MARK_READ:
+    description: Mark a provider notification as read (idempotent) (Provider Phase 37).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/mark_read.sql
+  PROV.NOTIFICATIONS.UNREAD_COUNT:
+    description: Count of unread provider notifications (Provider Phase 37).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/unread_count.sql
+  PROV.NOTIFICATIONS.CREATE:
+    description: Persist one provider notification (notification catalogue outbox drain).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/notifications/create.sql
+  PROV.PORTFOLIO.DELETE:
+    description: Remove a provider portfolio item (Provider Phase 36).
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/portfolio/delete.sql
+  PROV.RANKING.LEADERBOARD:
+    description: Public leaderboard of top providers by rank score (Provider Phase 35).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: providers/ranking/leaderboard.sql
+  PROV.KPIS.SUMMARY:
+    description: Provider performance KPI totals across all periods (Provider Phase 34).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/kpis/summary.sql
+  PROV.REVIEWS.SUMMARY:
+    description: Provider review totals, average rating, star distribution (Provider Phase 33).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/reviews/summary.sql
+  PROV.INVOICES.SUMMARY:
+    description: Provider invoice totals and overdue count (Provider Phase 32).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/invoices/summary.sql
+  PROV.COMMISSION.FEES.SUMMARY:
+    description: Totals for a provider's commission/fee events (Provider Phase 31).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/commission/fees_summary.sql
+  PROV.PAYOUT.METHODS.LIST:
+    description: List provider payout methods (Provider Phase 30).
+    sql: providers/payouts/methods_list.sql
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.METHODS.SET_DEFAULT:
+    description: Set the default payout method (Provider Phase 30).
+    sql: providers/payouts/method_set_default.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.METHODS.DELETE:
+    description: Remove a payout method (Provider Phase 30).
+    sql: providers/payouts/method_delete.sql
+    operation: delete
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.WITHDRAW:
+    description: Request a wallet withdrawal (Provider Phase 30).
+    sql: providers/payouts/withdraw.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.LIST:
+    description: Provider payout history (Provider Phase 30).
+    sql: providers/payouts/list.sql
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.GET:
+    description: Single payout by id (Provider Phase 30).
+    sql: providers/payouts/get.sql
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.PAYOUT.CANCEL:
+    description: Cancel a requested payout (Provider Phase 30).
+    sql: providers/payouts/cancel.sql
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+  PROV.DSL.REQUESTS.LIST:
+    description: Provider DSL requests, newest first (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/list.sql
+  PROV.DSL.REQUESTS.GET:
+    description: Single DSL request by id (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/get.sql
+  PROV.DSL.REQUESTS.CREATE:
+    description: Create one DSL request (Provider Phase 38).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/create.sql
+  PROV.DSL.REQUESTS.UPDATE:
+    description: Update mutable DSL request fields (Provider Phase 38).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/update.sql
+  PROV.DSL.REQUESTS.RESOLVE:
+    description: Close a DSL request as resolved (Provider Phase 38).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/resolve.sql
+  PROV.DSL.EXECUTION_LOGS.INSERT:
+    description: Append one DSL execution step (Provider Phase 38).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/exec_insert.sql
+  PROV.DSL.EXECUTION_LOGS.LIST:
+    description: Execution steps for a DSL request (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/exec_list.sql
+  PROV.DSL.PROVIDER_METRICS.GET:
+    description: Provider DSL lifetime metrics by period (Provider Phase 38).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/dsl/metrics.sql
+  PROV.DISPUTE.LIST:
+    description: Provider disputes on their bookings, newest first (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/list.sql
+  PROV.DISPUTE.GET:
+    description: Single dispute by id, ownership-scoped (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/get.sql
+  PROV.DISPUTE.EVIDENCE.LIST:
+    description: Evidence on a dispute, ownership-scoped (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/evidence_list.sql
+  PROV.DISPUTE.RESPOND:
+    description: Submit a provider response on an owned dispute (Provider Phase 39).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/respond.sql
+  PROV.DISPUTE.RESPONSES.LIST:
+    description: Provider responses for a dispute (Provider Phase 39).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/disputes/responses_list.sql
+  PROV.SUPPORT.TICKET.CREATE:
+    description: Open a provider support ticket (Provider Phase 40).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/create.sql
+  PROV.SUPPORT.TICKET.GET:
+    description: One owned provider support ticket (Provider Phase 40).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/get.sql
+  PROV.SUPPORT.TICKET.LIST:
+    description: Provider support ticket inbox (Provider Phase 40).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/list.sql
+  PROV.SUPPORT.MESSAGE.ADD:
+    description: Append a message to an owned provider support ticket (Provider Phase 40).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/message_add.sql
+  PROV.SUPPORT.MESSAGES.LIST:
+    description: Provider support ticket message thread (Provider Phase 40).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/support/messages_list.sql
+  PROV.RECURRING_CUSTOMERS.LIST:
+    description: Provider's repeat customers, 2+ completed bookings (Provider Phase 42).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/list.sql
+  PROV.RECURRING_CUSTOMERS.GET:
+    description: One repeat customer's summary and note (Provider Phase 42).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/get.sql
+  PROV.RECURRING_CUSTOMERS.BOOKINGS:
+    description: A repeat customer's completed booking history with this provider (Provider Phase 42).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/bookings.sql
+  PROV.RECURRING_CUSTOMERS.NOTE.SET:
+    description: Upsert a provider's private note about a repeat customer (Provider Phase 42).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/recurring_customers/note_set.sql
+  PROV.BUSINESS_CUSTOMERS.CREATE:
+    description: Register a business customer with a negotiated rate (Provider Phase 43).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/create.sql
+  PROV.BUSINESS_CUSTOMERS.LIST:
+    description: Provider's registered business customers (Provider Phase 43).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/list.sql
+  PROV.BUSINESS_CUSTOMERS.GET:
+    description: Single owned business-customer record (Provider Phase 43).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/get.sql
+  PROV.BUSINESS_CUSTOMERS.UPDATE:
+    description: Modify a business customer's negotiated rate/notes (Provider Phase 43).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/update.sql
+  PROV.BUSINESS_CUSTOMERS.DEACTIVATE:
+    description: End a business customer's negotiated-rate relationship (Provider Phase 43).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/business_customers/deactivate.sql
+  PROV.TEAM.MEMBER.CREATE:
+    description: Add a worker to the provider's team (Provider Phase 44).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/create.sql
+  PROV.TEAM.MEMBERS.LIST:
+    description: The provider's team roster (Provider Phase 44).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/list.sql
+  PROV.TEAM.MEMBER.GET:
+    description: Single owned team member (Provider Phase 44).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/get.sql
+  PROV.TEAM.MEMBER.UPDATE:
+    description: Modify a team member's details/role (Provider Phase 44).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/update.sql
+  PROV.TEAM.MEMBER.DEACTIVATE:
+    description: Remove a worker from the active roster (Provider Phase 44).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/team/deactivate.sql
+  PROV.JOB_ASSIGNMENTS.CREATE:
+    description: Assign a team member to a booking (Provider Phase 45).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/create.sql
+  PROV.JOB_ASSIGNMENTS.LIST:
+    description: The provider's job assignments (Provider Phase 45).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/list.sql
+  PROV.JOB_ASSIGNMENTS.GET:
+    description: Single owned job assignment (Provider Phase 45).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/get.sql
+  PROV.JOB_ASSIGNMENTS.UPDATE:
+    description: Reassign a member and/or change status/notes (Provider Phase 45).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/update.sql
+  PROV.JOB_ASSIGNMENTS.CANCEL:
+    description: Cancel an active job assignment (Provider Phase 45).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/job_assignments/cancel.sql
+  PROV.EQUIPMENT.CREATE:
+    description: Register a piece of equipment (Provider Phase 46).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/create.sql
+  PROV.EQUIPMENT.LIST:
+    description: The provider's equipment registry (Provider Phase 46).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/list.sql
+  PROV.EQUIPMENT.GET:
+    description: Single owned equipment record (Provider Phase 46).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/get.sql
+  PROV.EQUIPMENT.UPDATE:
+    description: Modify equipment details/condition/status (Provider Phase 46).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/update.sql
+  PROV.EQUIPMENT.ASSIGN:
+    description: Check equipment out to a team member, or release it (Provider Phase 46).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/assign.sql
+  PROV.EQUIPMENT.RETIRE:
+    description: Retire a piece of equipment (Provider Phase 46).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/equipment/retire.sql
+  PROV.PROMOTIONS.CREATE:
+    description: Create a provider promotion code (Provider Phase 48).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/create.sql
+  PROV.PROMOTIONS.LIST:
+    description: The provider's promotion codes (Provider Phase 48).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/list.sql
+  PROV.PROMOTIONS.GET:
+    description: Single owned promotion (Provider Phase 48).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/get.sql
+  PROV.PROMOTIONS.UPDATE:
+    description: Modify a promotion's terms (Provider Phase 48).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/update.sql
+  PROV.PROMOTIONS.DEACTIVATE:
+    description: Turn off a promotion (Provider Phase 48).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/deactivate.sql
+  PROV.PROMOTIONS.VALIDATE:
+    description: Resolve a promo code against an order amount (Provider Phase 48).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/validate.sql
+  PROV.PROMOTIONS.REDEEM:
+    description: Consume one use of a valid promotion (Provider Phase 48).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/promotions/redeem.sql
+  PROV.ANALYTICS.OVERVIEW:
+    description: Monthly trend of bookings/revenue/rating/customers (Provider Phase 49).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/analytics/overview.sql
+  PROV.SETTINGS.PREFERENCE.LIST:
+    description: The provider's key/value preferences (Provider Phase 50).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/preferences/list.sql
+  PROV.SETTINGS.PREFERENCE.SET:
+    description: Upsert a provider preference (Provider Phase 50).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/preferences/set.sql
+  PROV.SETTINGS.PRIVACY.CONSENT.LIST:
+    description: The provider's consent settings (Provider Phase 50).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/consent_list.sql
+  PROV.SETTINGS.PRIVACY.CONSENT.SET:
+    description: Upsert a provider consent (Provider Phase 50).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/consent_set.sql
+  PROV.SETTINGS.PRIVACY.EXPORT.REQUEST:
+    description: Request a data export (Provider Phase 50).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/export_request.sql
+  PROV.SETTINGS.PRIVACY.EXPORT.LIST:
+    description: The provider's data export request history (Provider Phase 50).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/settings/privacy/export_list.sql
+  PROV.ACTIVITY_LOG.RECORD:
+    description: Append one activity entry, internal use only (Provider Phase 51).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/activity_log/record.sql
+  PROV.ACTIVITY_LOG.LIST:
+    description: The provider's own activity/audit history (Provider Phase 51).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/activity_log/list.sql
+  PROV.PLANS.LIST:
+    description: Public catalogue of active subscription plans (Provider Phase 52).
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/subscriptions/plans_list.sql
+  PROV.SUBSCRIPTIONS.CURRENT:
+    description: The provider's active subscription + plan details (Provider Phase 52).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/current.sql
+  PROV.SUBSCRIPTIONS.SUBSCRIBE:
+    description: Switch to a plan, cancelling any current active subscription (Provider Phase 52).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/subscribe.sql
+  PROV.SUBSCRIPTIONS.CANCEL:
+    description: Cancel the provider's active subscription (Provider Phase 52).
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/cancel.sql
+  PROV.SUBSCRIPTIONS.HISTORY:
+    description: The provider's subscription history (Provider Phase 52).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/subscriptions/history.sql
+  PROV.ACCOUNT_RESTRICTIONS.IMPOSE:
+    description: Platform/admin action - record a restriction on a provider account (Provider Phase 53). Not exposed via any provider-facing endpoint.
+    operation: create
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/account_restrictions/impose.sql
+  PROV.ACCOUNT_RESTRICTIONS.LIFT:
+    description: Platform/admin action - lift an active restriction (Provider Phase 53). Not exposed via any provider-facing endpoint.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: providers/account_restrictions/lift.sql
+  PROV.ACCOUNT_RESTRICTIONS.LIST_ACTIVE:
+    description: The provider's currently active restrictions (Provider Phase 53).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/account_restrictions/list_active.sql
+  PROV.ACCOUNT_RESTRICTIONS.HISTORY:
+    description: The provider's full restriction history (Provider Phase 53).
+    operation: read
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/account_restrictions/history.sql
+  PROV.ACCOUNT.CLOSURE.SCHEDULE:
+    description: Uses SP_DELETE_PROVIDER_ACCOUNT (inserts PROVIDER_ACCOUNT_CLOSURES + soft-deletes provider) (Provider Phase 54).
+    operation: execute
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: providers/account_closure/schedule.sql
+version: 1

@@ -1,0 +1,30 @@
+{
+  "NTF.BOOKING.CONFIRMED.V1": {
+    "customer": {"title": "बुकिंग की पुष्टि हो गई", "body": "{booking_number} — आपका प्रदाता बुक कर दिया गया है।"},
+    "assigned_provider": {"title": "नई बुकिंग सौंपी गई", "body": "आपको {booking_number} के लिए बुक किया गया है।"}
+  },
+  "NTF.PAYMENT.AUTHORIZED.V1": {
+    "customer": {"title": "भुगतान अधिकृत", "body": "{booking_number} — इस काम के लिए राशि सुरक्षित कर दी गई है।"}
+  },
+  "NTF.BOOKING.ON_THE_WAY.V1": {
+    "customer": {"title": "आपका प्रदाता आ रहा है", "body": "बुकिंग {booking_number}"}
+  },
+  "NTF.BOOKING.ARRIVED.V1": {
+    "customer": {"title": "आपका प्रदाता पहुंच गया है", "body": "बुकिंग {booking_number}"}
+  },
+  "NTF.SERVICE.COMPLETION_REQUESTED.V1": {
+    "customer": {"title": "प्रदाता ने काम पूरा कर दिया है", "body": "{booking_number} — कृपया समीक्षा करें और पूर्णता की पुष्टि करें।"}
+  },
+  "NTF.SERVICE.COMPLETED.V1": {
+    "customer": {"title": "सेवा पूर्ण हुई", "body": "{booking_number} — पुष्टि करने के लिए धन्यवाद।"}
+  },
+  "NTF.PAYMENT.CAPTURED.V1": {
+    "customer": {"title": "भुगतान प्राप्त हुआ", "body": "{booking_number} — राशि प्राप्त कर ली गई है।"}
+  },
+  "NTF.INVOICE.ISSUED.V1": {
+    "customer": {"title": "चालान {invoice_number}", "body": "{total_amount} {currency} देय है।"}
+  },
+  "NTF.MAINTENANCE.OVERDUE.V1": {
+    "customer": {"title": "रखरखाव में देरी", "body": "योजना {plan_number} की नियत तारीख निकल चुकी है।"}
+  }
+}

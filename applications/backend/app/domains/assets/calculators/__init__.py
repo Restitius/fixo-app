@@ -1,0 +1,1 @@
+"""Assets calculation components."""
