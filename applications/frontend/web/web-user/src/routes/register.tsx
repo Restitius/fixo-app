@@ -92,6 +92,15 @@ function RegisterPage() {
             {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="email">{t("register.emailLabel")}</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input id="email" type="email" placeholder={t("register.emailPlaceholder")} className="pl-10" {...register("email")} />
+            </div>
+            {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+          </div>
+
                     <div className="space-y-2">
             <Label htmlFor="password">{t("register.passwordLabel")}</Label>
             <div className="relative">
