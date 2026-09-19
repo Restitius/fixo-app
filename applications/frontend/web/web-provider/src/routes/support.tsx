@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { LifeBuoy, PhoneCall, Send, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
@@ -140,20 +140,13 @@ function SupportPage() {
 
         <div className="space-y-4">
           <Panel title="Safety">
-            <button
-              onClick={() => {
-                setCategory("GENERAL");
-                setPriority("URGENT");
-                setSubject("Unsafe job site — ");
-              }}
-              className="flex w-full items-center gap-3 rounded-2xl bg-muted/50 p-4 text-left hover:bg-muted"
-            >
+            <Link to="/safety" search={{ urgent: true }} className="flex w-full items-center gap-3 rounded-2xl bg-muted/50 p-4 text-left hover:bg-muted">
               <ShieldAlert className="size-5 text-primary shrink-0" />
               <span>
                 <span className="block text-sm font-semibold">Report an unsafe job site</span>
-                <span className="block text-xs text-muted-foreground">Opens an urgent support ticket below</span>
+                <span className="block text-xs text-muted-foreground">Opens a real safety report</span>
               </span>
-            </button>
+            </Link>
             <a href="tel:+255800110220" className="mt-3 flex w-full items-center gap-3 rounded-2xl bg-muted/50 p-4 text-left hover:bg-muted">
               <PhoneCall className="size-5 text-primary shrink-0" />
               <span>

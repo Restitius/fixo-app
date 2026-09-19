@@ -31,6 +31,7 @@ import { Route as QuotesRouteImport } from './routes/quotes'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as RequestsRouteImport } from './routes/requests'
 import { Route as ReviewsRouteImport } from './routes/reviews'
+import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as ServiceAreasRouteImport } from './routes/service-areas'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -149,6 +150,11 @@ const ReviewsRoute = ReviewsRouteImport.update({
   path: '/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SafetyRoute = SafetyRouteImport.update({
+  id: '/safety',
+  path: '/safety',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServiceAreasRoute = ServiceAreasRouteImport.update({
   id: '/service-areas',
   path: '/service-areas',
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
   '/reviews': typeof ReviewsRoute
+  '/safety': typeof SafetyRoute
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
   '/reviews': typeof ReviewsRoute
+  '/safety': typeof SafetyRoute
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
@@ -271,6 +279,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
   '/reviews': typeof ReviewsRoute
+  '/safety': typeof SafetyRoute
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
@@ -304,6 +313,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/requests'
     | '/reviews'
+    | '/safety'
     | '/service-areas'
     | '/services'
     | '/settings'
@@ -335,6 +345,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/requests'
     | '/reviews'
+    | '/safety'
     | '/service-areas'
     | '/services'
     | '/settings'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/requests'
     | '/reviews'
+    | '/safety'
     | '/service-areas'
     | '/services'
     | '/settings'
@@ -398,6 +410,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   RequestsRoute: typeof RequestsRoute
   ReviewsRoute: typeof ReviewsRoute
+  SafetyRoute: typeof SafetyRoute
   ServiceAreasRoute: typeof ServiceAreasRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
@@ -563,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/safety': {
+      id: '/safety'
+      path: '/safety'
+      fullPath: '/safety'
+      preLoaderRoute: typeof SafetyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/service-areas': {
       id: '/service-areas'
       path: '/service-areas'
@@ -638,6 +658,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   RequestsRoute: RequestsRoute,
   ReviewsRoute: ReviewsRoute,
+  SafetyRoute: SafetyRoute,
   ServiceAreasRoute: ServiceAreasRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
