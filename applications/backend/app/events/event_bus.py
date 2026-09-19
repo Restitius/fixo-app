@@ -5,6 +5,8 @@ mirror selected events outward once implemented.
 """
 from __future__ import annotations
 
+from typing import Any
+
 from app.events.dispatcher import EventDispatcher
 from app.registries.events.event_registry import EventRegistry
 from app.registries.events.listener_registry import ListenerRegistry

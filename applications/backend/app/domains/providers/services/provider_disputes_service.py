@@ -15,7 +15,6 @@ from typing import Any
 
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
 
-
 # -- pagination defaults -------------------------------------------------------
 DEFAULT_LIMIT = 50
 MAX_LIMIT = 100
@@ -163,4 +162,3 @@ class ProviderDisputesService:
             "created_at": row.get("created_at"),
             "updated_at": row.get("updated_at"),
         }
-        return self._encode_dispute(row)
