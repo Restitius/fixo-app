@@ -12,7 +12,7 @@ import StatusBadge from '../components/StatusBadge'
 import { PlusIcon } from '../components/icons'
 import { useAuth } from '../lib/auth-context'
 import { onboardingApi, type CatalogServiceOption, type ProviderServiceConfig } from '../lib/api-client'
-import { fmtMoney } from '../lib/format'
+import { fmtMoney, humanize } from '../lib/format'
 
 const fieldCls = 'rounded-2xl bg-[#f5f5f5] px-4 py-3.5 text-[15px] text-ink'
 
@@ -76,7 +76,7 @@ export default function Services() {
               </View>
               <Text className="text-[12px] text-muted mt-0.5">{s.category_name ?? '—'}</Text>
               <View className="flex-row items-center justify-between mt-2">
-                <Text className="text-[12px] text-muted">{s.pricing_model}</Text>
+                <Text className="text-[12px] text-muted">{humanize(s.pricing_model)}</Text>
                 {s.minimum_charge ? <Text className="text-[13px] font-semibold text-primary">{fmtMoney(s.minimum_charge)}</Text> : null}
               </View>
               <View className="flex-row gap-4 mt-3">

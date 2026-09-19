@@ -26,7 +26,7 @@ export default function MetricCard({ icon: Icon, label, value, hint, tone = 'pri
   const t = ICON_TONE[tone]
   return (
     <View
-      className="flex-row items-center gap-4 rounded-3xl bg-white p-5"
+      className="flex-1 flex-row items-center gap-4 rounded-3xl bg-white p-5"
       style={{ shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 2 }}
     >
       <View className="items-center justify-center rounded-2xl" style={{ width: 48, height: 48, backgroundColor: t.bg }}>
