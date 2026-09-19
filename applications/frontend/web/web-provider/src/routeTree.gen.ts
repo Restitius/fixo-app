@@ -39,6 +39,7 @@ import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as ServiceAreasRouteImport } from './routes/service-areas'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SubscriptionRouteImport } from './routes/subscription'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
@@ -194,6 +195,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SubscriptionRoute = SubscriptionRouteImport.update({
+  id: '/subscription',
+  path: '/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -246,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/subscription': typeof SubscriptionRoute
   '/support': typeof SupportRoute
   '/team': typeof TeamRoute
   '/verify-otp': typeof VerifyOtpRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/subscription': typeof SubscriptionRoute
   '/support': typeof SupportRoute
   '/team': typeof TeamRoute
   '/verify-otp': typeof VerifyOtpRoute
@@ -319,6 +327,7 @@ export interface FileRoutesById {
   '/service-areas': typeof ServiceAreasRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/subscription': typeof SubscriptionRoute
   '/support': typeof SupportRoute
   '/team': typeof TeamRoute
   '/verify-otp': typeof VerifyOtpRoute
@@ -357,6 +366,7 @@ export interface FileRouteTypes {
     | '/service-areas'
     | '/services'
     | '/settings'
+    | '/subscription'
     | '/support'
     | '/team'
     | '/verify-otp'
@@ -393,6 +403,7 @@ export interface FileRouteTypes {
     | '/service-areas'
     | '/services'
     | '/settings'
+    | '/subscription'
     | '/support'
     | '/team'
     | '/verify-otp'
@@ -429,6 +440,7 @@ export interface FileRouteTypes {
     | '/service-areas'
     | '/services'
     | '/settings'
+    | '/subscription'
     | '/support'
     | '/team'
     | '/verify-otp'
@@ -466,6 +478,7 @@ export interface RootRouteChildren {
   ServiceAreasRoute: typeof ServiceAreasRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
+  SubscriptionRoute: typeof SubscriptionRoute
   SupportRoute: typeof SupportRoute
   TeamRoute: typeof TeamRoute
   VerifyOtpRoute: typeof VerifyOtpRoute
@@ -684,6 +697,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/subscription': {
+      id: '/subscription'
+      path: '/subscription'
+      fullPath: '/subscription'
+      preLoaderRoute: typeof SubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -746,6 +766,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServiceAreasRoute: ServiceAreasRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
+  SubscriptionRoute: SubscriptionRoute,
   SupportRoute: SupportRoute,
   TeamRoute: TeamRoute,
   VerifyOtpRoute: VerifyOtpRoute,
