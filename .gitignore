@@ -67,3 +67,18 @@ Thumbs.db
 .idea/
 .vscode/
 
+# --- Credentials and keys (CI/CD security handbook, section 3.2) -------------
+*.pem
+*.pfx
+id_rsa
+id_ed25519
+*-credentials.json
+service-account*.json
+.aws/
+.npmrc
+
+# --- Security scan output — never commit findings with code snippets --------
+gitleaks-report.json
+semgrep-results.sarif
+trivy-results.sarif
+

@@ -1,0 +1,62 @@
+# security/policies/risk-tiers.yml
+#
+# Path-to-tier mapping for the FIXO delivery pipeline (handbook section 1.3).
+# The tier of a pull request is the HIGHEST tier touched by any changed file.
+# Paths are real FIXO-APP paths, not the handbook's generic backend/* examples.
+
+tier3:
+  # Auth, security, ownership
+  - "applications/backend/app/domains/authentication/**"
+  - "applications/backend/app/domains/customers/services/auth_service.py"
+  - "applications/backend/app/domains/providers/services/provider_auth_service.py"
+  - "applications/backend/app/security/**"
+  - "applications/backend/app/api/deps/auth.py"
+  - "applications/backend/app/api/deps/provider_auth.py"
+
+  # Financial
+  - "applications/backend/app/domains/payments/**"
+  - "applications/backend/app/domains/wallets/**"
+  - "applications/backend/app/domains/disputes/**"
+  - "applications/backend/app/domains/cancellations/**"
+
+  # External integrations and webhooks
+  - "applications/backend/app/integrations/**"
+  - "applications/backend/app/adapters/integrations/**"
+
+  # The only place raw SQL is allowed, and its governance
+  - "applications/backend/app/queries/**"
+  - "applications/backend/app/registries/queries/**"
+
+  # Schema
+  - "applications/backend/migrations/**"
+
+  # Pipeline and infrastructure itself
+  - "infra/**"
+  - ".github/workflows/**"
+  - "security/**"
+  - "docker-compose.yml"
+  - "applications/backend/Dockerfile"
+  - "applications/frontend/web/*/Dockerfile"
+
+tier2:
+  # Business-critical domains
+  - "applications/backend/app/domains/bookings/**"
+  - "applications/backend/app/domains/providers/**"
+  - "applications/backend/app/domains/quotations/**"
+  - "applications/backend/app/domains/service_requests/**"
+  - "applications/backend/app/domains/service_execution/**"
+  - "applications/backend/app/domains/notifications/**"
+  - "applications/backend/app/domains/messaging/**"
+  - "applications/backend/app/domains/matching/**"
+  - "applications/frontend/web/web-user/src/routes/book.tsx"
+  - "applications/frontend/web/web-user/src/routes/bookings.tsx"
+  - "applications/frontend/web/web-provider/src/routes/bookings.tsx"
+  - "applications/frontend/web/web-provider/src/routes/requests.tsx"
+
+tier1:
+  - "**"
+
+# The tier is the highest tier touched. A pull request that changes one line
+# of CSS and one line of applications/backend/app/domains/payments/ is a
+# tier 3 pull request. Split unrelated changes instead of dragging a small
+# fix through a heavy review.
