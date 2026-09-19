@@ -43,9 +43,11 @@ async def swala_sms_webhook(request: Request) -> dict[str, Any]:
     """
     raw_body = await request.body()
     provided = request.headers.get("X-SwalaSMS-Signature", "")
-    webhook_secret = getattr(request.app, "state", {}).get("swala_sms_webhook_secret", "")
-    if not webhook_secret and hasattr(request.app, "extra"):
-        webhook_secret = request.app.extra.get("swala_sms_webhook_secret", "") or webhook_secret
+    # request.app.state is a real Starlette State object (attribute access,
+    # no .get()) — the previous getattr(...).get(...) form raised
+    # AttributeError unconditionally, crashing every call to this endpoint
+    # regardless of signature validity. Set in app/startup/application.py.
+    webhook_secret = getattr(request.app.state, "swala_sms_webhook_secret", "")
     if not webhook_secret:
         raise WebhookSignatureError(
             "SwalaSMS webhook secret not configured on application",
