@@ -18,7 +18,10 @@ import {
   BriefcaseIcon,
   CalendarIcon,
   ChevronRightIcon,
+  ClipboardCheckIcon,
+  CreditCardIcon,
   FileTextIcon,
+  GiftIcon,
   HelpCircleIcon,
   HistoryIcon,
   ImageIcon,
@@ -26,10 +29,13 @@ import {
   LogoutIcon,
   SettingsIcon,
   ShieldCheckIcon,
+  ShieldIcon,
   StarIcon,
   TagIcon,
+  ToolIcon,
   UserIcon,
   WalletIcon,
+  XCircleIcon,
 } from '../../components/icons'
 
 const MENU = [
@@ -40,6 +46,8 @@ const MENU = [
   { icon: LocationIcon, label: 'Service areas', to: '/service-areas' },
   { icon: ShieldCheckIcon, label: 'Documents', to: '/documents' },
   { icon: UserIcon, label: 'Team', to: '/team' },
+  { icon: ClipboardCheckIcon, label: 'Job assignments', to: '/job-assignments' },
+  { icon: ToolIcon, label: 'Equipment', to: '/equipment' },
   { icon: UserIcon, label: 'Customers', to: '/customers' },
   { icon: ImageIcon, label: 'Portfolio', to: '/portfolio' },
   { icon: StarIcon, label: 'Reviews', to: '/reviews' },
@@ -48,8 +56,12 @@ const MENU = [
   { icon: WalletIcon, label: 'Wallet', to: '/wallet' },
   { icon: WalletIcon, label: 'Payouts', to: '/payouts' },
   { icon: FileTextIcon, label: 'Invoices', to: '/invoices' },
+  { icon: GiftIcon, label: 'Promotions', to: '/promotions' },
+  { icon: CreditCardIcon, label: 'Subscription', to: '/subscription' },
   { icon: CalendarIcon, label: 'Availability', to: '/availability' },
   { icon: HelpCircleIcon, label: 'Support', to: '/support' },
+  { icon: ShieldIcon, label: 'Safety', to: '/safety' },
+  { icon: XCircleIcon, label: 'Disputes', to: '/disputes' },
   { icon: SettingsIcon, label: 'Settings', to: '/settings' },
 ] as const
 
