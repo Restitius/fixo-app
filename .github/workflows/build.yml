@@ -1,0 +1,206 @@
+# .github/workflows/build.yml
+#
+# Produces the immutable, signed artifacts that deploy-staging.yml and
+# deploy-production.yml consume. Runs on pushes to main/dev (not on every
+# PR — pr-checks.yml already validates the code; this stage is about
+# packaging what merged).
+#
+# Two different artifact shapes, because the components genuinely deploy
+# differently:
+#   - backend: a real long-running service -> container image, pushed to
+#     GHCR, signed with cosign, blue/green deployed (see deploy-*.yml).
+#   - web-user / web-provider: confirmed this session (real `npm run build`
+#     output, not a guess) to target Cloudflare Workers via nitro's
+#     "cloudflare-module" preset (nitro 3.0.260603-beta, at the version
+#     threshold where that preset applies reliably) — `npm run build`
+#     produces .output/server/wrangler.json and a nitro-generated worker,
+#     not a Node server to containerize. So these two are packaged as a
+#     signed build-output tarball and deployed with `wrangler deploy`,
+#     not as container images. Cloudflare's own deployment versioning
+#     provides the atomic-swap/rollback story blue/green gives the
+#     backend — see deploy-staging.yml / deploy-production.yml.
+#   - mobile: excluded, same reason as pr-checks.yml (no build tooling
+#     configured yet).
+name: Build
+
+on:
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write   # cosign keyless signing via GitHub OIDC
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: false   # never cancel a build mid-push to a real branch
+
+env:
+  REGISTRY: ghcr.io
+  BACKEND_IMAGE: ghcr.io/restitius/fixo-backend
+
+jobs:
+  changes:
+    name: Detect changed areas
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      web_user: ${{ steps.filter.outputs.web_user }}
+      web_provider: ${{ steps.filter.outputs.web_provider }}
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: dorny/paths-filter@<pin-to-commit-sha>      # v3.0.2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - "applications/backend/**"
+            web_user:
+              - "applications/frontend/web/web-user/**"
+            web_provider:
+              - "applications/frontend/web/web-provider/**"
+
+  backend-image:
+    name: Backend image
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+
+      - uses: docker/setup-buildx-action@<pin-to-commit-sha>   # v3.7.1
+
+      - uses: docker/login-action@<pin-to-commit-sha>     # v3.3.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build (not pushed yet — scan first)
+        uses: docker/build-push-action@<pin-to-commit-sha>   # v6.9.0
+        with:
+          context: applications/backend
+          file: applications/backend/Dockerfile
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          tags: ${{ env.BACKEND_IMAGE }}:git-${{ github.sha }}
+          load: true
+          push: false
+
+      - name: Vulnerability scan (blocks push on CRITICAL/HIGH)
+        uses: aquasecurity/trivy-action@<pin-to-commit-sha>   # v0.28.0
+        with:
+          image-ref: ${{ env.BACKEND_IMAGE }}:git-${{ github.sha }}
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          ignore-unfixed: true
+
+      - name: Push
+        id: push
+        uses: docker/build-push-action@<pin-to-commit-sha>   # v6.9.0
+        with:
+          context: applications/backend
+          file: applications/backend/Dockerfile
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:git-${{ github.sha }}
+            ${{ env.BACKEND_IMAGE }}:${{ github.ref_name }}-latest
+          push: true
+
+      - name: SBOM
+        uses: anchore/sbom-action@<pin-to-commit-sha>     # v0.17.9
+        with:
+          image: ${{ env.BACKEND_IMAGE }}@${{ steps.push.outputs.digest }}
+          format: spdx-json
+          output-file: backend-sbom.spdx.json
+          upload-artifact: true
+
+      - uses: sigstore/cosign-installer@<pin-to-commit-sha>   # v3.7.0
+
+      - name: Sign image (keyless, GitHub OIDC identity)
+        run: |
+          cosign sign --yes \
+            "${{ env.BACKEND_IMAGE }}@${{ steps.push.outputs.digest }}"
+
+  frontend-artifact:
+    name: Frontend artifact (${{ matrix.app }})
+    needs: changes
+    if: |
+      (matrix.app == 'web-user' && needs.changes.outputs.web_user == 'true') ||
+      (matrix.app == 'web-provider' && needs.changes.outputs.web_provider == 'true')
+    strategy:
+      matrix:
+        app: [web-user, web-provider]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: applications/frontend/web/${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+
+      - uses: actions/setup-node@<pin-to-commit-sha>      # v4.1.0
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: applications/frontend/web/${{ matrix.app }}/package-lock.json
+
+      - run: npm ci
+
+      - name: Dependency vulnerability scan (blocks package on CRITICAL/HIGH)
+        uses: aquasecurity/trivy-action@<pin-to-commit-sha>   # v0.28.0
+        with:
+          scan-type: fs
+          scan-ref: applications/frontend/web/${{ matrix.app }}
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          ignore-unfixed: true
+
+      - run: npm run build
+        env:
+          CI: "true"
+
+      # .output/server/wrangler.json is generated here — confirmed real by
+      # running this build directly (not assumed from config). This is
+      # what `wrangler deploy` in deploy-staging.yml / deploy-production.yml
+      # consumes; deploy jobs never rebuild from source.
+      - name: Verify build produced a Cloudflare Worker
+        run: test -f .output/server/wrangler.json
+
+      - name: Package build output
+        run: |
+          tar -C .output -czf ../${{ matrix.app }}-git-${{ github.sha }}.tar.gz .
+          cd .. && sha256sum ${{ matrix.app }}-git-${{ github.sha }}.tar.gz \
+            > ${{ matrix.app }}-git-${{ github.sha }}.tar.gz.sha256
+
+      - name: SBOM
+        uses: anchore/sbom-action@<pin-to-commit-sha>     # v0.17.9
+        with:
+          path: applications/frontend/web/${{ matrix.app }}
+          format: spdx-json
+          output-file: ${{ matrix.app }}-sbom.spdx.json
+          upload-artifact: true
+
+      - uses: sigstore/cosign-installer@<pin-to-commit-sha>   # v3.7.0
+
+      - name: Sign the build-output tarball (keyless, GitHub OIDC identity)
+        working-directory: applications/frontend/web
+        run: |
+          cosign sign-blob --yes \
+            --output-signature ${{ matrix.app }}-git-${{ github.sha }}.tar.gz.sig \
+            --output-certificate ${{ matrix.app }}-git-${{ github.sha }}.tar.gz.pem \
+            ${{ matrix.app }}-git-${{ github.sha }}.tar.gz
+
+      - name: Upload signed artifact
+        uses: actions/upload-artifact@<pin-to-commit-sha>   # v4.4.3
+        with:
+          name: ${{ matrix.app }}-git-${{ github.sha }}
+          retention-days: 90
+          path: |
+            applications/frontend/web/${{ matrix.app }}-git-${{ github.sha }}.tar.gz
+            applications/frontend/web/${{ matrix.app }}-git-${{ github.sha }}.tar.gz.sha256
+            applications/frontend/web/${{ matrix.app }}-git-${{ github.sha }}.tar.gz.sig
+            applications/frontend/web/${{ matrix.app }}-git-${{ github.sha }}.tar.gz.pem
