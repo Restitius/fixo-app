@@ -1,13 +1,14 @@
 """Account domain services — business rules, ports-only, no query IDs."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.ports.persistence.account_ports import (
+    AccountClosureRepositoryPort,
     PaymentMethodRepositoryPort,
     PreferenceRepositoryPort,
-    SecurityRepositoryPort,
     PrivacyRepositoryPort,
-    AccountClosureRepositoryPort,
+    SecurityRepositoryPort,
 )
 from app.shared.exceptions.hierarchy import AuthenticationError
 

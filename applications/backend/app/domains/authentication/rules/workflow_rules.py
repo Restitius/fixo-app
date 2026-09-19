@@ -1,6 +1,7 @@
 """Authentication workflow/state-transition rules (pure predicates)."""
 from __future__ import annotations
 
+
 def password_min_requirements(password: str) -> bool:
     """Minimum length plus mixed character classes."""
     import re

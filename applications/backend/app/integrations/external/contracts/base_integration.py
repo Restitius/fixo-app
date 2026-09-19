@@ -6,7 +6,6 @@ from typing import Any
 
 from app.integrations.external.clients.http_client import HttpClient
 from app.registries.integrations.integration_definition import IntegrationDefinition
-
 from app.security.secrets import SecretResolver
 
 

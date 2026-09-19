@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from datetime import date
 
 from app.shared.schemas.base import BaseSchema
 

@@ -5,6 +5,7 @@ class until pydantic is available (dependencies install during bootstrap).
 """
 from __future__ import annotations
 
+
 def _to_camel(name: str) -> str:
     parts = name.split("_")
     return parts[0] + "".join(p[:1].upper() + p[1:] for p in parts[1:])

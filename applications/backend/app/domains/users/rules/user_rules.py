@@ -1,6 +1,7 @@
 """User business rules (pure predicates — enforce BEFORE persistence)."""
 from __future__ import annotations
 
+
 def email_format_valid(email: str) -> bool:
     """Basic RFC-style shape check (full validation at schema layer)."""
     import re

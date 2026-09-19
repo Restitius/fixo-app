@@ -5,7 +5,6 @@ queries (PROV.TRIP.*) that assert provider_id = :user_id ownership.
 """
 from __future__ import annotations
 
-import json
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager

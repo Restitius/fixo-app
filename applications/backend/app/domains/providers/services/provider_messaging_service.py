@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.ports.persistence.provider_messaging_repository import ProviderMessagingRepository
-from app.shared.exceptions.hierarchy import NotFoundError, AuthorizationError
+from app.shared.exceptions.hierarchy import NotFoundError
 
 
 class ProviderMessagingService:

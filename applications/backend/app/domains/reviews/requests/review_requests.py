@@ -1,5 +1,6 @@
 """Request DTOs for Phase 10 endpoints."""
 from __future__ import annotations
+
 from pydantic import BaseModel, Field, field_validator
 
 

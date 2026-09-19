@@ -4,6 +4,7 @@ Responsibilities: receive request → context → service → response.
 It NEVER writes SQL, sends emails, or publishes events directly.
 """
 from __future__ import annotations
+
 from typing import Any
 
 from app.api.deps.request_context import RequestContext

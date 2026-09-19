@@ -1,8 +1,10 @@
 """ReviewService — Phase 10 module 28."""
 from __future__ import annotations
+
 import logging
 from typing import Any
-from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
+
+from app.shared.exceptions.hierarchy import ValidationError
 
 logger = logging.getLogger(__name__)
 

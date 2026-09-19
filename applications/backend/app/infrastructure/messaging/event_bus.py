@@ -6,7 +6,6 @@ logged and surfaced in the returned per-listener status.
 """
 from __future__ import annotations
 
-import asyncio
 import inspect
 import logging
 from typing import Any

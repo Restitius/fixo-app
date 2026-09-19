@@ -16,7 +16,6 @@ from typing import Any
 
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
 
-
 # -- pagination defaults ------------------------------------------------------
 DEFAULT_LIMIT = 50
 MAX_LIMIT = 100

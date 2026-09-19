@@ -1,5 +1,6 @@
 """Recurring domain router - Phase 11, Module 31."""
 from __future__ import annotations
+
 from datetime import date
 
 from fastapi import APIRouter, Query

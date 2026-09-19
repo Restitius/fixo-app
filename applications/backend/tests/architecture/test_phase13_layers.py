@@ -18,8 +18,6 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-import pytest
-
 APP_ROOT = Path(__file__).resolve().parents[2] / "app"
 
 _PHASE13_DOMAINS = ("cancellations", "support", "disputes")

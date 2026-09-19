@@ -1,6 +1,5 @@
 """Phase 13 smoke test against the live API (http://127.0.0.1:8000).
 Run: python scripts/smoke_phase13.py"""
-import json
 import random
 import string
 import sys
@@ -54,7 +53,7 @@ ticket = data(r)
 check("support.create", r.status_code in (200, 201), str(ticket)[:120])
 tid = (ticket or {}).get("ticket_id") or (ticket or {}).get("id")
 if tid:
-    r = s.post(f"/support/add_message", json={"ticket_id": tid, "message": "Any update?"})
+    r = s.post("/support/add_message", json={"ticket_id": tid, "message": "Any update?"})
     check("support.add_message", r.status_code in (200, 201))
 r = s.get("/support/list")
 check("support.list", r.status_code == 200)

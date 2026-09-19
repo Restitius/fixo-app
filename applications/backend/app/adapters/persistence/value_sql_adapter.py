@@ -1,13 +1,14 @@
 """Value-domain adapters — the ONLY places CUS.WALLET.* / CUS.PROMOTION.* /
 CUS.LOYALTY.* IDs appear."""
 from __future__ import annotations
+
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager
 from app.ports.persistence.value_ports import (
-    WalletRepositoryPort,
-    PromotionRepositoryPort,
     LoyaltyRepositoryPort,
+    PromotionRepositoryPort,
+    WalletRepositoryPort,
 )
 
 

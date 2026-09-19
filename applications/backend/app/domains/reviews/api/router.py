@@ -1,7 +1,9 @@
 """Reviews domain router — Phase 10 module 28."""
 from __future__ import annotations
+
 from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field
+
 from app.api.deps.auth import CurrentCustomer
 from app.api.responses.response import ok
 from app.startup.composition import get_composition

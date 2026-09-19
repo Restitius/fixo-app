@@ -7,11 +7,11 @@ from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager
 from app.ports.persistence.account_ports import (
+    AccountClosureRepositoryPort,
     PaymentMethodRepositoryPort,
     PreferenceRepositoryPort,
-    SecurityRepositoryPort,
     PrivacyRepositoryPort,
-    AccountClosureRepositoryPort,
+    SecurityRepositoryPort,
 )
 
 

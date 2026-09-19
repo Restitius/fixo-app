@@ -28,7 +28,7 @@ class TransactionManager:
     async def rollback(self, handle: Any) -> None:
         raise NotImplementedError("TransactionManager.rollback")
 
-    def transaction(self, database_id: str = "PRIMARY_DB") -> "_TransactionScope":
+    def transaction(self, database_id: str = "PRIMARY_DB") -> _TransactionScope:
         return _TransactionScope(self, database_id)
 
 

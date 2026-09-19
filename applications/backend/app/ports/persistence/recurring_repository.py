@@ -1,5 +1,6 @@
 """Recurring repository port - business-facing contract for subscriptions."""
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any
 

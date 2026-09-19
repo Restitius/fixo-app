@@ -9,7 +9,7 @@ from typing import Any
 from sqlalchemy.exc import IntegrityError
 
 from app.platform.query.sql_query_manager import SQLQueryManager
-from app.shared.exceptions.hierarchy import ConflictError, ValidationError
+from app.shared.exceptions.hierarchy import ConflictError
 
 
 class ProviderAvailabilityQueryIds:

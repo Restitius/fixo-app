@@ -1,6 +1,7 @@
 """Transaction business rules (pure predicates — enforce BEFORE persistence)."""
 from __future__ import annotations
 
+
 def settled_transactions_are_immutable(status: str) -> bool:
     """SETTLED rows can never be edited or archived."""
     return status == "SETTLED"
