@@ -1,0 +1,102 @@
+# security/semgrep/architecture.yml
+#
+# Fast, pattern-based architecture rules. These run in pr-checks.yml on every
+# push because they are architecture, not vulnerability — they should be fast
+# and quiet. Complements (does not replace) the AST-based import-boundary
+# tests already in applications/backend/tests/architecture/, which enforce
+# the same golden rule with full import-graph precision.
+#
+# The golden rule (docs/handyman_reference.md):
+#   Router -> Service -> Port -> SQL Adapter -> app/queries/ (governed SQL)
+#                              -> Integration Manager -> app/integrations/external/
+rules:
+  - id: fixo-no-raw-sql-outside-registry
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Raw SQL executed outside the governed query layer. Domain services must
+      call SQLQueryManager.execute(query_id, params) via a persistence
+      adapter. If this query is genuinely new, add the .sql file under
+      applications/backend/app/queries/ and register it in
+      applications/backend/app/queries/registry.yaml.
+    paths:
+      include: ["applications/backend/app/**"]
+      exclude:
+        - "applications/backend/app/infrastructure/**"
+        - "applications/backend/app/registries/queries/**"
+        - "applications/backend/migrations/**"
+        - "applications/backend/tests/**"
+    patterns:
+      - pattern-either:
+          - pattern: $CONN.execute($SQL, ...)
+          - pattern: $CONN.executemany($SQL, ...)
+          - pattern: $CURSOR.execute($SQL, ...)
+          - pattern: sqlalchemy.text(...)
+          - pattern: text(...)
+
+  - id: fixo-no-orm-session-in-controller
+    languages: [python]
+    severity: ERROR
+    message: >-
+      API routers must not touch persistence directly. Move this into a
+      domain service so that transaction boundaries stay in one place.
+    paths:
+      include: ["applications/backend/app/domains/*/api/**", "applications/backend/app/api/**"]
+    patterns:
+      - pattern-either:
+          - pattern: $DB.query(...)
+          - pattern: $DB.add(...)
+          - pattern: $DB.commit()
+          - pattern: $REPO.save(...)
+
+  - id: fixo-no-direct-provider-call
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Direct call to an external provider from domain or API code. All
+      provider traffic goes through IntegrationManager
+      (applications/backend/app/integrations/external/manager.py), which
+      owns retries, idempotency, credential handling and failure translation.
+    paths:
+      include: ["applications/backend/app/domains/**", "applications/backend/app/api/**"]
+      exclude: ["applications/backend/app/integrations/**"]
+    patterns:
+      - pattern-either:
+          - pattern: requests.$METHOD("$URL", ...)
+          - pattern: httpx.$METHOD("$URL", ...)
+          - pattern: $CLIENT.$METHOD("$URL", ...)
+      - metavariable-regex:
+          metavariable: $URL
+          regex: (?i).*(swalasms|smtp|mail|payment|gateway|checkout)\..*
+
+  - id: fixo-no-provider-sdk-outside-integrations
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Provider SDKs and low-level transport clients (smtplib, provider HTTP
+      libraries) may only be imported inside
+      applications/backend/app/integrations/external/.
+    paths:
+      include: ["applications/backend/app/**"]
+      exclude: ["applications/backend/app/integrations/**", "applications/backend/tests/**"]
+    patterns:
+      - pattern-either:
+          - pattern: import smtplib
+          - pattern: from smtplib import ...
+
+  - id: fixo-no-blanket-retry
+    languages: [python]
+    severity: WARNING
+    message: >-
+      Retrying every failed provider response duplicates messages and
+      charges. Retry 429 and 5xx. Do not retry 400, 401, 409 or 422 without
+      a code change (see the SMS idempotency-key handling in
+      app/integrations/external/providers/sms/swala.py for the pattern
+      this codebase already follows correctly).
+    paths:
+      include: ["applications/backend/app/integrations/**"]
+    patterns:
+      - pattern: |
+          if $RESP.status_code >= 400:
+            ...
+            $RETRY(...)
