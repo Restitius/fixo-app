@@ -88,7 +88,7 @@ export default function Pricing() {
             return (
               <View key={s.service_id} className="rounded-2xl bg-[#f5f5f5] p-4">
                 <View className="flex-row items-center justify-between">
-                  <Text className="text-[14px] font-semibold text-ink">{s.display_name || s.service_id}</Text>
+                  <Text className="text-[14px] font-semibold text-ink">{s.display_name || s.service_name || s.service_id}</Text>
                   {existing && <StatusBadge label="Priced" tone="success" />}
                 </View>
 
