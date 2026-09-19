@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "すべてのサービス"
+  },
+  "category": {
+    "titleFallback": "サービス",
+    "noProviders": "まだ利用可能な業者がありません。"
+  },
+  "detail": {
+    "reviewsCount": "（レビュー{{count}}件）",
+    "activeSince": "活動開始",
+    "jobsDone": "完了した案件",
+    "services": "サービス",
+    "about": "概要",
+    "readMore": "続きを読む...",
+    "servicesPricing": "サービスと料金",
+    "noServices": "まだサービスが登録されていません。",
+    "bookNow": "今すぐ予約"
+  },
+  "chat": {
+    "providerFallback": "業者",
+    "loading": "読み込み中…",
+    "noMessages": "まだメッセージはありません — 挨拶しましょう！",
+    "placeholder": "メッセージ..."
+  }
+}

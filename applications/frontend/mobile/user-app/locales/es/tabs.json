@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "bookings": "Reservas",
+    "calendar": "Calendario",
+    "inbox": "Mensajes",
+    "profile": "Perfil"
+  },
+  "home": {
+    "greetingMorning": "Buenos Días",
+    "greetingAfternoon": "Buenas Tardes",
+    "greetingEvening": "Buenas Noches",
+    "searchPlaceholder": "Buscar servicios...",
+    "specialOffers": "Ofertas Especiales",
+    "seeAll": "Ver Todo",
+    "offAmount": "{{amount}} DE DESCUENTO",
+    "services": "Servicios",
+    "more": "Más",
+    "mostPopular": "Servicios Más Populares",
+    "noProviders": "Aún no hay proveedores listados.",
+    "serviceFallback": "Servicio"
+  },
+  "bookings": {
+    "title": "Mis Reservas",
+    "tabUpcoming": "Próximas",
+    "tabCompleted": "Completadas",
+    "tabCancelled": "Canceladas",
+    "emptyTitle": "No hay reservas {{tab}}",
+    "emptySubtitle": "Tus reservas {{tab}} aparecerán aquí.",
+    "serviceFallback": "Servicio",
+    "loadingDetails": "Cargando detalles…",
+    "totalPaid": "Total pagado",
+    "viewProvider": "Ver Proveedor",
+    "cancelBooking": "Cancelar Reserva",
+    "eReceipt": "Recibo Electrónico"
+  },
+  "calendar": {
+    "title": "Mi Calendario",
+    "loading": "Cargando…",
+    "bookingsOn": "Reservas el {{date}}",
+    "noBookingsThisDay": "No hay reservas este día",
+    "dotHint": "Las fechas con un punto debajo tienen una reserva real.",
+    "serviceFallback": "Servicio"
+  },
+  "inbox": {
+    "title": "Mensajes",
+    "subtitle": "Escribe a los proveedores de tus reservas reales.",
+    "emptyTitle": "Aún no hay conversaciones",
+    "emptySubtitle": "Cuando se asigne un proveedor a una reserva, podrás enviarle mensajes aquí.",
+    "serviceFallback": "Servicio"
+  },
+  "profileHub": {
+    "title": "Perfil y Configuración",
+    "menu": {
+      "editProfile": "Editar Perfil",
+      "notificationSettings": "Configuración de Notificaciones",
+      "wallet": "Billetera",
+      "paymentMethods": "Métodos de Pago",
+      "invoices": "Facturas",
+      "history": "Historial",
+      "loyaltyRewards": "Lealtad y Recompensas",
+      "promotions": "Promociones",
+      "activity": "Actividad",
+      "feedback": "Comentarios",
+      "security": "Seguridad",
+      "language": "Idioma",
+      "privacyPolicy": "Política de Privacidad",
+      "inviteFriends": "Invitar Amigos",
+      "helpCenter": "Centro de Ayuda"
+    },
+    "logOut": "Cerrar Sesión",
+    "logoutConfirmTitle": "¿Cerrar sesión de tu cuenta?",
+    "logoutConfirmBody": "Deberás iniciar sesión de nuevo para acceder a tus reservas.",
+    "cancel": "Cancelar"
+  }
+}

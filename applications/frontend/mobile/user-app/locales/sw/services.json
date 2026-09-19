@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "Huduma Zote"
+  },
+  "category": {
+    "titleFallback": "Huduma",
+    "noProviders": "Hakuna watoa huduma bado."
+  },
+  "detail": {
+    "reviewsCount": "(maoni {{count}})",
+    "activeSince": "Anafanya Kazi Tangu",
+    "jobsDone": "Kazi Zilizokamilika",
+    "services": "Huduma",
+    "about": "Kuhusu",
+    "readMore": "Soma zaidi...",
+    "servicesPricing": "Huduma na Bei",
+    "noServices": "Hakuna huduma zilizoorodheshwa bado.",
+    "bookNow": "Hifadhi Sasa"
+  },
+  "chat": {
+    "providerFallback": "Mtoa Huduma",
+    "loading": "Inapakia…",
+    "noMessages": "Hakuna ujumbe bado — sema hujambo!",
+    "placeholder": "Ujumbe..."
+  }
+}

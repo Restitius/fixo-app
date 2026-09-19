@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "होम",
+    "bookings": "बुकिंग्स",
+    "calendar": "कैलेंडर",
+    "inbox": "इनबॉक्स",
+    "profile": "प्रोफ़ाइल"
+  },
+  "home": {
+    "greetingMorning": "सुप्रभात",
+    "greetingAfternoon": "नमस्कार",
+    "greetingEvening": "शुभ संध्या",
+    "searchPlaceholder": "सेवाएं खोजें...",
+    "specialOffers": "विशेष ऑफ़र",
+    "seeAll": "सभी देखें",
+    "offAmount": "{{amount}} की छूट",
+    "services": "सेवाएं",
+    "more": "और",
+    "mostPopular": "सबसे लोकप्रिय सेवाएं",
+    "noProviders": "अभी तक कोई प्रदाता सूचीबद्ध नहीं है।",
+    "serviceFallback": "सेवा"
+  },
+  "bookings": {
+    "title": "मेरी बुकिंग्स",
+    "tabUpcoming": "आगामी",
+    "tabCompleted": "पूर्ण",
+    "tabCancelled": "रद्द",
+    "emptyTitle": "कोई {{tab}} बुकिंग नहीं",
+    "emptySubtitle": "आपकी {{tab}} बुकिंग यहां दिखाई देंगी।",
+    "serviceFallback": "सेवा",
+    "loadingDetails": "विवरण लोड हो रहा है…",
+    "totalPaid": "कुल भुगतान",
+    "viewProvider": "प्रदाता देखें",
+    "cancelBooking": "बुकिंग रद्द करें",
+    "eReceipt": "ई-रसीद"
+  },
+  "calendar": {
+    "title": "मेरा कैलेंडर",
+    "loading": "लोड हो रहा है…",
+    "bookingsOn": "{{date}} की बुकिंग्स",
+    "noBookingsThisDay": "इस दिन कोई बुकिंग नहीं",
+    "dotHint": "नीचे बिंदी वाली तारीखों पर वास्तविक बुकिंग है।",
+    "serviceFallback": "सेवा"
+  },
+  "inbox": {
+    "title": "इनबॉक्स",
+    "subtitle": "अपनी वास्तविक बुकिंग के प्रदाताओं को संदेश भेजें।",
+    "emptyTitle": "अभी तक कोई बातचीत नहीं",
+    "emptySubtitle": "एक बार बुकिंग के लिए प्रदाता नियुक्त हो जाए, तो आप उन्हें यहां संदेश भेज सकते हैं।",
+    "serviceFallback": "सेवा"
+  },
+  "profileHub": {
+    "title": "प्रोफ़ाइल और सेटिंग्स",
+    "menu": {
+      "editProfile": "प्रोफ़ाइल संपादित करें",
+      "notificationSettings": "सूचना सेटिंग्स",
+      "wallet": "वॉलेट",
+      "paymentMethods": "भुगतान के तरीके",
+      "invoices": "चालान",
+      "history": "इतिहास",
+      "loyaltyRewards": "लॉयल्टी और रिवॉर्ड्स",
+      "promotions": "प्रमोशन",
+      "activity": "गतिविधि",
+      "feedback": "प्रतिक्रिया",
+      "security": "सुरक्षा",
+      "language": "भाषा",
+      "privacyPolicy": "गोपनीयता नीति",
+      "inviteFriends": "दोस्तों को आमंत्रित करें",
+      "helpCenter": "सहायता केंद्र"
+    },
+    "logOut": "लॉग आउट",
+    "logoutConfirmTitle": "अपने खाते से लॉग आउट करें?",
+    "logoutConfirmBody": "अपनी बुकिंग तक पहुंचने के लिए आपको फिर से साइन इन करना होगा।",
+    "cancel": "रद्द करें"
+  }
+}

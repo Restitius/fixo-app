@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "Alle Dienstleistungen"
+  },
+  "category": {
+    "titleFallback": "Dienstleistungen",
+    "noProviders": "Noch keine Anbieter verfügbar."
+  },
+  "detail": {
+    "reviewsCount": "({{count}} Bewertungen)",
+    "activeSince": "Aktiv Seit",
+    "jobsDone": "Erledigte Aufträge",
+    "services": "Dienstleistungen",
+    "about": "Über",
+    "readMore": "Mehr lesen...",
+    "servicesPricing": "Dienstleistungen & Preise",
+    "noServices": "Noch keine Dienstleistungen gelistet.",
+    "bookNow": "Jetzt Buchen"
+  },
+  "chat": {
+    "providerFallback": "Anbieter",
+    "loading": "Wird geladen…",
+    "noMessages": "Noch keine Nachrichten — sag Hallo!",
+    "placeholder": "Nachricht..."
+  }
+}

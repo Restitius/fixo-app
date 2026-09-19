@@ -1,0 +1,26 @@
+{
+  "allServices": {
+    "title": "全部服务"
+  },
+  "category": {
+    "titleFallback": "服务",
+    "noProviders": "暂无可用服务商。"
+  },
+  "detail": {
+    "reviewsCount": "（{{count}} 条评价）",
+    "activeSince": "活跃起始于",
+    "jobsDone": "已完成工作",
+    "services": "服务",
+    "about": "关于",
+    "readMore": "阅读更多...",
+    "servicesPricing": "服务与价格",
+    "noServices": "暂无已列出的服务。",
+    "bookNow": "立即预订"
+  },
+  "chat": {
+    "providerFallback": "服务商",
+    "loading": "加载中…",
+    "noMessages": "暂无消息——打个招呼吧！",
+    "placeholder": "消息..."
+  }
+}

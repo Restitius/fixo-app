@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Nyumbani",
+    "bookings": "Uhifadhi",
+    "calendar": "Kalenda",
+    "inbox": "Ujumbe",
+    "profile": "Wasifu"
+  },
+  "home": {
+    "greetingMorning": "Habari za Asubuhi",
+    "greetingAfternoon": "Habari za Mchana",
+    "greetingEvening": "Habari za Jioni",
+    "searchPlaceholder": "Tafuta huduma...",
+    "specialOffers": "Ofa Maalum",
+    "seeAll": "Angalia Zote",
+    "offAmount": "Punguzo la {{amount}}",
+    "services": "Huduma",
+    "more": "Zaidi",
+    "mostPopular": "Huduma Maarufu Zaidi",
+    "noProviders": "Hakuna watoa huduma bado.",
+    "serviceFallback": "Huduma"
+  },
+  "bookings": {
+    "title": "Uhifadhi Wangu",
+    "tabUpcoming": "Zijazo",
+    "tabCompleted": "Zilizokamilika",
+    "tabCancelled": "Zilizoghairiwa",
+    "emptyTitle": "Hakuna uhifadhi {{tab}}",
+    "emptySubtitle": "Uhifadhi wako {{tab}} utaonekana hapa.",
+    "serviceFallback": "Huduma",
+    "loadingDetails": "Inapakia maelezo…",
+    "totalPaid": "Jumla iliyolipwa",
+    "viewProvider": "Ona Mtoa Huduma",
+    "cancelBooking": "Ghairi Uhifadhi",
+    "eReceipt": "Risiti ya Kielektroniki"
+  },
+  "calendar": {
+    "title": "Kalenda Yangu",
+    "loading": "Inapakia…",
+    "bookingsOn": "Uhifadhi tarehe {{date}}",
+    "noBookingsThisDay": "Hakuna uhifadhi siku hii",
+    "dotHint": "Tarehe zenye nukta chini yake zina uhifadhi halisi.",
+    "serviceFallback": "Huduma"
+  },
+  "inbox": {
+    "title": "Ujumbe",
+    "subtitle": "Wasiliana na watoa huduma wa uhifadhi wako halisi.",
+    "emptyTitle": "Hakuna mazungumzo bado",
+    "emptySubtitle": "Mtoa huduma akishapangiwa kwenye uhifadhi, unaweza kumtumia ujumbe hapa.",
+    "serviceFallback": "Huduma"
+  },
+  "profileHub": {
+    "title": "Wasifu na Mipangilio",
+    "menu": {
+      "editProfile": "Hariri Wasifu",
+      "notificationSettings": "Mipangilio ya Arifa",
+      "wallet": "Pochi",
+      "paymentMethods": "Njia za Malipo",
+      "invoices": "Ankara",
+      "history": "Historia",
+      "loyaltyRewards": "Uaminifu na Zawadi",
+      "promotions": "Matangazo",
+      "activity": "Shughuli",
+      "feedback": "Maoni",
+      "security": "Usalama",
+      "language": "Lugha",
+      "privacyPolicy": "Sera ya Faragha",
+      "inviteFriends": "Alika Marafiki",
+      "helpCenter": "Kituo cha Usaidizi"
+    },
+    "logOut": "Toka",
+    "logoutConfirmTitle": "Toka kwenye akaunti yako?",
+    "logoutConfirmBody": "Utahitaji kuingia tena ili kufikia uhifadhi wako.",
+    "cancel": "Ghairi"
+  }
+}
