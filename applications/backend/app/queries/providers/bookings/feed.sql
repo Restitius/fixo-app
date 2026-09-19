@@ -2,6 +2,7 @@
 SELECT b.booking_id, b.booking_number, b.status, b.scheduled_date,
        b.time_window, b.agreed_amount, b.currency,
        b.payment_attempts, b.created_at, b.updated_at,
+       b.customer_id,
        c.full_name AS customer_name,
        c.phone AS customer_phone, c.email AS customer_email,
        s.name AS service_name,
