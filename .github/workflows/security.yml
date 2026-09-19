@@ -104,11 +104,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
-      - uses: bridgecrewio/checkov-action@<pin-to-commit-sha>
+      # infra/ doesn't have real Terraform/Kubernetes manifests yet (this
+      # repo's "pipeline code only" scope: the pipeline is real, the cloud
+      # resources it will one day provision aren't). Checkov erroring on a
+      # near-empty directory isn't a security finding, it's a tooling
+      # error — that would block security-gate on every single run for a
+      # reason unrelated to any real risk. Skip Checkov until real IaC
+      # exists; remove this check once it does.
+      - name: Check for infrastructure-as-code files
+        id: infra_files
+        run: |
+          if find infra \( -name '*.tf' -o -iname 'Dockerfile*' -o -iname 'docker-compose*.yml' -o -iname '*.k8s.yml' -o -iname '*.k8s.yaml' \) 2>/dev/null | grep -q .; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Terraform/Kubernetes misconfiguration (Checkov)
+        if: steps.infra_files.outputs.present == 'true'
+        uses: bridgecrewio/checkov-action@<pin-to-commit-sha>
         with:
           directory: infra/
           framework: terraform,dockerfile,docker_compose,kubernetes
           soft_fail: false
+      - name: No infrastructure-as-code yet — nothing to scan
+        if: steps.infra_files.outputs.present == 'false'
+        run: echo "::notice::infra/ has no IaC files yet. This step will start enforcing once real Terraform/Kubernetes manifests land."
       - name: Dockerfile and compose misconfiguration
         uses: aquasecurity/trivy-action@<pin-to-commit-sha>
         with:
