@@ -1,0 +1,1612 @@
+# Home Helper Hub
+
+HANDYMAN APP — CUSTOMER/USER SIDE BUSINESS REQUIREMENTS
+1. Purpose
+The customer-facing side of the HANDYMAN platform must support the complete customer lifecycle from the moment a person discovers the platform until they become a repeat customer.
+The complete customer journey is:
+Discover Platform → Create Account → Complete Onboarding → Set Location/Property → Find Service → Describe Problem → Receive Provider Options/Quotes → Select Provider → Confirm Booking → Authorize Payment → Communicate and Track Provider → Receive Service → Approve Changes → Confirm Completion → Make Final Payment → Receive Invoice → Review Service → Use Warranty → Rebook/Maintain Property → Receive Rewards → Obtain Support → View History → Manage Account
+PHASE 1 — PLATFORM ENTRY
+MODULE 01 — Public / Landing
+Purpose
+Allow prospective customers to understand what the platform offers before creating an account.
+Business Requirements
+A visitor must be able to access the platform without logging in.
+The public platform must allow the visitor to:
+View the main landing page.
+Understand what the platform does.
+Understand how handyman services are requested.
+Browse major service categories.
+Browse available services.
+Search for a service or problem.
+View information about service providers generally.
+View how providers are verified.
+Understand platform safety measures.
+View available pricing or membership information where applicable.
+Check whether services are available in their location.
+Read frequently asked questions.
+View promotional information available to the public.
+View contact information.
+Access help information.
+Read Terms and Conditions.
+Read Privacy Policy.
+Register for an account.
+Log into an existing account.
+Public Service Browsing
+A visitor may browse services such as:
+Plumbing
+Electrical services
+Cleaning
+Carpentry
+Painting
+Appliance repair
+Air-conditioning services
+Gardening
+Pest control
+Moving assistance
+General maintenance
+Emergency services
+Only information approved for public display should be shown.
+Expected User Journey
+Visitor opens platform
+↓
+Reviews services
+↓
+Searches or browses categories
+↓
+Checks availability
+↓
+Reads service information
+↓
+Chooses Register or Login
+MODULE 02 — Authentication
+Purpose
+Allow the customer to securely create and access an account.
+Registration
+The registration process should remain simple.
+The customer must provide:
+Full Name
+Phone Number
+Email Address
+Password
+Preferred Language
+Acceptance of Terms and Conditions
+Acceptance of Privacy Policy
+Where applicable, the customer may also register using supported social sign-in options.
+Account Verification
+After registration, the customer must verify required contact information.
+Verification may include:
+Phone verification
+Email verification
+One-Time Password verification
+The customer must be able to:
+Request a verification code.
+Enter the verification code.
+Request another code where permitted.
+Correct an incorrect phone number or email before completing verification.
+Login
+The customer must be able to:
+Enter phone/email and password.
+Log into the application.
+Stay signed in where permitted.
+Log out.
+Password Recovery
+The customer must be able to:
+Select Forgot Password.
+Identify their account.
+Receive verification.
+Create a new password.
+Return to login.
+Account Security
+Where required, the customer must be able to use:
+Multi-factor authentication.
+Device/session verification.
+Additional verification for sensitive activities.
+Successful Registration Outcome
+After registration and verification:
+A customer account exists.
+The account has customer access.
+The customer can continue to onboarding.
+Expected User Journey
+Register
+↓
+Verify phone/email
+↓
+Account activated
+↓
+Customer enters onboarding
+MODULE 03 — Customer Onboarding
+Purpose
+Collect the minimum information necessary to personalize the customer's experience.
+Onboarding Steps
+The customer should move through:
+Welcome
+↓
+Basic Profile
+↓
+Current Location
+↓
+Service Interests
+↓
+Communication Preferences
+↓
+Notification Permission
+↓
+Location Permission
+↓
+Completion
+Basic Profile
+The customer may provide:
+Profile Photo
+Full Name
+Preferred Language
+Preferred Contact Method
+Additional personal information should only be requested where there is a clear business need.
+Location
+The customer must be able to:
+Allow current location access.
+Manually enter their location.
+Skip location permission where the service allows it.
+Add location later.
+Service Interests
+The customer may select services they commonly need, for example:
+Plumbing
+Electrical
+Cleaning
+Gardening
+Appliance repair
+Painting
+General home maintenance
+This is used to improve recommendations.
+Communication Preferences
+The customer should be able to indicate preferred contact methods such as:
+In-app
+Push notifications
+SMS
+Email
+Completion
+The customer must clearly see when onboarding is complete.
+After completion, the customer proceeds to the Home Dashboard.
+PHASE 2 — CUSTOMER HOME ENVIRONMENT
+MODULE 04 — Customer Home Dashboard
+Purpose
+Provide a single starting point for everything important to the customer.
+Home Dashboard Requirements
+The customer should be able to see:
+Search Bar
+Current Location
+Service Categories
+Recommended Services
+Emergency Services
+Popular Services
+Services Available Nearby
+Upcoming Bookings
+Active Booking
+Recent Services
+Maintenance Reminders
+Promotions and Offers
+Favorite Providers
+Wallet Summary where applicable
+Notifications requiring attention
+Quick Customer Actions
+The customer should be able to quickly:
+Search for a service.
+Browse categories.
+Request a service.
+View active booking.
+View upcoming booking.
+Track a provider where tracking is active.
+View notifications.
+View promotions.
+Rebook a previous service.
+Personalized Content
+The dashboard may provide recommendations based on:
+Customer location
+Previous bookings
+Saved properties
+Saved assets
+Favorite providers
+Service interests
+Maintenance schedules
+Seasonal needs
+MODULE 05 — Location & Address
+Purpose
+Allow the customer to specify exactly where a service is required.
+Address Types
+The customer must be able to maintain multiple addresses such as:
+Home
+Office
+Rental Property
+Shop
+Other
+Address Information
+An address may include:
+Address Label
+Country
+Region/State
+District
+Ward
+Street
+Building
+Apartment/Unit
+Landmark
+Location Pin
+Access Instructions
+Customer Actions
+The customer must be able to:
+Add an address.
+Edit an address.
+Delete an address where permitted.
+Set a default address.
+Select an address during service booking.
+Use current location.
+Search for a location.
+Pin the exact location on a map.
+Add a landmark.
+Add access instructions.
+Service Availability
+When selecting an address, the customer should be informed whether:
+The location is supported.
+Some services are unavailable there.
+Additional travel charges may apply.
+Emergency service is available.
+MODULE 06 — Properties
+Purpose
+Allow the customer to describe the actual property located at an address.
+An address represents where the work takes place.
+A property represents what kind of place is being serviced.
+Property Types
+The customer may create:
+House
+Apartment
+Office
+Shop
+Rental Property
+Warehouse
+Commercial Building
+Other
+Property Information
+The customer may provide:
+Property Name
+Property Type
+Associated Address
+Owner/Tenant Status
+Number of Rooms
+Access Notes
+Property Photos
+Contact Person
+Special Instructions
+Customer Actions
+The customer must be able to:
+Add a property.
+Edit property information.
+Archive/remove a property where appropriate.
+Link a property to an address.
+Select a property during a service request.
+View previous services performed at the property.
+View property assets.
+View upcoming maintenance.
+Create recurring services for the property.
+PHASE 3 — FINDING A SERVICE
+MODULE 07 — Service Catalog
+Purpose
+Allow customers to browse everything the platform can provide.
+Service Hierarchy
+Services should be organized as:
+Category
+↓
+Subcategory
+↓
+Service
+↓
+Service Variant
+↓
+Options
+Example:
+Plumbing
+↓
+Pipe Problems
+↓
+Leak Repair
+↓
+Kitchen Sink Leak
+Service Card
+A service card may show:
+Service Name
+Icon/Image
+Short Description
+Starting Price
+Pricing Type
+Rating
+Estimated Duration
+Availability
+Emergency Availability
+Warranty Indicator
+Customer Actions
+The customer must be able to:
+Browse categories.
+Open a category.
+Browse subcategories.
+Open service details.
+Search within services.
+Filter services.
+Select a service to request.
+MODULE 08 — Search & Discovery
+Purpose
+Help customers find the correct service even when they do not know its formal name.
+Search Behaviour
+A customer may search using:
+Service name
+Problem description
+Category
+Provider
+Common household problem
+Example:
+"My kitchen sink is leaking."
+The system should help the customer identify a relevant service such as:
+Plumbing → Leak Repair → Sink Leak
+Search Results
+Results may include:
+Services
+Service Categories
+Common Problems
+Providers
+Previous Searches
+Popular Searches
+Filters
+Customers should be able to filter by:
+Price
+Rating
+Distance
+Availability
+Emergency Service
+Provider Type
+Preferred Date
+Search Actions
+The customer should be able to:
+Open a service.
+Open a provider.
+Start a service request.
+Clear search.
+Modify filters.
+Return to recent searches.
+MODULE 09 — Service Details
+Purpose
+Allow customers to understand exactly what they are requesting.
+Information Displayed
+The service details page should show:
+Service Name
+Description
+What's Included
+What's Excluded
+Starting Price
+Pricing Method
+Expected Duration
+Warranty Information
+Available Scheduling Options
+Customer Requirements
+FAQs
+Related Services
+Emergency Availability where applicable
+Customer Actions
+The customer should be able to:
+Book Now
+Request Quote
+Find Providers
+Schedule Inspection
+Select Property
+Save/Favorite Service where supported
+View related services
+PHASE 4 — SERVICE REQUEST CREATION
+MODULE 10 — Service Request
+Purpose
+Collect enough information for providers to understand and respond to the customer's problem.
+Step 1 — Select Service
+The customer selects the required service.
+Example:
+Plumbing → Leak Repair
+Step 2 — Select Property or Location
+Customer selects:
+Existing property
+Existing saved address
+Current location
+New location
+Step 3 — Describe the Problem
+Fields should include:
+Problem Title
+Detailed Description
+Step 4 — Add Evidence
+The customer may upload:
+Photos
+Videos
+Voice Notes
+Documents
+Step 5 — Select Timing
+The customer may choose:
+Now
+Today
+Specific Date and Time
+Flexible Time
+Step 6 — Pricing Preference
+Depending on the service, the customer may select:
+Fixed Price
+Request Quote
+Budget Range
+Competitive Offers
+Inspection First
+Step 7 — Special Instructions
+Customer may add:
+Access Instructions
+Parking Information
+Contact Person
+Pets/Safety Information
+Materials Already Available
+Other Important Notes
+Step 8 — Review Request
+Before submission, the customer must see a complete summary containing:
+Service
+Location
+Property
+Description
+Attachments
+Schedule
+Pricing preference
+Instructions
+The customer may:
+Edit the request.
+Submit the request.
+Cancel.
+Successful Outcome
+A Service Request is created.
+MODULE 11 — Request Validation & Eligibility
+Purpose
+Confirm that the platform can process the customer's request.
+Required Checks
+The customer request should be checked for:
+Service availability.
+Location coverage.
+Required information.
+Customer account eligibility.
+Payment restrictions.
+Availability of suitable providers.
+Possible Outcomes
+Valid
+The request proceeds to provider matching.
+Needs More Information
+The customer is shown exactly what information is missing.
+The customer must be able to:
+Add missing information.
+Replace unclear evidence.
+Update location.
+Update service details.
+Resubmit.
+Outside Service Area
+The customer should be:
+Clearly informed.
+Allowed to try another location.
+Allowed to request notification when coverage becomes available where supported.
+No Provider Available
+The customer may be offered:
+Another time.
+Another date.
+Similar service.
+Wider search area where appropriate.
+Notification when a provider becomes available.
+PHASE 5 — PROVIDER MATCHING AND SELECTION
+MODULE 12 — Provider Matching
+Purpose
+Identify providers capable of serving the customer's request.
+The customer should not need to manually search through every registered provider.
+Relevant providers should be shortlisted based on factors such as:
+Required skill
+Service supported
+Provider verification
+Provider availability
+Customer location
+Service area
+Rating
+Experience
+Reliability
+Response history
+Distance
+Expected arrival
+Previous relationship with the customer
+Customer Experience
+During matching, the customer should see an appropriate status such as:
+Finding Providers
+Providers Found
+Waiting for Offers
+No Provider Available
+MODULE 13 — Provider Discovery / Selection
+Purpose
+Allow the customer to evaluate suitable providers where the service model permits customer selection.
+Provider Card
+Display:
+Profile Photo
+Provider Name
+Verification Status
+Rating
+Completed Jobs
+Experience
+Distance
+Estimated Arrival
+Pricing Indicator
+Skills
+Availability
+Customer Actions
+The customer may:
+View Provider Profile
+Select Provider
+Request Quote
+Compare Providers
+Favorite Provider
+Continue searching
+MODULE 14 — Provider Profile
+Purpose
+Give the customer sufficient information to confidently select a provider.
+Profile Information
+Display:
+Profile
+About
+Skills
+Services
+Experience
+Certifications
+Verification Information
+Ratings
+Customer Reviews
+Portfolio
+Completed Jobs
+Availability
+Service Areas
+Warranty/support information where relevant
+Customer Actions
+The customer may:
+Select Provider
+Request Quote
+Book
+Favorite
+Book Again
+Message where platform rules permit
+MODULE 15 — Quotations / Offers
+Purpose
+Support services that cannot be priced fully before provider assessment.
+Quote Information
+Each quotation should show:
+Provider
+Labour Cost
+Materials Cost
+Transport Cost
+Other Fees
+Tax
+Discount where applicable
+Total
+Estimated Duration
+Warranty
+Provider Notes
+Expiration Time/Date
+Customer Actions
+The customer must be able to:
+Accept Quote
+Reject Quote
+Ask Question
+Request Revision
+Compare Quotes
+Quote Comparison
+Customers should be able to compare relevant information including:
+Provider rating
+Total price
+Labour
+Materials
+Arrival estimate
+Duration
+Warranty
+Accepted Quote
+Once accepted:
+The selected provider is confirmed.
+Agreed pricing is preserved.
+Booking confirmation begins.
+PHASE 6 — BOOKING AND INITIAL PAYMENT
+MODULE 16 — Booking Confirmation
+Purpose
+Convert an accepted service arrangement into a formal booking.
+Booking Details
+The booking should contain:
+Booking ID
+Customer
+Provider
+Service
+Property
+Address
+Date
+Time
+Agreed Price
+Payment Terms
+Cancellation Policy
+Special Instructions
+Customer Confirmation
+Before confirming, the customer should be able to review:
+Who is providing the service.
+What service will be delivered.
+Where it will be delivered.
+When it will occur.
+Agreed price.
+Payment requirements.
+Cancellation rules.
+The customer confirms the booking.
+Booking ID
+After confirmation, the customer receives a permanent Booking ID that becomes the primary reference for the transaction.
+MODULE 17 — Initial Payment / Authorization
+Purpose
+Collect or reserve funds where required before service execution.
+Supported Payment Arrangements
+Depending on the service:
+Full Prepayment
+Deposit
+Payment Authorization
+Wallet Reservation
+No Advance Payment
+Payment Summary
+The customer should clearly see:
+Job Total
+Required Deposit
+Amount Payable Now
+Remaining Balance
+Payment Methods
+Where available:
+Mobile Money
+Card
+Bank
+Wallet
+Corporate Account
+Customer Actions
+The customer must be able to:
+Select payment method.
+Confirm payment.
+Retry failed payment.
+Change payment method.
+Cancel where permitted.
+View payment status.
+Successful Outcome
+The booking becomes eligible to proceed according to the service's payment rules.
+PHASE 7 — ACTIVE BOOKING
+MODULE 18 — Booking Details
+Purpose
+Become the customer's main control center throughout an active service.
+Booking Sections
+The customer should be able to view:
+Overview
+Timeline
+Provider
+Chat
+Location
+Quote
+Payment
+Documents
+Support
+Before Service
+Actions may include:
+Reschedule
+Cancel
+Message Provider
+View Provider
+View Payment
+View Quote
+Get Help
+Provider Travelling
+Actions may include:
+Track Provider
+Message
+Call where permitted
+Share Booking
+Contact Support
+During Service
+Actions may include:
+View progress
+Approve Change
+Reject Change
+Message Provider
+Contact Support
+MODULE 19 — Messaging
+Purpose
+Provide controlled communication between customer and provider.
+A conversation should become available for the booking at the appropriate stage.
+Message Types
+Customer may send:
+Text
+Photo
+Video
+Voice Note
+Document
+Location
+System Messages
+The conversation may include platform-generated updates such as:
+Provider accepted your booking.
+Booking confirmed.
+Provider is on the way.
+Provider has arrived.
+Service started.
+A price change requires approval.
+Service completed.
+Customer Actions
+The customer must be able to:
+Send messages.
+View message history.
+View shared media.
+Receive new-message alerts.
+Report inappropriate communication.
+Access booking details from conversation.
+MODULE 20 — Notifications
+Purpose
+Keep the customer informed about important platform activity.
+Booking Notifications
+Examples include:
+Provider Assigned
+Quote Received
+Quote Expiring
+Booking Confirmed
+Booking Rescheduled
+Provider On The Way
+Provider Arrived
+Service Started
+Change Request Received
+Service Completed
+Financial Notifications
+Examples:
+Payment Required
+Payment Successful
+Payment Failed
+Refund Initiated
+Refund Completed
+Post-Service Notifications
+Examples:
+Review Requested
+Warranty Started
+Warranty Expiring
+Maintenance Due
+The customer should receive notifications according to their chosen communication preferences.
+MODULE 21 — Provider Tracking
+Purpose
+Allow the customer to track the provider once travel to the service location begins.
+Tracking Screen
+The customer should be able to view:
+Provider Location
+Map
+Estimated Arrival Time
+Remaining Distance
+Provider Name
+Provider Photo
+Vehicle details where appropriate
+Booking destination
+Actions
+The customer may:
+Message Provider
+Call Provider where permitted
+Contact Support
+Share Booking details where supported
+Tracking should stop when it is no longer required.
+MODULE 22 — Arrival Verification
+Purpose
+Confirm that the assigned provider has actually reached the customer.
+Arrival Notification
+The customer receives a message such as:
+"Your provider has arrived."
+Verification
+Where required, the customer may receive an arrival/start verification code.
+Example:
+Start Code: 5382
+The customer should only provide the code to the assigned provider when the provider is physically present and ready to begin.
+Outcome
+Successful verification confirms:
+Provider has arrived.
+Service may proceed.
+PHASE 8 — SERVICE EXECUTION
+MODULE 23 — Service Progress
+Purpose
+Allow the customer to understand what is happening during the service.
+Typical Progress
+Provider Arrived
+↓
+Inspection
+↓
+Work Started
+↓
+Work In Progress
+↓
+Finishing
+↓
+Completion Requested
+Customer View
+The customer should see meaningful progress updates without being overloaded with internal provider workflow details.
+The customer may see:
+Current service stage
+Start time
+Important notes
+Uploaded evidence where appropriate
+Expected completion time
+Issues requiring attention
+MODULE 24 — Change Request Approval
+Purpose
+Protect the customer from unapproved additional charges or changes.
+If the provider discovers additional work, the customer must receive a formal Change Request.
+Change Request Information
+Display:
+Reason for Change
+Description
+Supporting Photos
+Original Scope
+Additional Work
+Original Price
+Additional Price
+New Total
+Additional Time
+Materials where applicable
+Customer Actions
+The customer must be able to:
+Approve
+Reject
+Ask Questions
+Chat with Provider
+Contact Support
+Critical Business Rule
+No additional charge should become part of the final customer amount unless the customer has approved it according to platform rules.
+Approved changes should become part of the booking record.
+MODULE 25 — Service Completion
+Purpose
+Allow the customer to review the work before finally accepting completion.
+Completion Information
+The customer should see:
+Work Completed
+Service Notes
+Before Photos
+After Photos
+Materials Used
+Approved Changes
+Final Price
+Warranty Information
+Customer Actions
+The customer must be able to:
+Confirm Completion
+Request Correction
+Report Problem
+Open Dispute
+Contact Support
+Completion Confirmation
+If the customer is satisfied:
+Confirm Completion
+moves the transaction toward final settlement.
+PHASE 9 — FINANCIAL COMPLETION
+MODULE 26 — Final Payment
+Purpose
+Collect any remaining amount after service completion.
+Final Payment Summary
+Display:
+Original Price
+Approved Additional Charges
+Discounts
+Promotional Benefits
+Wallet Credit Used
+Tax
+Previously Paid Amount
+Remaining Balance
+Final Total
+Payment Methods
+Customer may pay using supported methods such as:
+Mobile Money
+Card
+Bank
+Wallet
+Corporate Account
+Customer Actions
+The customer must be able to:
+Select payment method.
+Review total.
+Confirm payment.
+Retry failed payment.
+Change payment method.
+View payment status.
+Successful Outcome
+After successful settlement:
+Payment is confirmed.
+The booking may close.
+Invoice becomes available.
+Receipt becomes available.
+Eligible rewards may be credited.
+MODULE 27 — Invoice & Receipt
+Purpose
+Provide the customer with a complete financial record.
+Invoice Information
+The invoice should contain:
+Customer
+Provider
+Booking ID
+Service
+Labour
+Materials
+Additional approved charges
+Fees
+Discounts
+Tax
+Total
+Payments
+Outstanding amount where applicable
+Receipt
+The receipt should include:
+Amount Paid
+Payment Date
+Payment Method
+Payment Reference
+Booking Reference
+Customer Actions
+The customer should be able to:
+View Invoice
+View Receipt
+Download
+Share
+Email
+PHASE 10 — POST-SERVICE EXPERIENCE
+MODULE 28 — Rating & Review
+Purpose
+Allow customers to evaluate the service and provider.
+Rating Dimensions
+Customers may rate:
+Overall Experience
+Work Quality
+Professionalism
+Communication
+Punctuality
+Value for Money
+Review
+The customer may:
+Add written comment.
+Upload photos.
+Recommend provider.
+Submit rating.
+The customer should be able to see whether the review has been successfully submitted.
+MODULE 29 — Warranty
+Purpose
+Give customers post-service protection for eligible services.
+Warranty Information
+The customer should see:
+Service
+Booking
+Provider
+Warranty Duration
+Start Date
+Expiry Date
+Coverage
+Exclusions
+Terms
+Customer Actions
+The customer may:
+Request Warranty Service
+Report Warranty Issue
+Upload Evidence
+View Warranty Status
+Contact Support
+MODULE 30 — Favorites & Rebooking
+Purpose
+Make it easy to return to trusted providers and repeat services.
+Favorite Providers
+Customers may maintain a list such as:
+My Handymen
+The customer should be able to:
+Favorite provider.
+Remove favorite.
+View provider profile.
+View previous jobs with provider.
+Book provider again.
+Rebooking
+When selecting Book Again, the system should prefill relevant information such as:
+Previous service
+Property
+Provider
+Relevant instructions
+The customer may then update:
+Schedule
+Problem description
+Property
+Service details
+before confirming.
+PHASE 11 — LONG-TERM CUSTOMER RELATIONSHIP
+MODULE 31 — Recurring Services
+Purpose
+Allow customers to automate repeating services.
+Examples:
+Cleaning
+Gardening
+Air-conditioning maintenance
+Pool maintenance
+Pest control
+Frequency Options
+Weekly
+Biweekly
+Monthly
+Quarterly
+Yearly
+Custom
+Customer Requirements
+Customer should be able to:
+Select service.
+Select property.
+Select preferred provider where permitted.
+Select frequency.
+Set preferred date/time.
+Select payment preference.
+Set start date.
+Set end date or leave ongoing.
+Pause recurring service.
+Resume.
+Skip occurrence.
+Reschedule occurrence.
+Cancel recurring arrangement.
+The customer should be able to view upcoming recurring bookings.
+MODULE 32 — Property Assets
+Purpose
+Allow customers to maintain a record of equipment and assets that require maintenance.
+Example:
+My Home
+Air Conditioner
+Refrigerator
+Water Pump
+Generator
+Solar System
+Asset Information
+The customer may provide:
+Asset Name
+Category
+Brand
+Model
+Serial Number
+Installation Date
+Purchase Date
+Warranty
+Photos
+Notes
+Customer Actions
+The customer should be able to:
+Add Asset
+Edit Asset
+Remove/Archive Asset
+View Service History
+View Warranty
+Schedule Maintenance
+Request Repair
+Upload Documents
+MODULE 33 — Maintenance
+Purpose
+Help customers maintain their properties and assets proactively.
+Maintenance Requirements
+The customer should be able to see:
+Maintenance Due
+Upcoming Maintenance
+Overdue Maintenance
+Completed Maintenance
+Recommended Maintenance
+Maintenance Reminder Example
+"Your LG Air Conditioner is due for service in 7 days."
+Customer Actions
+The customer should be able to:
+Book Maintenance
+Reschedule
+Dismiss Reminder
+View Asset
+View Previous Maintenance
+Choose Provider
+Create recurring maintenance
+After maintenance is completed, the service should become part of the asset/property service history.
+PHASE 12 — CUSTOMER VALUE AND REWARDS
+MODULE 34 — Wallet
+Purpose
+Provide the customer with platform financial credits and balances.
+Wallet May Contain
+Refunds
+Promotional Credits
+Referral Credits
+Loyalty Credits
+Other Approved Customer Credits
+Customer Wallet View
+Display:
+Available Balance
+Pending Balance
+Expiring Credits where applicable
+Transaction History
+Transaction Types
+Credit
+Debit
+Refund
+Promotion
+Booking Payment
+Reward
+Expiration
+Customer Actions
+The customer should be able to:
+View balance.
+View transaction history.
+Use eligible wallet balance during payment.
+View transaction details.
+MODULE 35 — Promotions
+Purpose
+Allow customers to benefit from eligible platform offers.
+Promotion Types
+May include:
+Coupons
+Discounts
+Campaign Offers
+Service Offers
+Membership Benefits
+Seasonal Promotions
+Customer Actions
+The customer should be able to:
+View available offers.
+View eligibility conditions.
+Enter coupon code.
+Apply promotion.
+Remove promotion.
+See discount before confirming payment.
+View expiry date.
+The platform must clearly explain why a promotion cannot be used when it is rejected.
+MODULE 36 — Referral & Loyalty
+Referral
+The customer should receive a referral code or link where referral programs are active.
+Customer may:
+View referral code.
+Share referral.
+View qualifying referrals.
+View earned rewards.
+A reward may become available when the referred person meets the defined qualifying conditions.
+Loyalty
+Customers may earn rewards through eligible activities such as completed bookings.
+The customer should be able to see:
+Points earned.
+Current balance.
+Reward history.
+Available benefits.
+Expiry where applicable.
+Rules for redemption.
+PHASE 13 — CUSTOMER PROTECTION
+MODULE 37 — Cancellation & Rescheduling
+Purpose
+Provide controlled booking changes.
+Rescheduling
+Customer must be able to:
+Request a new date.
+Request a new time.
+Review any consequences.
+Confirm the new schedule.
+Cancellation
+Customer must be able to:
+Request cancellation.
+Select cancellation reason.
+Review applicable cancellation fee.
+Review expected refund.
+Confirm cancellation.
+Cancellation Information
+Before confirmation, the customer should see:
+Whether cancellation is allowed.
+Applicable charges.
+Refund amount.
+Refund method.
+Expected outcome.
+MODULE 38 — Support Center
+Purpose
+Provide a central place for customer assistance.
+Support Home
+Customer should be able to access:
+Help Center
+FAQs
+Contact Support
+My Tickets
+Booking Problems
+Payment Problems
+Safety Concerns
+Account Problems
+Warranty Help
+Other Assistance
+Support Request
+Customer may:
+Select issue category.
+Describe issue.
+Select related booking where applicable.
+Upload evidence.
+Submit request.
+View status.
+Respond to support.
+View support history.
+MODULE 39 — Disputes
+Purpose
+Provide a formal process for serious service problems.
+A dispute should normally be linked to a booking.
+Dispute Reasons
+May include:
+Poor Quality
+Incomplete Work
+Overcharge
+Provider No Show
+Property Damage
+Safety Concern
+Unauthorized Charge
+Other
+Evidence
+The customer may attach:
+Photos
+Videos
+Messages
+Documents
+Description
+Dispute Statuses
+The customer should see states such as:
+Open
+Under Review
+Waiting for Provider
+Waiting for Customer
+Resolved
+Closed
+Customer Actions
+Customer may:
+Raise Dispute
+Add Evidence
+Respond to Request
+View Timeline
+View Decision
+Contact Support
+PHASE 14 — CUSTOMER HISTORY
+MODULE 40 — Booking History
+Purpose
+Give customers a permanent record of previous service activity.
+Booking Groups
+The customer should be able to view:
+Active
+Upcoming
+Completed
+Cancelled
+Disputed
+Historical Booking
+Each booking should remain linked to:
+Service
+Provider
+Property
+Quote
+Approved Changes
+Invoice
+Payment
+Review
+Warranty
+Conversation
+Customer Actions
+From history, the customer should be able to:
+Open booking.
+View invoice.
+View receipt.
+View provider.
+View conversation.
+View review.
+View warranty.
+Book Again.
+Contact support where eligible.
+MODULE 41 — Notification Center
+Purpose
+Provide a persistent place where customers can review platform notifications.
+Categories
+Notifications may include:
+Booking
+Messages
+Payment
+Promotions
+Maintenance
+Security
+Support
+Warranty
+Recommendations
+Customer Actions
+The customer should be able to:
+View notifications.
+Open notification.
+Mark as read.
+Mark multiple notifications as read where supported.
+Navigate to relevant booking/service/payment.
+Remove/archive notifications where permitted.
+MODULE 42 — Customer Activity
+Purpose
+Allow customers to review important activities associated with their account.
+Activity Examples
+Booking Created
+Booking Rescheduled
+Booking Cancelled
+Payment Completed
+Refund Processed
+Review Submitted
+Address Added
+Property Added
+Password Changed
+New Login
+Device Added
+Security-related activity should be particularly visible.
+PHASE 15 — CUSTOMER ACCOUNT MANAGEMENT
+MODULE 43 — Profile
+Purpose
+Allow the customer to manage personal profile information.
+Profile Information
+Customer may manage:
+Profile Photo
+Full Name
+Phone
+Email
+Preferred Language
+Sensitive changes may require verification.
+MODULE 44 — Address / Property Management
+Purpose
+Give the customer one account area for managing locations and properties.
+Customer can manage:
+Addresses
+Properties
+Property Assets
+Default Location
+Access Instructions
+Property Contacts
+MODULE 45 — Payment Methods
+Purpose
+Allow customers to manage payment options.
+Depending on platform availability:
+Mobile Money
+Cards
+Bank Accounts
+Wallet
+Customer Actions
+The customer may:
+Add supported payment method.
+Remove payment method.
+Set default.
+View masked payment details.
+Select method during checkout.
+Sensitive payment credentials must never be displayed in full.
+MODULE 46 — Security
+Purpose
+Allow customers to protect their accounts.
+Security Functions
+Customer should be able to:
+Change Password
+Enable/Disable MFA where permitted
+View Active Sessions
+View Devices
+View Login History
+Manage Trusted Devices
+Logout Individual Session
+Logout All Devices
+Suspicious login information should be clearly visible.
+MODULE 47 — Preferences
+Purpose
+Allow customers to personalize general application behaviour.
+Settings may include:
+Language
+Currency
+Distance Unit
+Default Location
+Default Property
+Default Payment Method
+Preferred Contact Method
+Communication Preferences
+MODULE 48 — Notification Preferences
+Purpose
+Allow customers to control how they receive different categories of communication.
+Categories
+Booking Updates
+Messages
+Payments
+Maintenance
+Promotions
+Security
+Recommendations
+Support
+Warranty
+Channels
+Where supported:
+Push
+Email
+SMS
+In-App
+Customers should be able to enable or disable permitted combinations.
+Critical security or legally required messages may remain mandatory.
+MODULE 49 — Privacy
+Purpose
+Give customers appropriate control over their personal information.
+Privacy Options
+Customer should be able to manage:
+Location Permissions
+Marketing Preferences
+Data Sharing Preferences
+Profile Visibility where applicable
+Communication Consent
+Data Rights
+Where applicable, the customer should be able to:
+Request copy/download of personal data.
+Review applicable consent.
+Withdraw optional consent.
+Request account deletion.
+MODULE 50 — Logout / Account Closure
+Logout
+Customer should be able to:
+Logout current session.
+Logout from all devices through security settings.
+Deactivation
+Where supported, the customer may temporarily deactivate the account.
+The platform should clearly explain the consequences.
+Account Deletion
+The customer should be able to request account deletion.
+Before deletion, the customer should be informed about:
+Outstanding bookings.
+Pending payments.
+Open disputes.
+Active warranties.
+Wallet balances.
+Data that must legally or financially be retained.
+What data will be removed.
+What information may remain as required records.
+Additional identity verification may be required before account closure.
+Final Customer Journey
+Account Closure Requested
+↓
+Eligibility Checked
+↓
+Outstanding Obligations Resolved
+↓
+Customer Confirms
+↓
+Required Records Retained
+↓
+Eligible Personal Information Removed/Anonymized
+↓
+Account Closed
+COMPLETE CUSTOMER BUSINESS LIFECYCLE
+The complete business journey of the HANDYMAN customer should therefore be:
+Phase 1 — Platform Entry
+Public Platform
+↓
+Registration
+↓
+Verification
+↓
+Onboarding
+Phase 2 — Customer Environment
+Home
+↓
+Location
+↓
+Property
+Phase 3 — Service Discovery
+Catalog
+↓
+Search
+↓
+Service Details
+Phase 4 — Request Creation
+Create Service Request
+↓
+Describe Problem
+↓
+Upload Evidence
+↓
+Schedule
+↓
+Validate Request
+Phase 5 — Provider Selection
+Provider Matching
+↓
+Provider Discovery
+↓
+Provider Profile
+↓
+Quotation Comparison
+↓
+Provider/Quote Selection
+Phase 6 — Booking
+Booking Confirmation
+↓
+Initial Payment/Authorization
+Phase 7 — Active Booking
+Booking Details
+↓
+Messaging
+↓
+Notifications
+↓
+Tracking
+↓
+Arrival Verification
+Phase 8 — Service Execution
+Service Begins
+↓
+Progress Updates
+↓
+Change Requests
+↓
+Customer Approval
+↓
+Completion Review
+Phase 9 — Financial Completion
+Customer Confirms Completion
+↓
+Final Payment
+↓
+Invoice
+↓
+Receipt
+Phase 10 — Post-Service
+Rating
+↓
+Review
+↓
+Warranty
+↓
+Favorite Provider
+↓
+Rebooking
+Phase 11 — Long-Term Relationship
+Recurring Services
+↓
+Property Assets
+↓
+Maintenance
+↓
+Maintenance Reminders
+Phase 12 — Customer Value
+Wallet
+↓
+Promotions
+↓
+Referral
+↓
+Loyalty Rewards
+Phase 13 — Customer Protection
+Rescheduling
+↓
+Cancellation
+↓
+Support
+↓
+Dispute Resolution
+Phase 14 — Customer Records
+Booking History
+↓
+Notification Center
+↓
+Customer Activity
+Phase 15 — Account Management
+Profile
+↓
+Addresses / Properties
+↓
+Payment Methods
+↓
+Security
+↓
+Preferences
+↓
+Notifications Preferences
+↓
+Privacy
+↓
+Logout / Account Closure
+END-TO-END SUCCESS CONDITION
+The customer-side implementation is functionally complete when a completely new customer can perform this journey without requiring manual intervention outside the platform:
+Discover the platform → Register → Verify account → Complete onboarding → Set location → Create property → Find a service → Describe the problem → Upload evidence → Schedule service → Receive matching providers or quotations → Select provider → Confirm booking → Make required initial payment → Communicate with provider → Track arrival → Verify provider → Follow service progress → Approve or reject additional work → Review completed work → Confirm completion → Pay remaining amount → Receive invoice and receipt → Rate provider → Receive warranty → Add provider to favorites → Rebook → Create recurring services → Register property assets → Receive maintenance reminders → Use wallet/promotions/rewards → Request support where needed → Raise dispute when necessary → Review complete history → Manage profile/security/privacy → Close account when required. create the dashboard exactly as this one
+
+This project was built with [Lovable](https://lovable.dev).
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/bcc27c34-e07d-4c5e-8c26-0b2b0445c3c3).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```sh
+git clone <this-repository-url>
+cd <repository-name>
+npm i
+npm run dev
+```

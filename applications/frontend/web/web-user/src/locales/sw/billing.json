@@ -1,0 +1,251 @@
+{
+  "invoices": {
+    "loading": "Inapakia…",
+    "page": {
+      "title": "Ankara",
+      "subtitle": "Kumbukumbu za malipo za kazi zako zilizokamilika"
+    },
+    "metrics": {
+      "totalInvoices": "Jumla ya Ankara",
+      "allTime": "Wakati wote",
+      "paidInvoices": "Ankara Zilizolipwa",
+      "completed": "Zimekamilika",
+      "pending": "Zinasubiri",
+      "awaitingPayment": "Zinasubiri malipo",
+      "totalBilled": "Jumla Iliyotozwa",
+      "acrossAllInvoices": "Katika ankara zote"
+    },
+    "recentInvoices": "Ankara za hivi karibuni",
+    "tabs": {
+      "all": "Zote",
+      "paid": "Zimelipwa",
+      "pending": "Zinasubiri",
+      "overdue": "Zimechelewa"
+    },
+    "downloadAll": "Pakua zote",
+    "empty": {
+      "titleAll": "Bado hakuna ankara",
+      "titleFilteredPaid": "Hakuna ankara zilizolipwa",
+      "titleFilteredPending": "Hakuna ankara zinazosubiri",
+      "titleFilteredOverdue": "Hakuna ankara zilizochelewa",
+      "descriptionAll": "Ankara hutolewa mara tu uwekaji unapokamilika na kuthibitishwa. Angalia tena baada ya kazi yako ijayo.",
+      "descriptionFiltered": "Jaribu kichupo kingine ili kuona ankara nyingine.",
+      "viewMyBookings": "Tazama Uwekaji Wangu"
+    },
+    "table": {
+      "service": "Huduma",
+      "invoiceNumber": "Nambari ya Ankara",
+      "provider": "Mtoa Huduma",
+      "issueDate": "Tarehe ya Kutoa",
+      "paymentMethod": "Njia ya Malipo",
+      "status": "Hali",
+      "amount": "Kiasi"
+    },
+    "serviceFallback": "Huduma",
+    "pagination": {
+      "showing_one": "Inaonyesha {{from}} hadi {{to}} kati ya ankara {{count}}",
+      "showing_other": "Inaonyesha {{from}} hadi {{to}} kati ya ankara {{count}}"
+    },
+    "fields": {
+      "invoiceNumber": "Nambari ya ankara",
+      "bookingReference": "Kumbukumbu ya uwekaji",
+      "provider": "Mtoa huduma",
+      "category": "Kategoria",
+      "invoiceDate": "Tarehe ya ankara",
+      "dueDate": "Tarehe ya mwisho",
+      "location": "Mahali",
+      "paymentMethod": "Njia ya malipo",
+      "customer": "Mteja"
+    },
+    "billing": {
+      "subtotal": "Kiasi kidogo",
+      "platformFee": "Ada ya jukwaa",
+      "totalAmount": "Jumla ya kiasi",
+      "serviceCharge": "Gharama ya huduma"
+    },
+    "panel": {
+      "title": "Maelezo ya ankara",
+      "progressTimeline": "Mwendelezo wa hatua",
+      "downloadInvoice": "Pakua ankara",
+      "contactSupport": "Wasiliana na msaada",
+      "payNotWiredToast": "Malipo ya ankara bado hayajaunganishwa na mfumo wa moja kwa moja — nenda kwenye Malipo kusimamia fedha.",
+      "payNow": "Lipa sasa"
+    },
+    "timeline": {
+      "invoiceIssued": "Ankara Imetolewa",
+      "paymentPending": "Malipo Yanasubiri",
+      "reminderScheduled": "Ukumbusho Umepangwa",
+      "issued": "Imetolewa",
+      "paid": "Imelipwa",
+      "downloaded": "Imepakuliwa"
+    },
+    "dialog": {
+      "receiptCopied": "Muhtasari wa risiti umenakiliwa",
+      "billingBreakdown": "Uchambuzi wa malipo",
+      "receiptNote": "Ankara hii inapatikana kama risiti inayoweza kupakuliwa kwa huduma yako iliyokamilika.",
+      "close": "Funga",
+      "shareReceipt": "Shiriki risiti",
+      "downloadPdf": "Pakua PDF",
+      "progress": "Mwendelezo",
+      "shareText": "Ankara {{invoiceNumber}} — {{amount}} imelipwa kwa {{provider}}"
+    }
+  },
+  "payments": {
+    "loading": "Inapakia…",
+    "page": {
+      "title": "Malipo",
+      "subtitle": "Simamia njia zilizohifadhiwa na fuatilia malipo"
+    },
+    "toast": {
+      "defaultUpdated": "Njia chaguomsingi ya malipo imesasishwa",
+      "methodRemoved": "Njia ya malipo imeondolewa"
+    },
+    "metrics": {
+      "savedMethods": "Njia Zilizohifadhiwa",
+      "savedMethodsHint": "{{default}} chaguomsingi · {{backup}} akiba",
+      "noMethodsYet": "Bado hakuna njia",
+      "thisMonthCharges": "Malipo ya Mwezi Huu",
+      "acrossBookings_one": "Katika uwekaji {{count}}",
+      "acrossBookings_other": "Katika uwekaji {{count}}",
+      "pendingAuthorizations": "Uthibitisho Unaosubiri",
+      "authorizationCount_one": "uthibitisho {{count}}",
+      "authorizationCount_other": "uthibitisho {{count}}"
+    },
+    "methods": {
+      "title": "Njia za malipo",
+      "subtitle": "Njia zilizohifadhiwa kwa malipo ya haraka na salama",
+      "addMethod": "Ongeza Njia",
+      "searchPlaceholder": "Tafuta njia za malipo...",
+      "filterType": "Aina",
+      "filterAllTypes": "Aina Zote",
+      "filterCard": "Kadi",
+      "filterMobileMoney": "Pesa za Simu",
+      "filterBank": "Benki",
+      "emptyFilteredTitle": "Hakuna njia zinazolingana",
+      "emptyFilteredDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "emptyTitle": "Bado hakuna njia za malipo",
+      "emptyDescription": "Ongeza kadi, pesa za simu au akaunti ya benki ili kuharakisha malipo.",
+      "addPaymentMethod": "Ongeza Njia ya Malipo",
+      "columns": {
+        "method": "Njia",
+        "type": "Aina",
+        "status": "Hali",
+        "actions": "Vitendo"
+      },
+      "expires": "Inaisha {{date}}",
+      "default": "Chaguomsingi",
+      "backup": "Akiba",
+      "setAsDefault": "Weka kama chaguomsingi",
+      "remove": "Ondoa",
+      "secureFooter": "Taarifa zako za malipo zimefichwa kwa usimbaji na ni taarifa zilizofichwa tu ndizo zinazohifadhiwa."
+    },
+    "charges": {
+      "title": "Malipo ya Hivi Karibuni",
+      "subtitle": "Malipo na uthibitisho wa hivi karibuni",
+      "searchPlaceholder": "Tafuta malipo...",
+      "filterStatus": "Hali",
+      "filterAllStatuses": "Hali Zote",
+      "filterAuthorized": "Yamethibitishwa",
+      "filterPaid": "Yamelipwa",
+      "filterClosed": "Yamefungwa",
+      "emptyFilteredTitle": "Hakuna malipo yanayolingana",
+      "emptyFilteredDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "emptyTitle": "Bado hakuna malipo",
+      "emptyDescription": "Ukishakamilisha uwekaji na kuthibitisha malipo, yataonekana hapa.",
+      "browseServices": "Vinjari Huduma",
+      "columns": {
+        "service": "Huduma",
+        "bookingId": "Nambari ya Uwekaji",
+        "date": "Tarehe",
+        "provider": "Mtoa Huduma",
+        "status": "Hali",
+        "amount": "Kiasi"
+      },
+      "serviceFallback": "Huduma",
+      "itemLabel": "malipo"
+    },
+    "viewFullHistory": "Tazama historia kamili ya malipo kwenye Historia →",
+    "chargeDetailsTitle": "Maelezo ya malipo",
+    "dialog": {
+      "title": "Ongeza njia ya malipo",
+      "tabCard": "Kadi",
+      "tabMobileMoney": "Pesa za Simu",
+      "tabBank": "Benki",
+      "errors": {
+        "cardRequired": "Jaza jina la mmiliki wa kadi, nambari ya kadi na tarehe ya mwisho",
+        "invalidPhone": "Weka nambari sahihi ya simu",
+        "bankRequired": "Weka jina la benki na nambari ya akaunti"
+      },
+      "methodAdded": "Njia ya malipo imeongezwa",
+      "labels": {
+        "cardholderName": "Jina la mmiliki wa kadi",
+        "cardNumber": "Nambari ya kadi",
+        "expiryDate": "Tarehe ya mwisho",
+        "cvv": "CVV",
+        "provider": "Mtoa huduma",
+        "billingPhone": "Nambari ya simu ya malipo",
+        "bankName": "Jina la benki",
+        "accountNumber": "Nambari ya akaunti"
+      },
+      "placeholders": {
+        "cardholderName": "mfano Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "MM / YY",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "mfano CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "Weka kama njia chaguomsingi ya malipo",
+      "secureNote": "Taarifa zako za malipo zimefichwa kwa usimbaji na kuhifadhiwa kwa usalama.",
+      "cancel": "Ghairi",
+      "saving": "Inahifadhi...",
+      "saveMethod": "Hifadhi Njia"
+    }
+  },
+  "wallet": {
+    "loading": "Inapakia…",
+    "page": {
+      "title": "Pochi",
+      "subtitle": "Pochi yako ya huduma na kumbukumbu za miamala"
+    },
+    "errors": {
+      "positiveAmount": "Weka kiasi chenye thamani chanya"
+    },
+    "toast": {
+      "credited": "Imewekwa {{amount}}",
+      "debited": "Imetolewa {{amount}}"
+    },
+    "metrics": {
+      "availableBalance": "Salio Lililopo",
+      "rightNow": "Sasa hivi",
+      "totalCredited": "Jumla Iliyowekwa",
+      "allTime": "Wakati wote",
+      "totalDebited": "Jumla Iliyotolewa"
+    },
+    "amountLabel": "Kiasi ({{currency}})",
+    "amountPlaceholder": "mfano 20000",
+    "creditButton": "Weka",
+    "debitButton": "Toa",
+    "refresh": "Onyesha upya",
+    "searchPlaceholder": "Tafuta miamala...",
+    "filterType": "Aina",
+    "filterAllTypes": "Aina Zote",
+    "filterCredit": "Kuweka",
+    "filterDebit": "Kutoa",
+    "emptyFilteredTitle": "Hakuna miamala inayolingana",
+    "emptyFilteredDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+    "clearFilters": "Futa Vichujio",
+    "emptyTitle": "Bado hakuna miamala",
+    "emptyDescription": "Kuweka, kutoa na kuzuia kwenye pochi yako kutaonekana hapa.",
+    "columns": {
+      "type": "Aina",
+      "date": "Tarehe",
+      "amount": "Kiasi",
+      "balanceAfter": "Salio Baada"
+    },
+    "itemLabel": "miamala"
+  }
+}

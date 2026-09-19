@@ -1,0 +1,134 @@
+{
+  "loading": "جارٍ التحميل…",
+  "page": {
+    "title": "النشاط",
+    "subtitle": "سجل زمني لرحلتك"
+  },
+  "metrics": {
+    "totalEvents": "إجمالي الأحداث",
+    "totalEventsHint": "جميع الأنشطة المسجلة",
+    "bookingEvents": "أحداث الحجز",
+    "bookingEventsHint": "الحجوزات التي تم إنشاؤها",
+    "paymentActions": "إجراءات الدفع",
+    "paymentActionsHint": "المدفوعات والتفويضات",
+    "thisWeek": "هذا الأسبوع",
+    "thisWeekHint": "الأحداث هذا الأسبوع"
+  },
+  "filters": {
+    "searchPlaceholder": "ابحث في النشاط...",
+    "allEvents": "جميع الأحداث",
+    "range": {
+      "7": "آخر 7 أيام",
+      "30": "آخر 30 يومًا",
+      "90": "آخر 90 يومًا",
+      "all": "كل الأوقات"
+    }
+  },
+  "actions": {
+    "export": "تصدير",
+    "viewTimeline": "عرض الجدول الزمني",
+    "clearFilters": "مسح الفلاتر",
+    "browseServices": "تصفح الخدمات",
+    "viewBooking": "عرض الحجز",
+    "viewPayment": "عرض الدفعة",
+    "viewDetails": "عرض التفاصيل",
+    "openTimeline": "فتح الجدول الزمني",
+    "downloadInvoice": "تنزيل الفاتورة",
+    "leaveReview": "إضافة تقييم",
+    "close": "إغلاق"
+  },
+  "empty": {
+    "noMatchTitle": "لا يوجد نشاط مطابق",
+    "noMatchDescription": "حاول تعديل بحثك أو الفلاتر.",
+    "noActivityTitle": "لا يوجد نشاط بعد",
+    "noActivityDescription": "ستظهر هنا أحداث الحجز — التأكيدات والمدفوعات والتحديثات."
+  },
+  "table": {
+    "event": "الحدث",
+    "booking": "الحجز",
+    "category": "الفئة",
+    "details": "التفاصيل",
+    "date": "التاريخ",
+    "status": "الحالة"
+  },
+  "pagination": {
+    "showing": "عرض {{from}} إلى {{to}} من {{total}} حدثًا"
+  },
+  "toast": {
+    "exported": "تم تصدير النشاط",
+    "openingFeedback": "جارٍ فتح التقييمات — ابحث عن هذا الحجز لإضافة تقييمك."
+  },
+  "categories": {
+    "Booking": "حجز",
+    "Payment": "دفع",
+    "Service": "خدمة",
+    "Invoice": "فاتورة",
+    "Feedback": "تقييم"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "failed": "فشل",
+    "completed": "مكتمل",
+    "authorized": "معتمد"
+  },
+  "eventTypes": {
+    "bookingCreated": "تم إنشاء الحجز",
+    "paymentAuthorized": "تم اعتماد الدفع",
+    "paymentFailed": "فشل الدفع",
+    "providerAssigned": "تم تعيين مزود الخدمة",
+    "providerOnTheWay": "مزود الخدمة في الطريق",
+    "providerArrived": "وصل مزود الخدمة",
+    "arrivalVerified": "تم التحقق من الوصول",
+    "serviceStarted": "بدأت الخدمة",
+    "serviceCompleted": "اكتملت الخدمة",
+    "bookingCancelled": "تم إلغاء الحجز",
+    "changeProposed": "تم اقتراح تغيير",
+    "changeApproved": "تمت الموافقة على التغيير",
+    "changeRejected": "تم رفض التغيير",
+    "invoiceReady": "الفاتورة جاهزة",
+    "reviewSubmitted": "تم إرسال التقييم",
+    "reviewPending": "التقييم قيد الانتظار"
+  },
+  "pendingReview": {
+    "detail": "يرجى مشاركة رأيك"
+  },
+  "common": {
+    "service": "خدمة"
+  },
+  "insights": {
+    "heading": "رؤى النشاط",
+    "mostRecentBooking": "أحدث حجز",
+    "lastPayment": "آخر دفعة",
+    "latestCompletedService": "آخر خدمة مكتملة",
+    "withProvider": "مع {{name}}",
+    "exploreYourJourney": "استكشف رحلتك",
+    "viewFullTimelineHint": "اعرض الجدول الزمني الكامل لنشاطك."
+  },
+  "fields": {
+    "dateTime": "التاريخ والوقت",
+    "booking": "الحجز",
+    "provider": "مزود الخدمة",
+    "payment": "الدفع",
+    "paymentStatus": "حالة الدفع",
+    "eventType": "نوع الحدث",
+    "bookingReference": "رقم مرجع الحجز",
+    "paymentReference": "رقم مرجع الدفع",
+    "amount": "المبلغ",
+    "status": "الحالة"
+  },
+  "journey": {
+    "timeline": "الجدول الزمني للرحلة",
+    "notYetReached": "لم يتم الوصول إليه بعد",
+    "description": "الوصف",
+    "noDetails": "لا توجد تفاصيل إضافية لهذا الحدث."
+  },
+  "payment": {
+    "dialogTitle": "تفاصيل النشاط",
+    "dialogSubtitle": "معلومات تفصيلية حول هذا النشاط",
+    "progressTimeline": "الجدول الزمني للتقدم",
+    "nextStep": "الخطوة التالية:",
+    "upcoming": "قادمة",
+    "failedNote": "فشلت محاولة الدفع هذه — يمكنك إعادة المحاولة من خلال حجزك.",
+    "authorizedNote": "تم اعتماد دفعتك بنجاح. سنبقيك على اطلاع بمستجدات هذا الحجز."
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "invoices": {
+    "loading": "लोड हो रहा है…",
+    "page": {
+      "title": "इनवॉइस",
+      "subtitle": "आपके पूरे हो चुके कामों का बिलिंग रिकॉर्ड"
+    },
+    "metrics": {
+      "totalInvoices": "कुल इनवॉइस",
+      "allTime": "अब तक",
+      "paidInvoices": "भुगतान किए गए इनवॉइस",
+      "completed": "पूर्ण",
+      "pending": "लंबित",
+      "awaitingPayment": "भुगतान की प्रतीक्षा में",
+      "totalBilled": "कुल बिल राशि",
+      "acrossAllInvoices": "सभी इनवॉइस में"
+    },
+    "recentInvoices": "हाल की इनवॉइस",
+    "tabs": {
+      "all": "सभी",
+      "paid": "भुगतान हो चुका",
+      "pending": "लंबित",
+      "overdue": "अतिदेय"
+    },
+    "downloadAll": "सभी डाउनलोड करें",
+    "empty": {
+      "titleAll": "अभी तक कोई इनवॉइस नहीं",
+      "titleFilteredPaid": "भुगतान किए गए इनवॉइस नहीं मिले",
+      "titleFilteredPending": "लंबित इनवॉइस नहीं मिले",
+      "titleFilteredOverdue": "अतिदेय इनवॉइस नहीं मिले",
+      "descriptionAll": "बुकिंग पूरी और पुष्ट होने पर इनवॉइस जारी की जाती है। अपने अगले काम के बाद फिर से जांचें।",
+      "descriptionFiltered": "अन्य इनवॉइस देखने के लिए दूसरा टैब आज़माएं।",
+      "viewMyBookings": "मेरी बुकिंग देखें"
+    },
+    "table": {
+      "service": "सेवा",
+      "invoiceNumber": "इनवॉइस नंबर",
+      "provider": "प्रदाता",
+      "issueDate": "जारी करने की तारीख",
+      "paymentMethod": "भुगतान का तरीका",
+      "status": "स्थिति",
+      "amount": "राशि"
+    },
+    "serviceFallback": "सेवा",
+    "pagination": {
+      "showing_one": "{{count}} इनवॉइस में से {{from}} से {{to}} दिखाया जा रहा है",
+      "showing_other": "{{count}} इनवॉइस में से {{from}} से {{to}} दिखाया जा रहा है"
+    },
+    "fields": {
+      "invoiceNumber": "इनवॉइस नंबर",
+      "bookingReference": "बुकिंग संदर्भ",
+      "provider": "प्रदाता",
+      "category": "श्रेणी",
+      "invoiceDate": "इनवॉइस की तारीख",
+      "dueDate": "देय तिथि",
+      "location": "स्थान",
+      "paymentMethod": "भुगतान का तरीका",
+      "customer": "ग्राहक"
+    },
+    "billing": {
+      "subtotal": "उप-योग",
+      "platformFee": "प्लेटफ़ॉर्म शुल्क",
+      "totalAmount": "कुल राशि",
+      "serviceCharge": "सेवा शुल्क"
+    },
+    "panel": {
+      "title": "इनवॉइस विवरण",
+      "progressTimeline": "प्रगति समयरेखा",
+      "downloadInvoice": "इनवॉइस डाउनलोड करें",
+      "contactSupport": "सहायता से संपर्क करें",
+      "payNotWiredToast": "इनवॉइस भुगतान अभी तक किसी लाइव गेटवे से जुड़ा नहीं है — अपनी राशि प्रबंधित करने के लिए भुगतान पर जाएं।",
+      "payNow": "अभी भुगतान करें"
+    },
+    "timeline": {
+      "invoiceIssued": "इनवॉइस जारी की गई",
+      "paymentPending": "भुगतान लंबित",
+      "reminderScheduled": "रिमाइंडर निर्धारित",
+      "issued": "जारी की गई",
+      "paid": "भुगतान हो चुका",
+      "downloaded": "डाउनलोड की गई"
+    },
+    "dialog": {
+      "receiptCopied": "रसीद का सारांश क्लिपबोर्ड पर कॉपी किया गया",
+      "billingBreakdown": "बिलिंग विवरण",
+      "receiptNote": "यह इनवॉइस आपकी पूरी हो चुकी सेवा के लिए डाउनलोड योग्य रसीद के रूप में उपलब्ध है।",
+      "close": "बंद करें",
+      "shareReceipt": "रसीद साझा करें",
+      "downloadPdf": "PDF डाउनलोड करें",
+      "progress": "प्रगति",
+      "shareText": "इनवॉइस {{invoiceNumber}} — {{provider}} को {{amount}} का भुगतान किया गया"
+    }
+  },
+  "payments": {
+    "loading": "लोड हो रहा है…",
+    "page": {
+      "title": "भुगतान",
+      "subtitle": "सहेजे गए तरीकों को प्रबंधित करें और शुल्कों को ट्रैक करें"
+    },
+    "toast": {
+      "defaultUpdated": "डिफ़ॉल्ट भुगतान तरीका अपडेट किया गया",
+      "methodRemoved": "भुगतान तरीका हटाया गया"
+    },
+    "metrics": {
+      "savedMethods": "सहेजे गए तरीके",
+      "savedMethodsHint": "{{default}} डिफ़ॉल्ट · {{backup}} बैकअप",
+      "noMethodsYet": "अभी तक कोई तरीका नहीं",
+      "thisMonthCharges": "इस महीने के शुल्क",
+      "acrossBookings_one": "{{count}} बुकिंग में",
+      "acrossBookings_other": "{{count}} बुकिंग में",
+      "pendingAuthorizations": "लंबित प्राधिकरण",
+      "authorizationCount_one": "{{count}} प्राधिकरण",
+      "authorizationCount_other": "{{count}} प्राधिकरण"
+    },
+    "methods": {
+      "title": "भुगतान के तरीके",
+      "subtitle": "तेज़ और सुरक्षित भुगतान के लिए सहेजे गए तरीके",
+      "addMethod": "तरीका जोड़ें",
+      "searchPlaceholder": "भुगतान के तरीके खोजें...",
+      "filterType": "प्रकार",
+      "filterAllTypes": "सभी प्रकार",
+      "filterCard": "कार्ड",
+      "filterMobileMoney": "मोबाइल मनी",
+      "filterBank": "बैंक",
+      "emptyFilteredTitle": "कोई मेल खाता तरीका नहीं मिला",
+      "emptyFilteredDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "emptyTitle": "अभी तक कोई भुगतान तरीका नहीं",
+      "emptyDescription": "चेकआउट तेज़ करने के लिए कार्ड, मोबाइल मनी या बैंक खाता जोड़ें।",
+      "addPaymentMethod": "भुगतान तरीका जोड़ें",
+      "columns": {
+        "method": "तरीका",
+        "type": "प्रकार",
+        "status": "स्थिति",
+        "actions": "कार्रवाइयां"
+      },
+      "expires": "{{date}} को समाप्त",
+      "default": "डिफ़ॉल्ट",
+      "backup": "बैकअप",
+      "setAsDefault": "डिफ़ॉल्ट के रूप में सेट करें",
+      "remove": "हटाएं",
+      "secureFooter": "आपकी भुगतान जानकारी एन्क्रिप्टेड है और केवल छिपाई गई जानकारी ही संग्रहीत की जाती है।"
+    },
+    "charges": {
+      "title": "हाल के शुल्क",
+      "subtitle": "नवीनतम शुल्क और प्राधिकरण",
+      "searchPlaceholder": "शुल्क खोजें...",
+      "filterStatus": "स्थिति",
+      "filterAllStatuses": "सभी स्थितियां",
+      "filterAuthorized": "प्राधिकृत",
+      "filterPaid": "भुगतान हो चुका",
+      "filterClosed": "बंद",
+      "emptyFilteredTitle": "कोई मेल खाता शुल्क नहीं मिला",
+      "emptyFilteredDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+      "clearFilters": "फ़िल्टर साफ़ करें",
+      "emptyTitle": "अभी तक कोई शुल्क नहीं",
+      "emptyDescription": "बुकिंग पूरी करने और भुगतान अधिकृत करने के बाद, यह यहां दिखाई देगा।",
+      "browseServices": "सेवाएं ब्राउज़ करें",
+      "columns": {
+        "service": "सेवा",
+        "bookingId": "बुकिंग आईडी",
+        "date": "तारीख",
+        "provider": "प्रदाता",
+        "status": "स्थिति",
+        "amount": "राशि"
+      },
+      "serviceFallback": "सेवा",
+      "itemLabel": "शुल्क"
+    },
+    "viewFullHistory": "इतिहास में पूरा भुगतान इतिहास देखें →",
+    "chargeDetailsTitle": "शुल्क विवरण",
+    "dialog": {
+      "title": "भुगतान तरीका जोड़ें",
+      "tabCard": "कार्ड",
+      "tabMobileMoney": "मोबाइल मनी",
+      "tabBank": "बैंक",
+      "errors": {
+        "cardRequired": "कार्डधारक का नाम, कार्ड नंबर और समाप्ति तिथि भरें",
+        "invalidPhone": "एक मान्य फ़ोन नंबर दर्ज करें",
+        "bankRequired": "बैंक का नाम और खाता नंबर दर्ज करें"
+      },
+      "methodAdded": "भुगतान तरीका जोड़ा गया",
+      "labels": {
+        "cardholderName": "कार्डधारक का नाम",
+        "cardNumber": "कार्ड नंबर",
+        "expiryDate": "समाप्ति तिथि",
+        "cvv": "CVV",
+        "provider": "प्रदाता",
+        "billingPhone": "बिलिंग फ़ोन नंबर",
+        "bankName": "बैंक का नाम",
+        "accountNumber": "खाता नंबर"
+      },
+      "placeholders": {
+        "cardholderName": "उदा. Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "MM / YY",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "उदा. CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "डिफ़ॉल्ट भुगतान तरीके के रूप में सेट करें",
+      "secureNote": "आपकी भुगतान जानकारी एन्क्रिप्टेड और सुरक्षित रूप से संग्रहीत है।",
+      "cancel": "रद्द करें",
+      "saving": "सहेजा जा रहा है...",
+      "saveMethod": "तरीका सहेजें"
+    }
+  },
+  "wallet": {
+    "loading": "लोड हो रहा है…",
+    "page": {
+      "title": "वॉलेट",
+      "subtitle": "आपका सेवा वॉलेट और लेनदेन विवरण"
+    },
+    "errors": {
+      "positiveAmount": "एक धनात्मक राशि दर्ज करें"
+    },
+    "toast": {
+      "credited": "{{amount}} जमा किया गया",
+      "debited": "{{amount}} निकाला गया"
+    },
+    "metrics": {
+      "availableBalance": "उपलब्ध शेष राशि",
+      "rightNow": "अभी",
+      "totalCredited": "कुल जमा",
+      "allTime": "अब तक",
+      "totalDebited": "कुल निकासी"
+    },
+    "amountLabel": "राशि ({{currency}})",
+    "amountPlaceholder": "उदा. 20000",
+    "creditButton": "जमा करें",
+    "debitButton": "निकालें",
+    "refresh": "रीफ़्रेश करें",
+    "searchPlaceholder": "लेनदेन खोजें...",
+    "filterType": "प्रकार",
+    "filterAllTypes": "सभी प्रकार",
+    "filterCredit": "जमा",
+    "filterDebit": "निकासी",
+    "emptyFilteredTitle": "कोई मेल खाता लेनदेन नहीं मिला",
+    "emptyFilteredDescription": "अपनी खोज या फ़िल्टर समायोजित करने का प्रयास करें।",
+    "clearFilters": "फ़िल्टर साफ़ करें",
+    "emptyTitle": "अभी तक कोई लेनदेन नहीं",
+    "emptyDescription": "आपके वॉलेट में जमा, निकासी और होल्ड यहां दिखाई देंगे।",
+    "columns": {
+      "type": "प्रकार",
+      "date": "तारीख",
+      "amount": "राशि",
+      "balanceAfter": "बाद की शेष राशि"
+    },
+    "itemLabel": "लेनदेन"
+  }
+}

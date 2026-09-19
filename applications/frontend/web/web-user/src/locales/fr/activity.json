@@ -1,0 +1,134 @@
+{
+  "loading": "Chargement…",
+  "page": {
+    "title": "Activité",
+    "subtitle": "Un journal chronologique de votre parcours"
+  },
+  "metrics": {
+    "totalEvents": "Total des événements",
+    "totalEventsHint": "Toute l'activité enregistrée",
+    "bookingEvents": "Événements de réservation",
+    "bookingEventsHint": "Réservations créées",
+    "paymentActions": "Actions de paiement",
+    "paymentActionsHint": "Paiements et autorisations",
+    "thisWeek": "Cette semaine",
+    "thisWeekHint": "Événements cette semaine"
+  },
+  "filters": {
+    "searchPlaceholder": "Rechercher une activité...",
+    "allEvents": "Tous les événements",
+    "range": {
+      "7": "7 derniers jours",
+      "30": "30 derniers jours",
+      "90": "90 derniers jours",
+      "all": "Depuis toujours"
+    }
+  },
+  "actions": {
+    "export": "Exporter",
+    "viewTimeline": "Voir la chronologie",
+    "clearFilters": "Effacer les filtres",
+    "browseServices": "Parcourir les services",
+    "viewBooking": "Voir la réservation",
+    "viewPayment": "Voir le paiement",
+    "viewDetails": "Voir les détails",
+    "openTimeline": "Ouvrir la chronologie",
+    "downloadInvoice": "Télécharger la facture",
+    "leaveReview": "Laisser un avis",
+    "close": "Fermer"
+  },
+  "empty": {
+    "noMatchTitle": "Aucune activité correspondante",
+    "noMatchDescription": "Essayez d'ajuster votre recherche ou vos filtres.",
+    "noActivityTitle": "Aucune activité pour le moment",
+    "noActivityDescription": "Les événements de réservation — confirmations, paiements, mises à jour — apparaîtront ici."
+  },
+  "table": {
+    "event": "Événement",
+    "booking": "Réservation",
+    "category": "Catégorie",
+    "details": "Détails",
+    "date": "Date",
+    "status": "Statut"
+  },
+  "pagination": {
+    "showing": "Affichage de {{from}} à {{to}} sur {{total}} événements"
+  },
+  "toast": {
+    "exported": "Activité exportée",
+    "openingFeedback": "Ouverture des avis — retrouvez cette réservation pour laisser votre avis."
+  },
+  "categories": {
+    "Booking": "Réservation",
+    "Payment": "Paiement",
+    "Service": "Service",
+    "Invoice": "Facture",
+    "Feedback": "Avis"
+  },
+  "status": {
+    "pending": "En attente",
+    "failed": "Échoué",
+    "completed": "Terminé",
+    "authorized": "Autorisé"
+  },
+  "eventTypes": {
+    "bookingCreated": "Réservation créée",
+    "paymentAuthorized": "Paiement autorisé",
+    "paymentFailed": "Paiement échoué",
+    "providerAssigned": "Prestataire assigné",
+    "providerOnTheWay": "Prestataire en route",
+    "providerArrived": "Prestataire arrivé",
+    "arrivalVerified": "Arrivée vérifiée",
+    "serviceStarted": "Service commencé",
+    "serviceCompleted": "Service terminé",
+    "bookingCancelled": "Réservation annulée",
+    "changeProposed": "Modification proposée",
+    "changeApproved": "Modification approuvée",
+    "changeRejected": "Modification refusée",
+    "invoiceReady": "Facture prête",
+    "reviewSubmitted": "Avis soumis",
+    "reviewPending": "Avis en attente"
+  },
+  "pendingReview": {
+    "detail": "Merci de partager votre avis"
+  },
+  "common": {
+    "service": "Service"
+  },
+  "insights": {
+    "heading": "Aperçus d'activité",
+    "mostRecentBooking": "Réservation la plus récente",
+    "lastPayment": "Dernier paiement",
+    "latestCompletedService": "Dernier service terminé",
+    "withProvider": "avec {{name}}",
+    "exploreYourJourney": "Explorez votre parcours",
+    "viewFullTimelineHint": "Consultez la chronologie complète de votre activité."
+  },
+  "fields": {
+    "dateTime": "Date et heure",
+    "booking": "Réservation",
+    "provider": "Prestataire",
+    "payment": "Paiement",
+    "paymentStatus": "Statut du paiement",
+    "eventType": "Type d'événement",
+    "bookingReference": "Référence de réservation",
+    "paymentReference": "Référence de paiement",
+    "amount": "Montant",
+    "status": "Statut"
+  },
+  "journey": {
+    "timeline": "Chronologie du parcours",
+    "notYetReached": "Pas encore atteint",
+    "description": "Description",
+    "noDetails": "Aucun détail supplémentaire pour cet événement."
+  },
+  "payment": {
+    "dialogTitle": "Détails de l'activité",
+    "dialogSubtitle": "Informations détaillées sur cette activité",
+    "progressTimeline": "Chronologie de progression",
+    "nextStep": "Prochaine étape :",
+    "upcoming": "À venir",
+    "failedNote": "Cette tentative de paiement a échoué — vous pouvez réessayer depuis votre réservation.",
+    "authorizedNote": "Votre paiement a été autorisé avec succès. Nous vous tiendrons informé de l'avancement de cette réservation."
+  }
+}

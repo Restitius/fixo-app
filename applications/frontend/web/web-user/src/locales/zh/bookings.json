@@ -1,0 +1,208 @@
+{
+  "loading": "加载中…",
+  "bookings": {
+    "pageTitle": "我的预约",
+    "pageSubtitle": "查看您的预约安排和服务记录",
+    "tabs": {
+      "upcoming": "即将到来",
+      "completed": "已完成",
+      "cancelled": "已取消"
+    },
+    "stats": {
+      "upcomingBookings": "即将到来的预约",
+      "upcomingBookingsHint": "已安排",
+      "completedThisMonth": "本月已完成",
+      "completedThisMonthHint": "本自然月",
+      "pendingPayments": "待付款项",
+      "pendingPaymentsHint": "等待授权",
+      "totalSpent": "总消费",
+      "totalSpentHint": "全部时间"
+    },
+    "searchPlaceholder": "搜索预约...",
+    "statusPlaceholder": "状态",
+    "allStatuses": "所有状态",
+    "servicePlaceholder": "服务",
+    "allServices": "所有服务",
+    "emptyUpcoming": {
+      "title": "暂无即将到来的预约",
+      "description": "您还没有安排任何预约。预约一项服务后即可在此查看。",
+      "actionLabel": "预约服务"
+    },
+    "emptyCompleted": {
+      "title": "暂无已完成的预约",
+      "description": "标记为完成的工作将显示在这里。",
+      "actionLabel": "浏览服务"
+    },
+    "emptyCancelled": {
+      "title": "暂无已取消的预约",
+      "description": "您取消的预约将显示在这里，方便查阅记录。",
+      "actionLabel": "查看即将到来的预约"
+    },
+    "emptyFiltered": {
+      "title": "没有匹配的预约",
+      "description": "请尝试调整搜索条件或筛选条件，以找到您需要的内容。",
+      "actionLabel": "清除筛选条件"
+    },
+    "columns": {
+      "service": "服务",
+      "bookingId": "预约编号",
+      "schedule": "安排时间",
+      "provider": "服务商",
+      "status": "状态",
+      "amount": "金额"
+    },
+    "serviceFallback": "服务",
+    "itemLabel": "个预约"
+  },
+  "calendar": {
+    "pageTitle": "日历",
+    "pageSubtitle": "按日期查看您的预约",
+    "myBookings": "我的预约",
+    "noBookingsThisDay": "这一天没有预约。",
+    "serviceFallback": "服务",
+    "footerHint": "带有紫色圆点的日期表示当天至少有一个真实的预约安排。"
+  },
+  "inbox": {
+    "pageTitle": "收件箱",
+    "pageSubtitle": "与您预约的服务商发消息",
+    "emptyTitle": "暂无对话",
+    "emptyDescription": "一旦有服务商被分配到您的某个预约，您就可以在这里与他们交流。",
+    "browseServices": "浏览服务",
+    "serviceFallback": "服务",
+    "noMessagesYet": "暂无消息 — 打个招呼吧！",
+    "messagePlaceholder": "输入消息..."
+  },
+  "history": {
+    "pageTitle": "历史记录",
+    "pageSubtitle": "您账户上发生的一切，尽在此处",
+    "viewing": "正在查看",
+    "detailSheetTitle": "历史详情",
+    "categories": {
+      "bookings": "预约",
+      "payments": "付款",
+      "wallet": "钱包",
+      "loyalty": "忠诚度",
+      "invoices": "发票"
+    },
+    "bookingsSection": {
+      "totalBookings": "预约总数",
+      "totalBookingsHint": "全部时间",
+      "paidJobs": "已付款工作",
+      "paidJobsHint": "已完成",
+      "cancelled": "已取消",
+      "cancelledHint": "全部时间",
+      "totalCharged": "总收费金额",
+      "totalChargedHint": "全部时间",
+      "pendingAuthorizations": "待授权",
+      "pendingAuthorizationsHint": "等待扣款",
+      "fullyPaid": "已全额付款",
+      "fullyPaidHint": "已完成",
+      "searchBookings": "搜索预约...",
+      "searchCharges": "搜索收费...",
+      "statusPlaceholder": "状态",
+      "allStatuses": "所有状态",
+      "statusPaid": "已付款",
+      "statusClosed": "已结束",
+      "statusCancelled": "已取消",
+      "statusAuthorized": "已授权",
+      "emptyMatchingTitle": "没有匹配的结果",
+      "emptyMatchingDescription": "请尝试调整搜索条件或筛选条件。",
+      "clearFilters": "清除筛选条件",
+      "noBookingsTitle": "暂无预约",
+      "noBookingsDescription": "已完成并付款的工作将显示在这里。",
+      "noChargesTitle": "暂无收费记录",
+      "noChargesDescription": "您预约产生的收费将显示在这里。",
+      "browseServices": "浏览服务",
+      "columns": {
+        "service": "服务",
+        "bookingId": "预约编号",
+        "date": "日期",
+        "provider": "服务商",
+        "status": "状态",
+        "amount": "金额"
+      },
+      "serviceFallback": "服务",
+      "itemLabelBookings": "个预约",
+      "itemLabelCharges": "笔收费"
+    },
+    "walletSection": {
+      "totalCredited": "总入账",
+      "totalCreditedHint": "全部时间",
+      "totalDebited": "总支出",
+      "totalDebitedHint": "全部时间",
+      "currentBalance": "当前余额",
+      "currentBalanceHint": "实时",
+      "searchPlaceholder": "搜索交易记录...",
+      "typePlaceholder": "类型",
+      "allTypes": "所有类型",
+      "credit": "入账",
+      "debit": "支出",
+      "emptyMatchingTitle": "没有匹配的交易",
+      "emptyMatchingDescription": "请尝试调整搜索条件或筛选条件。",
+      "clearFilters": "清除筛选条件",
+      "emptyTitle": "暂无钱包活动",
+      "emptyDescription": "入账、支出和冻结记录将显示在这里。",
+      "goToWallet": "前往钱包",
+      "columns": {
+        "type": "类型",
+        "date": "日期",
+        "amount": "金额",
+        "balanceAfter": "变动后余额"
+      },
+      "itemLabel": "笔交易"
+    },
+    "loyaltySection": {
+      "pointsEarned": "已获积分",
+      "pointsEarnedHint": "全部时间",
+      "pointsSpent": "已用积分",
+      "pointsSpentHint": "全部时间",
+      "currentBalance": "当前余额",
+      "currentBalanceHint": "实时",
+      "searchPlaceholder": "搜索活动记录...",
+      "typePlaceholder": "类型",
+      "all": "全部",
+      "earned": "已获得",
+      "spent": "已使用",
+      "emptyMatchingTitle": "没有匹配的活动记录",
+      "emptyMatchingDescription": "请尝试调整搜索条件或筛选条件。",
+      "clearFilters": "清除筛选条件",
+      "emptyTitle": "暂无忠诚度活动记录",
+      "emptyDescription": "预约一项服务即可开始赚取忠诚度积分。",
+      "goToLoyalty": "前往忠诚度页面",
+      "columns": {
+        "activity": "活动",
+        "date": "日期",
+        "points": "积分",
+        "balanceAfter": "变动后余额"
+      },
+      "itemLabel": "条记录"
+    },
+    "invoicesSection": {
+      "totalInvoices": "发票总数",
+      "totalInvoicesHint": "全部时间",
+      "paid": "已付款",
+      "paidHint": "已完成",
+      "outstanding": "未结清",
+      "outstandingHint": "等待付款",
+      "searchPlaceholder": "搜索发票...",
+      "statusPlaceholder": "状态",
+      "allStatuses": "所有状态",
+      "issued": "已开具",
+      "paidStatus": "已付款",
+      "emptyMatchingTitle": "没有匹配的发票",
+      "emptyMatchingDescription": "请尝试调整搜索条件或筛选条件。",
+      "clearFilters": "清除筛选条件",
+      "emptyTitle": "暂无发票",
+      "emptyDescription": "预约完成并确认后即会开具发票。",
+      "goToInvoices": "前往发票页面",
+      "columns": {
+        "invoiceNumber": "发票号",
+        "booking": "预约",
+        "date": "日期",
+        "status": "状态",
+        "amount": "金额"
+      },
+      "itemLabel": "张发票"
+    }
+  }
+}

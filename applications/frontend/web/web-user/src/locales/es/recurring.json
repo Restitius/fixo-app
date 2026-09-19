@@ -1,0 +1,101 @@
+{
+  "loading": "Cargando…",
+  "page": {
+    "title": "Servicios Recurrentes",
+    "subtitle": "Configura reservas recurrentes y nosotros nos encargamos del calendario"
+  },
+  "metrics": {
+    "total": {
+      "label": "Total de Suscripciones",
+      "hint": "En todos los servicios"
+    },
+    "active": {
+      "label": "Activas",
+      "hint_one": "{{count}} plan en curso",
+      "hint_other": "{{count}} planes en curso"
+    },
+    "paused": {
+      "label": "Pausadas",
+      "hint_one": "{{count}} plan en pausa",
+      "hint_other": "{{count}} planes en pausa"
+    }
+  },
+  "frequency": {
+    "WEEKLY": "Semanal",
+    "BIWEEKLY": "Cada 2 semanas",
+    "MONTHLY": "Mensual",
+    "QUARTERLY": "Trimestral"
+  },
+  "status": {
+    "ACTIVE": "Activa",
+    "PAUSED": "Pausada",
+    "CANCELLED": "Cancelada"
+  },
+  "timeWindow": {
+    "MORNING": "Mañana",
+    "AFTERNOON": "Tarde",
+    "EVENING": "Noche"
+  },
+  "newSubscription": "Nueva Suscripción",
+  "searchPlaceholder": "Buscar por servicio...",
+  "filterStatus": "Estado",
+  "filterAllStatuses": "Todos los estados",
+  "columns": {
+    "service": "Servicio",
+    "frequency": "Frecuencia",
+    "nextRun": "Próxima Fecha",
+    "details": "Detalles",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "noneSet": "—",
+  "pause": "Pausar",
+  "resume": "Reanudar",
+  "cancelPlan": "Cancelar",
+  "pausedToast": "Suscripción pausada",
+  "resumedToast": "Suscripción reanudada",
+  "cancelledToast": "Suscripción cancelada",
+  "itemLabel_one": "suscripción",
+  "itemLabel_other": "suscripciones",
+  "empty": {
+    "title": "Aún no tienes suscripciones recurrentes",
+    "description": "Configura una reserva recurrente, como una limpieza cada 2 semanas, y nosotros nos encargamos del calendario.",
+    "action": "Nueva Suscripción"
+  },
+  "emptyFiltered": {
+    "title": "No hay suscripciones coincidentes",
+    "description": "Prueba con otro término de búsqueda o filtro de estado.",
+    "action": "Borrar filtros"
+  },
+  "cancelDialog": {
+    "title": "¿Cancelar esta suscripción?",
+    "description": "Esto detendrá las próximas reservas de {{service}}. Esta acción no se puede deshacer.",
+    "keep": "Conservarla",
+    "confirm": "Cancelar suscripción"
+  },
+  "dialog": {
+    "title": "Nueva Suscripción",
+    "subtitle": "Configura una reserva recurrente con un calendario que te funcione.",
+    "categoryLabel": "Categoría",
+    "categoryPlaceholder": "Selecciona una categoría",
+    "serviceLabel": "Servicio",
+    "servicePlaceholder": "Selecciona un servicio",
+    "servicePlaceholderNoCategory": "Elige primero una categoría",
+    "addressLabel": "Dirección",
+    "addressPlaceholder": "Selecciona una dirección",
+    "addressNone": "Sin dirección específica",
+    "frequencyLabel": "Frecuencia",
+    "nextRunDateLabel": "Fecha de la próxima ejecución",
+    "nextRunDateHint": "Opcional — déjalo en blanco para que el proveedor programe la primera visita",
+    "timeWindowLabel": "Horario preferido",
+    "timeWindowNone": "Cualquier horario",
+    "instructionsLabel": "Instrucciones",
+    "instructionsPlaceholder": "p. ej. Usa la puerta trasera, concéntrate en la cocina y los baños",
+    "instructionsHint": "{{count}}/500 caracteres",
+    "cancel": "Cancelar",
+    "create": "Crear Suscripción",
+    "creating": "Creando…",
+    "selectServiceError": "Selecciona un servicio para continuar",
+    "createdToast": "Suscripción creada"
+  }
+}

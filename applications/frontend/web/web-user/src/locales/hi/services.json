@@ -1,0 +1,183 @@
+{
+  "common": {
+    "loading": "लोड हो रहा है…",
+    "close": "बंद करें",
+    "bookNow": "अभी बुक करें",
+    "topRated": "सर्वोच्च रेटेड",
+    "reviewsCount_one": "{{formatted}} समीक्षा",
+    "reviewsCount_other": "{{formatted}} समीक्षाएं",
+    "jobsDoneCount_one": "{{formatted}} काम पूरा हुआ",
+    "jobsDoneCount_other": "{{formatted}} काम पूरे हुए",
+    "toast": {
+      "savedToBookmarks": "बुकमार्क में सहेजा गया",
+      "removedFromBookmarks": "बुकमार्क से हटाया गया"
+    }
+  },
+  "services": {
+    "page": {
+      "title": "सेवाएं ब्राउज़ करें",
+      "subtitle": "अपने घर या ऑफिस के लिए सही सेवा खोजें"
+    },
+    "metrics": {
+      "availableServices": { "label": "उपलब्ध सेवाएं", "hint": "सभी श्रेणियों में" },
+      "averageRating": { "label": "औसत रेटिंग", "hint": "वास्तविक प्रदाता रेटिंग से" },
+      "trustedProviders": { "label": "विश्वसनीय प्रदाता", "hint": "सभी श्रेणियों में" },
+      "emergencyReady": { "label": "आपातकाल के लिए तैयार", "hint": "सूचीबद्ध आपातकालीन सेवाएं" }
+    },
+    "searchPlaceholder": "सेवाएं खोजें (जैसे प्लंबिंग, इलेक्ट्रिकल)...",
+    "sort": {
+      "popular": "लोकप्रिय",
+      "topRated": "सर्वोच्च रेटेड",
+      "az": "A–Z"
+    },
+    "emptyState": {
+      "title": "कोई सेवा नहीं मिली",
+      "description": "हमें \"{{query}}\" से मेल खाती कोई सेवा नहीं मिली। कोई दूसरा कीवर्ड आज़माएं।",
+      "action": "खोज साफ़ करें"
+    },
+    "fromPrice": "{{price}} से शुरू",
+    "askProvider": "प्रदाता से पूछें",
+    "jobsDoneCount_one": "{{formatted}} काम पूरा हुआ",
+    "jobsDoneCount_other": "{{formatted}} काम पूरे हुए",
+    "serviceCount_one": "{{count}} सेवा",
+    "serviceCount_other": "{{count}} सेवाएं",
+    "findProviders": "प्रदाता खोजें",
+    "popularCategories": "लोकप्रिय श्रेणियां",
+    "providerCount_one": "{{count}} प्रदाता",
+    "providerCount_other": "{{count}} प्रदाता",
+    "quickMatch": {
+      "title": "त्वरित सेवा मिलान",
+      "description": "हमें बताएं आपको क्या चाहिए, हम आपको सर्वश्रेष्ठ प्रदाताओं से मिलाएंगे।",
+      "cta": "अभी मिलान पाएं"
+    },
+    "dialog": {
+      "title": "सेवा विवरण",
+      "jobsCompleted_one": "{{formatted}} काम पूरा हुआ",
+      "jobsCompleted_other": "{{formatted}} काम पूरे हुए",
+      "startingFrom": "शुरुआती कीमत",
+      "providersAvailable": "उपलब्ध प्रदाता",
+      "whatsIncluded": "इसमें क्या शामिल है",
+      "noServicesYet": "इस श्रेणी की वास्तविक सेवाएं यहां दिखाई देंगी।",
+      "priceRange": "औसत मूल्य सीमा",
+      "priceFrom": "{{price}}+",
+      "varies": "अलग-अलग हो सकता है",
+      "priceVariesNote": "कीमत कार्य की जटिलता और आवश्यक सामग्री के अनुसार बदलती है।",
+      "whyChooseFixo": "ग्राहक FIXO क्यों चुनते हैं",
+      "reasons": {
+        "skilled": "कुशल और अनुभवी प्रदाता",
+        "quickResponse": "त्वरित प्रतिक्रिया और भरोसेमंद सेवा",
+        "qualityWork": "वास्तविक समीक्षाओं द्वारा समर्थित गुणवत्तापूर्ण कार्य",
+        "transparentPricing": "पारदर्शी, पहले से बताई गई कीमत"
+      },
+      "features": {
+        "realReviews": { "title": "वास्तविक समीक्षाएं", "hint": "असली ग्राहकों से" },
+        "upfrontPricing": { "title": "पारदर्शी मूल्य निर्धारण", "hint": "कोई छिपा हुआ शुल्क नहीं" },
+        "onTimeService": { "title": "समय पर सेवा", "hint": "आपके समय का सम्मान" },
+        "providersReadyCount_one": "{{count}} प्रदाता",
+        "providersReadyCount_other": "{{count}} प्रदाता",
+        "readyToHelp": "मदद के लिए तैयार"
+      }
+    }
+  },
+  "providers": {
+    "pageTitle": "प्रदाता खोजें",
+    "pageTitleWithCategory": "{{category}} प्रदाता",
+    "subtitle": "अपनी सेवा के लिए एक विश्वसनीय पेशेवर चुनें",
+    "backToServices": "सेवाओं पर वापस जाएं",
+    "thisService": "इस सेवा",
+    "noCategory": {
+      "title": "पहले एक सेवा चुनें",
+      "description": "वास्तविक प्रदाताओं को देखने के लिए एक सेवा श्रेणी चुनें जो इसे प्रदान करते हैं।",
+      "action": "सेवाएं ब्राउज़ करें"
+    },
+    "metrics": {
+      "providersFound": { "label": "मिले प्रदाता", "hint": "इस श्रेणी से मेल खाते हुए" },
+      "averageRating": {
+        "label": "औसत रेटिंग",
+        "hint_one": "{{formatted}} समीक्षा के आधार पर",
+        "hint_other": "{{formatted}} समीक्षाओं के आधार पर"
+      },
+      "totalReviews": { "label": "कुल समीक्षाएं", "hint": "इन प्रदाताओं में" },
+      "startingFrom": { "label": "शुरुआती कीमत", "hint": "प्रतिस्पर्धी मूल्य" }
+    },
+    "searchPlaceholder": "प्रदाता खोजें...",
+    "allLocations": "सभी स्थान",
+    "anyRating": "कोई भी रेटिंग",
+    "sort": {
+      "recommended": "अनुशंसित",
+      "topRated": "सर्वोच्च रेटेड",
+      "lowestPrice": "सबसे कम कीमत",
+      "mostJobs": "सबसे अधिक काम"
+    },
+    "noResults": {
+      "title": "अभी कोई {{category}} प्रदाता नहीं",
+      "description": "अभी आपके फ़िल्टर से मेल खाता कोई नहीं है। अपनी खोज को व्यापक बनाने का प्रयास करें।",
+      "action": "फ़िल्टर साफ़ करें"
+    },
+    "startingFromPrice": "{{price}} से शुरू",
+    "removeBookmark": "बुकमार्क हटाएं",
+    "saveBookmark": "बुकमार्क सहेजें",
+    "viewProfile": "प्रोफ़ाइल देखें",
+    "serviceArea": {
+      "title": "सेवा क्षेत्र",
+      "empty": "इन प्रदाताओं के लिए अभी तक कोई स्थान डेटा नहीं है।"
+    },
+    "recommendation": {
+      "title": "हमारी सिफारिश",
+      "description": "इन प्रदाताओं को {{category}} के लिए वास्तविक ग्राहक रेटिंग के आधार पर रैंक किया गया है।",
+      "items": {
+        "reviews": "असली ग्राहकों से असली समीक्षाएं",
+        "pricing": "प्रति कार्य पारदर्शी मूल्य निर्धारण",
+        "security": "सुरक्षित बुकिंग और भुगतान",
+        "support": "कुछ गलत होने पर सहायता उपलब्ध"
+      }
+    },
+    "dialog": {
+      "title": "प्रदाता प्रोफ़ाइल",
+      "activeSince": "सक्रिय है इससे",
+      "completedJobs": "पूर्ण किए गए काम",
+      "servicesOffered": "प्रदान की गई सेवाएं",
+      "avgPrice": "औसत मूल्य",
+      "servicesPricing": "सेवाएं और मूल्य",
+      "allPricesInTZS": "सभी कीमतें TZS में",
+      "noServices": "अभी तक कोई सेवा सूचीबद्ध नहीं है।",
+      "localFallback": "स्थानीय",
+      "features": {
+        "transparentPricing": { "title": "पारदर्शी मूल्य निर्धारण", "hint": "कोई छिपा हुआ शुल्क नहीं" },
+        "realReviewsCount_one": "{{formatted}} वास्तविक समीक्षा",
+        "realReviewsCount_other": "{{formatted}} वास्तविक समीक्षाएं",
+        "realReviews": { "hint": "असली ग्राहकों से" },
+        "coverageTitle": "{{city}} कवरेज",
+        "coverage": { "hint": "आपके पास एक स्थानीय विशेषज्ञ" },
+        "securePayments": { "title": "सुरक्षित भुगतान", "hint": "सुरक्षित रूप से संसाधित" }
+      },
+      "saved": "सहेजा गया",
+      "save": "सहेजें",
+      "messageUnavailable": "जैसे ही आपकी इस प्रदाता के साथ सक्रिय बुकिंग होगी, सीधी मैसेजिंग खुल जाएगी।",
+      "messageProvider": "प्रदाता को संदेश भेजें"
+    }
+  },
+  "bookmarks": {
+    "pageTitle": "बुकमार्क",
+    "subtitle": "आपके सहेजे गए पसंदीदा प्रदाता",
+    "empty": {
+      "title": "अभी तक कोई बुकमार्क नहीं",
+      "description": "अपनी पसंद के प्रदाताओं को उनकी प्रोफ़ाइल से सहेजें, वे बाद में त्वरित पहुंच के लिए यहां दिखाई देंगे।",
+      "action": "प्रदाता ब्राउज़ करें"
+    },
+    "remove": "हटाएं"
+  },
+  "search": {
+    "pageTitle": "खोजें",
+    "subtitle": "हमारी वास्तविक सूची में एक सेवा खोजें",
+    "placeholder": "सेवाएं खोजें, जैसे प्लंबिंग, सफाई, AC मरम्मत...",
+    "searchButton": "खोजें",
+    "prompt": "एक कीवर्ड टाइप करें और Enter या खोजें दबाएं।",
+    "empty": {
+      "title": "कोई परिणाम नहीं मिला",
+      "description": "\"{{query}}\" से कुछ भी मेल नहीं खाता। कोई दूसरा कीवर्ड आज़माएं।"
+    },
+    "resultsCount_one": "\"{{query}}\" के लिए {{count}} परिणाम",
+    "resultsCount_other": "\"{{query}}\" के लिए {{count}} परिणाम"
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "loading": "Inapakia…",
+  "help": {
+    "page": {
+      "title": "Msaada",
+      "subtitle": "Tiketi za msaada na kituo cha usaidizi"
+    },
+    "metrics": {
+      "openTickets": "Tiketi Wazi",
+      "viewAllOpen": "Ona zote wazi",
+      "resolved": "Zilizotatuliwa",
+      "viewResolved": "Ona zilizotatuliwa",
+      "avgResponse": "Muda wa Wastani wa Kujibu",
+      "thisMonth": "Mwezi huu",
+      "unreadReplies": "Majibu Ambayo Hujasoma",
+      "viewReplies": "Ona majibu",
+      "durationMinutes": "dakika {{count}}",
+      "durationHours": "saa {{count}}",
+      "durationHoursMinutes": "saa {{hours}} dakika {{minutes}}"
+    },
+    "search": {
+      "placeholder": "Tafuta tiketi..."
+    },
+    "filters": {
+      "allStatuses": "Hali Zote",
+      "open": "Wazi",
+      "resolved": "Imetatuliwa",
+      "closed": "Imefungwa",
+      "allCategories": "Jamii Zote"
+    },
+    "newTicket": "Tiketi Mpya",
+    "empty": {
+      "noMatchingTitle": "Hakuna tiketi zinazolingana",
+      "noMatchingDescription": "Jaribu kurekebisha utafutaji au vichujio vyako.",
+      "clearFilters": "Futa Vichujio",
+      "noTicketsTitle": "Hakuna tiketi za msaada",
+      "noTicketsDescription": "Unahitaji msaada kuhusu uwekaji, malipo au akaunti yako? Fungua tiketi na tutakujibu."
+    },
+    "table": {
+      "ticketNumber": "Namba ya Tiketi",
+      "subject": "Mada",
+      "category": "Jamii",
+      "priority": "Kipaumbele",
+      "status": "Hali",
+      "updated": "Ilisasishwa",
+      "messages": "Ujumbe",
+      "showing": "Inaonyesha {{from}} hadi {{to}} kati ya tiketi {{total}}"
+    },
+    "sidebar": {
+      "needHelpTitle": "Unahitaji msaada?",
+      "needHelpDescription": "Pata majibu ya haraka au wasiliana na timu yetu ya msaada.",
+      "faqShortcuts": "Njia za haraka za Maswali",
+      "faqs": {
+        "createTicket": "Jinsi ya kuunda tiketi",
+        "ticketStatus": "Kuelewa hali ya tiketi",
+        "refunds": "Marejesho na ughairishaji",
+        "paymentBilling": "Msaada wa malipo na billing"
+      },
+      "faqToasts": {
+        "createTicket": "Bofya \"Tiketi Mpya\" hapo juu, jaza mada na ujumbe, kisha tuma.",
+        "ticketStatus": "Wazi = inasubiri jibu. Imetatuliwa = timu inaona tatizo limeshughulikiwa. Imefungwa = mazungumzo yamehifadhiwa."
+      },
+      "stillNeedHelpTitle": "Bado unahitaji msaada?",
+      "stillNeedHelpDescription": "Timu yetu ya msaada ipo kwa ajili yako.",
+      "contactSupport": "Wasiliana na Msaada"
+    },
+    "detail": {
+      "category": "Jamii",
+      "priority": "Kipaumbele",
+      "status": "Hali",
+      "lastUpdated": "Ilisasishwa mwisho",
+      "relatedTo": "Inahusiana na",
+      "bookingFallback": "Uwekaji",
+      "provider": "Mtoa huduma",
+      "conversation": "Mazungumzo",
+      "loadingMessages": "Inapakia…",
+      "noMessages": "Bado hakuna ujumbe.",
+      "timeline": {
+        "title": "Ratiba ya Tiketi",
+        "ticketCreated": "Tiketi imeundwa",
+        "supportReplied": "Msaada umejibu",
+        "youReplied": "Umejibu",
+        "awaitingCustomer": "Inasubiri mteja",
+        "respondToContinue": "Jibu ili kuendelea",
+        "resolved": "Imetatuliwa",
+        "pending": "Inasubiri"
+      },
+      "replyToCustomer": "Jibu mteja",
+      "attachmentsNotAvailable": "Viambatisho bado havipatikani kwenye majibu ya tiketi.",
+      "replyPlaceholder": "Andika ujumbe wako...",
+      "closedNotice": "Tiketi hii imefungwa. Fungua tiketi mpya ikiwa unahitaji msaada zaidi."
+    },
+    "dialog": {
+      "title": "Tiketi Mpya ya Msaada",
+      "subtitle": "Tuambie ni nini kilichoharibika na timu yetu itakusaidia.",
+      "subjectLabel": "Mada *",
+      "subjectPlaceholder": "Eleza kwa ufupi tatizo lako",
+      "bookingReferenceLabel": "Namba ya rejeleo la uwekaji",
+      "bookingReferencePlaceholder": "mfano BK-123456",
+      "optional": "Si lazima",
+      "categoryLabel": "Jamii *",
+      "priorityLabel": "Kipaumbele *",
+      "messageLabel": "Ujumbe *",
+      "messagePlaceholder": "Toa maelezo mengi iwezekanavyo...",
+      "attachmentLabel": "Kiambatisho (si lazima)",
+      "filesSelected_one": "faili {{count}} limechaguliwa",
+      "filesSelected_other": "faili {{count}} zimechaguliwa",
+      "dragDropPrefix": "Buruta na uachie faili hapa au",
+      "browse": "vinjari",
+      "maxFileSize": "MB 5 kwa juu kwa kila faili (PDF, JPG, PNG)",
+      "contactMethodLabel": "Ungependa tuwasiliane nawe vipi? *",
+      "contactEmailTitle": "Barua pepe",
+      "contactEmailHint": "Tutajibu kwenye barua pepe yako",
+      "contactInAppTitle": "Ndani ya programu",
+      "contactInAppHint": "Tutajibu kwenye kikasha chako",
+      "responseTimeNote": "Timu yetu kawaida hujibu ndani ya saa 1-2 za kazi.",
+      "cancel": "Ghairi",
+      "submit": "Wasilisha Tiketi",
+      "submitting": "Inawasilisha...",
+      "subjectTooShort": "Mada inapaswa kuwa na angalau herufi 3",
+      "describeIssue": "Eleza tatizo kabla ya kuwasilisha",
+      "attachmentsNotAvailable": "Viambatisho bado havipatikani — tiketi na ujumbe wako vimehifadhiwa.",
+      "ticketOpened": "Tiketi ya msaada imefunguliwa"
+    }
+  },
+  "feedback": {
+    "page": {
+      "title": "Maoni",
+      "subtitle": "Kadiria watoa huduma kwa kazi zako zilizokamilika"
+    },
+    "metrics": {
+      "totalReviews": "Jumla ya Maoni",
+      "allTimeReviews": "Maoni ya wakati wote",
+      "pendingReviews": "Maoni Yanayosubiri",
+      "bookingsToRate": "Uwekaji wa kukadiria",
+      "averageRating": "Kiwango cha Wastani",
+      "acrossAllProviders": "Kwa watoa huduma wote",
+      "providersRated": "Watoa Huduma Waliokadiriwa",
+      "distinctProviders": "Watoa huduma tofauti"
+    },
+    "tabs": {
+      "all": "Zote",
+      "pending": "Zinazosubiri",
+      "submitted": "Zilizowasilishwa"
+    },
+    "search": {
+      "placeholder": "Tafuta uwekaji, huduma au watoa huduma..."
+    },
+    "sort": {
+      "oldestFirst": "Za zamani kwanza",
+      "newestFirst": "Za hivi karibuni kwanza"
+    },
+    "empty": {
+      "pendingTitle": "Hakuna kinachosubiri",
+      "submittedTitle": "Bado hakuna maoni",
+      "allTitle": "Bado hakuna cha kukadiria",
+      "description": "Mara uwekaji utakapokamilika na kufungwa, utaweza kumkadiria mtoa huduma wako hapa.",
+      "viewMyBookings": "Ona Uwekaji Wangu"
+    },
+    "serviceFallback": "Huduma",
+    "providerFallback": "Mtoa huduma",
+    "row": {
+      "submitted": "Imewasilishwa",
+      "rateNow": "Kadiria sasa"
+    },
+    "recent": {
+      "title": "Maoni ya hivi karibuni",
+      "viewAll": "Ona zote",
+      "emptyDescription": "Maoni yako yaliyowasilishwa yataonekana hapa."
+    },
+    "starAriaLabel_one": "nyota {{count}}",
+    "starAriaLabel_other": "nyota {{count}}",
+    "detail": {
+      "title": "Maelezo ya maoni",
+      "yourReview": "Maoni yako",
+      "noWrittenFeedback": "Hakuna maoni yaliyoandikwa kwa uwekaji huu.",
+      "bookingInformation": "Taarifa za uwekaji",
+      "bookingId": "Namba ya Uwekaji",
+      "service": "Huduma",
+      "dateTime": "Tarehe na Muda",
+      "amountPaid": "Kiasi Kilicholipwa",
+      "editReview": "Hariri maoni",
+      "viewBooking": "Ona uwekaji"
+    },
+    "aspects": {
+      "quality": "Ubora",
+      "punctuality": "Wakati",
+      "communication": "Mawasiliano",
+      "value": "Thamani"
+    },
+    "highlightTags": {
+      "professional": "Kitaalamu",
+      "onTime": "Kwa wakati",
+      "cleanWork": "Kazi safi",
+      "friendly": "Mkarimu"
+    },
+    "dialog": {
+      "title": "Mkadirie mtoa huduma wako",
+      "subtitle": "Shiriki uzoefu wako kwa uwekaji huu uliokamilika.",
+      "bookingCode": "Namba ya uwekaji",
+      "serviceDate": "Tarehe ya huduma",
+      "totalAmount": "Jumla ya kiasi",
+      "overallQuestion": "Ungekadiria vipi uzoefu wako kwa ujumla?",
+      "tapToRate": "Gusa nyota kukadiria",
+      "rateAspects": "Kadiria vipengele maalum",
+      "shareFeedback": "Shiriki maoni yako",
+      "feedbackPlaceholder": "Tuambie kuhusu uzoefu wako...",
+      "whatStoodOut": "Ni nini kilichokuvutia zaidi?",
+      "optional": "Si lazima",
+      "addPhotos": "Ongeza picha",
+      "uploadUpTo5": "Pakia picha hadi 5 za kazi",
+      "photosSelected_one": "{{count}} imechaguliwa",
+      "photosSelected_other": "{{count}} zimechaguliwa",
+      "chooseFiles": "Chagua faili",
+      "cancel": "Ghairi",
+      "submit": "Wasilisha maoni",
+      "submitting": "Inawasilisha...",
+      "pickStarRating": "Chagua kiwango cha nyota kwanza",
+      "photoAttachmentsNotAvailable": "Picha za kiambatisho bado hazipatikani — kiwango na maoni yako vimehifadhiwa.",
+      "thanksForFeedback": "Asante kwa maoni yako!"
+    }
+  }
+}
