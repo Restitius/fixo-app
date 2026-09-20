@@ -82,3 +82,7 @@ gitleaks-report.json
 semgrep-results.sarif
 trivy-results.sarif
 
+# --- Local recovery backups and tooling config — never part of the repo -----
+.git-history-backup/
+.claude/
+
