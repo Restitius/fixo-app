@@ -1,0 +1,92 @@
+{
+  "loading": "Inapakia…",
+  "page": {
+    "title": "Matengenezo",
+    "subtitle": "Mipango ya matengenezo ya mara kwa mara kwa vifaa vyako vya nyumbani"
+  },
+  "metrics": {
+    "total": "Jumla ya Mipango",
+    "totalHint": "Wakati wote",
+    "active": "Mipango Inayoendelea",
+    "activeHint": "Iliyoratibiwa kwa sasa",
+    "dueSoon": "Inakaribia Kufika",
+    "dueSoonHint_one": "Ndani ya siku {{count}}",
+    "dueSoonHint_other": "Ndani ya siku {{count}}",
+    "overdue": "Zilizochelewa",
+    "overdueHint": "Zinahitaji hatua"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Tafuta kwa kifaa au huduma...",
+    "statusPlaceholder": "Hali",
+    "allStatuses": "Hali Zote",
+    "addPlan": "Ongeza Mpango"
+  },
+  "table": {
+    "asset": "Kifaa",
+    "service": "Huduma",
+    "interval": "Muda",
+    "nextDue": "Tarehe Ijayo",
+    "status": "Hali",
+    "actions": "Vitendo",
+    "intervalValue_one": "Kila siku {{count}}",
+    "intervalValue_other": "Kila siku {{count}}"
+  },
+  "statuses": {
+    "ACTIVE": "Inaendelea",
+    "OVERDUE": "Imechelewa",
+    "CANCELLED": "Imeghairiwa"
+  },
+  "assetFallback": "Kifaa",
+  "serviceFallback": "Huduma",
+  "actions": {
+    "markDone": "Weka Imekamilika",
+    "markingDone": "Inaweka…",
+    "cancel": "Ghairi",
+    "cancelling": "Inaghairi…",
+    "cancelledNote": "Mpango umeghairiwa",
+    "markedDone": "\"{{asset}}\" imewekwa kama imehudumiwa"
+  },
+  "cancelConfirm": {
+    "title": "Ughairi mpango huu wa matengenezo?",
+    "description": "Hatua hii itasitisha vikumbusho vijavyo kwa \"{{asset}}\" — {{service}}. Haiwezi kutenduliwa.",
+    "keep": "Endelea na Mpango",
+    "confirm": "Ghairi Mpango",
+    "cancelled": "Mpango wa matengenezo umeghairiwa"
+  },
+  "itemLabel": "mipango ya matengenezo",
+  "empty": {
+    "title": "Hakuna mipango ya matengenezo bado",
+    "description": "Weka mpango wa mara kwa mara ili tukukumbushe kabla kifaa hakijachelewa kuhudumiwa.",
+    "action": "Ongeza Mpango",
+    "filteredTitle": "Hakuna mipango inayolingana",
+    "filteredDescription": "Jaribu neno lingine la utafutaji au hali tofauti.",
+    "clearFilters": "Futa Vichujio"
+  },
+  "addDialog": {
+    "title": "Ongeza Mpango wa Matengenezo",
+    "assetLabel": "Kifaa",
+    "assetPlaceholder": "Chagua kifaa",
+    "noAssetsHint": "Huna vifaa bado.",
+    "noAssetsCta": "Ongeza kifaa",
+    "categoryLabel": "Jamii",
+    "categoryPlaceholder": "Chagua jamii",
+    "serviceLabel": "Huduma",
+    "servicePlaceholder": "Chagua huduma",
+    "loadingServices": "Inapakia huduma…",
+    "noServicesFound": "Hakuna huduma zilizopatikana katika jamii hii",
+    "intervalLabel": "Rudia kila (siku)",
+    "intervalHint": "Kati ya siku 1 na 1095",
+    "nextDueLabel": "Tarehe ijayo (hiari)",
+    "nextDueHint_one": "Itakuwa siku {{count}} kutoka leo ikiachwa wazi",
+    "nextDueHint_other": "Itakuwa siku {{count}} kutoka leo ikiachwa wazi",
+    "notesLabel": "Maelezo (hiari)",
+    "notesPlaceholder": "Chochote muhimu kuhusu mpango huu",
+    "cancel": "Ghairi",
+    "save": "Ongeza Mpango",
+    "saving": "Inaongeza…",
+    "selectAsset": "Chagua kifaa kwanza.",
+    "selectService": "Chagua huduma kwanza.",
+    "intervalRange": "Muda lazima uwe kati ya siku 1 na 1095.",
+    "created": "Mpango wa matengenezo umeongezwa"
+  }
+}

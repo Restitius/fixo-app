@@ -1,0 +1,251 @@
+{
+  "invoices": {
+    "loading": "Loading…",
+    "page": {
+      "title": "Invoices",
+      "subtitle": "Billing records for your completed jobs"
+    },
+    "metrics": {
+      "totalInvoices": "Total Invoices",
+      "allTime": "All time",
+      "paidInvoices": "Paid Invoices",
+      "completed": "Completed",
+      "pending": "Pending",
+      "awaitingPayment": "Awaiting payment",
+      "totalBilled": "Total Billed",
+      "acrossAllInvoices": "Across all invoices"
+    },
+    "recentInvoices": "Recent invoices",
+    "tabs": {
+      "all": "All",
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue"
+    },
+    "downloadAll": "Download all",
+    "empty": {
+      "titleAll": "No invoices yet",
+      "titleFilteredPaid": "No paid invoices",
+      "titleFilteredPending": "No pending invoices",
+      "titleFilteredOverdue": "No overdue invoices",
+      "descriptionAll": "An invoice is issued once a booking is completed and confirmed. Check back after your next job.",
+      "descriptionFiltered": "Try a different tab to see other invoices.",
+      "viewMyBookings": "View My Bookings"
+    },
+    "table": {
+      "service": "Service",
+      "invoiceNumber": "Invoice #",
+      "provider": "Provider",
+      "issueDate": "Issue Date",
+      "paymentMethod": "Payment Method",
+      "status": "Status",
+      "amount": "Amount"
+    },
+    "serviceFallback": "Service",
+    "pagination": {
+      "showing_one": "Showing {{from}} to {{to}} of {{count}} invoice",
+      "showing_other": "Showing {{from}} to {{to}} of {{count}} invoices"
+    },
+    "fields": {
+      "invoiceNumber": "Invoice number",
+      "bookingReference": "Booking reference",
+      "provider": "Provider",
+      "category": "Category",
+      "invoiceDate": "Invoice date",
+      "dueDate": "Due date",
+      "location": "Location",
+      "paymentMethod": "Payment method",
+      "customer": "Customer"
+    },
+    "billing": {
+      "subtotal": "Subtotal",
+      "platformFee": "Platform fee",
+      "totalAmount": "Total amount",
+      "serviceCharge": "Service charge"
+    },
+    "panel": {
+      "title": "Invoice details",
+      "progressTimeline": "Progress timeline",
+      "downloadInvoice": "Download invoice",
+      "contactSupport": "Contact support",
+      "payNotWiredToast": "Invoice payments aren't wired to a live gateway yet — head to Payments to manage funding.",
+      "payNow": "Pay now"
+    },
+    "timeline": {
+      "invoiceIssued": "Invoice Issued",
+      "paymentPending": "Payment Pending",
+      "reminderScheduled": "Reminder Scheduled",
+      "issued": "Issued",
+      "paid": "Paid",
+      "downloaded": "Downloaded"
+    },
+    "dialog": {
+      "receiptCopied": "Receipt summary copied to clipboard",
+      "billingBreakdown": "Billing breakdown",
+      "receiptNote": "This invoice is available as a downloadable receipt for your completed service.",
+      "close": "Close",
+      "shareReceipt": "Share receipt",
+      "downloadPdf": "Download PDF",
+      "progress": "Progress",
+      "shareText": "Invoice {{invoiceNumber}} — {{amount}} paid to {{provider}}"
+    }
+  },
+  "payments": {
+    "loading": "Loading…",
+    "page": {
+      "title": "Payments",
+      "subtitle": "Manage saved methods and track charges"
+    },
+    "toast": {
+      "defaultUpdated": "Default payment method updated",
+      "methodRemoved": "Payment method removed"
+    },
+    "metrics": {
+      "savedMethods": "Saved Methods",
+      "savedMethodsHint": "{{default}} default · {{backup}} backup",
+      "noMethodsYet": "No methods yet",
+      "thisMonthCharges": "This Month Charges",
+      "acrossBookings_one": "Across {{count}} booking",
+      "acrossBookings_other": "Across {{count}} bookings",
+      "pendingAuthorizations": "Pending Authorizations",
+      "authorizationCount_one": "{{count}} authorization",
+      "authorizationCount_other": "{{count}} authorizations"
+    },
+    "methods": {
+      "title": "Payment methods",
+      "subtitle": "Saved methods for faster, secure payments",
+      "addMethod": "Add Method",
+      "searchPlaceholder": "Search payment methods...",
+      "filterType": "Type",
+      "filterAllTypes": "All Types",
+      "filterCard": "Card",
+      "filterMobileMoney": "Mobile Money",
+      "filterBank": "Bank",
+      "emptyFilteredTitle": "No matching methods",
+      "emptyFilteredDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "emptyTitle": "No payment methods yet",
+      "emptyDescription": "Add a card, mobile money or bank account to speed up checkout.",
+      "addPaymentMethod": "Add Payment Method",
+      "columns": {
+        "method": "Method",
+        "type": "Type",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "expires": "Expires {{date}}",
+      "default": "Default",
+      "backup": "Backup",
+      "setAsDefault": "Set as default",
+      "remove": "Remove",
+      "secureFooter": "Your payment details are encrypted and only masked information is stored."
+    },
+    "charges": {
+      "title": "Recent charges",
+      "subtitle": "Latest charges and authorizations",
+      "searchPlaceholder": "Search charges...",
+      "filterStatus": "Status",
+      "filterAllStatuses": "All Statuses",
+      "filterAuthorized": "Authorized",
+      "filterPaid": "Paid",
+      "filterClosed": "Closed",
+      "emptyFilteredTitle": "No matching charges",
+      "emptyFilteredDescription": "Try adjusting your search or filters.",
+      "clearFilters": "Clear Filters",
+      "emptyTitle": "No charges yet",
+      "emptyDescription": "Once you complete a booking and authorize payment, it will show up here.",
+      "browseServices": "Browse Services",
+      "columns": {
+        "service": "Service",
+        "bookingId": "Booking ID",
+        "date": "Date",
+        "provider": "Provider",
+        "status": "Status",
+        "amount": "Amount"
+      },
+      "serviceFallback": "Service",
+      "itemLabel": "charges"
+    },
+    "viewFullHistory": "View full payment history in History →",
+    "chargeDetailsTitle": "Charge details",
+    "dialog": {
+      "title": "Add payment method",
+      "tabCard": "Card",
+      "tabMobileMoney": "Mobile Money",
+      "tabBank": "Bank",
+      "errors": {
+        "cardRequired": "Fill in cardholder name, card number and expiry date",
+        "invalidPhone": "Enter a valid phone number",
+        "bankRequired": "Enter bank name and account number"
+      },
+      "methodAdded": "Payment method added",
+      "labels": {
+        "cardholderName": "Cardholder name",
+        "cardNumber": "Card number",
+        "expiryDate": "Expiry date",
+        "cvv": "CVV",
+        "provider": "Provider",
+        "billingPhone": "Billing phone",
+        "bankName": "Bank name",
+        "accountNumber": "Account number"
+      },
+      "placeholders": {
+        "cardholderName": "e.g. Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "MM / YY",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "e.g. CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "Set as default payment method",
+      "secureNote": "Your payment details are encrypted and securely stored.",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "saveMethod": "Save Method"
+    }
+  },
+  "wallet": {
+    "loading": "Loading…",
+    "page": {
+      "title": "Wallet",
+      "subtitle": "Your service wallet and ledger"
+    },
+    "errors": {
+      "positiveAmount": "Enter a positive amount"
+    },
+    "toast": {
+      "credited": "Credited {{amount}}",
+      "debited": "Debited {{amount}}"
+    },
+    "metrics": {
+      "availableBalance": "Available Balance",
+      "rightNow": "Right now",
+      "totalCredited": "Total Credited",
+      "allTime": "All time",
+      "totalDebited": "Total Debited"
+    },
+    "amountLabel": "Amount ({{currency}})",
+    "amountPlaceholder": "e.g. 20000",
+    "creditButton": "Credit",
+    "debitButton": "Debit",
+    "refresh": "Refresh",
+    "searchPlaceholder": "Search transactions...",
+    "filterType": "Type",
+    "filterAllTypes": "All Types",
+    "filterCredit": "Credit",
+    "filterDebit": "Debit",
+    "emptyFilteredTitle": "No matching transactions",
+    "emptyFilteredDescription": "Try adjusting your search or filters.",
+    "clearFilters": "Clear Filters",
+    "emptyTitle": "No transactions yet",
+    "emptyDescription": "Credits, debits and holds on your wallet will show up here.",
+    "columns": {
+      "type": "Type",
+      "date": "Date",
+      "amount": "Amount",
+      "balanceAfter": "Balance After"
+    },
+    "itemLabel": "transactions"
+  }
+}

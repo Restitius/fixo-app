@@ -1,0 +1,103 @@
+# security/semgrep/fixo-security.yml
+#
+# Security (not architecture) rules — run in security.yml. Encodes the
+# credential-handling and signature-verification rules that this session's
+# own work on the SwalaSMS integration and its webhook depended on getting
+# right: raw-body HMAC verification, constant-time comparison, no secret
+# literals, no client-exposed secrets, no sensitive logging.
+rules:
+  - id: fixo-no-secret-literal
+    languages: [python, javascript, typescript]
+    severity: ERROR
+    message: >-
+      Credential-shaped literal in source. Read it from configuration
+      (SecretResolver / os.environ) and store the value in the secret
+      store. A key committed once is compromised — rotate it immediately
+      even if this rule catches it before merge.
+    patterns:
+      - pattern-either:
+          - pattern-regex: swl_live_[A-Za-z0-9]{16,}
+          - pattern-regex: (?i)(api[_-]?key|secret|token)\s*[:=]\s*["\'][A-Za-z0-9/+=_-]{16,}
+    paths:
+      exclude:
+        - "**/.env.example"
+        - "applications/backend/docs/**"
+        - "applications/backend/tests/**"
+        - "security/semgrep/**"
+
+  - id: fixo-no-client-exposed-secret
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: >-
+      Secret-shaped name in a browser-exposed variable. Anything prefixed
+      VITE_ is shipped to every visitor via web-user/web-provider's Vite
+      build. SMS, email and payment calls belong behind the API, through
+      an Integration Manager.
+    patterns:
+      - pattern-regex: (VITE_)[A-Z0-9_]*(SECRET|API_KEY|TOKEN|PASSWORD|WEBHOOK)
+
+  - id: fixo-constant-time-signature-compare
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Signature compared with == or !=, which leaks timing information and
+      allows a signature to be recovered byte by byte. Use
+      hmac.compare_digest — exactly the fix already applied in
+      app/integrations/external/webhooks/router.py's _constant_time_eq.
+    patterns:
+      - pattern-either:
+          - pattern: $A == $B
+          - pattern: $A != $B
+      - metavariable-regex:
+          metavariable: $A
+          regex: (?i).*(signature|hmac|digest|mac|token).*
+    fix: hmac.compare_digest($A, $B)
+
+  - id: fixo-webhook-must-use-raw-body
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Signature verified against parsed or re-serialised JSON. Key order
+      and whitespace change on re-serialisation, so valid deliveries would
+      be rejected — verify against request.body() raw bytes, exactly as
+      app/integrations/external/webhooks/router.py already does.
+    paths:
+      include: ["applications/backend/app/integrations/**"]
+    patterns:
+      - pattern-either:
+          - pattern: hmac.new($K, json.dumps(...).encode(...), ...)
+          - pattern: hmac.new($K, str($PAYLOAD).encode(...), ...)
+
+  - id: fixo-no-sensitive-logging
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Sensitive value written to logs. Log the outbox_id, message uid,
+      booking_id or customer/provider id instead. Phone numbers,
+      signatures, tokens and card data never enter logs — the Swala
+      idempotency-key fix this session exists precisely so notification_id
+      can be logged instead of the phone number.
+    patterns:
+      - pattern-either:
+          - pattern: $LOG.$LEVEL(..., $VAL, ...)
+          - pattern: print(..., $VAL, ...)
+      - metavariable-regex:
+          metavariable: $VAL
+          regex: (?i).*(api_key|secret|signature|otp|card|cvv|msisdn|phone).*
+
+  - id: fixo-sms-key-from-config-only
+    languages: [python]
+    severity: ERROR
+    message: >-
+      The SwalaSMS key must be resolved through SecretResolver inside
+      app/integrations/external/providers/sms/swala.py, never read ad hoc
+      elsewhere in the codebase.
+    paths:
+      include: ["applications/backend/app/**"]
+      exclude: ["applications/backend/app/integrations/**"]
+    patterns:
+      - pattern-either:
+          - pattern: os.environ["SWALA_SMS_API_KEY"]
+          - pattern: os.getenv("SWALA_SMS_API_KEY", ...)
+          - pattern: os.environ["SWALA_SMS_WEBHOOK_SECRET"]
+          - pattern: os.getenv("SWALA_SMS_WEBHOOK_SECRET", ...)

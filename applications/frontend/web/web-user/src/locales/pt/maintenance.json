@@ -1,0 +1,92 @@
+{
+  "loading": "Carregando…",
+  "page": {
+    "title": "Manutenção",
+    "subtitle": "Planos de manutenção recorrentes para os itens da sua casa"
+  },
+  "metrics": {
+    "total": "Total de Planos",
+    "totalHint": "Desde o início",
+    "active": "Planos Ativos",
+    "activeHint": "Atualmente agendados",
+    "dueSoon": "Vencendo em Breve",
+    "dueSoonHint_one": "Em {{count}} dia",
+    "dueSoonHint_other": "Em {{count}} dias",
+    "overdue": "Atrasados",
+    "overdueHint": "Precisam de atenção"
+  },
+  "filterBar": {
+    "searchPlaceholder": "Buscar por item ou serviço...",
+    "statusPlaceholder": "Status",
+    "allStatuses": "Todos os Status",
+    "addPlan": "Adicionar Plano"
+  },
+  "table": {
+    "asset": "Item",
+    "service": "Serviço",
+    "interval": "Intervalo",
+    "nextDue": "Próximo Vencimento",
+    "status": "Status",
+    "actions": "Ações",
+    "intervalValue_one": "A cada {{count}} dia",
+    "intervalValue_other": "A cada {{count}} dias"
+  },
+  "statuses": {
+    "ACTIVE": "Ativo",
+    "OVERDUE": "Atrasado",
+    "CANCELLED": "Cancelado"
+  },
+  "assetFallback": "Item",
+  "serviceFallback": "Serviço",
+  "actions": {
+    "markDone": "Marcar como Feito",
+    "markingDone": "Registrando…",
+    "cancel": "Cancelar",
+    "cancelling": "Cancelando…",
+    "cancelledNote": "Plano cancelado",
+    "markedDone": "\"{{asset}}\" marcado como atendido"
+  },
+  "cancelConfirm": {
+    "title": "Cancelar este plano de manutenção?",
+    "description": "Isso interrompe os próximos lembretes de \"{{asset}}\" — {{service}}. Essa ação não pode ser desfeita.",
+    "keep": "Manter Plano",
+    "confirm": "Cancelar Plano",
+    "cancelled": "Plano de manutenção cancelado"
+  },
+  "itemLabel": "planos de manutenção",
+  "empty": {
+    "title": "Nenhum plano de manutenção ainda",
+    "description": "Configure um plano recorrente para sermos avisados antes que um item fique atrasado na manutenção.",
+    "action": "Adicionar um Plano",
+    "filteredTitle": "Nenhum plano encontrado",
+    "filteredDescription": "Tente outro termo de busca ou status.",
+    "clearFilters": "Limpar Filtros"
+  },
+  "addDialog": {
+    "title": "Adicionar um Plano de Manutenção",
+    "assetLabel": "Item",
+    "assetPlaceholder": "Escolha um item",
+    "noAssetsHint": "Você ainda não tem nenhum item.",
+    "noAssetsCta": "Adicionar um item",
+    "categoryLabel": "Categoria",
+    "categoryPlaceholder": "Escolha uma categoria",
+    "serviceLabel": "Serviço",
+    "servicePlaceholder": "Escolha um serviço",
+    "loadingServices": "Carregando serviços…",
+    "noServicesFound": "Nenhum serviço encontrado nesta categoria",
+    "intervalLabel": "Repetir a cada (dias)",
+    "intervalHint": "Entre 1 e 1095 dias",
+    "nextDueLabel": "Próxima data (opcional)",
+    "nextDueHint_one": "Padrão de {{count}} dia a partir de hoje se deixado em branco",
+    "nextDueHint_other": "Padrão de {{count}} dias a partir de hoje se deixado em branco",
+    "notesLabel": "Observações (opcional)",
+    "notesPlaceholder": "Qualquer coisa importante sobre este plano",
+    "cancel": "Cancelar",
+    "save": "Adicionar Plano",
+    "saving": "Adicionando…",
+    "selectAsset": "Escolha um item primeiro.",
+    "selectService": "Escolha um serviço primeiro.",
+    "intervalRange": "O intervalo deve ser entre 1 e 1095 dias.",
+    "created": "Plano de manutenção adicionado"
+  }
+}

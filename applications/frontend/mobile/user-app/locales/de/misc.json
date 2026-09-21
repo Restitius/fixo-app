@@ -1,0 +1,43 @@
+{
+  "onboarding": {
+    "slide1": "Wir bieten professionellen Service zu einem fairen Preis",
+    "slide2": "Beste Ergebnisse und deine Zufriedenheit haben oberste Priorität",
+    "slide3": "Lass uns großartige Veränderungen in deinem Zuhause vornehmen",
+    "next": "Weiter",
+    "getStarted": "Loslegen"
+  },
+  "bookmarks": {
+    "title": "Meine Favoriten",
+    "emptyTitle": "Noch keine Favoriten",
+    "emptySubtitle": "Gespeicherte Anbieter werden hier angezeigt.",
+    "removeConfirmTitle": "Favorit entfernen?",
+    "removeConfirmBody": "{{name}} wird aus deinen Favoriten entfernt.",
+    "cancel": "Abbrechen",
+    "remove": "Entfernen"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "empty": "Noch keine Benachrichtigungen."
+  },
+  "offers": {
+    "title": "Sonderangebote",
+    "empty": "Derzeit keine aktiven Aktionen.",
+    "discountOff": "{{amount}} RABATT",
+    "codeValidUntil": "Code {{code}} · Gültig bis {{date}}"
+  },
+  "popular": {
+    "title": "Am Beliebtesten",
+    "empty": "Noch keine Anbieter verfügbar."
+  },
+  "search": {
+    "placeholder": "Dienstleistungen suchen...",
+    "hint": "Durchsuche unseren echten Dienstleistungskatalog.",
+    "noResultsTitle": "Keine Ergebnisse gefunden",
+    "noResultsSubtitle": "Versuche ein anderes Stichwort oder passe deine Filter an.",
+    "resultsFor": "{{count}} Ergebnisse für „{{query}}“",
+    "filtersTitle": "Filter",
+    "category": "Kategorie",
+    "all": "Alle",
+    "applyFilters": "Filter Anwenden"
+  }
+}

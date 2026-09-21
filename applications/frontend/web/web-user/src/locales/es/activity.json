@@ -1,0 +1,134 @@
+{
+  "loading": "Cargando…",
+  "page": {
+    "title": "Actividad",
+    "subtitle": "Un registro cronológico de tu recorrido"
+  },
+  "metrics": {
+    "totalEvents": "Total de Eventos",
+    "totalEventsHint": "Toda la actividad registrada",
+    "bookingEvents": "Eventos de Reserva",
+    "bookingEventsHint": "Reservas creadas",
+    "paymentActions": "Acciones de Pago",
+    "paymentActionsHint": "Pagos y autorizaciones",
+    "thisWeek": "Esta Semana",
+    "thisWeekHint": "Eventos esta semana"
+  },
+  "filters": {
+    "searchPlaceholder": "Buscar actividad...",
+    "allEvents": "Todos los Eventos",
+    "range": {
+      "7": "Últimos 7 días",
+      "30": "Últimos 30 días",
+      "90": "Últimos 90 días",
+      "all": "Todo el tiempo"
+    }
+  },
+  "actions": {
+    "export": "Exportar",
+    "viewTimeline": "Ver cronología",
+    "clearFilters": "Borrar Filtros",
+    "browseServices": "Explorar Servicios",
+    "viewBooking": "Ver reserva",
+    "viewPayment": "Ver pago",
+    "viewDetails": "Ver detalles",
+    "openTimeline": "Abrir cronología",
+    "downloadInvoice": "Descargar factura",
+    "leaveReview": "Dejar reseña",
+    "close": "Cerrar"
+  },
+  "empty": {
+    "noMatchTitle": "No hay actividad coincidente",
+    "noMatchDescription": "Intenta ajustar tu búsqueda o filtros.",
+    "noActivityTitle": "Aún no hay actividad",
+    "noActivityDescription": "Los eventos de reserva — confirmaciones, pagos, actualizaciones — aparecerán aquí."
+  },
+  "table": {
+    "event": "Evento",
+    "booking": "Reserva",
+    "category": "Categoría",
+    "details": "Detalles",
+    "date": "Fecha",
+    "status": "Estado"
+  },
+  "pagination": {
+    "showing": "Mostrando {{from}} a {{to}} de {{total}} eventos"
+  },
+  "toast": {
+    "exported": "Actividad exportada",
+    "openingFeedback": "Abriendo Comentarios — encuentra esta reserva para dejar tu reseña."
+  },
+  "categories": {
+    "Booking": "Reserva",
+    "Payment": "Pago",
+    "Service": "Servicio",
+    "Invoice": "Factura",
+    "Feedback": "Comentarios"
+  },
+  "status": {
+    "pending": "Pendiente",
+    "failed": "Fallido",
+    "completed": "Completado",
+    "authorized": "Autorizado"
+  },
+  "eventTypes": {
+    "bookingCreated": "Reserva Creada",
+    "paymentAuthorized": "Pago Autorizado",
+    "paymentFailed": "Pago Fallido",
+    "providerAssigned": "Proveedor Asignado",
+    "providerOnTheWay": "Proveedor en Camino",
+    "providerArrived": "Proveedor Llegó",
+    "arrivalVerified": "Llegada Verificada",
+    "serviceStarted": "Servicio Iniciado",
+    "serviceCompleted": "Servicio Completado",
+    "bookingCancelled": "Reserva Cancelada",
+    "changeProposed": "Cambio Propuesto",
+    "changeApproved": "Cambio Aprobado",
+    "changeRejected": "Cambio Rechazado",
+    "invoiceReady": "Factura Lista",
+    "reviewSubmitted": "Reseña Enviada",
+    "reviewPending": "Reseña Pendiente"
+  },
+  "pendingReview": {
+    "detail": "Por favor comparte tu opinión"
+  },
+  "common": {
+    "service": "Servicio"
+  },
+  "insights": {
+    "heading": "Perspectivas de Actividad",
+    "mostRecentBooking": "Reserva más reciente",
+    "lastPayment": "Último pago",
+    "latestCompletedService": "Último servicio completado",
+    "withProvider": "con {{name}}",
+    "exploreYourJourney": "Explora tu recorrido",
+    "viewFullTimelineHint": "Consulta la cronología completa de tu actividad."
+  },
+  "fields": {
+    "dateTime": "Fecha y Hora",
+    "booking": "Reserva",
+    "provider": "Proveedor",
+    "payment": "Pago",
+    "paymentStatus": "Estado del Pago",
+    "eventType": "Tipo de Evento",
+    "bookingReference": "Referencia de Reserva",
+    "paymentReference": "Referencia de Pago",
+    "amount": "Monto",
+    "status": "Estado"
+  },
+  "journey": {
+    "timeline": "Cronología del Recorrido",
+    "notYetReached": "Aún no alcanzado",
+    "description": "Descripción",
+    "noDetails": "No hay detalles adicionales para este evento."
+  },
+  "payment": {
+    "dialogTitle": "Detalles de la Actividad",
+    "dialogSubtitle": "Información detallada sobre esta actividad",
+    "progressTimeline": "Cronología de Progreso",
+    "nextStep": "Siguiente Paso:",
+    "upcoming": "Próximamente",
+    "failedNote": "Este intento de pago falló — puedes reintentarlo desde tu reserva.",
+    "authorizedNote": "Tu pago se autorizó correctamente. Te mantendremos informado sobre el progreso de esta reserva."
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "invoices": {
+    "loading": "読み込み中…",
+    "page": {
+      "title": "請求書",
+      "subtitle": "完了した作業の請求記録"
+    },
+    "metrics": {
+      "totalInvoices": "請求書の合計数",
+      "allTime": "累計",
+      "paidInvoices": "支払い済み請求書",
+      "completed": "完了",
+      "pending": "保留中",
+      "awaitingPayment": "支払い待ち",
+      "totalBilled": "請求合計金額",
+      "acrossAllInvoices": "全請求書合計"
+    },
+    "recentInvoices": "最近の請求書",
+    "tabs": {
+      "all": "すべて",
+      "paid": "支払い済み",
+      "pending": "保留中",
+      "overdue": "期限超過"
+    },
+    "downloadAll": "すべてダウンロード",
+    "empty": {
+      "titleAll": "まだ請求書がありません",
+      "titleFilteredPaid": "支払い済みの請求書はありません",
+      "titleFilteredPending": "保留中の請求書はありません",
+      "titleFilteredOverdue": "期限超過の請求書はありません",
+      "descriptionAll": "予約が完了して確定すると請求書が発行されます。次の作業後にまたご確認ください。",
+      "descriptionFiltered": "他のタブを試して、他の請求書を確認してください。",
+      "viewMyBookings": "予約を見る"
+    },
+    "table": {
+      "service": "サービス",
+      "invoiceNumber": "請求書番号",
+      "provider": "提供者",
+      "issueDate": "発行日",
+      "paymentMethod": "支払い方法",
+      "status": "状況",
+      "amount": "金額"
+    },
+    "serviceFallback": "サービス",
+    "pagination": {
+      "showing_other": "{{count}} 件の請求書のうち {{from}} 〜 {{to}} 件を表示中"
+    },
+    "fields": {
+      "invoiceNumber": "請求書番号",
+      "bookingReference": "予約番号",
+      "provider": "提供者",
+      "category": "カテゴリー",
+      "invoiceDate": "請求日",
+      "dueDate": "支払期限",
+      "location": "所在地",
+      "paymentMethod": "支払い方法",
+      "customer": "お客様"
+    },
+    "billing": {
+      "subtotal": "小計",
+      "platformFee": "プラットフォーム手数料",
+      "totalAmount": "合計金額",
+      "serviceCharge": "サービス料金"
+    },
+    "panel": {
+      "title": "請求書の詳細",
+      "progressTimeline": "進行状況",
+      "downloadInvoice": "請求書をダウンロード",
+      "contactSupport": "サポートに連絡",
+      "payNotWiredToast": "請求書の支払いはまだ実際の決済ゲートウェイに接続されていません — 資金の管理は「支払い」ページで行ってください。",
+      "payNow": "今すぐ支払う"
+    },
+    "timeline": {
+      "invoiceIssued": "請求書発行",
+      "paymentPending": "支払い保留中",
+      "reminderScheduled": "リマインダー予定",
+      "issued": "発行済み",
+      "paid": "支払い済み",
+      "downloaded": "ダウンロード済み"
+    },
+    "dialog": {
+      "receiptCopied": "領収書の概要をクリップボードにコピーしました",
+      "billingBreakdown": "請求内訳",
+      "receiptNote": "この請求書は、完了したサービスのダウンロード可能な領収書としてご利用いただけます。",
+      "close": "閉じる",
+      "shareReceipt": "領収書を共有",
+      "downloadPdf": "PDFをダウンロード",
+      "progress": "進行状況",
+      "shareText": "請求書 {{invoiceNumber}} — {{provider}} に {{amount}} を支払いました"
+    }
+  },
+  "payments": {
+    "loading": "読み込み中…",
+    "page": {
+      "title": "支払い",
+      "subtitle": "保存済みの支払い方法を管理し、請求を追跡します"
+    },
+    "toast": {
+      "defaultUpdated": "デフォルトの支払い方法を更新しました",
+      "methodRemoved": "支払い方法を削除しました"
+    },
+    "metrics": {
+      "savedMethods": "保存済みの方法",
+      "savedMethodsHint": "デフォルト {{default}} 件・予備 {{backup}} 件",
+      "noMethodsYet": "まだ方法がありません",
+      "thisMonthCharges": "今月の請求",
+      "acrossBookings_other": "{{count}} 件の予約分",
+      "pendingAuthorizations": "保留中の承認",
+      "authorizationCount_other": "{{count}} 件の承認"
+    },
+    "methods": {
+      "title": "支払い方法",
+      "subtitle": "より速く安全な支払いのために保存された方法",
+      "addMethod": "方法を追加",
+      "searchPlaceholder": "支払い方法を検索...",
+      "filterType": "種類",
+      "filterAllTypes": "すべての種類",
+      "filterCard": "カード",
+      "filterMobileMoney": "モバイルマネー",
+      "filterBank": "銀行",
+      "emptyFilteredTitle": "一致する方法がありません",
+      "emptyFilteredDescription": "検索条件やフィルターを調整してみてください。",
+      "clearFilters": "フィルターを解除",
+      "emptyTitle": "まだ支払い方法がありません",
+      "emptyDescription": "カード、モバイルマネー、または銀行口座を追加して支払いを迅速化しましょう。",
+      "addPaymentMethod": "支払い方法を追加",
+      "columns": {
+        "method": "方法",
+        "type": "種類",
+        "status": "状況",
+        "actions": "操作"
+      },
+      "expires": "有効期限 {{date}}",
+      "default": "デフォルト",
+      "backup": "予備",
+      "setAsDefault": "デフォルトに設定",
+      "remove": "削除",
+      "secureFooter": "お支払い情報は暗号化されており、マスクされた情報のみが保存されます。"
+    },
+    "charges": {
+      "title": "最近の請求",
+      "subtitle": "最新の請求と承認",
+      "searchPlaceholder": "請求を検索...",
+      "filterStatus": "状況",
+      "filterAllStatuses": "すべての状況",
+      "filterAuthorized": "承認済み",
+      "filterPaid": "支払い済み",
+      "filterClosed": "完了",
+      "emptyFilteredTitle": "一致する請求がありません",
+      "emptyFilteredDescription": "検索条件やフィルターを調整してみてください。",
+      "clearFilters": "フィルターを解除",
+      "emptyTitle": "まだ請求がありません",
+      "emptyDescription": "予約を完了して支払いを承認すると、ここに表示されます。",
+      "browseServices": "サービスを見る",
+      "columns": {
+        "service": "サービス",
+        "bookingId": "予約ID",
+        "date": "日付",
+        "provider": "提供者",
+        "status": "状況",
+        "amount": "金額"
+      },
+      "serviceFallback": "サービス",
+      "itemLabel": "件の請求"
+    },
+    "viewFullHistory": "履歴で支払い履歴の全体を見る →",
+    "chargeDetailsTitle": "請求の詳細",
+    "dialog": {
+      "title": "支払い方法を追加",
+      "tabCard": "カード",
+      "tabMobileMoney": "モバイルマネー",
+      "tabBank": "銀行",
+      "errors": {
+        "cardRequired": "名義人氏名、カード番号、有効期限を入力してください",
+        "invalidPhone": "有効な電話番号を入力してください",
+        "bankRequired": "銀行名と口座番号を入力してください"
+      },
+      "methodAdded": "支払い方法を追加しました",
+      "labels": {
+        "cardholderName": "名義人氏名",
+        "cardNumber": "カード番号",
+        "expiryDate": "有効期限",
+        "cvv": "セキュリティコード(CVV)",
+        "provider": "プロバイダー",
+        "billingPhone": "請求先電話番号",
+        "bankName": "銀行名",
+        "accountNumber": "口座番号"
+      },
+      "placeholders": {
+        "cardholderName": "例:Restitius Rushambya",
+        "cardNumber": "1234 5678 9012 3456",
+        "expiryDate": "MM / YY",
+        "cvv": "123",
+        "billingPhone": "+255 712 345 678",
+        "bankName": "例:CRDB Bank",
+        "accountNumber": "0123456789"
+      },
+      "setAsDefault": "デフォルトの支払い方法に設定",
+      "secureNote": "お支払い情報は暗号化され、安全に保存されます。",
+      "cancel": "キャンセル",
+      "saving": "保存中...",
+      "saveMethod": "方法を保存"
+    }
+  },
+  "wallet": {
+    "loading": "読み込み中…",
+    "page": {
+      "title": "ウォレット",
+      "subtitle": "サービスウォレットと取引履歴"
+    },
+    "errors": {
+      "positiveAmount": "正の金額を入力してください"
+    },
+    "toast": {
+      "credited": "{{amount}} を入金しました",
+      "debited": "{{amount}} を出金しました"
+    },
+    "metrics": {
+      "availableBalance": "利用可能残高",
+      "rightNow": "現在",
+      "totalCredited": "累計入金額",
+      "allTime": "累計",
+      "totalDebited": "累計出金額"
+    },
+    "amountLabel": "金額({{currency}})",
+    "amountPlaceholder": "例:20000",
+    "creditButton": "入金",
+    "debitButton": "出金",
+    "refresh": "更新",
+    "searchPlaceholder": "取引を検索...",
+    "filterType": "種類",
+    "filterAllTypes": "すべての種類",
+    "filterCredit": "入金",
+    "filterDebit": "出金",
+    "emptyFilteredTitle": "一致する取引がありません",
+    "emptyFilteredDescription": "検索条件やフィルターを調整してみてください。",
+    "clearFilters": "フィルターを解除",
+    "emptyTitle": "まだ取引がありません",
+    "emptyDescription": "ウォレットへの入金・出金・保留がここに表示されます。",
+    "columns": {
+      "type": "種類",
+      "date": "日付",
+      "amount": "金額",
+      "balanceAfter": "取引後残高"
+    },
+    "itemLabel": "件の取引"
+  }
+}

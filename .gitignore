@@ -1,0 +1,87 @@
+# =============================================================================
+# FIXO-APP monorepo — root ignore rules covering both applications.
+# =============================================================================
+
+# --- Python (applications/backend) -------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Node / JS (applications/frontend) ---------------------------------------
+node_modules/
+.next/
+.nuxt/
+.turbo/
+coverage/
+
+# --- Environment secrets ------------------------------------------------------
+.env
+.env.local
+.env.*.local
+
+# --- Runtime artifacts (keep folder anchors via .gitkeep) --------------------
+applications/backend/storage/logs/*
+applications/backend/storage/exports/*
+applications/backend/storage/imports/*
+applications/backend/storage/temporary/*
+applications/backend/storage/generated/*
+!applications/backend/storage/logs/.gitkeep
+!applications/backend/storage/exports/.gitkeep
+!applications/backend/storage/imports/.gitkeep
+!applications/backend/storage/temporary/.gitkeep
+!applications/backend/storage/generated/.gitkeep
+
+# --- Databases -----------------------------------------------------------------
+*.db
+*.sqlite3
+
+# --- Expo / React Native (applications/frontend/mobile) ----------------------
+.expo/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+expo-env.d.ts
+
+# --- OS / editor -----------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local history-rebuild recovery archives (never publish Git metadata).
+.git-history-backup/
+
+# --- Credentials and keys (CI/CD security handbook, section 3.2) -------------
+*.pem
+*.pfx
+id_rsa
+id_ed25519
+*-credentials.json
+service-account*.json
+.aws/
+.npmrc
+
+# --- Security scan output — never commit findings with code snippets --------
+gitleaks-report.json
+semgrep-results.sarif
+trivy-results.sarif
+

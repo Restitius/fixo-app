@@ -1,0 +1,223 @@
+{
+  "loyalty": {
+    "loading": "加载中…",
+    "page": {
+      "title": "会员积分",
+      "subtitle": "为常客提供的奖励"
+    },
+    "ptsValue": "{{points}} 积分",
+    "metrics": {
+      "pointsBalance": "积分余额",
+      "availableNow": "当前可用",
+      "tierStatus": "等级状态",
+      "ptsToTier": "距 {{tier}} 还需 {{points}} 积分",
+      "topTier": "最高等级",
+      "earnedThisMonth": "本月获得",
+      "fromActivities_other": "来自 {{count}} 项活动",
+      "redeemed": "已兑换",
+      "rewardsUsed_other": "已使用 {{count}} 项奖励"
+    },
+    "tierCard": {
+      "currentTier": "当前等级",
+      "tierName": "{{tier}} 等级",
+      "progressToTier": "距 {{tier}} 的进度",
+      "reachedTopTier": "您已达到最高等级",
+      "ptsOfPts": "{{balance}} / {{target}} 积分",
+      "quickActions": "快捷操作",
+      "earnPoints": "赚取积分",
+      "redeemReward": "兑换奖励",
+      "viewRules": "查看规则",
+      "conversionNote": "100 积分 = TZS 1,000 奖励额度"
+    },
+    "activity": {
+      "recentActivity": "最近积分动态",
+      "viewAll": "查看全部",
+      "noActivityYet": "暂无积分动态",
+      "noActivityHint": "预订一项服务即可开始赚取积分。",
+      "columnActivity": "活动",
+      "columnDate": "日期",
+      "columnPoints": "积分",
+      "columnStatus": "状态",
+      "earned": "已获得",
+      "redeemed": "已兑换"
+    },
+    "rewards": {
+      "availableRewards": "可用奖励",
+      "viewAllRewards": "查看全部奖励",
+      "minPts": "最低 {{points}} 积分"
+    },
+    "earnDialog": {
+      "title": "赚取积分",
+      "pointsLabel": "积分",
+      "placeholder": "例如 100",
+      "enterPointsFirst": "请先输入积分",
+      "adding": "添加中...",
+      "addPoints": "添加积分",
+      "earnedToast": "已获得 {{points}} 积分 — 余额 {{balance}}"
+    },
+    "redeemDialog": {
+      "title": "兑换奖励",
+      "subtitle": "用您的积分兑换可用权益",
+      "currentBalance": "当前余额",
+      "notEnoughPoints": "积分不足，无法兑换此奖励",
+      "confirmDeduction": "请确认您理解积分将被扣除",
+      "notEnoughPointsBadge": "积分不足",
+      "selectedReward": "已选奖励",
+      "pointsRequired": "所需积分",
+      "remainingAfter": "兑换后剩余积分",
+      "consentLabel": "我理解积分将立即被扣除",
+      "instantNote": "兑换的奖励将立即应用到您的账户。",
+      "cancel": "取消",
+      "redeeming": "兑换中...",
+      "redeemNow": "立即兑换",
+      "redeemedToast": "已兑换{{reward}}！"
+    },
+    "detailSheet": {
+      "title": "积分详情",
+      "memberSince": "会员加入时间",
+      "tierBenefits": "等级权益",
+      "benefitsValue": "{{tier}} 权益",
+      "rewardConversion": "奖励换算",
+      "conversionValue": "100 积分 = TZS 1,000",
+      "nextMilestone": "下一个奖励里程碑",
+      "milestoneValue": "{{points}} 积分（{{tier}} 等级）",
+      "topTierReached": "已达最高等级",
+      "selectedActivity": "已选活动",
+      "referenceCode": "参考编号",
+      "pointsEarned": "获得积分",
+      "pointsSpent": "使用积分",
+      "balanceAfter": "之后余额",
+      "timeline": "时间线",
+      "recorded": "已记录{{activity}}",
+      "viewRules": "查看规则",
+      "share": "分享",
+      "copiedToClipboard": "已复制到剪贴板",
+      "done": "完成"
+    },
+    "tierBenefits": {
+      "Bronze": ["每消费 TZS 1,000 可获 1 积分", "标准预订优先级"],
+      "Silver": ["每消费 TZS 1,000 可获 1 积分", "优先客户支持"],
+      "Gold": ["每次预订可获 10% 额外积分", "优先服务商匹配"],
+      "Platinum": ["每次预订可获 20% 额外积分", "专属支持热线", "免费优先预订附加服务"]
+    },
+    "rewardCatalog": {
+      "discount5000": "立减 TZS {{amount}}",
+      "priorityBooking": "优先预订",
+      "freeInspection": "免费检查"
+    },
+    "share": {
+      "title": "FIXO 会员积分",
+      "message": "{{activity}} — {{sign}}{{points}} 积分",
+      "messageWithRef": "{{activity}} — {{sign}}{{points}} 积分（参考编号 {{ref}}）"
+    }
+  },
+  "promotions": {
+    "loading": "加载中…",
+    "page": {
+      "title": "促销活动",
+      "subtitle": "下次服务的优惠与折扣"
+    },
+    "metrics": {
+      "activePromotions": "进行中的促销",
+      "currentlyAvailable": "当前可用",
+      "totalSavings": "累计节省",
+      "acrossRedemptions": "所有兑换合计",
+      "usedThisMonth": "本月已使用",
+      "appliedOnBookings": "已用于预订",
+      "expiringSoon": "即将到期",
+      "within7Days": "7 天内"
+    },
+    "categories": {
+      "plumbing": "水管维修",
+      "cleaning": "清洁",
+      "painting": "粉刷",
+      "acCooling": "空调与制冷",
+      "electrical": "电工",
+      "moving": "搬家",
+      "general": "综合服务"
+    },
+    "discount": {
+      "percentOff": "{{value}}% 折扣",
+      "amountOff": "立减 {{amount}}"
+    },
+    "labels": {
+      "noCap": "无上限",
+      "noMinimum": "无最低消费",
+      "unlimited": "不限次数",
+      "usageOfLimit": "已使用 {{used}} / {{limit}}"
+    },
+    "promoCode": {
+      "title": "优惠码",
+      "enterCode": "输入优惠码",
+      "placeholder": "例如 WELCOME10",
+      "orderAmount": "订单金额（TZS）",
+      "validateCode": "验证优惠码",
+      "enterCodeFirst": "请输入优惠码",
+      "enterAmountFirst": "请输入订单金额",
+      "appliesSave": "{{code}} 可用 — 节省 {{amount}}",
+      "save": "节省 {{amount}}",
+      "savePercent": "节省 {{amount}}（{{percent}}%）",
+      "disclaimer": "优惠码仅适用于符合条件的服务，且不可与其他优惠叠加使用。"
+    },
+    "availablePromotions": {
+      "title": "可用促销",
+      "subtitle": "选择要应用到预订的促销活动。",
+      "noneTitle": "暂无进行中的促销",
+      "noneDescription": "请稍后再来查看 — 新优惠会在此显示。",
+      "expires": "有效期至 {{date}}",
+      "details": "详情",
+      "useNow": "立即使用",
+      "showLess": "收起",
+      "viewAll": "查看全部促销"
+    },
+    "redemptions": {
+      "title": "最近兑换记录",
+      "showLess": "收起",
+      "viewAll": "查看全部",
+      "noneTitle": "暂无兑换记录",
+      "noneDescription": "您实际使用过的促销将连同真实节省金额显示在此处。",
+      "columnCode": "优惠码",
+      "columnDate": "日期",
+      "columnSavings": "节省金额",
+      "columnStatus": "状态",
+      "applied": "已应用"
+    },
+    "details": {
+      "title": "促销详情",
+      "active": "进行中",
+      "expired": "已过期",
+      "maxSavings": "最高节省：{{amount}}",
+      "promoCode": "优惠码",
+      "category": "类别",
+      "validity": "有效期",
+      "validityRange": "{{from}} – {{to}}",
+      "minimumOrder": "最低消费",
+      "usageLimit": "使用次数限制",
+      "eligibleAreas": "适用区域",
+      "allAreas": "所有区域",
+      "conditionsTitle": "使用条件",
+      "conditionGeneral": "仅适用于符合条件的服务。",
+      "conditionCategory": "仅适用于符合条件的{{category}}服务。",
+      "conditionNoCombine": "不可与其他优惠码叠加使用。",
+      "conditionAppliedImmediately": "使用此促销后立即生效。",
+      "recentUseTitle": "最近使用记录",
+      "noRecentUse": "此优惠码暂无兑换记录。",
+      "columnBookingRef": "预订编号",
+      "columnDate": "日期",
+      "columnSavings": "节省金额",
+      "shareCode": "分享优惠码",
+      "viewTerms": "查看条款",
+      "useThisPromotion": "使用此促销",
+      "termsComingSoon": "完整条款即将在此列出 — 请暂时参考上方条件。"
+    },
+    "toasts": {
+      "enterOrderAmountToCalc": "请在上方输入订单金额，以便我们计算实际节省金额。",
+      "appliedSaved": "已应用 {{code}} — 已节省 {{amount}}",
+      "copiedToClipboard": "优惠码已复制到剪贴板"
+    },
+    "share": {
+      "title": "FIXO 促销",
+      "message": "在 FIXO 使用优惠码 {{code}} — {{discount}}"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "bookings": "Réservations",
+    "calendar": "Calendrier",
+    "inbox": "Messages",
+    "profile": "Profil"
+  },
+  "home": {
+    "greetingMorning": "Bonjour",
+    "greetingAfternoon": "Bon après-midi",
+    "greetingEvening": "Bonsoir",
+    "searchPlaceholder": "Rechercher des services...",
+    "specialOffers": "Offres Spéciales",
+    "seeAll": "Tout voir",
+    "offAmount": "{{amount}} DE RÉDUCTION",
+    "services": "Services",
+    "more": "Plus",
+    "mostPopular": "Services les Plus Populaires",
+    "noProviders": "Aucun prestataire répertorié pour le moment.",
+    "serviceFallback": "Service"
+  },
+  "bookings": {
+    "title": "Mes Réservations",
+    "tabUpcoming": "À venir",
+    "tabCompleted": "Terminées",
+    "tabCancelled": "Annulées",
+    "emptyTitle": "Aucune réservation {{tab}}",
+    "emptySubtitle": "Vos réservations {{tab}} apparaîtront ici.",
+    "serviceFallback": "Service",
+    "loadingDetails": "Chargement des détails…",
+    "totalPaid": "Total payé",
+    "viewProvider": "Voir le Prestataire",
+    "cancelBooking": "Annuler la Réservation",
+    "eReceipt": "Reçu Électronique"
+  },
+  "calendar": {
+    "title": "Mon Calendrier",
+    "loading": "Chargement…",
+    "bookingsOn": "Réservations du {{date}}",
+    "noBookingsThisDay": "Aucune réservation ce jour",
+    "dotHint": "Les dates avec un point en dessous ont une réservation réelle.",
+    "serviceFallback": "Service"
+  },
+  "inbox": {
+    "title": "Messages",
+    "subtitle": "Contactez les prestataires de vos réservations réelles.",
+    "emptyTitle": "Aucune conversation pour le moment",
+    "emptySubtitle": "Une fois qu'un prestataire est assigné à une réservation, vous pouvez lui écrire ici.",
+    "serviceFallback": "Service"
+  },
+  "profileHub": {
+    "title": "Profil et Paramètres",
+    "menu": {
+      "editProfile": "Modifier le Profil",
+      "notificationSettings": "Paramètres de Notification",
+      "wallet": "Portefeuille",
+      "paymentMethods": "Moyens de Paiement",
+      "invoices": "Factures",
+      "history": "Historique",
+      "loyaltyRewards": "Fidélité et Récompenses",
+      "promotions": "Promotions",
+      "activity": "Activité",
+      "feedback": "Avis",
+      "security": "Sécurité",
+      "language": "Langue",
+      "privacyPolicy": "Politique de Confidentialité",
+      "inviteFriends": "Inviter des Amis",
+      "helpCenter": "Centre d'Aide"
+    },
+    "logOut": "Déconnexion",
+    "logoutConfirmTitle": "Se déconnecter de votre compte ?",
+    "logoutConfirmBody": "Vous devrez vous reconnecter pour accéder à vos réservations.",
+    "cancel": "Annuler"
+  }
+}

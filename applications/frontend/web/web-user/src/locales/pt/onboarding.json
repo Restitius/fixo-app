@@ -1,0 +1,50 @@
+{
+  "loading": "Carregando…",
+  "title": "Bem-vindo ao FIXO",
+  "subtitle": "Algumas etapas rápidas para preparar sua conta.",
+  "progress": "{{done}} de {{total}} etapas concluídas",
+  "required": "Obrigatório",
+  "optional": "Opcional",
+  "completed": "Concluído",
+  "steps": {
+    "VERIFY_CONTACT": {
+      "title": "Verificar contato",
+      "description": "Confirme seu telefone ou e-mail com o código que enviamos.",
+      "verifiedNote": "Seus dados de contato já estão verificados.",
+      "unverifiedNote": "Não conseguimos confirmar seus dados de contato automaticamente — verifique seu e-mail ou telefone no seu perfil e depois volte aqui.",
+      "markDone": "Verifiquei meus dados de contato"
+    },
+    "SET_LOCATION": {
+      "title": "Defina sua localização",
+      "description": "Diga-nos onde você mora para encontrarmos prestadores próximos.",
+      "labelLabel": "Rótulo",
+      "recipientNameLabel": "Nome do destinatário",
+      "phoneLabel": "Telefone",
+      "cityLabel": "Cidade",
+      "streetLabel": "Endereço",
+      "regionLabel": "Região (opcional)",
+      "save": "Salvar localização",
+      "saving": "Salvando…",
+      "fillRequired": "Preencha destinatário, telefone, rua e cidade.",
+      "saved": "Localização salva"
+    },
+    "ADD_PROPERTY": {
+      "title": "Adicionar um imóvel",
+      "description": "Cadastre o imóvel onde os serviços serão realizados.",
+      "nameLabel": "Nome do imóvel",
+      "namePlaceholder": "ex.: Casa, Escritório",
+      "typeLabel": "Tipo de imóvel",
+      "types": { "HOUSE": "Casa", "APARTMENT": "Apartamento", "CONDO": "Condomínio", "OFFICE": "Escritório", "OTHER": "Outro" },
+      "bedroomsLabel": "Quartos",
+      "bathroomsLabel": "Banheiros",
+      "save": "Adicionar imóvel",
+      "saving": "Adicionando…",
+      "skip": "Pular por agora",
+      "fillRequired": "Informe o nome do imóvel.",
+      "saved": "Imóvel adicionado"
+    }
+  },
+  "continueCta": "Continuar para o Painel",
+  "allDoneTitle": "Tudo pronto!",
+  "allDoneSubtitle": "Sua conta está pronta. Vamos encontrar um ótimo prestador para você."
+}

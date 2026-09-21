@@ -1,0 +1,1 @@
+"""Liabilities domain events."""

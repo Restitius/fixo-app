@@ -1,0 +1,30 @@
+{
+  "NTF.BOOKING.CONFIRMED.V1": {
+    "customer": {"title": "予約が確定しました", "body": "{booking_number} — 担当者の予約が完了しました。"},
+    "assigned_provider": {"title": "新しい予約が割り当てられました", "body": "{booking_number} の担当に割り当てられました。"}
+  },
+  "NTF.PAYMENT.AUTHORIZED.V1": {
+    "customer": {"title": "お支払いが承認されました", "body": "{booking_number} — 作業のための資金が確保されました。"}
+  },
+  "NTF.BOOKING.ON_THE_WAY.V1": {
+    "customer": {"title": "担当者が向かっています", "body": "予約 {booking_number}"}
+  },
+  "NTF.BOOKING.ARRIVED.V1": {
+    "customer": {"title": "担当者が到着しました", "body": "予約 {booking_number}"}
+  },
+  "NTF.SERVICE.COMPLETION_REQUESTED.V1": {
+    "customer": {"title": "担当者が作業を完了しました", "body": "{booking_number} — 内容を確認し、完了を承認してください。"}
+  },
+  "NTF.SERVICE.COMPLETED.V1": {
+    "customer": {"title": "サービスが完了しました", "body": "{booking_number} — ご確認ありがとうございます。"}
+  },
+  "NTF.PAYMENT.CAPTURED.V1": {
+    "customer": {"title": "お支払いを受領しました", "body": "{booking_number} — 決済が完了しました。"}
+  },
+  "NTF.INVOICE.ISSUED.V1": {
+    "customer": {"title": "請求書 {invoice_number}", "body": "{total_amount} {currency} のお支払いが必要です。"}
+  },
+  "NTF.MAINTENANCE.OVERDUE.V1": {
+    "customer": {"title": "メンテナンスが期限切れです", "body": "プラン {plan_number} は期日を過ぎています。"}
+  }
+}

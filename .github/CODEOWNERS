@@ -1,0 +1,49 @@
+# .github/CODEOWNERS
+# Every line: path  owners...   Later matches take precedence.
+#
+# @fixo/* team handles are placeholders — no real GitHub teams exist yet
+# for this repo. Create them in GitHub org settings (Settings > Teams)
+# before this file can actually gate reviews; until then, GitHub will
+# silently ignore lines whose owner doesn't resolve to a real user/team.
+
+*                                                        @Restitius
+
+# --- Tier 2: business-critical ---
+/applications/backend/app/domains/bookings/             @Restitius
+/applications/backend/app/domains/providers/            @Restitius
+/applications/backend/app/domains/notifications/        @Restitius
+/applications/backend/app/domains/messaging/            @Restitius
+/applications/backend/app/domains/quotations/           @Restitius
+/applications/backend/app/domains/service_requests/     @Restitius
+/applications/backend/app/domains/service_execution/    @Restitius
+/applications/backend/app/domains/matching/             @Restitius
+
+# --- Tier 3: security and financial ---
+/applications/backend/app/domains/authentication/       @Restitius
+/applications/backend/app/security/                     @Restitius
+/applications/backend/app/api/deps/auth.py              @Restitius
+/applications/backend/app/api/deps/provider_auth.py     @Restitius
+/applications/backend/app/domains/payments/             @Restitius
+/applications/backend/app/domains/wallets/              @Restitius
+/applications/backend/app/domains/disputes/             @Restitius
+/applications/backend/app/domains/cancellations/        @Restitius
+/applications/backend/app/integrations/                 @Restitius
+/applications/backend/app/adapters/integrations/        @Restitius
+/applications/backend/app/queries/                      @Restitius
+/applications/backend/app/registries/queries/           @Restitius
+/applications/backend/migrations/                       @Restitius
+
+# --- Pipeline and infrastructure ---
+/.github/workflows/                                     @Restitius
+/.github/CODEOWNERS                                     @Restitius
+/infra/                                                 @Restitius
+/security/                                              @Restitius
+/.gitleaks.toml                                         @Restitius
+
+# --- Dependency manifests ---
+/applications/backend/requirements.txt                     @Restitius
+/applications/backend/pyproject.toml                        @Restitius
+/applications/frontend/web/web-user/package.json            @Restitius
+/applications/frontend/web/web-user/package-lock.json       @Restitius
+/applications/frontend/web/web-provider/package.json        @Restitius
+/applications/frontend/web/web-provider/package-lock.json   @Restitius

@@ -1,0 +1,1 @@
+"""Assets notification definitions."""

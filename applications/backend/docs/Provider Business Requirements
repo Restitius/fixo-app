@@ -1,0 +1,1492 @@
+FIXO— PROVIDER SIDE REQUIREMENTS
+
+Phase 1 — Provider Public Entry & Registration
+
+The provider should first access a dedicated Become a Provider / Join as a Professional section.
+
+The platform should allow either:
+
+Individual handyman
+Freelancer
+Technician
+Small service business
+Registered company
+Multi-worker service company
+
+The provider should be able to:
+
+Learn how the platform works
+View provider benefits
+View supported service categories
+Understand commissions/fees
+Review payment terms
+Review provider requirements
+Start registration
+Sign in if already registered
+Registration fields
+
+Basic information:
+
+First name
+Middle name
+Last name
+Email
+Mobile number
+Password
+Confirm password
+Country
+Region/state
+City/district
+Preferred language
+Referral code
+Account type
+
+Account type:
+
+Individual provider
+Business/company
+
+The system verifies:
+
+Mobile number using OTP
+Email using verification link or OTP
+Phase 2 — Provider Account Onboarding
+
+After authentication, the provider should enter a guided onboarding process.
+
+The system should show something similar to:
+
+Step 1 of 7 — Personal Information
+
+Progress should be saved automatically.
+
+Typical onboarding stages:
+
+Personal information
+Business information
+Identity verification
+Service configuration
+Service areas
+Payment information
+Agreements
+
+Providers should be able to leave and continue later.
+
+Phase 3 — Provider Profile
+
+The provider should create the public profile customers will eventually see.
+
+Information should include:
+
+Personal information
+Profile photo
+Full name
+Gender if required
+Date of birth
+Phone
+Email
+Biography
+Languages
+Years of experience
+Professional information
+Professional title
+Example: Senior Electrician
+Experience
+Qualifications
+Certifications
+Skills
+Specializations
+Tools/equipment available
+Number of completed projects
+Portfolio
+
+Example:
+
+John M — Certified Electrician
+8 years experience
+Residential wiring, solar systems, fault diagnosis.
+
+Providers should be able to preview their public profile.
+
+Phase 4 — Business Profile
+
+If the provider operates through a company, the platform should support a business profile.
+
+Fields may include:
+
+Business name
+Business logo
+Registration number
+Tax number
+Business email
+Business telephone
+Business address
+Business description
+Year established
+Number of employees
+Website
+Social profiles
+
+A company can later have several workers under the same provider account.
+
+Phase 5 — Identity & Provider Verification
+
+Providers should not become fully active before required verification has been completed.
+
+Possible documents:
+
+National ID
+Passport
+Driving licence
+Business registration certificate
+Professional licence
+Trade certificate
+Insurance documentation
+Tax certificate
+Police/background clearance where required
+
+Provider uploads:
+
+Document type
+Document number
+Front image
+Back image
+Issue date
+Expiry date
+
+Verification status:
+
+Not Submitted → Submitted → Under Review → Verified / Rejected / More Information Required
+
+The provider dashboard should prominently display verification progress.
+
+Phase 6 — Service Category Setup
+
+Providers must define exactly what services they offer.
+
+For example:
+
+Home Services
+
+→ Plumbing
+→ Electrical
+→ Cleaning
+→ Carpentry
+→ Painting
+→ Appliance repair
+
+A provider could select:
+
+Electrical
+
+and then:
+
+Wiring
+Socket installation
+Lighting installation
+Electrical inspection
+Circuit breaker repair
+Generator installation
+Solar installation
+
+For each selected service the provider should configure:
+
+Service name
+Description
+Experience
+Pricing model
+Minimum charge
+Estimated duration
+Emergency availability
+Tools required
+Materials included/not included
+Warranty
+Photos
+
+The provider should only receive requests for approved services.
+
+Phase 7 — Provider Pricing
+
+Pricing should support different structures.
+
+Fixed price
+
+Example:
+
+Ceiling fan installation — TZS 45,000.
+
+Starting price
+
+Example:
+
+Plumbing repair — From TZS 30,000.
+
+Hourly rate
+
+Example:
+
+TZS 20,000/hour.
+
+Inspection then quote
+
+Provider visits the property before determining the final price.
+
+Custom quotation
+
+Customer describes the job and providers submit quotations.
+
+Providers should be able to configure pricing independently for every service.
+
+Phase 8 — Service Area Management
+
+Providers need to tell the platform where they operate.
+
+They should be able to select:
+
+Country
+Region
+City
+District
+Ward
+Neighborhood
+
+Or define a radius such as:
+
+Within 15 km of my location.
+
+Providers should also configure:
+
+Maximum travel distance
+Travel fee
+Free travel radius
+Areas they do not serve
+
+The matching engine uses this information when finding providers.
+
+Phase 9 — Working Hours & Availability
+
+Providers should define when they are available.
+
+Example:
+
+Day	Availability
+Monday	08:00–18:00
+Tuesday	08:00–18:00
+Wednesday	08:00–18:00
+Thursday	08:00–18:00
+Friday	08:00–18:00
+Saturday	09:00–15:00
+Sunday	Unavailable
+
+Providers should also configure:
+
+Emergency availability
+Same-day availability
+Holiday availability
+Temporary unavailable periods
+Vacation mode
+
+The provider should have an important toggle:
+
+ONLINE / AVAILABLE
+
+or
+
+OFFLINE / UNAVAILABLE
+
+Only available providers should normally receive immediate jobs.
+
+Phase 10 — Provider Dashboard
+
+After onboarding, the provider should land on the main Provider Dashboard.
+
+The dashboard should answer:
+
+What requires my attention today?
+
+Four primary statistics could be:
+
+Today's jobs
+Pending requests
+Earnings
+Rating
+
+Other information:
+
+Today's Schedule
+
+Upcoming jobs.
+
+New Requests
+
+Jobs awaiting response.
+
+Active Jobs
+
+Jobs currently being performed.
+
+Earnings Snapshot
+
+Today / week / month.
+
+Performance
+Acceptance rate
+Completion rate
+Cancellation rate
+Response time
+Rating
+Quick actions
+Go online
+View requests
+Add availability
+View earnings
+Manage services
+Phase 11 — Incoming Job Requests
+
+This is one of the most important provider modules.
+
+When a customer requests a service, eligible providers may receive the request.
+
+The provider should see:
+
+Service requested
+Customer location
+Distance
+Requested date
+Requested time
+Job description
+Photos/videos
+Property information
+Estimated duration
+Customer rating where appropriate
+Estimated earnings
+
+Actions:
+
+Accept
+
+Decline
+
+Submit Quote
+
+Ask Question
+
+There should normally be a countdown for urgent marketplace jobs.
+
+Example:
+
+Respond within 03:25
+
+Phase 12 — Matching Engine Interaction
+
+The provider should not manually search all customer requests.
+
+The system should determine eligible providers using:
+
+Service category
+Service specialization
+Location
+Distance
+Availability
+Rating
+Completion rate
+Price
+Experience
+Verification status
+Response rate
+
+Matching should produce something conceptually like:
+
+Customer Request
+
+→ Matching Engine
+
+→ Eligible Providers
+
+→ Ranked Providers
+
+→ Providers Notified
+
+Phase 13 — Quotations / Offers
+
+Some services require quotations rather than instant acceptance.
+
+Providers should submit a professional quotation containing:
+
+Labour cost
+Materials
+Transportation
+Inspection charge
+Additional charges
+Taxes
+Discount
+Platform fees if shown
+Total price
+Estimated duration
+Proposed start date
+Quote expiry
+
+The provider can include:
+
+Notes
+Terms
+Photos
+Attachments
+
+Quotation statuses:
+
+Draft → Submitted → Viewed → Accepted / Rejected / Expired / Withdrawn
+
+Phase 14 — Booking Confirmation
+
+Once the customer selects a provider or accepts the quotation, a booking is created.
+
+Provider receives:
+
+Booking Confirmed
+
+Booking information:
+
+Booking number
+Customer
+Service
+Address
+Property
+Date/time
+Price
+Payment status
+Customer notes
+Attachments
+
+The provider should acknowledge the booking.
+
+Phase 15 — Provider Calendar
+
+Providers need a calendar containing:
+
+Confirmed bookings
+Pending bookings
+Recurring jobs
+Inspections
+Blocked periods
+Personal unavailable periods
+
+Views:
+
+Day
+Week
+Month
+Agenda
+
+The system must prevent overlapping bookings unless explicitly supported.
+
+Phase 16 — Booking Details
+
+Every job should have one central operational screen.
+
+Example lifecycle:
+
+Confirmed
+
+↓
+
+Preparing
+
+↓
+
+Traveling
+
+↓
+
+Arrived
+
+↓
+
+Work Started
+
+↓
+
+Work Completed
+
+↓
+
+Customer Confirmation
+
+↓
+
+Paid
+
+The booking page should contain:
+
+Customer details
+Property
+Service
+Schedule
+Price
+Payment status
+Directions
+Messages
+Attachments
+Job timeline
+Job notes
+Phase 17 — Customer Communication
+
+Providers should communicate with customers without exposing unnecessary personal contact details.
+
+Messaging should support:
+
+Text
+Images
+Documents
+Voice notes if implemented
+Location sharing
+Service attachments
+System messages
+
+Example:
+
+Customer
+
+The leaking pipe is underneath the kitchen sink.
+
+Provider
+
+Understood. Please send a photo so I can determine which fittings may be required.
+
+Messages should be linked to the booking.
+
+Phase 18 — Navigation & Provider Tracking
+
+Once the provider starts traveling:
+
+Start Trip
+
+The system begins location updates.
+
+Customer sees:
+
+Provider location
+Estimated arrival
+Distance
+Provider profile
+Vehicle details if relevant
+
+Provider sees:
+
+Customer address
+Navigation
+Distance
+ETA
+Contact/message customer
+
+Conceptually:
+
+Provider Mobile GPS
+
+→ Location Service
+
+→ Real-Time Gateway
+
+→ Customer Tracking Screen
+
+Phase 19 — Arrival Verification
+
+The provider should indicate:
+
+I Have Arrived
+
+The system records:
+
+Arrival time
+GPS position
+Booking ID
+
+The customer may confirm arrival.
+
+For additional security the platform can support:
+
+PIN
+QR code
+OTP
+
+Example:
+
+Customer gives provider:
+
+JOB PIN: 4812
+
+Provider enters the PIN before work begins.
+
+Phase 20 — Start Service
+
+The provider selects:
+
+Start Job
+
+The system records:
+
+Actual start time
+Provider
+Customer
+Booking
+Location
+
+Job status becomes:
+
+IN PROGRESS
+
+For hourly jobs, the job timer can begin automatically.
+
+Phase 21 — Job Checklist
+
+Some service types should contain predefined workflows.
+
+Example — Air Conditioning Service:
+
+Inspect unit
+Check electrical connections
+Clean filters
+Test cooling
+Check refrigerant
+Run system test
+
+Provider checks tasks as they are completed.
+
+This improves service consistency and auditability.
+
+Phase 22 — Evidence & Job Documentation
+
+Providers should document work.
+
+Possible evidence:
+
+Before photos
+During-work photos
+After photos
+Videos
+Notes
+Measurements
+Customer instructions
+Replacement parts
+
+These should be stored against the booking.
+
+Phase 23 — Change Request
+
+Sometimes the original job scope changes.
+
+Example:
+
+Customer requested:
+
+Repair leaking sink — TZS 30,000
+
+Provider discovers damaged pipes.
+
+Provider should submit:
+
+Change Request
+
+Containing:
+
+Reason
+New work required
+Additional labour
+Additional materials
+Additional time
+Additional price
+Supporting photos
+
+Customer must:
+
+Approve
+
+or
+
+Reject
+
+before additional billable work is performed.
+
+Phase 24 — Materials & Expenses
+
+Providers may record materials used during the job.
+
+Example:
+
+Item	Qty	Amount
+PVC pipe	2	15,000
+Connector	4	8,000
+Sealant	1	7,000
+
+Provider can upload:
+
+Purchase receipts
+Material photos
+Supplier invoice
+
+Depending on platform rules, costs may automatically be added to the final invoice.
+
+Phase 25 — Job Completion
+
+When work is finished, provider selects:
+
+Complete Job
+
+Provider should enter:
+
+Completion notes
+Work performed
+Materials used
+Before/after evidence
+Warranty details
+Recommended follow-up
+Additional maintenance recommendations
+
+Customer then receives:
+
+Provider has completed the job.
+
+Customer can confirm completion.
+
+Phase 26 — Customer Sign-Off
+
+Before the booking is closed, customer may need to provide:
+
+Digital signature
+Completion PIN
+App confirmation
+
+Example:
+
+Approve Completed Work
+
+The system records:
+
+Customer
+Provider
+Date/time
+Booking
+Approval evidence
+
+This reduces disputes.
+
+Phase 27 — Final Billing
+
+The system calculates the final service amount from:
+
+Original price
+
+approved additional work
+approved materials
+taxes
+
+− discounts
+
+= Final Amount
+
+Provider can review the calculation.
+
+Normally the provider should not manually alter a finalized amount without customer approval.
+
+Phase 28 — Provider Earnings
+
+Providers need an earnings module.
+
+Main statistics:
+
+Available balance
+Pending earnings
+Total earnings
+Withdrawn amount
+
+Views:
+
+Today
+
+This Week
+
+This Month
+
+This Year
+
+The provider should see every transaction.
+
+Phase 29 — Provider Wallet
+
+The provider wallet should show:
+
+Available balance
+Pending balance
+Reserved funds
+Withdrawals
+Refund deductions
+Bonuses
+Adjustments
+
+Example transaction:
+
+Booking #FX12390
+
+Customer paid: TZS 120,000
+
+Platform commission: TZS 12,000
+
+Provider earnings: TZS 108,000
+
+Phase 30 — Payout Management
+
+Provider should register payout methods.
+
+Examples:
+
+Bank account
+Mobile money
+Provider wallet
+Other supported payment channels
+
+Provider enters:
+
+Account holder
+Bank/provider
+Account number
+Mobile number
+Currency
+
+Provider can request:
+
+Withdraw Funds
+
+Payout lifecycle:
+
+Requested → Processing → Paid
+
+or
+
+Failed
+
+Phase 31 — Commission & Fees
+
+Providers should clearly understand platform deductions.
+
+Example:
+
+Customer charge: TZS 100,000
+
+Platform commission: 10%
+
+Provider receives: TZS 90,000
+
+The system should separately show:
+
+Gross earnings
+Commission
+Tax
+Adjustments
+Net earnings
+Phase 32 — Invoices & Statements
+
+Provider should access:
+
+Customer invoices
+Provider earnings statements
+Commission statements
+Tax statements where supported
+Withdrawal receipts
+
+Filters:
+
+Date
+Booking
+Status
+Customer
+Payment type
+
+Documents should be downloadable where supported.
+
+Phase 33 — Ratings & Reviews
+
+After completion, customers can rate providers.
+
+Provider should see:
+
+Overall rating
+
+Example:
+
+4.8 / 5
+
+Breakdown:
+
+Quality
+Professionalism
+Communication
+Punctuality
+Value
+
+Provider can read customer reviews.
+
+Where allowed, provider may submit one professional response.
+
+Phase 34 — Provider Performance
+
+A deeper performance module should track:
+
+Jobs offered
+Jobs accepted
+Jobs rejected
+Jobs completed
+Jobs cancelled
+Acceptance rate
+Completion rate
+Cancellation rate
+Average response time
+Average rating
+Repeat customers
+Revenue
+
+This information can influence provider ranking.
+
+Phase 35 — Provider Ranking & Reputation
+
+The platform should maintain provider reputation.
+
+Possible levels:
+
+New Provider
+
+↓
+
+Verified Provider
+
+↓
+
+Trusted Provider
+
+↓
+
+Top Provider
+
+↓
+
+Elite Provider
+
+The level can be calculated from:
+
+Rating
+Jobs completed
+Response rate
+Cancellation rate
+Customer complaints
+Verification status
+Experience
+Phase 36 — Portfolio
+
+Providers should build a portfolio.
+
+Each portfolio item can contain:
+
+Project title
+Service category
+Description
+Before image
+After image
+Completion date
+
+The portfolio appears on the public provider profile.
+
+Phase 37 — Provider Notifications
+
+Providers should receive notifications for:
+
+New service request
+Quote accepted
+Quote rejected
+Booking confirmed
+Booking changed
+Booking cancelled
+Customer message
+Upcoming appointment
+Payment received
+Withdrawal completed
+New review
+Verification update
+Document expiry
+Dispute
+Platform announcement
+
+Channels:
+
+In-app
+Push
+Email
+SMS
+Phase 38 — Cancellations & Rescheduling
+
+Providers may request cancellation or rescheduling.
+
+Reasons could include:
+
+Emergency
+Vehicle problem
+Customer unavailable
+Required equipment unavailable
+Unsafe working environment
+Wrong job description
+Other
+
+The platform should record cancellation metrics.
+
+Excessive provider cancellations may affect ranking.
+
+Phase 39 — Disputes
+
+Providers should be able to raise disputes.
+
+Possible reasons:
+
+Customer refused payment
+Customer claims incomplete work
+Incorrect cancellation
+Material reimbursement
+Customer behavior
+Property damage allegation
+Payment discrepancy
+
+Provider submits:
+
+Explanation
+Photos
+Messages
+Receipts
+Job evidence
+
+Case lifecycle:
+
+Opened → Under Review → Additional Information → Decision → Closed
+
+Phase 40 — Provider Support
+
+Provider support should include:
+
+Help Center
+FAQs
+Tutorials
+Contact support
+Chat
+Support tickets
+
+Possible support categories:
+
+Booking
+Customer
+Payment
+Payout
+Account
+Verification
+Technical issue
+Dispute
+Phase 41 — Safety & Incident Reporting
+
+Provider should have an important safety feature:
+
+Report Safety Issue
+
+Examples:
+
+Threatening customer
+Unsafe property
+Hazardous environment
+Fraud
+Harassment
+Accident
+Injury
+
+Serious incidents should be escalated to platform administrators.
+
+Phase 42 — Recurring Customers
+
+Providers should see recurring service relationships.
+
+Examples:
+
+Monthly cleaning
+Quarterly AC maintenance
+Annual electrical inspection
+Weekly gardening
+
+Provider can view:
+
+Customer
+Service
+Frequency
+Next visit
+Earnings
+Phase 43 — Business Customers
+
+Some providers may serve commercial customers.
+
+The system should support:
+
+Offices
+Companies
+Hotels
+Apartments
+Retail stores
+Property managers
+
+Providers may manage negotiated rates for corporate customers.
+
+Phase 44 — Team Management
+
+Business providers should be able to add workers.
+
+Example:
+
+ABC Plumbing Ltd
+
+Team:
+
+Company Admin
+Dispatcher
+Plumber A
+Plumber B
+Apprentice
+
+Each employee should have permissions.
+
+Roles could include:
+
+Owner
+Manager
+Dispatcher
+Technician
+Finance officer
+Phase 45 — Job Assignment
+
+For company providers:
+
+Customer booking
+
+↓
+
+Company account
+
+↓
+
+Dispatcher
+
+↓
+
+Technician assignment
+
+Technician receives the job in their mobile app.
+
+The company can monitor the job without sharing administrative permissions with technicians.
+
+Phase 46 — Equipment & Tools
+
+Advanced providers should manage equipment.
+
+Examples:
+
+Drilling machine
+Pressure washer
+Ladder
+Electrical tester
+Plumbing inspection camera
+
+Information:
+
+Equipment
+Serial number
+Condition
+Assigned employee
+Maintenance date
+
+This is especially valuable for larger service companies.
+
+Phase 47 — Documents & Compliance
+
+Providers need a document center containing:
+
+Identity documents
+Licences
+Certifications
+Insurance
+Business registration
+Tax documents
+Background checks
+
+The system should track expiration dates.
+
+Example:
+
+Electrical Licence expires in 30 days.
+
+Phase 48 — Promotions
+
+Providers may participate in platform promotions.
+
+Examples:
+
+10% Weekend Discount
+
+or
+
+First Booking Discount
+
+Promotions could be:
+
+Platform funded
+Provider funded
+Shared
+
+The provider should see the effect on earnings before joining the promotion.
+
+Phase 49 — Provider Analytics
+
+Business providers especially need advanced analytics.
+
+Dashboard could include:
+
+Revenue trend
+Jobs completed
+Most profitable services
+Highest-demand locations
+Repeat customer rate
+Average booking value
+Team performance
+Customer ratings
+Cancellation rate
+Service demand
+
+Filters:
+
+Today
+Week
+Month
+Quarter
+Year
+Custom range
+Phase 50 — Provider Settings
+
+Settings should be divided into clear sections.
+
+Personal Information
+Name
+Photo
+Contact information
+Business
+Business information
+Services
+Services
+Pricing
+Availability
+Schedule
+Service area
+Payments
+Wallet
+Payout methods
+Notifications
+SMS
+Email
+Push
+Security
+Password
+2FA
+Devices
+Login history
+Privacy
+Data permissions
+Integrations
+
+For advanced business accounts.
+
+Phase 51 — Provider Activity & Audit History
+
+The provider should see important account activity.
+
+Example:
+
+02 Sep 2026 — 09:21
+Booking #FX1932 accepted.
+
+02 Sep 2026 — 08:45
+TZS 180,000 payment received.
+
+01 Sep 2026 — 17:14
+Service price updated.
+
+For company accounts this becomes particularly important because several employees may operate the account.
+
+Phase 52 — Subscription / Provider Plans
+
+If FIXO monetizes providers using subscriptions, providers could have plans such as:
+
+Starter
+
+Professional
+
+Business
+
+Enterprise
+
+Plans could affect:
+
+Number of service categories
+Service radius
+Number of employees
+Analytics
+Marketplace ranking
+Commission percentage
+Promotional tools
+
+This is separate from booking commission.
+
+Phase 53 — Provider Account Restrictions
+
+The system needs provider status management.
+
+Possible statuses:
+
+Draft
+
+Pending Verification
+
+Active
+
+Temporarily Suspended
+
+Restricted
+
+Deactivated
+
+Banned
+
+Closed
+
+Restrictions should have reasons and, where appropriate, appeal mechanisms.
+
+Phase 54 — Provider Account Closure
+
+Provider can request account closure.
+
+Before closure, the system checks:
+
+Active bookings
+Open disputes
+Pending refunds
+Available wallet balance
+Pending withdrawals
+Outstanding obligations
+
+The system should not immediately delete transactional history required for financial, dispute, security or regulatory purposes.
+
+The complete Provider journey
+
+The provider-side business flow should therefore become:
+
+PUBLIC PROVIDER PORTAL
+        ↓
+PROVIDER REGISTRATION
+        ↓
+AUTHENTICATION
+        ↓
+ONBOARDING
+        ↓
+IDENTITY / BUSINESS VERIFICATION
+        ↓
+PROFILE
+        ↓
+SERVICES & PRICING
+        ↓
+SERVICE AREAS
+        ↓
+AVAILABILITY
+        ↓
+PROVIDER DASHBOARD
+        ↓
+GO ONLINE
+        ↓
+MATCHING ENGINE
+        ↓
+JOB REQUEST
+        ↓
+ACCEPT / DECLINE / QUOTE
+        ↓
+CUSTOMER ACCEPTS
+        ↓
+BOOKING CONFIRMED
+        ↓
+CALENDAR
+        ↓
+PREPARE FOR JOB
+        ↓
+TRAVEL TO CUSTOMER
+        ↓
+REAL-TIME TRACKING
+        ↓
+ARRIVAL VERIFICATION
+        ↓
+START SERVICE
+        ↓
+JOB CHECKLIST
+        ↓
+EVIDENCE / DOCUMENTATION
+        ↓
+CHANGE REQUESTS
+        ↓
+MATERIALS / EXPENSES
+        ↓
+COMPLETE SERVICE
+        ↓
+CUSTOMER SIGN-OFF
+        ↓
+FINAL BILL
+        ↓
+PAYMENT
+        ↓
+PLATFORM COMMISSION
+        ↓
+PROVIDER WALLET
+        ↓
+PAYOUT
+        ↓
+INVOICE / STATEMENT
+        ↓
+CUSTOMER REVIEW
+        ↓
+PROVIDER PERFORMANCE
+        ↓
+REPUTATION / RANKING
+        ↓
+REPEAT / RECURRING JOBS
+Core provider modules
+
+When we convert these requirements into the actual application, I would recommend roughly these 20 major navigation modules instead of exposing all 54 processes as separate menu items:
+
+#	Provider module	Purpose
+1	Dashboard	Provider command center
+2	Requests	Incoming customer jobs
+3	Quotes	Quotations and offers
+4	Bookings	Confirmed and active jobs
+5	Calendar	Job scheduling
+6	Messages	Customer communication
+7	Services	Services offered
+8	Pricing	Rates and pricing rules
+9	Service Areas	Provider coverage
+10	Availability	Working schedule
+11	Customers	Customer relationships
+12	Wallet	Provider money
+13	Earnings	Revenue reporting
+14	Payouts	Withdrawal management
+15	Reviews	Ratings and feedback
+16	Performance	Provider KPIs
+17	Team	Employees and technicians
+18	Documents	Verification/compliance
+19	Support	Cases and disputes
+20	Settings	Account configuration
+
+The important architectural point is that the Provider App should not merely be a second version of the Customer App. The Customer side is primarily a service-purchasing application, while the Provider side is effectively a small field-service business management system connected to the FIXO marketplace.
+
+That distinction will make the provider platform considerably more powerful and scalable.

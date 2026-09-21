@@ -1,0 +1,76 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "bookings": "予約",
+    "calendar": "カレンダー",
+    "inbox": "受信箱",
+    "profile": "プロフィール"
+  },
+  "home": {
+    "greetingMorning": "おはようございます",
+    "greetingAfternoon": "こんにちは",
+    "greetingEvening": "こんばんは",
+    "searchPlaceholder": "サービスを検索...",
+    "specialOffers": "特別オファー",
+    "seeAll": "すべて見る",
+    "offAmount": "{{amount}}オフ",
+    "services": "サービス",
+    "more": "もっと見る",
+    "mostPopular": "人気のサービス",
+    "noProviders": "まだ登録されている業者がありません。",
+    "serviceFallback": "サービス"
+  },
+  "bookings": {
+    "title": "マイ予約",
+    "tabUpcoming": "予定",
+    "tabCompleted": "完了",
+    "tabCancelled": "キャンセル済み",
+    "emptyTitle": "{{tab}}の予約はありません",
+    "emptySubtitle": "{{tab}}の予約はここに表示されます。",
+    "serviceFallback": "サービス",
+    "loadingDetails": "詳細を読み込み中…",
+    "totalPaid": "支払合計",
+    "viewProvider": "業者を見る",
+    "cancelBooking": "予約をキャンセル",
+    "eReceipt": "電子領収書"
+  },
+  "calendar": {
+    "title": "マイカレンダー",
+    "loading": "読み込み中…",
+    "bookingsOn": "{{date}}の予約",
+    "noBookingsThisDay": "この日の予約はありません",
+    "dotHint": "下に点が付いている日付には実際の予約があります。",
+    "serviceFallback": "サービス"
+  },
+  "inbox": {
+    "title": "受信箱",
+    "subtitle": "実際の予約先の業者にメッセージを送りましょう。",
+    "emptyTitle": "まだ会話はありません",
+    "emptySubtitle": "予約に業者が割り当てられると、ここでメッセージを送れるようになります。",
+    "serviceFallback": "サービス"
+  },
+  "profileHub": {
+    "title": "プロフィールと設定",
+    "menu": {
+      "editProfile": "プロフィールを編集",
+      "notificationSettings": "通知設定",
+      "wallet": "ウォレット",
+      "paymentMethods": "支払い方法",
+      "invoices": "請求書",
+      "history": "履歴",
+      "loyaltyRewards": "ロイヤルティと特典",
+      "promotions": "プロモーション",
+      "activity": "アクティビティ",
+      "feedback": "フィードバック",
+      "security": "セキュリティ",
+      "language": "言語",
+      "privacyPolicy": "プライバシーポリシー",
+      "inviteFriends": "友達を招待",
+      "helpCenter": "ヘルプセンター"
+    },
+    "logOut": "ログアウト",
+    "logoutConfirmTitle": "アカウントからログアウトしますか？",
+    "logoutConfirmBody": "予約にアクセスするには再度サインインする必要があります。",
+    "cancel": "キャンセル"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "loading": "लोड हो रहा है…",
+  "itemLabel_one": "विवाद",
+  "itemLabel_other": "विवाद",
+  "page": {
+    "title": "विवाद",
+    "subtitle": "अपनी बुकिंग पर उठाए गए विवादों को ट्रैक और प्रबंधित करें"
+  },
+  "metrics": {
+    "total": "कुल विवाद",
+    "totalHint_one": "{{count}} विवाद दर्ज किया गया",
+    "totalHint_other": "{{count}} विवाद दर्ज किए गए",
+    "open": "खुले / लंबित",
+    "openHint": "समाधान की प्रतीक्षा में",
+    "closed": "सुलझाए गए",
+    "closedHint": "सुलझाए गए, बंद किए गए या वापस लिए गए"
+  },
+  "search": {
+    "placeholder": "श्रेणी, विवरण या बुकिंग द्वारा खोजें..."
+  },
+  "filters": {
+    "statusPlaceholder": "स्थिति",
+    "all": "सभी स्थितियां",
+    "open": "खुला",
+    "closed": "बंद"
+  },
+  "columns": {
+    "category": "श्रेणी",
+    "description": "विवरण",
+    "booking": "बुकिंग",
+    "status": "स्थिति",
+    "created": "बनाया गया"
+  },
+  "categories": {
+    "SERVICE_QUALITY": "सेवा की गुणवत्ता",
+    "DAMAGE": "नुकसान",
+    "BILLING": "बिलिंग",
+    "NO_SHOW": "उपस्थित न होना",
+    "OTHER": "अन्य"
+  },
+  "evidenceKinds": {
+    "PHOTO": "फ़ोटो",
+    "DOCUMENT": "दस्तावेज़",
+    "OTHER": "अन्य"
+  },
+  "empty": {
+    "title": "अभी तक कोई विवाद नहीं",
+    "description": "यदि आपकी किसी बुकिंग में कुछ गलत होता है, तो आप यहां एक विवाद दर्ज कर सकते हैं और हमारी टीम इसमें हस्तक्षेप करेगी।",
+    "filteredTitle": "कोई मेल खाता विवाद नहीं",
+    "filteredDescription": "कोई अलग खोज शब्द या स्थिति फ़िल्टर आज़माएं।",
+    "clearFilters": "फ़िल्टर साफ़ करें"
+  },
+  "newDispute": {
+    "trigger": "नया विवाद",
+    "title": "नया विवाद दर्ज करें",
+    "subtitle": "हमें बताएं कि आपकी बुकिंग में क्या गलत हुआ, हम इसकी समीक्षा करेंगे।",
+    "bookingLabel": "बुकिंग",
+    "bookingPlaceholder": "एक बुकिंग चुनें",
+    "noBookings": "अभी तक आपके पास कोई बुकिंग नहीं है जिस पर विवाद दर्ज किया जा सके।",
+    "serviceFallback": "सेवा",
+    "categoryLabel": "श्रेणी",
+    "descriptionLabel": "विवरण",
+    "descriptionPlaceholder": "कम से कम 10 अक्षरों में बताएं कि क्या हुआ...",
+    "charCount": "{{count}}/{{max}}",
+    "cancel": "रद्द करें",
+    "submit": "विवाद सबमिट करें",
+    "submitting": "सबमिट हो रहा है...",
+    "opened": "विवाद दर्ज किया गया — हमारी टीम इसकी समीक्षा करेगी",
+    "errors": {
+      "pickBooking": "पहले एक बुकिंग चुनें",
+      "descriptionLength": "विवरण 10 से 2000 अक्षरों के बीच होना चाहिए"
+    }
+  },
+  "detail": {
+    "title": "विवाद का विवरण",
+    "booking": "बुकिंग",
+    "service": "सेवा",
+    "description": "विवरण",
+    "evidence": "सबूत",
+    "noEvidence": "अभी तक कोई सबूत संलग्न नहीं किया गया।",
+    "withdraw": "विवाद वापस लें",
+    "withdrawing": "वापस लिया जा रहा है...",
+    "withdrawn": "विवाद वापस ले लिया गया",
+    "alreadyClosed": "यह विवाद पहले ही बंद हो चुका है",
+    "withdrawConfirmTitle": "क्या आप इस विवाद को वापस लेना चाहते हैं?",
+    "withdrawConfirmDescription": "इससे विवाद बंद हो जाएगा और इसे पूर्ववत नहीं किया जा सकता। केवल तभी वापस लें जब समस्या सुलझ चुकी हो।",
+    "addEvidence": {
+      "title": "सबूत जोड़ें",
+      "urlPlaceholder": "https://... किसी फ़ोटो या दस्तावेज़ का लिंक",
+      "notePlaceholder": "वैकल्पिक नोट",
+      "add": "सबूत जोड़ें",
+      "adding": "जोड़ा जा रहा है...",
+      "added": "सबूत जोड़ा गया",
+      "errors": {
+        "url": "एक मान्य URL दर्ज करें (अधिकतम 2000 अक्षर)"
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "NTF.BOOKING.CONFIRMED.V1": {
+    "customer": {"title": "Réservation confirmée", "body": "{booking_number} — votre prestataire a été réservé."},
+    "assigned_provider": {"title": "Nouvelle réservation attribuée", "body": "Vous avez été réservé pour {booking_number}."}
+  },
+  "NTF.PAYMENT.AUTHORIZED.V1": {
+    "customer": {"title": "Paiement autorisé", "body": "{booking_number} — fonds réservés pour la prestation."}
+  },
+  "NTF.BOOKING.ON_THE_WAY.V1": {
+    "customer": {"title": "Votre prestataire est en route", "body": "Réservation {booking_number}"}
+  },
+  "NTF.BOOKING.ARRIVED.V1": {
+    "customer": {"title": "Votre prestataire est arrivé", "body": "Réservation {booking_number}"}
+  },
+  "NTF.SERVICE.COMPLETION_REQUESTED.V1": {
+    "customer": {"title": "Le prestataire a terminé la prestation", "body": "{booking_number} — veuillez vérifier et confirmer la fin des travaux."}
+  },
+  "NTF.SERVICE.COMPLETED.V1": {
+    "customer": {"title": "Prestation terminée", "body": "{booking_number} — merci pour votre confirmation."}
+  },
+  "NTF.PAYMENT.CAPTURED.V1": {
+    "customer": {"title": "Paiement reçu", "body": "{booking_number} — fonds débités."}
+  },
+  "NTF.INVOICE.ISSUED.V1": {
+    "customer": {"title": "Facture {invoice_number}", "body": "{total_amount} {currency} dus."}
+  },
+  "NTF.MAINTENANCE.OVERDUE.V1": {
+    "customer": {"title": "Entretien en retard", "body": "Le plan {plan_number} a dépassé sa date d'échéance."}
+  }
+}

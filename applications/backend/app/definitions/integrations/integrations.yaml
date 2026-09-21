@@ -1,0 +1,29 @@
+# Integration definitions — INT-* catalogue (scaffold sample).
+#
+# The IntegrationRegistry is seeded from definitions like these. IDs follow the
+# INT.*.<domain>.<name>.V<n> convention so the registry remains versioned and
+# stable. Application code never references these directly; adapters do.
+int.identity.otp.v1:
+  category: identity
+  operation: otp
+  provider: provisional
+  enabled: false
+  environment: development
+
+int.payment.mobile_money.v1:
+  category: payments
+  operation: mobile_money
+  credentials_key: MOBILE_MONEY_PRIMARY
+  enabled: false
+
+int.sms.transactional.v1:
+  category: communications
+  operation: sms
+  credentials_key: SMS_PRIMARY
+  enabled: false
+
+int.email.transactional.v1:
+  category: communications
+  operation: email
+  credentials_key: EMAIL_PRIMARY
+  enabled: false

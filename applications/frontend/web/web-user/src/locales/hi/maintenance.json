@@ -1,0 +1,92 @@
+{
+  "loading": "लोड हो रहा है…",
+  "page": {
+    "title": "रखरखाव",
+    "subtitle": "आपके घरेलू सामान के लिए आवर्ती रखरखाव योजनाएं"
+  },
+  "metrics": {
+    "total": "कुल योजनाएं",
+    "totalHint": "अब तक",
+    "active": "सक्रिय योजनाएं",
+    "activeHint": "फ़िलहाल निर्धारित",
+    "dueSoon": "जल्द देय",
+    "dueSoonHint_one": "{{count}} दिन के भीतर",
+    "dueSoonHint_other": "{{count}} दिनों के भीतर",
+    "overdue": "अतिदेय",
+    "overdueHint": "ध्यान देने की आवश्यकता है"
+  },
+  "filterBar": {
+    "searchPlaceholder": "सामान या सेवा से खोजें...",
+    "statusPlaceholder": "स्थिति",
+    "allStatuses": "सभी स्थितियां",
+    "addPlan": "योजना जोड़ें"
+  },
+  "table": {
+    "asset": "सामान",
+    "service": "सेवा",
+    "interval": "अंतराल",
+    "nextDue": "अगली देय तारीख",
+    "status": "स्थिति",
+    "actions": "कार्रवाइयां",
+    "intervalValue_one": "हर {{count}} दिन में",
+    "intervalValue_other": "हर {{count}} दिनों में"
+  },
+  "statuses": {
+    "ACTIVE": "सक्रिय",
+    "OVERDUE": "अतिदेय",
+    "CANCELLED": "रद्द"
+  },
+  "assetFallback": "सामान",
+  "serviceFallback": "सेवा",
+  "actions": {
+    "markDone": "पूर्ण के रूप में चिह्नित करें",
+    "markingDone": "चिह्नित किया जा रहा है…",
+    "cancel": "रद्द करें",
+    "cancelling": "रद्द किया जा रहा है…",
+    "cancelledNote": "योजना रद्द की गई",
+    "markedDone": "\"{{asset}}\" को सेवित के रूप में चिह्नित किया गया"
+  },
+  "cancelConfirm": {
+    "title": "क्या इस रखरखाव योजना को रद्द करना है?",
+    "description": "इससे \"{{asset}}\" — {{service}} के लिए भविष्य के रिमाइंडर बंद हो जाएंगे। इसे पूर्ववत नहीं किया जा सकता।",
+    "keep": "योजना रखें",
+    "confirm": "योजना रद्द करें",
+    "cancelled": "रखरखाव योजना रद्द की गई"
+  },
+  "itemLabel": "रखरखाव योजनाएं",
+  "empty": {
+    "title": "अभी तक कोई रखरखाव योजना नहीं",
+    "description": "एक आवर्ती योजना सेट करें ताकि सामान के रखरखाव में देरी होने से पहले हम आपको याद दिला सकें।",
+    "action": "योजना जोड़ें",
+    "filteredTitle": "कोई मिलती-जुलती योजना नहीं",
+    "filteredDescription": "कोई अन्य खोज शब्द या स्थिति आज़माएं।",
+    "clearFilters": "फ़िल्टर साफ़ करें"
+  },
+  "addDialog": {
+    "title": "रखरखाव योजना जोड़ें",
+    "assetLabel": "सामान",
+    "assetPlaceholder": "एक सामान चुनें",
+    "noAssetsHint": "आपके पास अभी तक कोई सामान नहीं है।",
+    "noAssetsCta": "सामान जोड़ें",
+    "categoryLabel": "श्रेणी",
+    "categoryPlaceholder": "एक श्रेणी चुनें",
+    "serviceLabel": "सेवा",
+    "servicePlaceholder": "एक सेवा चुनें",
+    "loadingServices": "सेवाएं लोड हो रही हैं…",
+    "noServicesFound": "इस श्रेणी में कोई सेवा नहीं मिली",
+    "intervalLabel": "हर (दिनों) में दोहराएं",
+    "intervalHint": "1 से 1095 दिनों के बीच",
+    "nextDueLabel": "अगली देय तारीख (वैकल्पिक)",
+    "nextDueHint_one": "खाली छोड़ने पर आज से {{count}} दिन डिफ़ॉल्ट होगा",
+    "nextDueHint_other": "खाली छोड़ने पर आज से {{count}} दिन डिफ़ॉल्ट होंगे",
+    "notesLabel": "टिप्पणियां (वैकल्पिक)",
+    "notesPlaceholder": "इस योजना के बारे में कोई भी उपयोगी जानकारी",
+    "cancel": "रद्द करें",
+    "save": "योजना जोड़ें",
+    "saving": "जोड़ा जा रहा है…",
+    "selectAsset": "पहले एक सामान चुनें।",
+    "selectService": "पहले एक सेवा चुनें।",
+    "intervalRange": "अंतराल 1 से 1095 दिनों के बीच होना चाहिए।",
+    "created": "रखरखाव योजना जोड़ी गई"
+  }
+}
