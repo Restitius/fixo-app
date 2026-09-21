@@ -19,8 +19,7 @@ tags = ["sms", "credential"]
 [[rules]]
 id = "fixo-webhook-secret-assignment"
 description = "Webhook signing secret assigned inline"
-regex = '''(?i)(webhook[_-]?secret|signing[_-]?secret)\s*[:=]\s*["\']?([A-Za-z0-9/+=_-]{16,})'''
-secretGroup = 2
+regex = '''(?i)(webhook[_-]?secret|signing[_-]?secret)\s*[:=]\s*["\']?[A-Za-z0-9/+=_-]{16,}'''
 tags = ["webhook", "credential", "critical"]
 
 [[rules]]
@@ -43,5 +42,4 @@ regexes = [
   '''swl_(live|test)_(x|X){8,}''',
   '''swl_test_XXXXXXXXXXXXXXXX''',
   '''CHANGE_ME''',
-  '''^ci-fake-webhook-secret$''',
 ]

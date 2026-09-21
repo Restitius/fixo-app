@@ -56,10 +56,10 @@
 | PRV-24 | 24 | Materials & Expenses — booking material lines (item/qty/amount) + receipt/photo/invoice attachments, per-currency totals | ✅ done (tag `provider-phase24-v1`) |
 | PRV-25 | 25 | Job Completion — completion notes + evidence | ✅ done (commit `d0872e0`) |
 | PRV-26 | 26 | Customer Sign-Off | ✅ done (commit `d0872e0`) |
-| PRV-27 | 27 | Final Billing | ⏳ next |
-| PRV-28 | 28 | Provider Earnings | ⏳ |
-| PRV-29 | 29 | Provider Wallet | ✅ `provider-phase29-v1` |
-| PRV-30 | 30 | Payout Management — methods + withdrawals | ✅ `provider-phase30-v1` |
+| PRV-27 | 27 | Final Billing | ✅ done (tag `provider-phase27-v1`) |
+| PRV-28 | 28 | Provider Earnings | ✅ done (tag `provider-phase28-v1`) |
+| PRV-29 | 29 | Provider Wallet | ✅ done (tag `provider-phase29-v1`) |
+| PRV-30 | 30 | Payout Management — methods + withdrawals | ✅ done (tag `provider-phase30-v1`) |
 | PRV-31 | 31 | Commission & Fees — gross/commission/tax/net | ⏳ |
 | PRV-32 | 32 | Invoices & Statements | ✅ |
 | PRV-33 | 33 | Ratings & Reviews | ✅ |

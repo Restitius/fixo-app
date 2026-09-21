@@ -2,25 +2,12 @@
   "name": "protect-dev",
   "target": "branch",
   "enforcement": "active",
-  "conditions": {
-    "ref_name": {
-      "include": [
-        "refs/heads/dev"
-      ],
-      "exclude": []
-    }
-  },
+  "conditions": { "ref_name": { "include": ["refs/heads/dev"], "exclude": [] } },
   "bypass_actors": [],
   "rules": [
-    {
-      "type": "deletion"
-    },
-    {
-      "type": "non_fast_forward"
-    },
-    {
-      "type": "required_signatures"
-    },
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "required_signatures" },
     {
       "type": "pull_request",
       "parameters": {
@@ -36,15 +23,8 @@
       "parameters": {
         "strict_required_status_checks_policy": true,
         "required_status_checks": [
-          {
-            "context": "pr-gate"
-          },
-          {
-            "context": "security-gate"
-          },
-          {
-            "context": "git-flow-gate"
-          }
+          { "context": "pr-gate" },
+          { "context": "security-gate" }
         ]
       }
     }

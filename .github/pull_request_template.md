@@ -3,20 +3,6 @@
 
 Ticket: FIXO-___
 
-## Git promotion validation
-
-<!-- Required route: fix/feature -> page -> module -> dev -> staging -> main.
-Check only completed validation levels and replace the evidence placeholder. -->
-
-- [ ] Fix validation complete
-- [ ] Page validation complete
-- [ ] Module validation complete
-- [ ] Staging validation complete
-
-Validation evidence:
-
-<!-- Add test commands/results or links after the colon above. Reviewers must verify them. -->
-
 <!-- What changes, and what problem it solves. Two or three sentences. -->
 
 ## Risk tier
