@@ -21,9 +21,17 @@ services:
     image: postgres:16-alpine
     container_name: fixo-postgres
     restart: unless-stopped
-    # Keep ERROR messages while omitting the full failed SQL from Docker logs.
-    # Set POSTGRES_LOG_MIN_ERROR_STATEMENT=ERROR when statement text is needed.
-    command: ["postgres", "-c", "log_min_error_statement=${POSTGRES_LOG_MIN_ERROR_STATEMENT:-PANIC}"]
+    # Log the query ID and error, without the full failed SQL statement.
+    # Query IDs can be 0 when parsing fails before PostgreSQL computes one.
+    # Set POSTGRES_LOG_MIN_ERROR_STATEMENT=ERROR to include SQL for debugging.
+    command:
+      - postgres
+      - -c
+      - compute_query_id=on
+      - -c
+      - "log_line_prefix=%m [%p] query_id=%Q "
+      - -c
+      - "log_min_error_statement=${POSTGRES_LOG_MIN_ERROR_STATEMENT:-PANIC}"
     environment:
       POSTGRES_USER: fixo
       POSTGRES_PASSWORD: fixo_dev_password
