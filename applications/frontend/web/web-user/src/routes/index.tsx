@@ -88,12 +88,7 @@ function Landing() {
       <header className="sticky top-0 z-10 border-b border-transparent bg-background/70 backdrop-blur-md">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-2">
-            <span
-              className="flex size-9 items-center justify-center rounded-xl text-primary-foreground shadow-[var(--shadow-glow)]"
-              style={{ backgroundImage: "var(--gradient-primary)" }}
-            >
-              <Hammer className="size-5" />
-            </span>
+            <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-9 object-contain" />
             <span className="text-lg font-bold tracking-tight">FIXO</span>
           </div>
           <nav className="flex items-center gap-2">
