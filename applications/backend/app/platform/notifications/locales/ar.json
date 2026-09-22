@@ -1,7 +1,7 @@
 {
   "NTF.BOOKING.CONFIRMED.V1": {
     "customer": {"title": "تم تأكيد الحجز", "body": "{booking_number} — تم حجز مزود الخدمة الخاص بك."},
-    "assigned_provider": {"title": "تم تعيين حجز جديد", "body": "تم حجزك من أجل {booking_number}."}
+    "provider": {"title": "تم تعيين حجز جديد", "body": "تم حجزك من أجل {booking_number}."}
   },
   "NTF.PAYMENT.AUTHORIZED.V1": {
     "customer": {"title": "تم اعتماد الدفع", "body": "{booking_number} — تم حجز الأموال لهذه الخدمة."}

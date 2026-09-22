@@ -1,4 +1,5 @@
 """SwalaSMS provider implementation for FIXO transactional SMS."""
+
 from __future__ import annotations
 
 import re
@@ -56,9 +57,7 @@ class SwalaSmsProvider(MessagingProvider):
         """Cheap liveness probe via GET /sms/profile."""
         api_key = self.secret("SWALA_SMS_API_KEY", required=True)
         client = self._client(timeout_seconds=10.0)
-        response = await client.request(
-            "GET", "/sms/profile", headers={"authorization": f"Bearer {api_key}"}
-        )
+        response = await client.request("GET", "/sms/profile", headers={"authorization": f"Bearer {api_key}"})
         if response.status == 200:
             return True
         return False
@@ -72,7 +71,7 @@ class SwalaSmsProvider(MessagingProvider):
         notification_id: str | None = None,
     ) -> dict[str, Any]:
         api_key = self.secret("SWALA_SMS_API_KEY", required=True)
-        sender_id = self.optional_secret("SWALA_SMS_SENDER_ID") or "FIXO"
+        sender_id = self.optional_secret("SWALA_SMS_SENDER_ID") or "FIXO APP"
 
         if not self.E164_RE.match(to):
             raise ProviderRejectedError(
@@ -88,7 +87,9 @@ class SwalaSmsProvider(MessagingProvider):
                 details={"recipient": to},
             )
 
-        idempotency_key = self._idempotency_key(notification_id=notification_id, reference=reference, recipient=to)
+        idempotency_key = self._idempotency_key(
+            notification_id=notification_id, reference=reference, recipient=to
+        )
 
         payload = {
             "recipient": to,
@@ -129,6 +130,13 @@ class SwalaSmsProvider(MessagingProvider):
     def _interpret_send_response(*, to: str, response: Any, idempotency_key: str) -> dict[str, Any]:
         status = getattr(response, "status", None)
         body = getattr(response, "json", lambda: None)() or {}
+
+        if not isinstance(status, int):
+            raise ProviderRejectedError(
+                "Swala SMS provider returned no HTTP status",
+                code="INTEGRATION.SWALA_PROVIDER_ERROR",
+                details={"recipient": to},
+            )
 
         if status == 409:
             raise ProviderRejectedError(
