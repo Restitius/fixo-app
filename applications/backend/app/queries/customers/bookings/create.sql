@@ -30,7 +30,7 @@ WITH ins AS (
            jsonb_build_object('booking_id', ins.booking_id, 'booking_number', ins.booking_number)
       FROM ins
       CROSS JOIN LATERAL (
-          VALUES ('customer', ins.customer_id), ('assigned_provider', ins.provider_id)
+          VALUES ('customer', ins.customer_id), ('provider', ins.provider_id)
       ) AS v(recipient_type, recipient_id)
     RETURNING outbox_id
 )

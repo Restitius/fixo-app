@@ -11,11 +11,12 @@ Pipeline (architecture section 18):
 Application/domain services never touch this class; only the persistence
 adapters (app/adapters/persistence) consume it.
 """
+
 from __future__ import annotations
 
 from typing import Any
 
-from app.infrastructure.database.query_executor import QueryExecutor
+from app.infrastructure.database.query_executor import FetchMode, QueryExecutor
 from app.shared.exceptions.hierarchy import ConfigurationError
 
 
@@ -42,7 +43,7 @@ class SQLQueryManager:
         query_id: str,
         params: dict[str, Any] | None = None,
         *,
-        fetch: str = "all",
+        fetch: FetchMode = "all",
         **execution_options: Any,
     ) -> Any:
         """Run one governed query end-to-end."""

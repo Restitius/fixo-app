@@ -1,7 +1,7 @@
 {
   "NTF.BOOKING.CONFIRMED.V1": {
     "customer": {"title": "预约已确认", "body": "{booking_number} — 已为您安排服务人员。"},
-    "assigned_provider": {"title": "已分配新预约", "body": "您已被安排负责 {booking_number}。"}
+    "provider": {"title": "已分配新预约", "body": "您已被安排负责 {booking_number}。"}
   },
   "NTF.PAYMENT.AUTHORIZED.V1": {
     "customer": {"title": "付款已授权", "body": "{booking_number} — 已为此服务预留款项。"}

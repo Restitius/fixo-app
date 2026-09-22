@@ -1,7 +1,7 @@
 {
   "NTF.BOOKING.CONFIRMED.V1": {
     "customer": {"title": "Reserva confirmada", "body": "{booking_number} — su proveedor ha sido reservado."},
-    "assigned_provider": {"title": "Nueva reserva asignada", "body": "Se le ha reservado para {booking_number}."}
+    "provider": {"title": "Nueva reserva asignada", "body": "Se le ha reservado para {booking_number}."}
   },
   "NTF.PAYMENT.AUTHORIZED.V1": {
     "customer": {"title": "Pago autorizado", "body": "{booking_number} — fondos reservados para el trabajo."}
