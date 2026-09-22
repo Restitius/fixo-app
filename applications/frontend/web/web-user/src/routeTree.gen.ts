@@ -17,6 +17,7 @@ import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as DisputesRouteImport } from './routes/disputes'
 import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as InboxRouteImport } from './routes/inbox'
@@ -34,6 +35,7 @@ import { Route as ProtectedRouteImport } from './routes/protected'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as RecurringRouteImport } from './routes/recurring'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
@@ -78,6 +80,11 @@ const DisputesRoute = DisputesRouteImport.update({
 const FeedbackRoute = FeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HelpRoute = HelpRouteImport.update({
@@ -165,6 +172,11 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -200,6 +212,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
   '/inbox': typeof InboxRoute
@@ -217,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/providers': typeof ProvidersRoute
   '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
@@ -232,6 +246,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
   '/inbox': typeof InboxRoute
@@ -249,6 +264,7 @@ export interface FileRoutesByTo {
   '/providers': typeof ProvidersRoute
   '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
@@ -265,6 +281,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
   '/inbox': typeof InboxRoute
@@ -282,6 +299,7 @@ export interface FileRoutesById {
   '/providers': typeof ProvidersRoute
   '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
   '/verify-otp': typeof VerifyOtpRoute
@@ -299,6 +317,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/disputes'
     | '/feedback'
+    | '/forgot-password'
     | '/help'
     | '/history'
     | '/inbox'
@@ -316,6 +335,7 @@ export interface FileRouteTypes {
     | '/providers'
     | '/recurring'
     | '/register'
+    | '/reset-password'
     | '/search'
     | '/services'
     | '/verify-otp'
@@ -331,6 +351,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/disputes'
     | '/feedback'
+    | '/forgot-password'
     | '/help'
     | '/history'
     | '/inbox'
@@ -348,6 +369,7 @@ export interface FileRouteTypes {
     | '/providers'
     | '/recurring'
     | '/register'
+    | '/reset-password'
     | '/search'
     | '/services'
     | '/verify-otp'
@@ -363,6 +385,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/disputes'
     | '/feedback'
+    | '/forgot-password'
     | '/help'
     | '/history'
     | '/inbox'
@@ -380,6 +403,7 @@ export interface FileRouteTypes {
     | '/providers'
     | '/recurring'
     | '/register'
+    | '/reset-password'
     | '/search'
     | '/services'
     | '/verify-otp'
@@ -396,6 +420,7 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   DisputesRoute: typeof DisputesRoute
   FeedbackRoute: typeof FeedbackRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
   InboxRoute: typeof InboxRoute
@@ -413,6 +438,7 @@ export interface RootRouteChildren {
   ProvidersRoute: typeof ProvidersRoute
   RecurringRoute: typeof RecurringRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   ServicesRoute: typeof ServicesRoute
   VerifyOtpRoute: typeof VerifyOtpRoute
@@ -476,6 +502,13 @@ declare module '@tanstack/react-router' {
       path: '/feedback'
       fullPath: '/feedback'
       preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/help': {
@@ -597,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -644,6 +684,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   DisputesRoute: DisputesRoute,
   FeedbackRoute: FeedbackRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
   InboxRoute: InboxRoute,
@@ -661,6 +702,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProvidersRoute: ProvidersRoute,
   RecurringRoute: RecurringRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   ServicesRoute: ServicesRoute,
   VerifyOtpRoute: VerifyOtpRoute,
