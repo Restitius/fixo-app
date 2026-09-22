@@ -28,8 +28,8 @@
     "sha": "4f58ea79222b3b9dc2c8bbdd6debcef730109a75"
   },
   "aquasecurity/trivy-action": {
-    "tag": "v0.28.0",
-    "sha": "915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2"
+    "tag": "v0.36.0",
+    "sha": "ed142fd0673e97e23eac54620cfb913e5ce36c25"
   },
   "anchore/sbom-action": {
     "tag": "v0.17.9",
