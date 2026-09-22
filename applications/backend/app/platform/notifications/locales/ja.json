@@ -1,7 +1,7 @@
 {
   "NTF.BOOKING.CONFIRMED.V1": {
     "customer": {"title": "予約が確定しました", "body": "{booking_number} — 担当者の予約が完了しました。"},
-    "assigned_provider": {"title": "新しい予約が割り当てられました", "body": "{booking_number} の担当に割り当てられました。"}
+    "provider": {"title": "新しい予約が割り当てられました", "body": "{booking_number} の担当に割り当てられました。"}
   },
   "NTF.PAYMENT.AUTHORIZED.V1": {
     "customer": {"title": "お支払いが承認されました", "body": "{booking_number} — 作業のための資金が確保されました。"}

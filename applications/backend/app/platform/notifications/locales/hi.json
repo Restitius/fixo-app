@@ -1,7 +1,7 @@
 {
   "NTF.BOOKING.CONFIRMED.V1": {
     "customer": {"title": "बुकिंग की पुष्टि हो गई", "body": "{booking_number} — आपका प्रदाता बुक कर दिया गया है।"},
-    "assigned_provider": {"title": "नई बुकिंग सौंपी गई", "body": "आपको {booking_number} के लिए बुक किया गया है।"}
+    "provider": {"title": "नई बुकिंग सौंपी गई", "body": "आपको {booking_number} के लिए बुक किया गया है।"}
   },
   "NTF.PAYMENT.AUTHORIZED.V1": {
     "customer": {"title": "भुगतान अधिकृत", "body": "{booking_number} — इस काम के लिए राशि सुरक्षित कर दी गई है।"}
