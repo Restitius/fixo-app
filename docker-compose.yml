@@ -21,6 +21,9 @@ services:
     image: postgres:16-alpine
     container_name: fixo-postgres
     restart: unless-stopped
+    # Keep ERROR messages while omitting the full failed SQL from Docker logs.
+    # Set POSTGRES_LOG_MIN_ERROR_STATEMENT=ERROR when statement text is needed.
+    command: ["postgres", "-c", "log_min_error_statement=${POSTGRES_LOG_MIN_ERROR_STATEMENT:-PANIC}"]
     environment:
       POSTGRES_USER: fixo
       POSTGRES_PASSWORD: fixo_dev_password
