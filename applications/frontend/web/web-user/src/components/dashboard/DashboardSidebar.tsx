@@ -169,12 +169,7 @@ function SidebarBody({ onNavigate }: { onNavigate?: () => void }) {
 function Logo() {
   return (
     <div className="flex items-center gap-3">
-      <span
-        className="flex size-9 items-center justify-center rounded-xl text-primary-foreground shadow-[var(--shadow-glow)]"
-        style={{ backgroundImage: "var(--gradient-primary)" }}
-      >
-        <Wrench className="size-5" />
-      </span>
+      <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-9 object-contain" />
       <span className="text-xl font-bold tracking-tight">FIXO</span>
     </div>
   );
