@@ -73,7 +73,8 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <div className="w-full max-w-md space-y-8 p-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">{t("login.title")}</h1>
+          <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="mx-auto size-12 object-contain" />
+          <h1 className="mt-4 text-3xl font-bold">{t("login.title")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {t("login.subtitle")}
           </p>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Wrench } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import { useProviderAuth } from "@/lib/provider-auth";
 
@@ -53,12 +53,7 @@ function LoginPage() {
         </Link>
 
         <div className="mt-5 rounded-[2rem] bg-card p-7 shadow-[var(--shadow-card)]">
-          <span
-            className="flex size-12 items-center justify-center rounded-2xl text-primary-foreground shadow-[var(--shadow-glow)]"
-            style={{ backgroundImage: "var(--gradient-primary)" }}
-          >
-            <Wrench className="size-6" />
-          </span>
+          <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-12 object-contain" />
           <h1 className="mt-4 text-2xl font-bold tracking-tight">Welcome back</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sign in to your FIXO provider workspace.</p>
 

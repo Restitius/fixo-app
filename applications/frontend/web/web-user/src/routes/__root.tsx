@@ -10,7 +10,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import { Construction, HelpCircle, Home, RefreshCw, Sparkles, TrafficCone, Wrench } from "lucide-react";
+import { Construction, HelpCircle, Home, RefreshCw, Sparkles, TrafficCone } from "lucide-react";
 import { I18nextProvider } from "react-i18next";
 
 import appCss from "../styles.css?url";
@@ -104,9 +104,7 @@ function ErrorPageChrome({
   return (
     <div className="flex min-h-screen flex-col bg-background px-4 py-6">
       <header className="mx-auto flex w-full max-w-5xl items-center gap-2">
-        <span className="flex size-9 items-center justify-center rounded-xl text-primary-foreground" style={{ backgroundImage: "var(--gradient-primary)" }}>
-          <Wrench className="size-5" />
-        </span>
+        <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-9 object-contain" />
         <span className="text-lg font-bold tracking-tight text-foreground">FIXO</span>
       </header>
 
@@ -249,6 +247,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
     ],
   }),
   shellComponent: RootShell,
