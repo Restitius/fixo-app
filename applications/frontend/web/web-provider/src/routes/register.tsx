@@ -4,7 +4,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowLeft, Building2, User, Wrench } from "lucide-react";
+import { ArrowLeft, Building2, User } from "lucide-react";
 import { toast } from "sonner";
 
 import { useProviderAuth } from "@/lib/provider-auth";
@@ -112,12 +112,7 @@ function RegisterPage() {
 
         <div className="mt-5 rounded-[2rem] bg-card p-6 shadow-[var(--shadow-card)] sm:p-8">
           <div className="flex items-center gap-3">
-            <span
-              className="flex size-11 items-center justify-center rounded-2xl text-primary-foreground shadow-[var(--shadow-glow)]"
-              style={{ backgroundImage: "var(--gradient-primary)" }}
-            >
-              <Wrench className="size-5" />
-            </span>
+            <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-11 object-contain" />
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Create your provider account</h1>
               <p className="text-sm text-muted-foreground">We verify your email in the next step.</p>
