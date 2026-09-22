@@ -8,8 +8,12 @@ temporary integration branches, not additional permanent environments.
 
 Fetch origin, verify a clean worktree, and update dev with `git pull --ff-only`.
 If dev diverges, stop and review the commits instead of resetting or force-pushing.
-Create `fix/<task>` or `feature/<task>` from dev. Create the corresponding
-`page/<name>` and `module/<name>` integration branches from dev when needed.
+Create `module/<name>` from dev for a completed release batch. Start each
+`fix/<task>` or `feature/<task>` and its `page/<name>` from the current module
+tip. Merge the feature into the page and the page into the module before
+starting the next page. This keeps each page's graph diamond short while the
+module receives exactly one merge into dev. For unrelated work, start a new
+module batch from the then-current dev tip.
 Open reviewed PRs in this order:
 
 1. `fix/*` or `feature/*` into `page/*`: fix tests and code review.

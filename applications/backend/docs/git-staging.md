@@ -16,7 +16,10 @@ All implementation work must follow a controlled progression before reaching pro
 
 * Every implementation, bug fix, enhancement, or technical change must be developed in a dedicated temporary working branch.
 * Do **not** create permanent branches for individual fixes, pages, or modules.
-* Working branches should be created from the current `dev` branch.
+* Start a module integration branch from the current `dev` branch. Start each
+  working branch from that module's current tip. After a page is integrated,
+  start the next page from the updated module tip so page branches remain short
+  in the Git graph.
 * Use clear branch names such as:
 
   * `fix/category-validation`
@@ -38,6 +41,8 @@ Once the fix is confirmed:
 #### 3. Page-Level Integration
 
 Related fixes and implementations should be integrated into their corresponding page.
+The page branch starts at the same module tip as its working branch. Merge the
+page into the module before starting the next page in that module batch.
 
 For example:
 
