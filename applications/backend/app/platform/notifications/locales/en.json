@@ -1,7 +1,7 @@
 {
   "NTF.BOOKING.CONFIRMED.V1": {
     "customer": {"title": "Booking confirmed", "body": "{booking_number} — your provider has been booked."},
-    "assigned_provider": {"title": "New booking assigned", "body": "You've been booked for {booking_number}."}
+    "provider": {"title": "New booking assigned", "body": "You've been booked for {booking_number}."}
   },
   "NTF.PAYMENT.AUTHORIZED.V1": {
     "customer": {"title": "Payment authorized", "body": "{booking_number} — funds reserved for the job."}

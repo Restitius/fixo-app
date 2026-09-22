@@ -1,11 +1,10 @@
 -- PROV.NOTIFICATIONS.CREATE — persist one provider notification.
--- Matches the existing uq_notifications_reference unique index: a duplicate
--- (provider_id, reference_type, reference_id) is a safe no-op, not an error.
+-- An outbox item creates at most one provider inbox row, even after a retry.
 INSERT INTO "PROVIDER_NOTIFICATIONS"
-    (provider_id, channel, category, title, body, reference_type, reference_id)
+    (provider_id, channel, category, title, body, reference_type, reference_id, outbox_id)
 VALUES (
     CAST(:user_id AS uuid), :channel, :category, :title, :body,
-    :reference_type, CAST(:reference_id AS uuid)
+    :reference_type, CAST(:reference_id AS uuid), CAST(:outbox_id AS uuid)
 )
-ON CONFLICT ON CONSTRAINT uq_notifications_reference DO NOTHING
+ON CONFLICT (outbox_id) WHERE outbox_id IS NOT NULL DO NOTHING
 RETURNING id, created_at;

@@ -6,6 +6,7 @@ UPDATE "NOTIFICATION_DELIVERY_ATTEMPTS"
 SET status = :status,
     failure_reason = :failure_reason,
     next_retry_at = :next_retry_at,
-    provider_reference = COALESCE(:provider_reference, provider_reference)
+    provider_reference = COALESCE(:provider_reference, provider_reference),
+    updated_at = now()
 WHERE attempt_id = CAST(:attempt_id AS uuid)
 RETURNING attempt_id, outbox_id;

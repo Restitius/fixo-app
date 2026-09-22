@@ -5,12 +5,13 @@ WITH claimed AS (
     SELECT outbox_id
     FROM "NOTIFICATION_OUTBOX"
     WHERE status = 'pending'
+       OR (status = 'processing' AND claimed_at < now() - interval '5 minutes')
     ORDER BY created_at
     LIMIT :batch
     FOR UPDATE SKIP LOCKED
 )
 UPDATE "NOTIFICATION_OUTBOX" o
-SET status = 'processing'
+SET status = 'processing', claimed_at = now()
 FROM claimed c
 WHERE o.outbox_id = c.outbox_id
 RETURNING o.outbox_id, o.event_key, o.recipient_type, o.recipient_id, o.payload, o.created_at;

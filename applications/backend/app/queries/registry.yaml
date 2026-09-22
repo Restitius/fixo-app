@@ -731,6 +731,20 @@ queries:
       ownership_filter_required: false
       requires_auth: true
     sql: shared/notifications/delivery_attempt_update_status.sql
+  NTF.DELIVERY_ATTEMPTS.CLAIM_RETRY:
+    description: Atomically claim due notification channel retries.
+    operation: update
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_claim_retry.sql
+  NTF.DELIVERY_ATTEMPTS.FIND_BY_CHANNEL:
+    description: Detect an existing channel attempt when reclaiming an outbox item.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: true
+    sql: shared/notifications/delivery_attempt_find_by_channel.sql
   NTF.DELIVERY_ATTEMPTS.FIND_BY_REFERENCE:
     description: Locate the delivery attempt a provider webhook callback refers to.
     operation: read

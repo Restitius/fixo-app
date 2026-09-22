@@ -16,10 +16,14 @@ implementation does NOT do, corrected here:
     notification-catalogue test suite (not this one) is the right place
     for.
 """
+
 from __future__ import annotations
+
+from typing import cast
 
 import pytest
 
+from app.integrations.external.clients.http_client import HttpClient
 from app.integrations.external.exceptions.integration_errors import ProviderRejectedError
 from app.integrations.external.providers.sms.swala import SwalaSmsProvider
 from app.registries.integrations.integration_definition import IntegrationDefinition
@@ -84,3 +88,24 @@ def test_idempotency_key_differs_across_notifications_to_the_same_number():
     key1 = provider._idempotency_key(notification_id="ntf-1", reference=None, recipient="+255712345678")
     key2 = provider._idempotency_key(notification_id="ntf-2", reference=None, recipient="+255712345678")
     assert key1 != key2
+
+
+async def test_sms_uses_fixo_app_sender_id(monkeypatch):
+    monkeypatch.setenv("SWALA_SMS_SENDER_ID", "FIXO APP")
+    captured = {}
+
+    class Response:
+        status = 202
+
+        def json(self):
+            return {"data": {"uid": "provider-message-1"}}
+
+    class Client:
+        async def request(self, method, path, *, json_payload, headers):
+            captured.update(json_payload)
+            return Response()
+
+    provider = SwalaSmsProvider(_provider().definition, client=cast(HttpClient, Client()))
+    result = await provider.send_sms(to="+255712345678", text="Booking confirmed", notification_id="outbox-1")
+    assert captured["sender_id"] == "FIXO APP"
+    assert result["provider_message_uid"] == "provider-message-1"
