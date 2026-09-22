@@ -12,7 +12,9 @@ module/<surface>/<module>/<release-batch>
 dev
 ```
 
-Page changes are retained as individual commits. Pages belonging to one module
+Page changes are retained as individual commits. Start each working and page
+branch from the current module tip, then integrate that page before beginning
+the next one. This creates short page diamonds. Pages belonging to one module
 are collected on one temporary module branch and merged once into `dev`. A new
 module release batch starts only when the source history reaches the next module
 integration boundary. The four client surfaces remain explicit: `user-web`,
