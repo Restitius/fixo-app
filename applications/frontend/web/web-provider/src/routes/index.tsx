@@ -56,12 +56,7 @@ function JoinPage() {
     <div className="min-h-screen bg-background">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5">
         <div className="flex items-center gap-3">
-          <span
-            className="flex size-10 items-center justify-center rounded-2xl text-primary-foreground shadow-[var(--shadow-glow)]"
-            style={{ backgroundImage: "var(--gradient-primary)" }}
-          >
-            <Wrench className="size-5" />
-          </span>
+          <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-10 object-contain" />
           <div className="leading-tight">
             <span className="block text-lg font-bold tracking-tight">FIXO</span>
             <span className="block text-[11px] font-semibold uppercase tracking-wider text-primary">Provider</span>
