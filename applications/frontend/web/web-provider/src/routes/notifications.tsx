@@ -4,21 +4,7 @@ import { Bell, BellRing, CheckCheck } from "lucide-react";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
-import { activityApi, fixoSdk, settingsApi, type ActivityLogEntry, type ProviderNotificationRow } from "@/lib/api-client";
-
-// Real, persisted channel toggles — reuses the same generic key/value
-// preference store settings.tsx already uses for "language" (no dedicated
-// notification-preferences endpoint exists, but the store itself is real
-// and has no key namespace restriction, so this isn't fabricated).
-const CHANNELS = [
-  { key: "new_job_requests", label: "New job requests" },
-  { key: "quote_responses", label: "Quote responses" },
-  { key: "booking_changes", label: "Booking changes" },
-  { key: "payments_payouts", label: "Payments & payouts" },
-  { key: "reviews", label: "Reviews" },
-  { key: "compliance_reminders", label: "Compliance reminders" },
-  { key: "promotions", label: "Promotions from FIXO" },
-] as const;
+import { activityApi, fixoSdk, type ActivityLogEntry, type ProviderNotificationRow } from "@/lib/api-client";
 
 const title = "Notifications — FIXO Provider";
 const description = "Job alerts, quote activity, payments, reviews and compliance reminders in one feed.";
@@ -40,7 +26,6 @@ function NotificationsPage() {
   const [items, setItems] = useState<ProviderNotificationRow[]>([]);
   const [filter, setFilter] = useState("ALL");
   const [activity, setActivity] = useState<ActivityLogEntry[]>([]);
-  const [channelPrefs, setChannelPrefs] = useState<Record<string, boolean>>({});
 
   const load = useCallback(() => {
     fixoSdk
@@ -52,29 +37,7 @@ function NotificationsPage() {
   useEffect(() => {
     load();
     activityApi.list(20, 0).then(setActivity).catch(() => setActivity([]));
-    settingsApi
-      .listPreferences()
-      .then((prefs) => {
-        const byKey = new Map(prefs.map((p) => [p.key, p.value]));
-        const next: Record<string, boolean> = {};
-        for (const c of CHANNELS) {
-          next[`push_${c.key}`] = byKey.get(`push_${c.key}`) !== "false";
-          next[`sms_${c.key}`] = byKey.get(`sms_${c.key}`) === "true";
-        }
-        setChannelPrefs(next);
-      })
-      .catch(() => {});
   }, [load]);
-
-  async function toggleChannel(prefKey: string) {
-    const next = !channelPrefs[prefKey];
-    setChannelPrefs((prev) => ({ ...prev, [prefKey]: next }));
-    try {
-      await settingsApi.setPreference(prefKey, String(next));
-    } catch {
-      setChannelPrefs((prev) => ({ ...prev, [prefKey]: !next }));
-    }
-  }
 
   const filters = useMemo(
     () => ["ALL", ...Array.from(new Set(items.map((n) => n.category))).sort()],
@@ -155,31 +118,10 @@ function NotificationsPage() {
 
         <div className="space-y-4">
           <Panel title="Delivery channels">
-            {CHANNELS.map((c) => (
-              <label key={c.key} className="flex items-center justify-between gap-3 border-b border-border/60 py-3 text-sm last:border-0">
-                {c.label}
-                <span className="flex gap-3 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    Push
-                    <input
-                      type="checkbox"
-                      checked={channelPrefs[`push_${c.key}`] ?? true}
-                      onChange={() => void toggleChannel(`push_${c.key}`)}
-                      className="size-4 accent-[var(--primary)]"
-                    />
-                  </span>
-                  <span className="flex items-center gap-1">
-                    SMS
-                    <input
-                      type="checkbox"
-                      checked={channelPrefs[`sms_${c.key}`] ?? false}
-                      onChange={() => void toggleChannel(`sms_${c.key}`)}
-                      className="size-4 accent-[var(--primary)]"
-                    />
-                  </span>
-                </span>
-              </label>
-            ))}
+            <p className="text-sm text-muted-foreground">
+              Booking notifications appear here and in the provider mobile app.
+              Delivery settings will appear when additional channels are available.
+            </p>
           </Panel>
 
           <Panel title="Account activity">
