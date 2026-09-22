@@ -48,9 +48,15 @@ jobs:
       backend: ${{ steps.filter.outputs.backend }}
       web_user: ${{ steps.filter.outputs.web_user }}
       web_provider: ${{ steps.filter.outputs.web_provider }}
+      # Job-level `if:` on frontend-artifact can't see `matrix.app` — the
+      # matrix context only exists inside a job's steps, not in the `if:`
+      # that gates whether the job runs at all. So instead of skipping
+      # matrix entries with an if, the matrix itself is built here from
+      # only the apps that actually changed.
+      web_apps: ${{ steps.matrix.outputs.apps }}
     steps:
-      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
-      - uses: dorny/paths-filter@<pin-to-commit-sha>      # v3.0.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36      # v3.0.2
         id: filter
         with:
           filters: |
@@ -60,6 +66,14 @@ jobs:
               - "applications/frontend/web/web-user/**"
             web_provider:
               - "applications/frontend/web/web-provider/**"
+      - name: Build frontend app matrix from changed apps
+        id: matrix
+        run: |
+          apps=()
+          [ "${{ steps.filter.outputs.web_user }}" = "true" ] && apps+=("web-user")
+          [ "${{ steps.filter.outputs.web_provider }}" = "true" ] && apps+=("web-provider")
+          json=$(printf '%s\n' "${apps[@]}" | jq -R . | jq -sc .)
+          echo "apps=$json" >> "$GITHUB_OUTPUT"
 
   backend-image:
     name: Backend image
@@ -69,18 +83,18 @@ jobs:
     outputs:
       digest: ${{ steps.push.outputs.digest }}
     steps:
-      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
 
-      - uses: docker/setup-buildx-action@<pin-to-commit-sha>   # v3.7.1
+      - uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349   # v3.7.1
 
-      - uses: docker/login-action@<pin-to-commit-sha>     # v3.3.0
+      - uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567     # v3.3.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build (not pushed yet — scan first)
-        uses: docker/build-push-action@<pin-to-commit-sha>   # v6.9.0
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75   # v6.9.0
         with:
           context: applications/backend
           file: applications/backend/Dockerfile
@@ -91,7 +105,7 @@ jobs:
           push: false
 
       - name: Vulnerability scan (blocks push on CRITICAL/HIGH)
-        uses: aquasecurity/trivy-action@<pin-to-commit-sha>   # v0.28.0
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2   # v0.28.0
         with:
           image-ref: ${{ env.BACKEND_IMAGE }}:git-${{ github.sha }}
           severity: CRITICAL,HIGH
@@ -100,7 +114,7 @@ jobs:
 
       - name: Push
         id: push
-        uses: docker/build-push-action@<pin-to-commit-sha>   # v6.9.0
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75   # v6.9.0
         with:
           context: applications/backend
           file: applications/backend/Dockerfile
@@ -112,14 +126,14 @@ jobs:
           push: true
 
       - name: SBOM
-        uses: anchore/sbom-action@<pin-to-commit-sha>     # v0.17.9
+        uses: anchore/sbom-action@df80a981bc6edbc4e220a492d3cbe9f5547a6e75     # v0.17.9
         with:
           image: ${{ env.BACKEND_IMAGE }}@${{ steps.push.outputs.digest }}
           format: spdx-json
           output-file: backend-sbom.spdx.json
           upload-artifact: true
 
-      - uses: sigstore/cosign-installer@<pin-to-commit-sha>   # v3.7.0
+      - uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da   # v3.7.0
 
       - name: Sign image (keyless, GitHub OIDC identity)
         run: |
@@ -129,20 +143,18 @@ jobs:
   frontend-artifact:
     name: Frontend artifact (${{ matrix.app }})
     needs: changes
-    if: |
-      (matrix.app == 'web-user' && needs.changes.outputs.web_user == 'true') ||
-      (matrix.app == 'web-provider' && needs.changes.outputs.web_provider == 'true')
+    if: needs.changes.outputs.web_apps != '[]'
     strategy:
       matrix:
-        app: [web-user, web-provider]
+        app: ${{ fromJSON(needs.changes.outputs.web_apps) }}
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: applications/frontend/web/${{ matrix.app }}
     steps:
-      - uses: actions/checkout@<pin-to-commit-sha>        # v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683        # v4.2.2
 
-      - uses: actions/setup-node@<pin-to-commit-sha>      # v4.1.0
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af      # v4.1.0
         with:
           node-version: "22"
           cache: npm
@@ -151,7 +163,7 @@ jobs:
       - run: npm ci
 
       - name: Dependency vulnerability scan (blocks package on CRITICAL/HIGH)
-        uses: aquasecurity/trivy-action@<pin-to-commit-sha>   # v0.28.0
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2   # v0.28.0
         with:
           scan-type: fs
           scan-ref: applications/frontend/web/${{ matrix.app }}
@@ -177,14 +189,14 @@ jobs:
             > ${{ matrix.app }}-git-${{ github.sha }}.tar.gz.sha256
 
       - name: SBOM
-        uses: anchore/sbom-action@<pin-to-commit-sha>     # v0.17.9
+        uses: anchore/sbom-action@df80a981bc6edbc4e220a492d3cbe9f5547a6e75     # v0.17.9
         with:
           path: applications/frontend/web/${{ matrix.app }}
           format: spdx-json
           output-file: ${{ matrix.app }}-sbom.spdx.json
           upload-artifact: true
 
-      - uses: sigstore/cosign-installer@<pin-to-commit-sha>   # v3.7.0
+      - uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da   # v3.7.0
 
       - name: Sign the build-output tarball (keyless, GitHub OIDC identity)
         working-directory: applications/frontend/web
@@ -195,7 +207,7 @@ jobs:
             ${{ matrix.app }}-git-${{ github.sha }}.tar.gz
 
       - name: Upload signed artifact
-        uses: actions/upload-artifact@<pin-to-commit-sha>   # v4.4.3
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882   # v4.4.3
         with:
           name: ${{ matrix.app }}-git-${{ github.sha }}
           retention-days: 90
