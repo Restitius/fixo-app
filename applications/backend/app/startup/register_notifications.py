@@ -39,6 +39,10 @@ def register_notifications(notification_registry: Any) -> None:
             if module_info.name.startswith("_"):
                 continue
             module = importlib.import_module(f"{package}.{module_info.name}")
+            definitions = getattr(module, "NOTIFICATION_DEFINITIONS", ())
+            for definition in definitions:
+                notification_registry.register(definition.key, definition)
+                count += 1
             key = getattr(module, "NOTIFICATION_KEY", None)
             if not key:
                 continue

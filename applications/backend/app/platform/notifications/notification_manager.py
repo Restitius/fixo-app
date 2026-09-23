@@ -77,6 +77,9 @@ _DEFAULT_CHANNEL_ENABLED = {
 # notify() calls already used.
 _REFERENCE_KEYS: tuple[tuple[str, str], ...] = (
     ("booking_id", "BOOKING"),
+    ("request_id", "SERVICE_REQUEST"),
+    ("quote_id", "QUOTATION"),
+    ("change_id", "CHANGE_REQUEST"),
     ("invoice_id", "INVOICE"),
     ("plan_id", "MAINTENANCE_PLAN"),
 )
