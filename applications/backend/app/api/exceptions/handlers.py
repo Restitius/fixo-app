@@ -18,12 +18,30 @@ def _request_id(request: Request) -> str | None:
     return getattr(request.state, "request_id", None)
 
 
+def _message_for_error(request: Request, code: str) -> dict | None:
+    """Map stable API errors to registered display copy without leaking exception text."""
+    message_id: str | None = None
+    if code == "AUTH.FAILED":
+        if request.url.path.endswith("/login"):
+            message_id = "MSG.AUTH.LOGIN.INVALID_CREDENTIALS.V1"
+        elif request.url.path.endswith("/otp/verify"):
+            message_id = "MSG.AUTH.OTP.INVALID.V1"
+        else:
+            message_id = "MSG.AUTH.SESSION.EXPIRED.V1"
+    if message_id is None:
+        return None
+    from app.registries.messages.message_registry import get_message_registry
+
+    return get_message_registry().get(message_id)
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Attach handlers for AppException, NotImplementedError, validation, 500."""
 
     @app.exception_handler(AppException)
     async def handle_app_exception(request: Request, exc: AppException) -> JSONResponse:
         title, body = describe(exc.code, exc.message)
+        message = _message_for_error(request, exc.code)
         return JSONResponse(
             status_code=exc.http_status,
             content=error_envelope(
@@ -32,6 +50,7 @@ def register_exception_handlers(app: FastAPI) -> None:
                 body=body,
                 details=exc.details,
                 request_id=_request_id(request),
+                message=message,
             ),
         )
 
