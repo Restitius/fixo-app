@@ -11,7 +11,9 @@ import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { SystemMessageCard } from "@/components/system/SystemMessageCard";
+import { ApiError, type SystemMessage } from "@/lib/api-client";
+import { resolveSystemMessage } from "@/lib/system-messages";
 
 const title = "Login — Fixo";
 
@@ -35,6 +37,7 @@ function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isOtpMode, setIsOtpMode] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [systemMessage, setSystemMessage] = useState<SystemMessage | null>(null);
 
   const {
     register,
@@ -47,25 +50,25 @@ function LoginPage() {
 
   const onSubmit = async (values: LoginValues) => {
     setPasswordError(null);
+    setSystemMessage(null);
     try {
       if (isOtpMode) {
         const otp = await requestOtp(values.email);
         if (otp) {
-          toast.success(`Your OTP code is: ${otp}`, {
-            description: "Use this code to verify your email",
-          });
+          void otp;
         }
         navigate({ to: "/verify-otp", search: { email: values.email } });
       } else {
         const password = getValues("password");
         if (!password || password.length < 6) {
-          setPasswordError(t("login.passwordTooShort"));
+          setSystemMessage(await resolveSystemMessage("MSG.AUTH.PASSWORD.TOO_SHORT.V1", { minimum: 6 }));
           return;
         }
         await login(values.email, password, navigator.userAgent);
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("login.genericError"));
+      if (err instanceof ApiError && err.systemMessage) setSystemMessage(err.systemMessage);
+      else setPasswordError(err instanceof Error ? err.message : t("login.genericError"));
     }
   };
 
@@ -79,6 +82,8 @@ function LoginPage() {
             {t("login.subtitle")}
           </p>
         </div>
+
+        {systemMessage && <SystemMessageCard message={systemMessage} onAction={() => setSystemMessage(null)} />}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
