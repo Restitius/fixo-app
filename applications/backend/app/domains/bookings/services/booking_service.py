@@ -148,16 +148,8 @@ class BookingService:
                else f" — {result.get('failure_reason')}"),
         )
 
+        # The governed status query queued the payment result atomically.
         updated = await self.get(customer_id, booking_id)
-        # CUS.BOOKING.SET_STATUS is shared across many transitions, so it
-        # can't safely carry a notification-specific CTE — queued here
-        # instead, right after the state write.
-        if ok_auth and self._notifications is not None:
-            await self._notifications.queue_notification(
-                "customer", customer_id,
-                key="NTF.PAYMENT.AUTHORIZED.V1",
-                data={"booking_id": booking_id, "booking_number": booking["booking_number"]},
-            )
         return {
             **updated,
             "payment": {

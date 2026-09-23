@@ -3,6 +3,7 @@
 -- on site before work begins. Records actual start time; for hourly jobs the
 -- job timer begins automatically via timer_started_at. Optional GPS snapshot
 -- records where the service started.
+WITH changed AS (
 UPDATE "BOOKINGS"
    SET status            = 'IN_PROGRESS',
        started_at        = now(),
@@ -21,6 +22,15 @@ UPDATE "BOOKINGS"
    AND "BOOKINGS".service_id = ps.service_id
    AND ps.provider_id = CAST(:user_id AS uuid)
    AND "BOOKINGS".status = 'ARRIVED'
-RETURNING "BOOKINGS".booking_id, "BOOKINGS".status, "BOOKINGS".started_at,
+RETURNING "BOOKINGS".booking_id, "BOOKINGS".booking_number,
+          "BOOKINGS".customer_id, "BOOKINGS".status, "BOOKINGS".started_at,
           "BOOKINGS".timer_started_at, "BOOKINGS".current_latitude,
-          "BOOKINGS".current_longitude, "BOOKINGS".updated_at;
+          "BOOKINGS".current_longitude, "BOOKINGS".updated_at
+), queued AS (
+    INSERT INTO "NOTIFICATION_OUTBOX" (event_key, recipient_type, recipient_id, payload)
+    SELECT 'NTF.SERVICE.STARTED.V1', 'customer', customer_id,
+           jsonb_build_object('booking_id', booking_id, 'booking_number', booking_number)
+      FROM changed
+)
+SELECT booking_id, status, started_at, timer_started_at,
+       current_latitude, current_longitude, updated_at FROM changed;
