@@ -61,7 +61,11 @@ class UpdateProfileRequest(BaseModel):
 @router.post("/register", status_code=201)
 async def register(payload: RegisterRequest) -> dict:
     svc = get_composition().auth_service()
-    return ok(await svc.register(payload.model_dump()), title="Welcome", status_code=201)
+    return ok(
+        await svc.register(payload.model_dump()),
+        status_code=201,
+        message_id="MSG.AUTH.REGISTER.SUCCESS.V1",
+    )
 
 
 @router.post("/login")
@@ -71,25 +75,34 @@ async def login(
 ) -> dict:
     ip = (x_forwarded_for or "").split(",")[0].strip()
     svc = get_composition().auth_service()
-    return ok(await svc.login(payload.email, payload.password, payload.device_info, ip))
+    return ok(
+        await svc.login(payload.email, payload.password, payload.device_info, ip),
+        message_id="MSG.AUTH.LOGIN.SUCCESS.V1",
+    )
 
 
 @router.post("/otp/request")
 async def request_otp(payload: OtpRequestRequest) -> dict:
-    return ok(await get_composition().auth_service().request_otp(payload.email))
+    return ok(
+        await get_composition().auth_service().request_otp(payload.email),
+        message_id="MSG.AUTH.OTP.SENT.V1",
+    )
 
 
 @router.post("/otp/verify")
 async def verify_otp(payload: OtpVerifyRequest) -> dict:
     return ok(
         await get_composition().auth_service().verify_otp(payload.email, payload.code),
-        title="Verified",
+        message_id="MSG.AUTH.OTP.VERIFIED.V1",
     )
 
 
 @router.post("/password/forgot")
 async def forgot_password(payload: ForgotPasswordRequest) -> dict:
-    return ok(await get_composition().auth_service().request_password_reset(payload.email))
+    return ok(
+        await get_composition().auth_service().request_password_reset(payload.email),
+        message_id="MSG.AUTH.PASSWORD.RESET_SENT.V1",
+    )
 
 
 @router.post("/password/reset")
@@ -97,13 +110,16 @@ async def reset_password(payload: ResetPasswordRequest) -> dict:
     svc = get_composition().auth_service()
     return ok(
         await svc.reset_password(payload.email, payload.code, payload.new_password),
-        title="Password reset",
+        message_id="MSG.AUTH.PASSWORD.RESET_COMPLETE.V1",
     )
 
 
 @router.post("/token/refresh")
 async def refresh_token(payload: RefreshRequest) -> dict:
-    return ok(await get_composition().auth_service().refresh(payload.refresh_token))
+    return ok(
+        await get_composition().auth_service().refresh(payload.refresh_token),
+        message_id="MSG.AUTH.SESSION.REFRESHED.V1",
+    )
 
 
 @router.get("/me")
@@ -123,5 +139,5 @@ async def logout(customer: CurrentCustomer) -> dict:
     # Revoke all active sessions for this customer.
     svc = get_composition().auth_service()
     await svc.logout(customer["customer_id"])
-    return ok({"success": True}, title="Logged out")
+    return ok({"success": True}, message_id="MSG.AUTH.LOGOUT.SUCCESS.V1")
 

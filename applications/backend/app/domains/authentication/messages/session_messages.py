@@ -5,6 +5,9 @@ from app.registries.messages.message_definition import MessageDefinition
 
 MESSAGE_DEFINITIONS = (
     MessageDefinition(
+        "MSG.AUTH.REGISTER.SUCCESS.V1", "success", "card", "Account created", "Welcome to FIXO."
+    ),
+    MessageDefinition(
         "MSG.AUTH.LOGIN.SUCCESS.V1", "success", "card", "Signed in", "Welcome back."
     ),
     MessageDefinition(
@@ -55,6 +58,9 @@ MESSAGE_DEFINITIONS = (
         action_label="Try again",
     ),
     MessageDefinition(
+        "MSG.AUTH.OTP.VERIFIED.V1", "success", "card", "Verified", "Your account is verified."
+    ),
+    MessageDefinition(
         "MSG.AUTH.PASSWORD.RESET_SENT.V1",
         "info",
         "card",
@@ -78,6 +84,16 @@ MESSAGE_DEFINITIONS = (
         "Sign in again to continue.",
         action_id="AUTH.LOGIN.OPEN",
         action_label="Sign in",
+    ),
+    MessageDefinition(
+        "MSG.AUTH.SESSION.REFRESHED.V1",
+        "success",
+        "toast",
+        "Session renewed",
+        "Your access token was renewed.",
+    ),
+    MessageDefinition(
+        "MSG.AUTH.LOGOUT.SUCCESS.V1", "success", "toast", "Signed out", "Your session has ended."
     ),
 )
 

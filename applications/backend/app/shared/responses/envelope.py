@@ -17,15 +17,32 @@ from __future__ import annotations
 from typing import Any
 
 
-def build_message(message_type: str, title: str, body: str) -> dict[str, str]:
+def build_message(
+    message_type: str,
+    title: str,
+    body: str,
+    *,
+    message_id: str | None = None,
+    presentation: str = "toast",
+    params: dict[str, Any] | None = None,
+    action: dict[str, str] | None = None,
+) -> dict[str, Any]:
     """Build the nested message block."""
-    return {"type": message_type, "title": title, "body": body}
+    return {
+        "id": message_id,
+        "type": message_type,
+        "presentation": presentation,
+        "title": title,
+        "body": body,
+        "params": params or {},
+        "action": action,
+    }
 
 
 def build_envelope(
     *,
     success: bool = True,
-    message: dict[str, str] | None = None,
+    message: dict[str, Any] | None = None,
     data: Any = None,
     meta: dict[str, Any] | None = None,
     request_id: str | None = None,
@@ -51,10 +68,11 @@ def success_envelope(
     body: str = "",
     meta: dict[str, Any] | None = None,
     request_id: str | None = None,
+    message: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     return build_envelope(
         success=True,
-        message=build_message("success", title, body),
+        message=message or build_message("success", title, body),
         data=data,
         meta=meta,
         request_id=request_id,
@@ -68,10 +86,11 @@ def error_envelope(
     body: str = "",
     details: dict[str, Any] | None = None,
     request_id: str | None = None,
+    message: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     envelope = build_envelope(
         success=False,
-        message=build_message("error", title, body),
+        message=message or build_message("error", title, body),
         data=None,
         meta=None,
         request_id=request_id,
