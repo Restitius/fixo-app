@@ -32,7 +32,12 @@ def _message_for_error(request: Request, code: str) -> dict | None:
         return None
     from app.registries.messages.message_registry import get_message_registry
 
-    return get_message_registry().get(message_id)
+    try:
+        return get_message_registry().get(message_id)
+    except RuntimeError:
+        # Lightweight test/CLI applications may omit Bootstrap. The exception
+        # handler must still return the standard envelope during early startup.
+        return None
 
 
 def register_exception_handlers(app: FastAPI) -> None:
