@@ -15,13 +15,28 @@ const CLIENT_ID =
       : 'CLT-MOBILE'
 const CLIENT_VERSION = Constants.expoConfig?.version ?? 'dev'
 
+export interface SystemMessage {
+  id: string | null
+  type: 'success' | 'info' | 'warning' | 'error' | string
+  presentation: 'toast' | 'inline' | 'card' | string
+  title: string
+  body: string
+  params: Record<string, unknown>
+  action: { id: string; label: string } | null
+}
+
 interface ApiResponse<T = any> {
   success: boolean
   data: T
-  message?: { type: string; title: string; body: string }
+  message?: SystemMessage
 }
 
-export class ApiError extends Error {}
+export class ApiError extends Error {
+  constructor(message: string, readonly systemMessage?: SystemMessage) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
 
 class ApiClient {
   private token: string | null = null
@@ -55,7 +70,7 @@ class ApiClient {
     const json = await res.json().catch(() => null)
     if (!res.ok || !json?.success) {
       const msg = json?.message?.body || json?.message?.title || `Request failed (${res.status})`
-      throw new ApiError(msg)
+      throw new ApiError(msg, json?.message)
     }
     return json as ApiResponse<T>
   }
