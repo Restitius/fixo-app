@@ -3,6 +3,9 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 import { useProviderAuth } from "@/lib/provider-auth";
+import { SystemMessageCard } from "@/components/system/SystemMessageCard";
+import { ApiError, type SystemMessage } from "@/lib/api-client";
+import { resolveSystemMessage } from "@/lib/system-messages";
 
 const title = "Provider Sign In — FIXO";
 const description = "Sign in to your FIXO provider workspace to manage requests, jobs, earnings and payouts.";
@@ -26,17 +29,24 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [systemMessage, setSystemMessage] = useState<SystemMessage | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setSystemMessage(null);
+    if (!email.trim() || !password) {
+      setSystemMessage(await resolveSystemMessage("MSG.AUTH.LOGIN.REQUIRED_FIELDS.V1"));
+      return;
+    }
     setSubmitting(true);
     try {
       await login(email, password);
       navigate({ to: "/dashboard" });
-    } catch {
-      setError("Invalid email or password.");
+    } catch (err) {
+      if (err instanceof ApiError && err.systemMessage) setSystemMessage(err.systemMessage);
+      else setError(err instanceof Error ? err.message : "Unable to sign in.");
     } finally {
       setSubmitting(false);
     }
@@ -56,6 +66,8 @@ function LoginPage() {
           <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-12 object-contain" />
           <h1 className="mt-4 text-2xl font-bold tracking-tight">Welcome back</h1>
           <p className="mt-1 text-sm text-muted-foreground">Sign in to your FIXO provider workspace.</p>
+
+          {systemMessage && <div className="mt-6"><SystemMessageCard message={systemMessage} onAction={() => setSystemMessage(null)} /></div>}
 
           <form onSubmit={submit} className="mt-6 space-y-4">
             <label className="block">

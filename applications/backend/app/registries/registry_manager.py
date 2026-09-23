@@ -22,6 +22,7 @@ from app.registries.events.event_registry import EventRegistry
 from app.registries.events.listener_registry import ListenerRegistry
 from app.registries.integrations.integration_registry import IntegrationRegistry
 from app.registries.jobs.job_registry import JobRegistry
+from app.registries.messages.message_registry import MessageRegistry
 from app.registries.notifications.notification_registry import NotificationRegistry
 from app.registries.queries.query_registry import QueryRegistry
 from app.registries.screens.screen_registry import ScreenRegistry
@@ -38,6 +39,7 @@ class RegistryManager:
         self.events: EventRegistry = EventRegistry()
         self.listeners: ListenerRegistry = ListenerRegistry()
         self.jobs: JobRegistry = JobRegistry()
+        self.messages: MessageRegistry = MessageRegistry()
         self.notifications: NotificationRegistry = NotificationRegistry()
         self.commands: CommandRegistry = CommandRegistry()
 
@@ -51,6 +53,7 @@ class RegistryManager:
             "events": self.events.count(),
             "listeners": self.listeners.count(),
             "jobs": self.jobs.count(),
+            "messages": self.messages.count(),
             "notifications": self.notifications.count(),
             "commands": self.commands.count(),
         }

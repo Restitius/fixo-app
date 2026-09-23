@@ -9,6 +9,9 @@ import Checkbox from '../../components/Checkbox'
 import Button from '../../components/Button'
 import { MailIcon, LockIcon } from '../../components/icons'
 import { useAuth, ApiError } from '../../lib/auth-context'
+import type { SystemMessage } from '../../lib/api-client'
+import { resolveSystemMessage } from '../../lib/system-messages'
+import SystemMessageCard from '../../components/SystemMessageCard'
 
 export default function SignIn() {
   const { t } = useTranslation('auth')
@@ -18,11 +21,13 @@ export default function SignIn() {
   const [remember, setRemember] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [systemMessage, setSystemMessage] = useState<SystemMessage | null>(null)
 
   async function submit() {
     setError(null)
+    setSystemMessage(null)
     if (!email.trim() || !password) {
-      setError(t('signIn.validationError'))
+      setSystemMessage(await resolveSystemMessage('MSG.AUTH.LOGIN.REQUIRED_FIELDS.V1'))
       return
     }
     setLoading(true)
@@ -30,7 +35,8 @@ export default function SignIn() {
       await login(email.trim(), password)
       router.replace('/(tabs)/home')
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : t('signIn.genericError'))
+      if (err instanceof ApiError && err.systemMessage) setSystemMessage(err.systemMessage)
+      else setError(err instanceof Error ? err.message : t('signIn.genericError'))
     } finally {
       setLoading(false)
     }
@@ -42,6 +48,8 @@ export default function SignIn() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1">
         <ScrollView className="flex-1 px-6 pt-2" contentContainerStyle={{ paddingBottom: 24 }}>
           <Text className="text-[32px] leading-[38px] font-extrabold text-ink">{t('signIn.title')}</Text>
+
+          {systemMessage ? <View className="mt-6"><SystemMessageCard message={systemMessage} onAction={() => setSystemMessage(null)} /></View> : null}
 
           <View className="gap-4 mt-8">
             <TextField icon={<MailIcon color="#6C7585" />} placeholder={t('signIn.emailPlaceholder')} keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} />
