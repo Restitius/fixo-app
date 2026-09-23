@@ -1,7 +1,7 @@
 # --- build stage -------------------------------------------------
 # Compiles anything requiring build-essential once; none of that toolchain
 # ships in the final image.
-FROM python:3.12-slim AS build
+FROM python:3.14-slim AS build
 ENV PIP_NO_CACHE_DIR=1 PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 RUN apt-get update \
@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --prefix=/install -r requirements.txt
 
 # --- runtime stage -----------------------------------------------
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 ARG GIT_SHA=unknown
 LABEL org.opencontainers.image.source="https://github.com/Restitius/fixo-app" \
       org.opencontainers.image.revision="${GIT_SHA}" \
