@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
-import { EmptyState } from "@/components/dashboard/EmptyState";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -305,43 +304,49 @@ function NotificationsPage() {
               </div>
             </div>
 
-            <div className="mt-4 flex-1">
+            <div className="mt-4 flex-1 rounded-3xl bg-[#2f69d9] p-4">
             {items === null ? (
-              <div className="h-64 animate-pulse rounded-3xl bg-muted/60" />
+              <div className="h-72 animate-pulse rounded-[22px] bg-white/90" />
             ) : filtered.length === 0 ? (
-              <div>
-                {tab !== "All" ? (
-                  <EmptyState compact icon={FilterX} title={t("list.noMatching")} description={t("list.tryDifferentTab")} actionLabel={t("list.showAll")} onAction={() => setTab("All")} />
-                ) : (
-                  <EmptyState compact icon={Bell} title={t("list.allCaughtUp")} description={t("list.noNotificationsYet")} />
-                )}
+              <div className="flex min-h-72 flex-col items-center justify-center rounded-[22px] bg-white px-8 py-10 text-center shadow-lg">
+                <span className="relative flex size-20 items-center justify-center text-[#2468c7]">
+                  <span className="absolute h-px w-28 bg-[#dceaff]" />
+                  <span className="absolute size-16 rounded-full bg-[#f4f8ff]" />
+                  {tab !== "All" ? <FilterX className="relative size-10 stroke-[1.35]" /> : <Bell className="relative size-10 stroke-[1.35]" />}
+                </span>
+                <p className="mt-4 text-sm font-bold text-slate-900">{tab !== "All" ? t("list.noMatching") : t("list.allCaughtUp")}</p>
+                <p className="mt-1 max-w-64 text-xs leading-5 text-slate-500">{tab !== "All" ? t("list.tryDifferentTab") : t("list.noNotificationsYet")}</p>
+                <button onClick={() => setTab("All")} className="mt-6 min-w-44 rounded-full bg-[#2476f2] px-6 py-2.5 text-xs font-bold text-white shadow-[0_6px_14px_rgba(36,118,242,.28)] transition hover:bg-[#1266e7]">
+                  {tab !== "All" ? t("list.showAll") : t("tabs.all")}
+                </button>
               </div>
             ) : (
-              <div className="divide-y divide-border">
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {filtered.map((n) => {
-                  const { Icon, tone } = iconFor(n.type);
+                  const { Icon } = iconFor(n.type);
                   const badge = badgeFor(n, t);
                   const unread = !n.read_at;
                   return (
                     <button
                       key={n.notification_id}
                       onClick={() => void openNotification(n)}
-                      className={`flex w-full items-center gap-4 py-4 text-left transition-colors hover:bg-muted/40 ${unread ? "bg-primary/5" : ""}`}
+                      className="relative flex min-h-72 w-full flex-col items-center rounded-[22px] bg-white px-5 py-6 text-center shadow-[0_12px_26px_rgba(10,45,105,.22)] transition hover:-translate-y-0.5"
                     >
-                      <span className={`flex size-11 shrink-0 items-center justify-center rounded-2xl ${tone}`}>
-                        <Icon className="size-5" />
+                      {unread && <span className="absolute right-4 top-4 size-2.5 rounded-full bg-[#2476f2]" aria-label={t("list.new")} />}
+                      <span className="relative flex size-20 items-center justify-center text-[#2468c7]">
+                        <span className="absolute h-px w-28 bg-[#dceaff]" />
+                        <span className="absolute size-16 rounded-full bg-[#f4f8ff]" />
+                        <Icon className="relative size-10 stroke-[1.35]" />
                       </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold">{n.title}</p>
-                        {n.body && <p className="truncate text-sm text-muted-foreground">{n.body}</p>}
+                      <p className="mt-4 line-clamp-2 text-sm font-bold text-slate-900">{n.title}</p>
+                      {n.body && <p className="mt-1 line-clamp-3 text-xs leading-5 text-slate-500">{n.body}</p>}
+                      <div className="mt-2 flex items-center gap-2 text-[11px] text-slate-400">
+                        <span title={fmtDateTime(n.created_at)}>{timeAgo(n.created_at)}</span>
+                        {badge && <span className="rounded-full bg-[#edf4ff] px-2 py-0.5 font-semibold text-[#2468c7]">{badge.label}</span>}
                       </div>
-                      <div className="flex shrink-0 items-center gap-3">
-                        <span className="text-sm text-muted-foreground" title={fmtDateTime(n.created_at)}>
-                          {timeAgo(n.created_at)}
-                        </span>
-                        {badge && <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${badge.tone}`}>{badge.label}</span>}
-                        <span aria-hidden className="text-muted-foreground">›</span>
-                      </div>
+                      <span className="mt-auto inline-flex min-w-40 items-center justify-center rounded-full bg-[#2476f2] px-5 py-2.5 text-xs font-bold text-white shadow-[0_6px_14px_rgba(36,118,242,.28)]">
+                        {unread ? t("dialog.markAsRead") : t("panel.title")}
+                      </span>
                     </button>
                   );
                 })}
