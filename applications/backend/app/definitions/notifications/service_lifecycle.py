@@ -79,6 +79,15 @@ NOTIFICATION_DEFINITIONS = (
         "booking_number",
     ),
     _event(
+        "NTF.PAYMENT.AUTHORIZATION_FAILED.V1",
+        "PAYMENT_RECEIPTS",
+        "customer",
+        "Payment authorization failed",
+        "Payment could not be authorized for booking {booking_number}. Please try again.",
+        "booking_id",
+        "booking_number",
+    ),
+    _event(
         "NTF.SERVICE.STARTED.V1",
         "BOOKING_UPDATES",
         "customer",
