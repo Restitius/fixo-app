@@ -1,16 +1,38 @@
 """System endpoints — health, readiness, runtime info (platform-owned)."""
 from __future__ import annotations
 
-from fastapi import APIRouter
+from typing import Annotated
+
+from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.observability.health import HealthReporter
+from app.registries.messages.message_registry import get_message_registry
 from app.shared.responses.envelope import error_envelope, success_envelope
 
 router = APIRouter(tags=["system"])
 
 _health_reporter = HealthReporter()
+
+
+@router.get("/messages/{message_key}")
+async def system_message(message_key: str) -> dict:
+    """Resolve registered UI copy by stable key, including pre-login flows."""
+    message = get_message_registry().get(message_key)
+    return success_envelope(
+        data=message,
+        title=message["title"],
+        body=message["body"],
+    )
+
+
+@router.get("/messages")
+async def system_messages(keys: Annotated[list[str] | None, Query()] = None) -> dict:
+    """Resolve a batch once so clients cache catalogues instead of requesting per card."""
+    registry = get_message_registry()
+    messages = registry.resolve_many(keys) if keys else list(registry.all().values())
+    return success_envelope(data={"messages": messages}, title="Message catalogue")
 
 
 def get_health_reporter() -> HealthReporter:
