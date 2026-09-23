@@ -44,6 +44,7 @@ class Bootstrap:
             "register_events",
             "register_listeners",
             "register_jobs",
+            "register_messages",
             "register_notifications",
             "register_platform",
             "register_scheduler",
@@ -149,6 +150,11 @@ class Bootstrap:
         from app.startup.register_notifications import register_notifications
 
         register_notifications(self.registry_manager.notifications)
+
+    def _register_messages(self) -> None:
+        from app.startup.register_messages import register_messages
+
+        register_messages(self.registry_manager.messages)
 
     async def _register_scheduler(self) -> None:
         from app.startup.register_scheduler import register_scheduler
