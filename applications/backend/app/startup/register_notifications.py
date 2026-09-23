@@ -28,6 +28,7 @@ def _normalize_channels(raw_channels: Any, recipients: tuple[str, ...]) -> dict[
 
 def register_notifications(notification_registry: Any) -> None:
     """Register notification definitions from every domain."""
+    from app.definitions.notifications.service_lifecycle import NOTIFICATION_DEFINITIONS
     from app.registries.notifications.notification_definition import NotificationDefinition
 
     domains_root = Path(__file__).resolve().parent.parent / "domains"
@@ -54,4 +55,7 @@ def register_notifications(notification_registry: Any) -> None:
             )
             notification_registry.register(key, definition)
             count += 1
+    for definition in NOTIFICATION_DEFINITIONS:
+        notification_registry.register(definition.key, definition)
+        count += 1
     logger.info("notification registry loaded: %s definitions", count)

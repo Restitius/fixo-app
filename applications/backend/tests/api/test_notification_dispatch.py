@@ -9,6 +9,42 @@ from app.platform.query.sql_query_manager import SQLQueryManager
 from app.registries.notifications.notification_registry import NotificationRegistry
 from app.startup.register_notifications import register_notifications
 
+LIFECYCLE_EVENTS = {
+    "NTF.REQUEST.SUBMITTED.V1",
+    "NTF.QUOTE.SUBMITTED.V1",
+    "NTF.QUOTE.ACCEPTED.V1",
+    "NTF.QUOTE.EXPIRED.V1",
+    "NTF.BOOKING.CONFIRMED.V1",
+    "NTF.BOOKING.ACKNOWLEDGED.V1",
+    "NTF.PAYMENT.AUTHORIZED.V1",
+    "NTF.PAYMENT.AUTHORIZATION_FAILED.V1",
+    "NTF.BOOKING.ON_THE_WAY.V1",
+    "NTF.BOOKING.ARRIVED.V1",
+    "NTF.SERVICE.STARTED.V1",
+    "NTF.CHANGE.PROPOSED.V1",
+    "NTF.CHANGE.APPROVED.V1",
+    "NTF.CHANGE.REJECTED.V1",
+    "NTF.SERVICE.COMPLETION_REQUESTED.V1",
+    "NTF.SERVICE.COMPLETED.V1",
+    "NTF.BOOKING.CANCELLED.V1",
+    "NTF.PAYMENT.CAPTURED.V1",
+    "NTF.INVOICE.ISSUED.V1",
+    "NTF.REVIEW.RECEIVED.V1",
+    "NTF.VERIFICATION.APPROVED.V1",
+    "NTF.VERIFICATION.REJECTED.V1",
+}
+
+
+def test_user_visible_lifecycle_is_registered_on_supported_channels():
+    registry = NotificationRegistry()
+    register_notifications(registry)
+
+    assert LIFECYCLE_EVENTS <= set(registry.all_keys())
+    for key in registry.all_keys():
+        definition = registry.get(key)
+        for recipient in definition.recipients:
+            assert set(definition.channels_for(recipient)) <= {"database", "sms", "email"}
+
 
 class RecordingSql:
     def __init__(self):

@@ -9,6 +9,6 @@ NOTIFICATION_KEY = "NTF.SERVICE.COMPLETION_REQUESTED.V1"
 CATEGORY = "BOOKING_UPDATES"
 RECIPIENTS: tuple[str, ...] = ("customer",)
 CHANNELS: dict[str, tuple[str, ...]] = {
-    "customer": ("database", "email"),
+    "customer": ("database", "sms"),
 }
 REQUIRED_DATA: tuple[str, ...] = ("booking_id", "booking_number")

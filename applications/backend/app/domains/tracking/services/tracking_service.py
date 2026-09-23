@@ -93,18 +93,7 @@ class TrackingService:
         await self._bookings.add_timeline_internal(
             booking_id, str(booking["customer_id"]), target, "Provider event"
         )
-        # ARRIVED already queued its NTF.BOOKING.ARRIVED.V1 outbox row atomically
-        # inside CUS.BOOKING.SET_ARRIVED (dedicated query, CTE-embedded write).
-        # ON_THE_WAY flows through the generic CUS.BOOKING.SET_STATUS query
-        # (shared across many transitions), so it can't safely carry a
-        # notification-specific CTE — queued here instead, right after the
-        # state write, going through the same catalogue/outbox pipeline.
-        if self._notifications is not None and target == "ON_THE_WAY":
-            await self._notifications.queue_notification(
-                "customer", str(booking["customer_id"]),
-                key="NTF.BOOKING.ON_THE_WAY.V1",
-                data={"booking_id": booking_id, "booking_number": booking["booking_number"]},
-            )
+        # The governed transition query queued its customer message atomically.
 
         logger.info("provider event %s applied to %s", target, booking_id)
         return await self._bookings.get_internal(booking_id)
