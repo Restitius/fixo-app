@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Bell, BellRing, CheckCheck } from "lucide-react";
+import { Bell, BriefcaseBusiness, Check, CheckCheck, FileText, ShieldCheck, Star, WalletCards } from "lucide-react";
 
 import { ProviderPage } from "@/components/dashboard/ProviderPage";
 import { Panel } from "@/components/dashboard/PageShell";
@@ -60,6 +60,16 @@ function NotificationsPage() {
     }
   }
 
+  function iconFor(category: string) {
+    const key = category.toUpperCase();
+    if (key.includes("PAYMENT") || key.includes("INVOICE")) return WalletCards;
+    if (key.includes("QUOTE") || key.includes("REQUEST")) return FileText;
+    if (key.includes("REVIEW")) return Star;
+    if (key.includes("ACCOUNT") || key.includes("VERIFICATION")) return ShieldCheck;
+    if (key.includes("BOOKING")) return BriefcaseBusiness;
+    return Bell;
+  }
+
   return (
     <ProviderPage title="Notifications" subtitle={`${unread} unread`}>
       <div className="mt-6 grid gap-4 pb-6 lg:grid-cols-[1fr_320px]">
@@ -89,30 +99,45 @@ function NotificationsPage() {
             ))}
           </div>
 
-          <div className="space-y-3">
+          <div className="grid gap-4 rounded-3xl bg-[#2f69d9] p-4 sm:grid-cols-2 xl:grid-cols-3">
             {rows.length === 0 && (
-              <p className="py-8 text-center text-sm text-muted-foreground">No notifications yet.</p>
-            )}
-            {rows.map((n) => (
-              <div
-                key={n.id}
-                onClick={() => !n.is_read && markRead(n.id)}
-                className={`flex cursor-pointer items-start gap-3 rounded-2xl p-4 transition-colors ${
-                  !n.is_read ? "bg-primary/5" : "bg-muted/50"
-                }`}
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  {!n.is_read ? <BellRing className="size-4" /> : <Bell className="size-4" />}
+              <div className="col-span-full flex min-h-72 flex-col items-center justify-center rounded-[22px] bg-white px-8 py-10 text-center shadow-lg">
+                <span className="relative flex size-20 items-center justify-center text-[#2468c7]">
+                  <span className="absolute h-px w-28 bg-[#dceaff]" />
+                  <span className="absolute size-16 rounded-full bg-[#f4f8ff]" />
+                  <Bell className="relative size-10 stroke-[1.4]" />
                 </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold">{n.title}</p>
-                  <p className="text-xs text-muted-foreground">{n.body}</p>
-                </div>
-                <span className="shrink-0 text-xs text-muted-foreground">
-                  {new Date(n.created_at).toLocaleDateString()}
-                </span>
+                <p className="mt-4 text-sm font-bold text-slate-900">Your inbox is empty</p>
+                <p className="mt-1 max-w-56 text-xs leading-5 text-slate-500">Job, quote, payment and account updates will appear here.</p>
+                <button onClick={load} className="mt-6 min-w-44 rounded-full bg-[#2476f2] px-6 py-2.5 text-xs font-bold text-white shadow-[0_6px_14px_rgba(36,118,242,.28)] transition hover:bg-[#1266e7]">
+                  Refresh notifications
+                </button>
               </div>
-            ))}
+            )}
+            {rows.map((n) => {
+              const Icon = iconFor(n.category);
+              return (
+                <article key={n.id} className="relative flex min-h-72 flex-col items-center rounded-[22px] bg-white px-5 py-6 text-center shadow-[0_12px_26px_rgba(10,45,105,.22)]">
+                  {!n.is_read && <span className="absolute right-4 top-4 size-2.5 rounded-full bg-[#2476f2]" aria-label="Unread" />}
+                  <span className="relative flex size-20 items-center justify-center text-[#2468c7]">
+                    <span className="absolute h-px w-28 bg-[#dceaff]" />
+                    <span className="absolute size-16 rounded-full bg-[#f4f8ff]" />
+                    <Icon className="relative size-10 stroke-[1.35]" />
+                  </span>
+                  <p className="mt-4 line-clamp-2 text-sm font-bold text-slate-900">{n.title}</p>
+                  <p className="mt-1 line-clamp-3 text-xs leading-5 text-slate-500">{n.body}</p>
+                  <p className="mt-2 text-[11px] text-slate-400">{new Date(n.created_at).toLocaleDateString()}</p>
+                  <button
+                    onClick={() => !n.is_read && void markRead(n.id)}
+                    disabled={n.is_read}
+                    className="mt-auto inline-flex min-w-40 items-center justify-center gap-1.5 rounded-full bg-[#2476f2] px-5 py-2.5 text-xs font-bold text-white shadow-[0_6px_14px_rgba(36,118,242,.28)] transition hover:bg-[#1266e7] disabled:bg-[#e8f0fb] disabled:text-[#2468c7] disabled:shadow-none"
+                  >
+                    {n.is_read && <Check className="size-3.5" />}
+                    {n.is_read ? "Read" : "Mark as read"}
+                  </button>
+                </article>
+              );
+            })}
           </div>
         </Panel>
 
