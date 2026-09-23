@@ -8,10 +8,27 @@ const BASE_URL = import.meta.env["VITE_API_URL"] ?? "http://localhost:8000/api/v
 const CLIENT_ID = "CLT-WEB-USER";
 const CLIENT_VERSION = import.meta.env["VITE_CLIENT_VERSION"] ?? "dev";
 
+export interface SystemMessage {
+  id: string | null;
+  type: "success" | "info" | "warning" | "error" | string;
+  presentation: "toast" | "inline" | "card" | string;
+  title: string;
+  body: string;
+  params: Record<string, unknown>;
+  action: { id: string; label: string } | null;
+}
+
 interface ApiResponse<T = any> {
   success: boolean;
   data: T;
-  message?: { type: string; title: string; body: string };
+  message?: SystemMessage;
+}
+
+export class ApiError extends Error {
+  constructor(message: string, readonly systemMessage?: SystemMessage) {
+    super(message);
+    this.name = "ApiError";
+  }
 }
 
 class ApiClient {
@@ -48,7 +65,7 @@ class ApiClient {
       const msg =
         json?.message?.body || json?.message?.title || `Request failed (${res.status})`;
       toast.error(msg);
-      throw new Error(msg);
+      throw new ApiError(msg, json?.message);
     }
     return json as ApiResponse<T>;
   }
