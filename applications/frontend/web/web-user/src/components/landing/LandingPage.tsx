@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight, BadgeCheck, Calendar, ChevronDown, Clock, CreditCard,
-  Droplets, Hammer, Headphones, MapPin, Paintbrush, Search, Sparkles, Star, Users, Wind, Wrench, Zap,
+  Droplets, Hammer, Headphones, MapPin, Paintbrush, Quote, Search, Shield, Sparkles, Star, Users, Wind, Wrench, Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -207,6 +207,57 @@ export function LandingPage() {
               <aside className="absolute right-[1.5vw] top-10 hidden w-[300px] rounded-2xl bg-white/95 p-6 shadow-[0_18px_45px_rgba(35,22,76,.12)] xl:block 2xl:w-[350px]">
                 <div className="flex gap-4"><span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#eee4ff]"><img src="/favicon-32x32.png" alt="FIXO" className="size-9" /></span><div><div className="flex gap-0.5 text-[#ffab00]">{Array.from({ length: 5 }).map((_, index) => <Star key={index} className="size-5 fill-current" />)}</div><p className="mt-2 text-base leading-6 text-[#3f4261]">“FIXO has helped me get consistent work. It's reliable and easy to use.”</p><strong className="mt-3 block">— Amina M.</strong><small className="text-[#777b98]">Technician, Dar es Salaam</small></div></div>
               </aside>
+            </div>
+          </div>
+        </section>
+
+        <section id="reviews" className="relative overflow-hidden bg-[#fbfbff] px-5 py-14 lg:px-[4.6vw] lg:py-16">
+          <div className="pointer-events-none absolute -right-24 -top-40 size-[500px] rounded-full bg-[radial-gradient(circle,rgba(105,25,245,.08),rgba(105,25,245,.015)_62%,transparent_63%)]" />
+          <div className="pointer-events-none absolute right-[7%] top-12 -rotate-6 text-center font-serif text-[29px] italic leading-[1.05] text-[#111333]">Same<br />Great Service.<br />Happier Homes.<div className="mx-auto mt-3 h-1.5 w-40 -rotate-6 rounded-full bg-gradient-to-r from-[#5c09ef] to-[#a740ff]" /></div>
+
+          <div className="relative">
+            <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">Customer Reviews &amp; Trust</span>
+            <h2 className="mt-5 text-[clamp(50px,4.7vw,76px)] font-extrabold leading-[.98] tracking-[-.055em]">Loved by <span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">homeowners.</span></h2>
+            <p className="mt-3 text-2xl text-[#6d7190]">Real people. Real homes. Real results.</p>
+
+            <div className="mt-7 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                { icon: Users, value: "10,000+", label: "Happy Customers", tone: "bg-[#eee3ff] text-[#651cf4]" },
+                { icon: Wrench, value: "25,000+", label: "Jobs Completed", tone: "bg-[#dcf8ee] text-[#0bad70]" },
+                { icon: Shield, value: "500+", label: "Verified Professionals", tone: "bg-[#fff0d7] text-[#f0a000]" },
+                { icon: Star, value: "4.9/5", label: "Customer Rating", tone: "bg-[#ffe1ec] text-[#e51e67]" },
+              ].map(({ icon: Icon, value, label, tone }) => (
+                <article key={label} className="flex min-h-[126px] items-center gap-4 rounded-2xl border border-[#e3e0ed] bg-white px-5 shadow-[0_10px_32px_rgba(35,22,76,.04)]">
+                  <span className={`flex size-[72px] shrink-0 items-center justify-center rounded-full ${tone}`}><Icon className="size-10" strokeWidth={2.3} /></span>
+                  <span><strong className="block text-[28px] leading-none">{value}</strong><small className="mt-3 block whitespace-nowrap text-base text-[#707493]">{label}</small></span>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-3">
+              {[
+                { name: "Amina", image: "/brand/fixo-provider-woman-v1.png", position: "68% 20%", zoom: 2.5, review: "FIXO made it so easy to find a reliable cleaner for my home. She was professional, arrived on time, and did an amazing job. I’ll definitely book again!", service: "Home Cleaning", icon: Sparkles, tone: TONES[0] },
+                { name: "Daniel", image: "/brand/fixo-how-it-works-v2.png", position: "38% 52%", zoom: 4, review: "I needed an electrician urgently and FIXO connected me with a great pro within minutes. Fast, reliable and professional service!", service: "Electrical Repair", icon: Zap, tone: TONES[2] },
+                { name: "Neema", image: "/brand/fixo-provider-woman-v1.png", position: "70% 18%", zoom: 2.5, review: "Great experience from start to finish. The plumber was polite, knowledgeable and fixed the issue quickly. FIXO really delivers!", service: "Plumbing", icon: Droplets, tone: TONES[1] },
+              ].map((review) => {
+                const ServiceIcon = review.icon;
+                return (
+                  <article key={review.name} className="relative flex min-h-[338px] flex-col rounded-2xl border border-[#e3e0ed] bg-white p-8 shadow-[0_14px_42px_rgba(35,22,76,.055)]">
+                    <Quote className="absolute right-7 top-7 size-12 fill-[#e8dcff] text-[#e8dcff]" />
+                    <div className="flex items-center gap-5">
+                      <span className="size-[92px] shrink-0 overflow-hidden rounded-full bg-[#eee4ff]"><img src={review.image} alt={review.name} className="h-full w-full object-cover" style={{ objectPosition: review.position, transform: `scale(${review.zoom})`, transformOrigin: review.position }} /></span>
+                      <span><strong className="block text-xl">{review.name}</strong><span className="mt-2 flex gap-0.5 text-[#ffab00]">{Array.from({ length: 5 }).map((_, index) => <Star key={index} className="size-5 fill-current" />)}</span></span>
+                    </div>
+                    <p className="mt-5 flex-1 text-lg leading-7 text-[#666b8b]">“{review.review}”</p>
+                    <div className="mt-4 flex items-center gap-4 border-t border-[#e6e3ef] pt-4"><span className={`flex size-12 items-center justify-center rounded-full ${review.tone}`}><ServiceIcon className="size-6" /></span><span className="text-base text-[#737795]">Booked: <strong className="text-[#111333]">{review.service}</strong></span></div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="mt-14 flex items-center gap-7"><span className="h-px flex-1 bg-[#dddbea]" /><span className="text-xs font-semibold tracking-[.3em] text-[#9699b5]">TRUSTED BY THOUSANDS ACROSS DAR ES SALAAM</span><span className="h-px flex-1 bg-[#dddbea]" /></div>
+            <div className="mt-7 grid grid-cols-3 items-center gap-4 text-[#777c9e] md:grid-cols-6">
+              {["NMB", "Airtel", "vodacom", "tigo", "halotel", "selcom"].map((name) => <div key={name} className="flex items-center justify-center gap-3 border-r border-[#dddbea] py-2 last:border-r-0"><img src="/favicon-32x32.png" alt="FIXO" className="size-8 grayscale opacity-55" /><strong className="text-lg">{name}</strong></div>)}
             </div>
           </div>
         </section>
