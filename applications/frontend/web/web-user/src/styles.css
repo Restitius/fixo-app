@@ -66,6 +66,73 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@keyframes auth-wave-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -3%, 0) rotate(2deg) scale(1.08);
+  }
+}
+
+@keyframes auth-wave-drift-reverse {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(8deg) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-5%, 4%, 0) rotate(-3deg) scale(0.98);
+  }
+}
+
+.auth-wave-stage {
+  background: radial-gradient(circle at 50% 45%, #fff 0%, #fbfaff 44%, #f3efff 100%);
+}
+
+.auth-wave {
+  position: absolute;
+  width: 58vw;
+  height: 58vw;
+  min-width: 620px;
+  min-height: 620px;
+  border: clamp(52px, 7vw, 110px) solid rgba(111, 44, 245, 0.09);
+  border-radius: 44% 56% 63% 37% / 42% 38% 62% 58%;
+  will-change: transform;
+}
+
+.auth-wave-one {
+  right: -29vw;
+  top: -34vw;
+  animation: auth-wave-drift 15s ease-in-out infinite;
+}
+.auth-wave-two {
+  bottom: -35vw;
+  left: -31vw;
+  animation: auth-wave-drift-reverse 18s ease-in-out infinite;
+}
+.auth-wave-three {
+  left: 9vw;
+  top: 30%;
+  opacity: 0.42;
+  animation: auth-wave-drift 22s ease-in-out infinite reverse;
+}
+
+.auth-dot-grid {
+  position: absolute;
+  width: 112px;
+  height: 112px;
+  opacity: 0.38;
+  background-image: radial-gradient(circle, #8b54fb 2px, transparent 2.5px);
+  background-size: 24px 24px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-wave {
+    animation: none;
+  }
+}
+
 :root {
   --radius: 1rem;
   --background: oklch(0.968 0.012 280);
@@ -104,7 +171,11 @@
   --sidebar-accent-foreground: oklch(0.28 0.04 289);
   --sidebar-border: oklch(0.93 0.008 289);
   --sidebar-ring: oklch(0.5198 0.2894 289.03);
-  --gradient-primary: linear-gradient(135deg, oklch(0.6091 0.2481 298.76), oklch(0.4514 0.2532 287.24));
+  --gradient-primary: linear-gradient(
+    135deg,
+    oklch(0.6091 0.2481 298.76),
+    oklch(0.4514 0.2532 287.24)
+  );
   --card-hairline: oklch(0.3 0.05 289 / 0.06);
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -114,12 +185,19 @@
      shadows that read as soft/realistic rather than a single hard-edged
      drop-shadow. */
   --shadow-xs: inset 0 0 0 1px var(--card-hairline), 0 1px 2px oklch(0.3 0.05 289 / 0.05);
-  --shadow-sm: inset 0 0 0 1px var(--card-hairline), 0 1px 2px oklch(0.3 0.05 289 / 0.04), 0 2px 6px oklch(0.3 0.05 289 / 0.05);
-  --shadow-card: inset 0 0 0 1px var(--card-hairline), 0 1px 1px oklch(0.3 0.05 289 / 0.03), 0 2px 4px oklch(0.3 0.05 289 / 0.04), 0 12px 28px -8px oklch(0.3 0.05 289 / 0.09);
-  --shadow-lg: inset 0 0 0 1px var(--card-hairline), 0 2px 4px oklch(0.3 0.05 289 / 0.04), 0 16px 40px -12px oklch(0.3 0.05 289 / 0.16);
-  --shadow-glow: inset 0 1px 0 oklch(1 0 0 / 0.2), 0 1px 2px oklch(0.3 0.05 289 / 0.05), 0 8px 20px -4px oklch(0.5198 0.2894 289.03 / 0.35);
+  --shadow-sm:
+    inset 0 0 0 1px var(--card-hairline), 0 1px 2px oklch(0.3 0.05 289 / 0.04),
+    0 2px 6px oklch(0.3 0.05 289 / 0.05);
+  --shadow-card:
+    inset 0 0 0 1px var(--card-hairline), 0 1px 1px oklch(0.3 0.05 289 / 0.03),
+    0 2px 4px oklch(0.3 0.05 289 / 0.04), 0 12px 28px -8px oklch(0.3 0.05 289 / 0.09);
+  --shadow-lg:
+    inset 0 0 0 1px var(--card-hairline), 0 2px 4px oklch(0.3 0.05 289 / 0.04),
+    0 16px 40px -12px oklch(0.3 0.05 289 / 0.16);
+  --shadow-glow:
+    inset 0 1px 0 oklch(1 0 0 / 0.2), 0 1px 2px oklch(0.3 0.05 289 / 0.05),
+    0 8px 20px -4px oklch(0.5198 0.2894 289.03 / 0.35);
 }
-
 
 .dark {
   --background: oklch(0.129 0.042 264.695);
