@@ -187,7 +187,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       customer,
       loading: false,
     });
-    navigate({ to: "/" });
+    const postAuthPath = sessionStorage.getItem("fixo.postAuthPath");
+    if (postAuthPath) {
+      sessionStorage.removeItem("fixo.postAuthPath");
+      window.location.assign(postAuthPath);
+    } else {
+      navigate({ to: "/" });
+    }
   };
 
   const register = async (data: RegisterData) => {
