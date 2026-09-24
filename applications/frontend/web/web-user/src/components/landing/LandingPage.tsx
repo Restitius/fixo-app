@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight, BadgeCheck, Calendar, ChevronDown, Clock, CreditCard,
-  Droplets, Hammer, Headphones, MapPin, Paintbrush, Sparkles, Wind, Wrench, Zap,
+  Droplets, Hammer, Headphones, MapPin, Paintbrush, Search, Sparkles, Users, Wind, Wrench, Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -44,6 +44,9 @@ export function LandingPage() {
 
   const selected = categories.find((category) => category.code === selectedCode);
   const popular = categories.slice(0, 6);
+  const nearby = ["plumb", "clean", "elect"]
+    .map((term) => categories.find((category) => category.name.toLowerCase().includes(term)))
+    .filter((category): category is PublicCategory => Boolean(category));
   const goToBooking = (category = selected) => {
     if (!category) return void navigate({ to: "/register" });
     const query = new URLSearchParams({
@@ -112,47 +115,55 @@ export function LandingPage() {
           { icon: Headphones, title: "Reliable Support", copy: "We're here to help" },
         ].map(({ icon: Icon, title, copy }) => <div key={title} className="flex items-center gap-4 border-[#dfdeea] px-4 md:border-r md:last:border-r-0"><Icon className="size-9 shrink-0 text-[#651cf4]" /><span><strong className="block">{title}</strong><small className="text-sm text-[#747795]">{copy}</small></span></div>)}</div></section>
 
-        <section id="how-it-works" className="relative overflow-hidden bg-[#fafaff] px-5 py-16 lg:px-[4vw] lg:py-20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_70%,rgba(113,37,255,.09),transparent_34%),radial-gradient(circle_at_85%_20%,rgba(113,37,255,.06),transparent_30%)]" />
-          <div className="relative grid gap-12 xl:grid-cols-[1.7fr_1fr]">
-            <div className="relative min-h-[720px] overflow-hidden rounded-[28px]">
-              <img src="/brand/fixo-how-it-works-v1.png" alt="FIXO professional ready to help" className="absolute inset-0 h-full w-full object-cover object-[46%_center]" />
-              <div className="absolute inset-0 bg-gradient-to-b from-white via-white/90 to-white/5" />
-              <div className="relative z-10 p-7 lg:p-10">
-                <span className="inline-flex rounded-full bg-[#eee4ff] px-5 py-2 text-base font-semibold text-[#651cf4]">How It Works</span>
-                <h2 className="mt-5 max-w-[850px] text-5xl font-extrabold leading-[.98] tracking-[-.05em] lg:text-[66px]">Get the help you need<br />in <span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">three simple steps.</span></h2>
-                <p className="mt-4 max-w-[720px] text-xl leading-8 text-[#696d8c]">From choosing a service to getting it done, FIXO makes home services simple, fast and reliable.</p>
-                <div className="relative mt-8 grid gap-5 md:grid-cols-3">
-                  <div className="pointer-events-none absolute left-[15%] right-[15%] top-[72px] hidden border-t-2 border-dashed border-[#d8cdf4] md:block" />
-                  {[
-                    { title: "Choose a service", copy: "Pick the service you need for your home or office." },
-                    { title: "Select a provider", copy: "View trusted professionals and choose the right fit." },
-                    { title: "Book and get it done", copy: "Schedule at your convenience and relax while we handle the rest." },
-                  ].map((step, index) => (
-                    <article key={step.title} className="relative z-10 min-h-[260px] rounded-2xl border border-[#e7e3f2] bg-white/95 p-6 shadow-[0_18px_45px_rgba(35,22,76,.08)]">
-                      <span className={`flex size-20 items-center justify-center rounded-full ${index === 2 ? "bg-[#dcf8ee]" : "bg-[#efe3ff]"}`}><img src="/favicon-32x32.png" alt="" className="size-10 object-contain" /></span>
-                      <span className="mt-3 flex size-8 items-center justify-center rounded-full bg-[#eee4ff] font-extrabold text-[#651cf4]">{index + 1}</span>
+        <section id="how-it-works" className="relative min-h-[920px] overflow-hidden bg-[#fbfbff] px-5 py-12 lg:px-[4.6vw]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_31%_78%,rgba(91,0,237,.09),transparent_29%),radial-gradient(circle_at_79%_18%,rgba(91,0,237,.055),transparent_25%)]" />
+          <img src="/brand/fixo-how-it-works-v1.png" alt="FIXO professional ready to help" className="pointer-events-none absolute bottom-0 left-0 h-[360px] w-[62%] object-cover object-[31%_34%]" />
+          <div className="pointer-events-none absolute bottom-0 left-0 h-[390px] w-[62%] bg-gradient-to-b from-[#fbfbff]/15 via-transparent to-transparent" />
+
+          <div className="relative grid items-start gap-[4.5vw] xl:grid-cols-[1.62fr_1fr]">
+            <div>
+              <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">How It Works</span>
+              <h2 className="mt-6 max-w-[880px] text-[clamp(48px,4vw,66px)] font-extrabold leading-[.98] tracking-[-.052em]">Get the help you need<br />in <span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">three simple steps.</span></h2>
+              <p className="mt-4 max-w-[735px] text-xl leading-8 text-[#696d8c]">From choosing a service to getting it done, FIXO makes<br className="hidden lg:block" /> home services simple, fast and reliable.</p>
+
+              <div className="relative mt-8 grid max-w-[900px] gap-[3.7vw] md:grid-cols-3">
+                <div className="pointer-events-none absolute left-[17%] right-[17%] top-[74px] hidden border-t-2 border-dashed border-[#d8cdf4] md:block" />
+                {[
+                  { icon: Search, title: "Choose a service", copy: "Pick the service you need for your home or office." },
+                  { icon: Users, title: "Select a provider", copy: "View trusted professionals and choose the right fit." },
+                  { icon: Calendar, title: "Book and get it done", copy: "Schedule at your convenience and relax while we handle the rest." },
+                ].map((step, index) => {
+                  const StepIcon = step.icon;
+                  return (
+                    <article key={step.title} className="relative z-10 min-h-[304px] rounded-[20px] border border-[#e6e2f1] bg-white/95 p-7 shadow-[0_14px_40px_rgba(35,22,76,.055)]">
+                      <span className={`flex size-[82px] items-center justify-center rounded-full ${index === 2 ? "bg-[#dcf8ee]" : "bg-[#efe3ff]"}`}><StepIcon className="size-10 text-[#6617f5]" strokeWidth={2.5} /></span>
+                      <span className="mt-3 flex size-8 items-center justify-center rounded-full bg-[#eee4ff] text-lg font-extrabold text-[#651cf4]">{index + 1}</span>
                       <h3 className="mt-3 text-xl font-bold">{step.title}</h3>
-                      <p className="mt-2 max-w-[230px] text-base leading-6 text-[#6f7392]">{step.copy}</p>
+                      <p className="mt-2 max-w-[210px] text-base leading-6 text-[#6f7392]">{step.copy}</p>
                     </article>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
+
+              <div className="relative z-10 mt-10 max-w-[245px] -rotate-6 text-center font-serif text-[28px] italic leading-[1.05] text-[#111333]">Same Homes<br />Brighter Tomorrows<div className="mx-auto mt-3 h-1.5 w-36 -rotate-6 rounded-full bg-gradient-to-r from-[#5c09ef] to-[#a740ff]" /></div>
             </div>
 
-            <aside className="self-start rounded-[28px] bg-white p-7 shadow-[0_22px_60px_rgba(40,28,86,.1)] lg:p-9">
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#eee4ff] px-5 py-2 font-semibold text-[#651cf4]"><img src="/favicon-32x32.png" alt="" className="size-5" /> Popular Near You</span>
-              <h2 className="mt-5 text-5xl font-extrabold leading-[.98] tracking-[-.05em]">Top Services<br /><span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">Near You</span></h2>
-              <p className="mt-3 text-lg text-[#717593]">Find trusted professionals in your area.</p>
-              <div className="mt-6 space-y-4">{popular.slice(0, 3).map((category, index) => { const Icon = categoryIcon(category.name); return (
-                <button key={category.category_id} onClick={() => goToBooking(category)} className="group flex w-full items-center gap-4 rounded-2xl border border-[#e3e0ef] p-4 text-left transition hover:border-[#8a37ff] hover:shadow-md">
-                  <span className={`flex size-16 shrink-0 items-center justify-center rounded-full ${TONES[index % TONES.length]}`}><Icon className="size-8" /></span>
-                  <span className="min-w-0 flex-1"><strong className="block text-xl">{category.name}</strong><small className="mt-1 block truncate text-base text-[#767a99]">Trusted local professionals.</small></span>
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#f0e8ff] text-[#6a19f4]"><ArrowRight className="size-5 transition group-hover:translate-x-0.5" /></span>
-                </button>
-              ); })}</div>
-              <button onClick={() => navigate({ to: "/register" })} className="mt-7 flex w-full items-center gap-3 border-t border-[#e6e3ef] pt-7 text-lg font-semibold text-[#651cf4]">View all services <ArrowRight className="size-5" /></button>
-            </aside>
+            <div>
+              <aside className="rounded-[26px] bg-white p-9 shadow-[0_22px_60px_rgba(40,28,86,.1)]">
+                <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">Popular Near You</span>
+                <h2 className="mt-6 text-[clamp(46px,3.4vw,56px)] font-extrabold leading-[.98] tracking-[-.05em]">Top Services<br /><span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">Near You</span></h2>
+                <p className="mt-3 text-xl text-[#717593]">Find trusted professionals in your area.</p>
+                <div className="mt-7 space-y-4">{nearby.map((category, index) => { const Icon = categoryIcon(category.name); const descriptions = ["Repairs, installation, leaks.", "Homes and offices.", "Repairs and installations."]; return (
+                  <button key={category.category_id} onClick={() => goToBooking(category)} className="group flex w-full items-center gap-5 rounded-2xl border border-[#dedbea] p-4 text-left transition hover:border-[#8a37ff] hover:shadow-md">
+                    <span className={`flex size-[74px] shrink-0 items-center justify-center rounded-full ${TONES[index % TONES.length]}`}><Icon className="size-10" strokeWidth={2.4} /></span>
+                    <span className="min-w-0 flex-1"><strong className="block text-xl">{category.name}</strong><small className="mt-1 block truncate text-base text-[#767a99]">{descriptions[index]}</small></span>
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#f0e8ff] text-[#6a19f4]"><ArrowRight className="size-6 transition group-hover:translate-x-0.5" /></span>
+                  </button>
+                ); })}</div>
+                <button onClick={() => navigate({ to: "/register" })} className="mt-7 flex w-full items-center gap-3 border-t border-[#e6e3ef] pt-7 text-lg font-semibold text-[#651cf4]">View all services <ArrowRight className="size-5" /></button>
+              </aside>
+              <div className="mt-7 flex justify-center gap-2" aria-label="Service carousel page 1 of 3"><span className="size-3 rounded-full bg-[#6617f5]" /><span className="size-3 rounded-full bg-[#dfd5fb]" /><span className="size-3 rounded-full bg-[#dfd5fb]" /></div>
+            </div>
           </div>
         </section>
         <span id="support" className="sr-only">FIXO support</span>
