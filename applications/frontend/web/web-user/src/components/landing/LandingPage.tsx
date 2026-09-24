@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  ArrowRight, BadgeCheck, Calendar, ChevronDown, Clock, CreditCard,
-  Droplets, Hammer, Headphones, MapPin, Paintbrush, Quote, Search, Shield, Sparkles, Star, Users, Wind, Wrench, Zap,
+  ArrowRight, BadgeCheck, Calendar, Check, ChevronDown, Clock, CreditCard, Facebook,
+  Droplets, Hammer, Headphones, Home, Instagram, Linkedin, MapPin, MessageCircle, Paintbrush, Quote, Search, Shield, Smartphone, Sparkles, Star, Users, Wind, Wrench, Youtube, Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -261,7 +261,67 @@ export function LandingPage() {
             </div>
           </div>
         </section>
-        <span id="support" className="sr-only">FIXO support</span>
+
+        <section id="mobile-app" className="relative min-h-[780px] overflow-hidden bg-white px-5 py-16 lg:px-[4.6vw]">
+          <img src="/brand/fixo-mobile-app-v1.png" alt="FIXO mobile app booking and live tracking" className="pointer-events-none absolute inset-y-0 right-0 h-full w-[62%] object-cover object-center" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#fff_0%,#fff_43%,rgba(255,255,255,.55)_52%,rgba(255,255,255,0)_67%)]" />
+          <div className="relative z-10 max-w-[720px]">
+            <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">Mobile App</span>
+            <h2 className="mt-6 text-[clamp(50px,4.2vw,68px)] font-extrabold leading-[.96] tracking-[-.052em]">Manage every<br /><span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">service from your phone.</span></h2>
+            <p className="mt-5 text-xl leading-8 text-[#696d8c]">Book, track, chat and pay — all in the FIXO app.<br />Home services made simple, wherever you are.</p>
+
+            <div className="mt-7 grid max-w-[710px] gap-5 sm:grid-cols-2">
+              {[
+                { icon: Calendar, title: "Easy booking", copy: "Find and book trusted professionals in minutes.", tone: "bg-[#efe3ff] text-[#651cf4]" },
+                { icon: MapPin, title: "Real-time tracking", copy: "See your provider's live location.", tone: "bg-[#dcf8ee] text-[#08b87c]" },
+                { icon: MessageCircle, title: "In-app chat", copy: "Message your provider directly in the app.", tone: "bg-[#ffe1ec] text-[#df2468]" },
+                { icon: CreditCard, title: "Secure payments", copy: "Pay safely and conveniently.", tone: "bg-[#fff0d7] text-[#f0a000]" },
+              ].map(({ icon: Icon, title, copy, tone }) => (
+                <article key={title} className="flex min-h-[136px] items-center gap-6 rounded-2xl border border-[#e3e0ed] bg-white/95 p-6 shadow-[0_10px_32px_rgba(35,22,76,.04)]">
+                  <span className={`flex size-[76px] shrink-0 items-center justify-center rounded-full ${tone}`}><Icon className="size-10" strokeWidth={2.4} /></span>
+                  <span><strong className="block text-xl">{title}</strong><small className="mt-2 block text-base leading-6 text-[#727694]">{copy}</small></span>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-4">
+              <button onClick={() => navigate({ to: "/register" })} className="flex h-16 min-w-[280px] items-center justify-center gap-4 rounded-2xl bg-gradient-to-r from-[#8d32ff] to-[#5b00ed] px-8 text-lg font-bold text-white shadow-[0_14px_30px_rgba(99,21,242,.25)]">Download the App <ArrowRight className="size-6" /></button>
+              <button onClick={() => navigate({ to: "/register" })} className="flex h-16 min-w-[190px] items-center justify-center gap-3 rounded-2xl border border-[#e3e0ed] bg-white px-5"><Smartphone className="size-8" /><span className="text-left text-xs">Download on the<strong className="block text-lg leading-5">App Store</strong></span></button>
+              <button onClick={() => navigate({ to: "/register" })} className="flex h-16 min-w-[190px] items-center justify-center gap-3 rounded-2xl border border-[#e3e0ed] bg-white px-5"><span className="text-3xl">▶</span><span className="text-left text-xs">GET IT ON<strong className="block text-lg leading-5">Google Play</strong></span></button>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-8 text-base text-[#686c8b]">{["Safe & secure", "Trusted professionals", "Same great service"].map((item) => <span key={item} className="flex items-center gap-3"><span className="flex size-8 items-center justify-center rounded-full bg-[#eee4ff] text-[#651cf4]"><Check className="size-5" strokeWidth={3} /></span>{item}</span>)}</div>
+          </div>
+        </section>
+
+        <section id="support" className="relative overflow-hidden bg-[#fbfbff] px-5 pb-0 pt-12 lg:px-[4.6vw]">
+          <div className="pointer-events-none absolute right-[6%] top-8 -rotate-6 text-center font-serif text-[28px] italic leading-[1.05]">Real People<br />Real Support<div className="mx-auto mt-3 h-1.5 w-32 -rotate-6 rounded-full bg-gradient-to-r from-[#5c09ef] to-[#a740ff]" /></div>
+          <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">Help &amp; FAQ</span>
+          <h2 className="mt-4 text-[clamp(48px,4.3vw,68px)] font-extrabold leading-[.98] tracking-[-.052em]">Need help? <span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">We’re here for you.</span></h2>
+          <p className="mt-2 text-xl text-[#6c708f]">Find quick answers or get in touch — we’re always happy to help.</p>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              { icon: Calendar, title: "Bookings", copy: "Manage, reschedule or cancel your bookings.", tone: TONES[0] },
+              { icon: CreditCard, title: "Payments", copy: "Billing, refunds and payment methods.", tone: TONES[1] },
+              { icon: Users, title: "Providers", copy: "Finding, verifying and working with pros.", tone: TONES[3] },
+              { icon: Headphones, title: "Support", copy: "Account help and general questions.", tone: TONES[4] },
+            ].map(({ icon: Icon, title, copy, tone }) => <button key={title} onClick={() => navigate({ to: "/register" })} className="group flex min-h-[120px] items-center gap-5 rounded-2xl border border-[#e2dfed] bg-white p-5 text-left"><span className={`flex size-16 shrink-0 items-center justify-center rounded-full ${tone}`}><Icon className="size-8" /></span><span className="min-w-0 flex-1"><strong className="block text-xl">{title}</strong><small className="mt-1 block text-base leading-6 text-[#747896]">{copy}</small></span><span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#f0e8ff] text-[#6a19f4]"><ArrowRight className="size-5 transition group-hover:translate-x-0.5" /></span></button>)}
+          </div>
+
+          <div className="mt-7 flex items-center justify-between"><h3 className="text-[32px] font-extrabold">Frequently Asked Questions</h3><a href="#support" className="flex items-center gap-2 font-semibold text-[#651cf4]">View all FAQs <ArrowRight className="size-5" /></a></div>
+          <div className="mt-3 space-y-2">{[
+            ["How do I book a service with FIXO?", "Choose a service, select a trusted provider, then confirm the date, address and payment method."],
+            ["What payment methods are accepted?", "FIXO supports the secure payment methods shown during checkout, including available mobile and card options."],
+            ["Are FIXO providers verified?", "Yes. Provider profiles go through identity, qualification and service-quality checks before activation."],
+          ].map(([question, answer], index) => <details key={question} className="group rounded-xl border border-[#e2dfed] bg-white px-6 py-4"><summary className="flex cursor-pointer list-none items-center gap-5 font-semibold"><span className="flex size-9 items-center justify-center rounded-full bg-[#eee4ff] text-[#651cf4]">{index + 1}</span><span className="flex-1 text-lg">{question}</span><ChevronDown className="size-5 transition group-open:rotate-180" /></summary><p className="ml-14 mt-3 max-w-4xl text-base leading-6 text-[#727694]">{answer}</p></details>)}</div>
+
+          <div className="relative mt-5 min-h-[220px] overflow-hidden rounded-[26px] bg-[#f1edff] px-7 py-8 lg:px-16">
+            <img src="/brand/fixo-how-it-works-v2.png" alt="FIXO professional" className="absolute bottom-0 right-[7%] h-[245px] w-[420px] object-cover object-[38%_58%]" />
+            <div className="relative z-10"><h3 className="text-[clamp(38px,3.4vw,54px)] font-extrabold leading-none">Ready to <span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">book a service?</span></h3><p className="mt-3 text-lg text-[#6d7190]">Find trusted professionals, get it done, and enjoy a happier home.</p><div className="mt-5 flex gap-4"><button onClick={() => goToBooking()} className="flex h-14 min-w-[220px] items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-[#8d32ff] to-[#5b00ed] px-7 font-bold text-white">Find Providers <ArrowRight className="size-5" /></button><a href="#how-it-works" className="flex h-14 min-w-[170px] items-center justify-center rounded-xl border border-[#dad5e8] bg-white px-7 font-bold">Learn More</a></div></div>
+          </div>
+
+          <footer className="-mx-5 mt-6 border-t border-[#e7e4ef] bg-white px-5 py-7 lg:-mx-[4.6vw] lg:px-[4.6vw]"><div className="flex flex-col items-center justify-between gap-6 lg:flex-row"><Link to="/" className="flex items-center gap-3"><img src="/favicon-32x32.png" alt="FIXO" className="size-14" /><span><strong className="block text-3xl leading-none">FIXO</strong><small className="text-sm text-[#717593]">Home services made simple.</small></span></Link><nav className="flex flex-wrap justify-center gap-10 font-medium"><a href="#home">Home</a><a href="#services">Services</a><a href={PROVIDER_APP_URL}>For Providers</a><a href="#support">Support</a></nav><div className="flex items-center gap-5 text-[#555a7b]"><Instagram className="size-5" /><Facebook className="size-5" /><Linkedin className="size-5" /><Youtube className="size-5" /><span className="ml-3 border-l border-[#dddbea] pl-6 text-sm">© {new Date().getFullYear()} FIXO. All rights reserved.</span></div></div></footer>
+        </section>
       </main>
     </div>
   );
