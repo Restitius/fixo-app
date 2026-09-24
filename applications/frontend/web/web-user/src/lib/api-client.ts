@@ -502,6 +502,18 @@ export interface CatalogCategory {
   provider_count?: number | null;
 }
 
+export interface PublicCategory {
+  category_id: string;
+  code: string;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+export const publicApi = {
+  categories: () => apiClient.get<PublicCategory[]>("/public/categories").then((r) => r.data),
+};
+
 export interface ProviderListing {
   provider_id: string;
   display_name: string;

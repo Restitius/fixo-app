@@ -35,6 +35,7 @@ import {
 import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { Button } from "@/components/ui/button";
+import { LandingPage } from "@/components/landing/LandingPage";
 import { useAuth } from "@/lib/auth-context";
 import { fixoSdk, type ActivityEvent, type BookingHistoryRow, type WalletBalance } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize, timeAgo } from "@/lib/format";
@@ -77,78 +78,7 @@ function Home() {
 }
 
 function Landing() {
-  const { t } = useTranslation("home");
-  return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-[-12rem] -z-10 h-[36rem] opacity-40 blur-3xl"
-        style={{ backgroundImage: "radial-gradient(closest-side, var(--primary), transparent)" }}
-      />
-
-      <header className="sticky top-0 z-10 border-b border-transparent bg-background/70 backdrop-blur-md">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-2">
-            <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="size-9 object-contain" />
-            <span className="text-lg font-bold tracking-tight">FIXO</span>
-          </div>
-          <nav className="flex items-center gap-2">
-            <Button asChild variant="ghost">
-              <Link to="/login">{t("landing.signIn")}</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/register">{t("landing.createAccount")}</Link>
-            </Button>
-          </nav>
-        </div>
-      </header>
-
-      <main className="container mx-auto flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-primary">
-          <Sparkles className="size-3.5" /> {t("landing.badge")}
-        </span>
-        <h1 className="mt-6 max-w-3xl text-4xl font-bold tracking-tight sm:text-6xl">
-          {t("landing.headingPrefix")}{" "}
-          <span className="bg-[image:var(--gradient-primary)] bg-clip-text text-transparent">
-            {t("landing.headingHighlight")}
-          </span>
-        </h1>
-        <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-          {t("landing.subtitle")}
-        </p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Button asChild size="lg" className="h-12 px-8 text-base">
-            <Link to="/register">{t("landing.getStarted")}</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base">
-            <Link to="/login">{t("landing.haveAccount")}</Link>
-          </Button>
-        </div>
-
-        <div className="mt-20 grid w-full max-w-3xl gap-6 sm:grid-cols-3">
-          {[
-            { icon: Wrench, title: t("landing.feature1Title"), d: t("landing.feature1Desc") },
-            { icon: ClipboardList, title: t("landing.feature2Title"), d: t("landing.feature2Desc") },
-            { icon: PackageCheck, title: t("landing.feature3Title"), d: t("landing.feature3Desc") },
-          ].map(({ icon: Icon, title, d }) => (
-            <div
-              key={title}
-              className="rounded-2xl bg-card p-6 text-left shadow-[var(--shadow-card)] transition-all duration-200 ease-[var(--ease-premium)] hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]"
-            >
-              <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Icon className="size-5" />
-              </span>
-              <h3 className="mt-4 font-semibold">{title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
-            </div>
-          ))}
-        </div>
-      </main>
-
-      <footer className="border-t border-border py-6 text-center text-sm text-muted-foreground">
-        {t("landing.footer", { year: new Date().getFullYear() })}
-      </footer>
-    </div>
-  );
+  return <LandingPage />;
 }
 
 // ---- Dashboard — every number below is derived from the customer's real
