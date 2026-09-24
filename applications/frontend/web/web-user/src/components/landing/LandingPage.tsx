@@ -2,7 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight, BadgeCheck, Calendar, ChevronDown, Clock, CreditCard,
-  Droplets, Hammer, Headphones, MapPin, Paintbrush, Search, Sparkles, Users, Wind, Wrench, Zap,
+  Droplets, Hammer, Headphones, MapPin, Paintbrush, Search, Sparkles, Star, Users, Wind, Wrench, Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -117,7 +117,7 @@ export function LandingPage() {
 
         <section id="how-it-works" className="relative min-h-[920px] overflow-hidden bg-[#fbfbff] px-5 py-12 lg:px-[4.6vw]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_31%_78%,rgba(91,0,237,.09),transparent_29%),radial-gradient(circle_at_79%_18%,rgba(91,0,237,.055),transparent_25%)]" />
-          <img src="/brand/fixo-how-it-works-v1.png" alt="FIXO professional ready to help" className="pointer-events-none absolute bottom-0 left-0 h-[360px] w-[62%] object-cover object-[31%_34%]" />
+          <img src="/brand/fixo-how-it-works-v2.png" alt="FIXO professional ready to help" className="pointer-events-none absolute bottom-0 left-[14%] h-[500px] w-[48%] object-cover object-[38%_58%]" />
           <div className="pointer-events-none absolute bottom-0 left-0 h-[390px] w-[62%] bg-gradient-to-b from-[#fbfbff]/15 via-transparent to-transparent" />
 
           <div className="relative grid items-start gap-[4.5vw] xl:grid-cols-[1.62fr_1fr]">
@@ -163,6 +163,50 @@ export function LandingPage() {
                 <button onClick={() => navigate({ to: "/register" })} className="mt-7 flex w-full items-center gap-3 border-t border-[#e6e3ef] pt-7 text-lg font-semibold text-[#651cf4]">View all services <ArrowRight className="size-5" /></button>
               </aside>
               <div className="mt-7 flex justify-center gap-2" aria-label="Service carousel page 1 of 3"><span className="size-3 rounded-full bg-[#6617f5]" /><span className="size-3 rounded-full bg-[#dfd5fb]" /><span className="size-3 rounded-full bg-[#dfd5fb]" /></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="trust" className="bg-white px-5 pb-0 pt-12 lg:px-[4.6vw]">
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div>
+              <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">Why customers trust FIXO</span>
+              <h2 className="mt-5 max-w-[640px] text-[clamp(46px,3.8vw,62px)] font-extrabold leading-[.98] tracking-[-.05em]">A simpler, safer way<br />to get things done</h2>
+            </div>
+            <p className="max-w-[470px] pb-3 text-xl leading-8 text-[#696d8c]">Thousands of homeowners and businesses<br className="hidden lg:block" /> trust FIXO for reliable service, every day.</p>
+          </div>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              { icon: BadgeCheck, title: "Verified professionals", copy: "Background-checked experts" },
+              { icon: CreditCard, title: "Secure payments", copy: "Safe and protected" },
+              { icon: Clock, title: "Fast booking", copy: "Get help in minutes" },
+              { icon: Headphones, title: "Friendly support", copy: "We're here to help" },
+            ].map(({ icon: Icon, title, copy }) => (
+              <article key={title} className="flex min-h-[126px] items-center gap-6 rounded-2xl border border-[#e4e1ed] bg-white px-6 shadow-[0_12px_35px_rgba(35,22,76,.04)]">
+                <span className="flex size-[78px] shrink-0 items-center justify-center rounded-full bg-[#efe4ff]"><Icon className="size-10 text-[#651cf4]" strokeWidth={2.4} /></span>
+                <span><strong className="block text-xl">{title}</strong><small className="mt-2 block text-base text-[#737795]">{copy}</small></span>
+              </article>
+            ))}
+          </div>
+
+          <div className="relative -mx-5 mt-10 min-h-[540px] overflow-hidden bg-[#f7f5ff] lg:-mx-[4.6vw]">
+            <img src="/brand/fixo-provider-woman-v1.png" alt="Female FIXO service professional" className="absolute inset-y-0 left-0 h-full w-[108%] max-w-none -translate-x-[8%] object-cover object-center" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(249,248,255,.99)_0%,rgba(249,248,255,.93)_35%,rgba(249,248,255,.12)_61%,rgba(249,248,255,0)_100%)]" />
+            <div className="relative z-10 flex min-h-[540px] px-5 py-12 lg:px-[4.6vw]">
+              <div className="max-w-[570px] self-center">
+                <span className="inline-flex rounded-full bg-[#eee4ff] px-6 py-2 text-base font-semibold text-[#651cf4]">For Service Professionals</span>
+                <h2 className="mt-6 text-[clamp(48px,4vw,66px)] font-extrabold leading-[.96] tracking-[-.05em]">Grow your skills.<br /><span className="bg-gradient-to-r from-[#6818f6] to-[#9b35ff] bg-clip-text text-transparent">More opportunities<br />with FIXO.</span></h2>
+                <p className="mt-5 text-xl leading-8 text-[#696d8c]">Join a trusted platform, get more jobs,<br />and build your reputation.</p>
+                <div className="mt-7 flex flex-wrap gap-5">
+                  <a href={PROVIDER_APP_URL} className="flex h-16 min-w-[290px] items-center justify-center gap-5 rounded-2xl bg-gradient-to-r from-[#8d32ff] to-[#5b00ed] px-8 text-lg font-bold text-white shadow-[0_14px_30px_rgba(99,21,242,.25)]">Join as a provider <ArrowRight className="size-6" /></a>
+                  <a href={PROVIDER_APP_URL} className="flex h-16 min-w-[210px] items-center justify-center rounded-2xl bg-white px-8 text-lg font-bold shadow-[0_8px_28px_rgba(35,22,76,.08)]">Learn more</a>
+                </div>
+              </div>
+
+              <aside className="absolute right-[1.5vw] top-10 hidden w-[300px] rounded-2xl bg-white/95 p-6 shadow-[0_18px_45px_rgba(35,22,76,.12)] xl:block 2xl:w-[350px]">
+                <div className="flex gap-4"><span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#eee4ff]"><img src="/favicon-32x32.png" alt="FIXO" className="size-9" /></span><div><div className="flex gap-0.5 text-[#ffab00]">{Array.from({ length: 5 }).map((_, index) => <Star key={index} className="size-5 fill-current" />)}</div><p className="mt-2 text-base leading-6 text-[#3f4261]">“FIXO has helped me get consistent work. It's reliable and easy to use.”</p><strong className="mt-3 block">— Amina M.</strong><small className="text-[#777b98]">Technician, Dar es Salaam</small></div></div>
+              </aside>
             </div>
           </div>
         </section>
