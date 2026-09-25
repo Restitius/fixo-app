@@ -35,6 +35,7 @@ import { Route as ProtectedRouteImport } from './routes/protected'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as RecurringRouteImport } from './routes/recurring'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as RegisterCustomerRouteImport } from './routes/register-customer'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ServicesRouteImport } from './routes/services'
@@ -172,6 +173,11 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterCustomerRoute = RegisterCustomerRouteImport.update({
+  id: '/register-customer',
+  path: '/register-customer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/providers': typeof ProvidersRoute
   '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
+  '/register-customer': typeof RegisterCustomerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
@@ -264,6 +271,7 @@ export interface FileRoutesByTo {
   '/providers': typeof ProvidersRoute
   '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
+  '/register-customer': typeof RegisterCustomerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/providers': typeof ProvidersRoute
   '/recurring': typeof RecurringRoute
   '/register': typeof RegisterRoute
+  '/register-customer': typeof RegisterCustomerRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
@@ -335,6 +344,7 @@ export interface FileRouteTypes {
     | '/providers'
     | '/recurring'
     | '/register'
+    | '/register-customer'
     | '/reset-password'
     | '/search'
     | '/services'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/providers'
     | '/recurring'
     | '/register'
+    | '/register-customer'
     | '/reset-password'
     | '/search'
     | '/services'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/providers'
     | '/recurring'
     | '/register'
+    | '/register-customer'
     | '/reset-password'
     | '/search'
     | '/services'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   ProvidersRoute: typeof ProvidersRoute
   RecurringRoute: typeof RecurringRoute
   RegisterRoute: typeof RegisterRoute
+  RegisterCustomerRoute: typeof RegisterCustomerRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   ServicesRoute: typeof ServicesRoute
@@ -630,6 +643,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register-customer': {
+      id: '/register-customer'
+      path: '/register-customer'
+      fullPath: '/register-customer'
+      preLoaderRoute: typeof RegisterCustomerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -702,6 +722,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProvidersRoute: ProvidersRoute,
   RecurringRoute: RecurringRoute,
   RegisterRoute: RegisterRoute,
+  RegisterCustomerRoute: RegisterCustomerRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   ServicesRoute: ServicesRoute,
