@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Apple, ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Phone, UserRound } from "lucide-react";
+import { ArrowRight, ChevronDown, Eye, EyeOff, LockKeyhole, Mail, Phone, UserRound } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,6 +25,18 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>;
 
+const countries = [
+  { code: "TZ", name: "Tanzania", dialCode: "+255", flag: "🇹🇿" },
+  { code: "KE", name: "Kenya", dialCode: "+254", flag: "🇰🇪" },
+  { code: "UG", name: "Uganda", dialCode: "+256", flag: "🇺🇬" },
+  { code: "RW", name: "Rwanda", dialCode: "+250", flag: "🇷🇼" },
+  { code: "BI", name: "Burundi", dialCode: "+257", flag: "🇧🇮" },
+  { code: "CD", name: "DR Congo", dialCode: "+243", flag: "🇨🇩" },
+  { code: "ZA", name: "South Africa", dialCode: "+27", flag: "🇿🇦" },
+  { code: "NG", name: "Nigeria", dialCode: "+234", flag: "🇳🇬" },
+  { code: "GH", name: "Ghana", dialCode: "+233", flag: "🇬🇭" },
+] as const;
+
 export const Route = createFileRoute("/register-customer")({
   head: () => ({ meta: [{ title: "Create your FIXO account" }] }),
   component: RegisterCustomerPage,
@@ -34,6 +46,8 @@ function RegisterCustomerPage() {
   const { register: registerCustomer } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<(typeof countries)[number]>(countries[0]);
+  const [countryMenuOpen, setCountryMenuOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -47,7 +61,7 @@ function RegisterCustomerPage() {
     try {
       await registerCustomer({
         full_name: values.full_name,
-        phone: values.phone,
+        phone: `${selectedCountry.dialCode}${values.phone.replace(/\D/g, "")}`,
         email: values.email,
         password: values.password,
         terms_accepted: true,
@@ -73,12 +87,50 @@ function RegisterCustomerPage() {
             <input {...register("full_name")} autoComplete="name" placeholder="John Doe" />
           </Field>
           <Field label="Phone Number" error={errors.phone?.message} icon={<Phone />}>
-            <TanzaniaFlag />
+            <div className="relative mr-3 shrink-0">
+              <button
+                type="button"
+                aria-label={`Country: ${selectedCountry.name}`}
+                aria-haspopup="listbox"
+                aria-expanded={countryMenuOpen}
+                onClick={() => setCountryMenuOpen((open) => !open)}
+                className="flex h-9 items-center gap-1.5 rounded-lg px-1.5 text-sm font-semibold text-[#303553] hover:bg-[#f4efff] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b20f4]"
+              >
+                <span className="text-xl leading-none" aria-hidden="true">{selectedCountry.flag}</span>
+                <span>{selectedCountry.dialCode}</span>
+                <ChevronDown className={`size-4 transition-transform ${countryMenuOpen ? "rotate-180" : ""}`} />
+              </button>
+              {countryMenuOpen && (
+                <div
+                  role="listbox"
+                  aria-label="Select country"
+                  className="absolute left-0 top-11 z-30 max-h-64 w-64 overflow-y-auto rounded-xl border border-[#deddea] bg-white p-1.5 shadow-[0_16px_45px_rgba(34,20,82,.18)]"
+                >
+                  {countries.map((country) => (
+                    <button
+                      key={country.code}
+                      type="button"
+                      role="option"
+                      aria-selected={country.code === selectedCountry.code}
+                      onClick={() => {
+                        setSelectedCountry(country);
+                        setCountryMenuOpen(false);
+                      }}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm hover:bg-[#f5f0ff] ${country.code === selectedCountry.code ? "bg-[#f1e9ff] text-[#5817dc]" : "text-[#303553]"}`}
+                    >
+                      <span className="text-xl leading-none" aria-hidden="true">{country.flag}</span>
+                      <span className="flex-1 font-medium">{country.name}</span>
+                      <span className="text-[#737795]">{country.dialCode}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <input
               {...register("phone")}
               autoComplete="tel"
               inputMode="tel"
-              placeholder="+255 700 000 000"
+              placeholder="700 000 000"
             />
           </Field>
           <Field label="Email Address" error={errors.email?.message} icon={<Mail />}>
@@ -150,7 +202,7 @@ function RegisterCustomerPage() {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <SocialButton label="Google" icon={<GoogleIcon />} />
-          <SocialButton label="Apple" icon={<Apple className="size-5 fill-current" />} />
+          <SocialButton label="Apple" icon={<AppleIcon />} />
         </div>
         <p className="mt-5 text-center text-sm text-[#717694]">
           Already have an account?{" "}
@@ -175,14 +227,14 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="block">
+    <div className="block">
       <span className="mb-1.5 block text-sm font-semibold">{label}</span>
       <span className="flex h-12 items-center rounded-xl border border-[#d9dbea] bg-white px-4 text-[#747b9e] [&>svg]:mr-3 [&>svg]:size-5 [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-[#111333] [&>input]:outline-none [&>input]:placeholder:text-[#8f94af]">
         {icon}
         {children}
       </span>
       {error && <span className="mt-1 block text-xs text-red-600">{error}</span>}
-    </label>
+    </div>
   );
 }
 
@@ -199,17 +251,13 @@ function RevealButton({ shown, onClick }: { shown: boolean; onClick: () => void 
   );
 }
 
-function TanzaniaFlag() {
+function AppleIcon() {
   return (
-    <svg
-      viewBox="0 0 30 20"
-      aria-label="Tanzania"
-      className="mr-3 h-4 w-6 shrink-0 rounded-[2px] shadow-sm"
-    >
-      <path fill="#1eb53a" d="M0 0h30v20H0z" />
-      <path fill="#00a3dd" d="M0 20 30 0v20z" />
-      <path stroke="#fcd116" strokeWidth="8" d="M-2 22 32-2" />
-      <path stroke="#000" strokeWidth="5" d="M-2 22 32-2" />
+    <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.29-.07 2.19.71 2.95.71.76 0 2.17-.96 3.65-.82 1.85.15 3.24.88 4.16 2.2-3.82 2.29-2.91 7.32.59 8.73-.7 1.84-1.61 3.66-3.35 5.15ZM12.03 7.19C11.88 4.46 14.07 2.21 16.62 2c.35 3.15-2.86 5.5-4.59 5.19Z"
+      />
     </svg>
   );
 }
