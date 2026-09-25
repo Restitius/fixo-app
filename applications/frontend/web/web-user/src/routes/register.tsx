@@ -1,177 +1,126 @@
-// Register page — customer registration form.
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { User, Mail, Phone, Lock, Check } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Building2,
+  Check,
+  Home,
+  Repeat2,
+  UserRound,
+  Wrench,
+  Zap,
+} from "lucide-react";
+import { useState } from "react";
 
-import { useAuth } from "@/lib/auth-context";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "sonner";
-
-const title = "Create Account — Fixo";
-
-const registerSchema = z.object({
-  full_name: z.string().min(2, "Name must be at least 2 characters"),
-  phone: z.string().min(7, "Phone number too short"),
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  terms_accepted: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
-  }),
-  privacy_accepted: z.boolean().refine((val) => val === true, {
-    message: "You must accept the privacy policy",
-  }),
-});
-
-type RegisterValues = z.infer<typeof registerSchema>;
+import { AnimatedAuthShell, AuthBrand } from "@/components/auth/AnimatedAuthShell";
 
 export const Route = createFileRoute("/register")({
-  head: () => ({
-    meta: [{ title }, { name: "description", content: "Create your Fixo account." }],
-  }),
-  component: RegisterPage,
+  head: () => ({ meta: [{ title: "Choose how to use FIXO" }] }),
+  component: RegistrationRolePage,
 });
 
-function RegisterPage() {
-  const { t } = useTranslation("auth");
-  const { register: registerCustomer } = useAuth();
-  const { register, control, handleSubmit, formState: { isSubmitting, errors }, watch } =
-    useForm<RegisterValues>({
-      resolver: zodResolver(registerSchema),
-      defaultValues: {
-        full_name: "",
-        phone: "",
-        email: "",
-        password: "",
-        terms_accepted: false,
-        privacy_accepted: false,
-      },
-    });
+type Role = "customer" | "provider";
+const PROVIDER_APP_URL = import.meta.env["VITE_PROVIDER_APP_URL"] ?? "http://localhost:5190";
 
-  const passwordValue = watch("password", "");
+function RegistrationRolePage() {
+  const navigate = useNavigate();
+  const [role, setRole] = useState<Role>("customer");
 
-  const onSubmit = async (values: RegisterValues) => {
-    try {
-      await registerCustomer(values);
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : t("register.genericError"));
-    }
+  const continueRegistration = () => {
+    if (role === "provider") return void window.location.assign(`${PROVIDER_APP_URL}/register`);
+    void navigate({ to: "/register-customer" });
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="w-full max-w-md space-y-8 p-8">
-        <div className="text-center">
-          <img src="/brand/fixo-icon-mark.png" alt="FIXO" className="mx-auto size-12 object-contain" />
-          <h1 className="mt-4 text-3xl font-bold">{t("register.title")}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t("register.subtitle")}
+    <AnimatedAuthShell>
+      <section className="mx-auto w-full max-w-[835px] rounded-[28px] bg-white/95 px-5 py-9 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-11 md:py-10">
+        <AuthBrand />
+        <div className="mt-11 text-center">
+          <h1 className="text-3xl font-extrabold tracking-[-.035em] md:text-4xl">
+            How would you like to use FIXO?
+          </h1>
+          <p className="mt-2 text-xl text-[#727694]">
+            One account. Choose how you want to continue.
           </p>
         </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="full_name">{t("register.fullNameLabel")}</Label>
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="full_name" placeholder={t("register.fullNamePlaceholder")} className="pl-10" {...register("full_name")} />
-            </div>
-            {errors.full_name && <p className="text-xs text-destructive">{errors.full_name.message}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone">{t("register.phoneLabel")}</Label>
-            <div className="relative">
-              <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="phone" type="tel" placeholder="+254 700 000 000" className="pl-10" {...register("phone")} />
-            </div>
-            {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">{t("register.emailLabel")}</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="email" type="email" placeholder={t("register.emailPlaceholder")} className="pl-10" {...register("email")} />
-            </div>
-            {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
-          </div>
-
-                    <div className="space-y-2">
-            <Label htmlFor="password">{t("register.passwordLabel")}</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input id="password" type="password" placeholder={t("register.passwordPlaceholder")} className="pl-10" {...register("password")} />
-            </div>
-            {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
-            {passwordValue && (
-              <div className="text-xs">
-                <div className="flex items-center gap-2">
-                  <Check className={passwordValue.length >= 8 ? "h-3 w-3 text-success" : "h-3 w-3 text-muted-foreground"} />
-                  {t("register.passwordHint")}
+        <div className="mt-9 grid gap-5 md:grid-cols-2">
+          {[
+            {
+              id: "customer" as const,
+              icon: UserRound,
+              title: "I need services",
+              copy: "Book trusted professionals for your home or office.",
+              tags: [
+                [Home, "Home"],
+                [Building2, "Office"],
+                [Wrench, "Repairs"],
+              ] as const,
+            },
+            {
+              id: "provider" as const,
+              icon: BriefcaseBusiness,
+              title: "I provide services",
+              copy: "Set up your profile and start receiving jobs.",
+              tags: [
+                [Zap, "Get jobs"],
+                [Building2, "Grow"],
+                [UserRound, "Earn"],
+              ] as const,
+            },
+          ].map((option) => {
+            const selected = role === option.id;
+            const Icon = option.icon;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setRole(option.id)}
+                className={`relative min-h-[360px] overflow-hidden rounded-[22px] border-2 p-5 text-center transition md:p-8 ${selected ? "border-[#7a2cff] bg-[#fbf8ff] shadow-[0_16px_40px_rgba(104,24,246,.15)]" : "border-[#e0deea] bg-white hover:border-[#a66cff]"}`}
+              >
+                <span
+                  className={`absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border-2 ${selected ? "border-[#6b1cf4] bg-[#6b1cf4] text-white" : "border-[#abb0c5]"}`}
+                >
+                  {selected && <Check className="size-5" strokeWidth={3} />}
+                </span>
+                <span className="mx-auto mt-1 flex size-28 items-center justify-center rounded-[30px] bg-[#efe4ff]">
+                  <Icon className="size-14 text-[#651cf4]" strokeWidth={2.2} />
+                </span>
+                <strong className="mt-6 block text-2xl">{option.title}</strong>
+                <p className="mx-auto mt-2 max-w-[290px] text-lg leading-7 text-[#737795]">
+                  {option.copy}
+                </p>
+                <div className="mt-7 flex flex-wrap justify-center gap-2">
+                  {option.tags.map(([TagIcon, label]) => (
+                    <span
+                      key={label}
+                      className="flex items-center gap-2 rounded-full bg-[#f2edff] px-4 py-2 text-sm"
+                    >
+                      <TagIcon className="size-4 text-[#651cf4]" />
+                      {label}
+                    </span>
+                  ))}
                 </div>
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-start space-x-3 space-y-0">
-              <Controller
-                name="terms_accepted"
-                control={control}
-                render={({ field }) => (
-                  <Checkbox
-                    id="terms_accepted"
-                    checked={field.value}
-                    onCheckedChange={(checked) => field.onChange(checked === true)}
-                    className="mt-1"
-                  />
-                )}
-              />
-              <Label htmlFor="terms_accepted" className="font-normal">
-                {t("register.agreeTermsPrefix")} <a href="#" className="text-primary">{t("register.termsLink")}</a>
-              </Label>
-            </div>
-            {errors.terms_accepted && <p className="text-xs text-destructive">{errors.terms_accepted.message}</p>}
-
-            <div className="flex items-start space-x-3 space-y-0">
-              <Controller
-                name="privacy_accepted"
-                control={control}
-                render={({ field }) => (
-                  <Checkbox
-                    id="privacy_accepted"
-                    checked={field.value}
-                    onCheckedChange={(checked) => field.onChange(checked === true)}
-                    className="mt-1"
-                  />
-                )}
-              />
-              <Label htmlFor="privacy_accepted" className="font-normal">
-                {t("register.agreePrivacyPrefix")} <a href="#" className="text-primary">{t("register.privacyLink")}</a>
-              </Label>
-            </div>
-            {errors.privacy_accepted && <p className="text-xs text-destructive">{errors.privacy_accepted.message}</p>}
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? t("register.submittingCta") : t("register.submitCta")}
-          </Button>
-        </form>
-
-        <div className="text-center text-sm">
-          {t("register.alreadyHaveAccount")}{" "}
-          <Link to="/login" className="text-primary font-medium hover:underline">
-            {t("register.logIn")}
-          </Link>
+              </button>
+            );
+          })}
         </div>
-      </div>
-    </div>
+        <button
+          onClick={continueRegistration}
+          className="mt-8 flex h-[68px] w-full items-center justify-center gap-5 rounded-2xl bg-gradient-to-r from-[#a149ff] to-[#4f00e7] text-xl font-bold text-white shadow-[0_12px_28px_rgba(91,0,237,.28)]"
+        >
+          Continue <ArrowRight className="size-7" />
+        </button>
+        <button
+          onClick={() => navigate({ to: "/" })}
+          className="mt-4 h-[58px] w-full rounded-2xl border-2 border-[#ddd9e8] text-lg font-bold text-[#651cf4]"
+        >
+          Maybe later
+        </button>
+        <p className="mt-9 flex items-center justify-center gap-3 text-center text-sm text-[#707493] md:gap-5 md:text-base">
+          <Repeat2 className="size-8 text-[#651cf4]" />
+          You can add another role or switch between customer and provider later from your account.
+        </p>
+      </section>
+    </AnimatedAuthShell>
   );
 }
-
