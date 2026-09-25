@@ -6,7 +6,10 @@ from __future__ import annotations
 
 from typing import Any
 
+from sqlalchemy.exc import IntegrityError
+
 from app.platform.query.sql_query_manager import SQLQueryManager
+from app.shared.exceptions.hierarchy import ConflictError
 
 
 class CustomerQueryIds:
@@ -24,7 +27,10 @@ class CustomerSqlAdapter:
         self._sql = sql_manager
 
     async def create(self, params: dict[str, Any]) -> Any | None:
-        return await self._sql.execute(CustomerQueryIds.CREATE, params, fetch="one")
+        try:
+            return await self._sql.execute(CustomerQueryIds.CREATE, params, fetch="one")
+        except IntegrityError as exc:
+            raise ConflictError("An account with this email or phone number already exists") from exc
 
     async def get_by_email(self, email: str) -> Any | None:
         return await self._sql.execute(CustomerQueryIds.BY_EMAIL, {"email": email}, fetch="one")
