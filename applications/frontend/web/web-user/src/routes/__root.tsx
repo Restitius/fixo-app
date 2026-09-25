@@ -23,7 +23,13 @@ import { onboardingApi } from "@/lib/api-client";
 // Redirects to the one-time onboarding checklist (Module 03) once, if the
 // authenticated customer hasn't completed it yet. Skips auth-flow routes so
 // it never fights with login/register/verify-otp navigation.
-const SKIP_PATHS = new Set(["/login", "/register", "/verify-otp", "/onboarding"]);
+const SKIP_PATHS = new Set([
+  "/login",
+  "/register",
+  "/register-customer",
+  "/verify-otp",
+  "/onboarding",
+]);
 
 function OnboardingGate() {
   const { access_token, customer } = useAuth();
@@ -112,15 +118,24 @@ function ErrorPageChrome({
         <div className="relative flex w-full max-w-xs items-center justify-center rounded-[3rem] bg-primary/5 py-10">
           <Sparkles className="absolute right-8 top-4 size-6 text-primary/50" />
           <div className="w-56 overflow-hidden rounded-2xl bg-card shadow-[var(--shadow-card)]">
-            <div className="flex items-center gap-1.5 px-3 py-2" style={{ backgroundImage: "var(--gradient-primary)" }}>
+            <div
+              className="flex items-center gap-1.5 px-3 py-2"
+              style={{ backgroundImage: "var(--gradient-primary)" }}
+            >
               <span className="size-2 rounded-full bg-white/70" />
               <span className="size-2 rounded-full bg-white/70" />
               <span className="size-2 rounded-full bg-white/70" />
             </div>
             <p className="py-6 text-4xl font-extrabold tracking-tight text-primary">{code}</p>
           </div>
-          <Construction className="absolute -bottom-2 -left-3 size-9 text-primary/70" strokeWidth={1.5} />
-          <TrafficCone className="absolute -bottom-2 -right-3 size-8 text-primary/70" strokeWidth={1.5} />
+          <Construction
+            className="absolute -bottom-2 -left-3 size-9 text-primary/70"
+            strokeWidth={1.5}
+          />
+          <TrafficCone
+            className="absolute -bottom-2 -right-3 size-8 text-primary/70"
+            strokeWidth={1.5}
+          />
         </div>
 
         <h1 className="mt-8 text-2xl font-bold tracking-tight text-foreground">{title}</h1>
@@ -132,9 +147,14 @@ function ErrorPageChrome({
           <HelpCircle className="mt-0.5 size-5 shrink-0 text-primary" />
           <div>
             <p className="text-sm font-semibold text-foreground">Need help?</p>
-            <p className="text-xs text-muted-foreground">If the problem persists, please contact our support team.</p>
+            <p className="text-xs text-muted-foreground">
+              If the problem persists, please contact our support team.
+            </p>
           </div>
-          <Link to="/help" className="ml-auto shrink-0 self-center whitespace-nowrap text-sm font-semibold text-primary hover:underline">
+          <Link
+            to="/help"
+            className="ml-auto shrink-0 self-center whitespace-nowrap text-sm font-semibold text-primary hover:underline"
+          >
             Contact Support ›
           </Link>
         </div>
@@ -143,8 +163,19 @@ function ErrorPageChrome({
   );
 }
 
-function PrimaryButton({ onClick, href, icon: Icon, children }: { onClick?: () => void; href?: string; icon: typeof Home; children: ReactNode }) {
-  const cls = "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.98]";
+function PrimaryButton({
+  onClick,
+  href,
+  icon: Icon,
+  children,
+}: {
+  onClick?: () => void;
+  href?: string;
+  icon: typeof Home;
+  children: ReactNode;
+}) {
+  const cls =
+    "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.98]";
   const style = { backgroundImage: "var(--gradient-primary)" };
   if (href) {
     return (
@@ -160,8 +191,19 @@ function PrimaryButton({ onClick, href, icon: Icon, children }: { onClick?: () =
   );
 }
 
-function SecondaryButton({ onClick, href, icon: Icon, children }: { onClick?: () => void; href?: string; icon: typeof Home; children: ReactNode }) {
-  const cls = "inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted";
+function SecondaryButton({
+  onClick,
+  href,
+  icon: Icon,
+  children,
+}: {
+  onClick?: () => void;
+  href?: string;
+  icon: typeof Home;
+  children: ReactNode;
+}) {
+  const cls =
+    "inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted";
   if (href) {
     return (
       <Link to={href} className={cls}>
@@ -184,8 +226,12 @@ function NotFoundComponent() {
       description="The page you're looking for doesn't exist or has been moved."
       actions={
         <>
-          <SecondaryButton onClick={() => window.history.back()} icon={RefreshCw}>Go Back</SecondaryButton>
-          <PrimaryButton href="/" icon={Home}>Go Home</PrimaryButton>
+          <SecondaryButton onClick={() => window.history.back()} icon={RefreshCw}>
+            Go Back
+          </SecondaryButton>
+          <PrimaryButton href="/" icon={Home}>
+            Go Home
+          </PrimaryButton>
         </>
       }
     />
@@ -215,7 +261,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           >
             Try Again
           </PrimaryButton>
-          <SecondaryButton href="/" icon={Home}>Go Home</SecondaryButton>
+          <SecondaryButton href="/" icon={Home}>
+            Go Home
+          </SecondaryButton>
         </>
       }
     />
@@ -228,10 +276,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "FIXO — Handyman Services" },
-      { name: "description", content: "Book trusted handyman providers and manage your home maintenance." },
+      {
+        name: "description",
+        content: "Book trusted handyman providers and manage your home maintenance.",
+      },
       { name: "author", content: "FIXO" },
       { property: "og:title", content: "FIXO — Handyman Services" },
-      { property: "og:description", content: "Book trusted handyman providers and manage your home maintenance." },
+      {
+        property: "og:description",
+        content: "Book trusted handyman providers and manage your home maintenance.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
