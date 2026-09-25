@@ -9,7 +9,18 @@
 // it's been removed from what was previously step 4's UI.
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Check, ChevronLeft, ChevronRight, Loader2, Upload } from "lucide-react";
+import {
+  ArrowRight,
+  Camera,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  Eye,
+  Loader2,
+  ShieldCheck,
+  Upload,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import {
@@ -24,9 +35,11 @@ import {
   type VerificationDocType,
   type VerificationDocument,
 } from "@/lib/api-client";
+import { useProviderAuth } from "@/lib/provider-auth";
 
 const title = "Provider Onboarding — FIXO";
-const description = "Complete the seven onboarding steps to activate your FIXO provider account and start receiving jobs.";
+const description =
+  "Complete the seven onboarding steps to activate your FIXO provider account and start receiving jobs.";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({
@@ -63,7 +76,17 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function FileUploadBox({ label, hint, url, onUploaded }: { label: string; hint: string; url?: string | null; onUploaded: (url: string) => void }) {
+function FileUploadBox({
+  label,
+  hint,
+  url,
+  onUploaded,
+}: {
+  label: string;
+  hint: string;
+  url?: string | null;
+  onUploaded: (url: string) => void;
+}) {
   const [uploading, setUploading] = useState(false);
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -84,7 +107,13 @@ function FileUploadBox({ label, hint, url, onUploaded }: { label: string; hint: 
 
   return (
     <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/40 px-4 py-8 text-center hover:bg-muted/60">
-      <input type="file" accept="image/jpeg,image/png,application/pdf" className="hidden" onChange={handleChange} disabled={uploading} />
+      <input
+        type="file"
+        accept="image/jpeg,image/png,application/pdf"
+        className="hidden"
+        onChange={handleChange}
+        disabled={uploading}
+      />
       {uploading ? (
         <Loader2 className="size-6 animate-spin text-primary" />
       ) : url ? (
@@ -100,6 +129,7 @@ function FileUploadBox({ label, hint, url, onUploaded }: { label: string; hint: 
 
 function OnboardingPage() {
   const navigate = useNavigate();
+  const { provider } = useProviderAuth();
   const [step, setStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
@@ -183,25 +213,38 @@ function OnboardingPage() {
     if (!loaded) return;
     const code = STEP_CODES[step]!;
     if (code === "BUSINESS_INFO") {
-      onboardingApi.getBusiness().then((b) => {
-        setBusiness(b);
-        setLogoUrl(b.logo_url ?? null);
-      }).catch(() => {});
+      onboardingApi
+        .getBusiness()
+        .then((b) => {
+          setBusiness(b);
+          setLogoUrl(b.logo_url ?? null);
+        })
+        .catch(() => {});
     } else if (code === "IDENTITY_VERIFICATION") {
-      onboardingApi.documents().then(setDocuments).catch(() => {});
+      onboardingApi
+        .documents()
+        .then(setDocuments)
+        .catch(() => {});
     } else if (code === "SERVICE_CONFIGURATION") {
-      Promise.all([onboardingApi.serviceCatalog(), onboardingApi.myServices()]).then(([cat, mine]) => {
-        setCatalog(cat);
-        setMyServices(mine);
-        setSelectedServiceIds(new Set(mine.map((m) => m.service_id)));
-      }).catch(() => {});
+      Promise.all([onboardingApi.serviceCatalog(), onboardingApi.myServices()])
+        .then(([cat, mine]) => {
+          setCatalog(cat);
+          setMyServices(mine);
+          setSelectedServiceIds(new Set(mine.map((m) => m.service_id)));
+        })
+        .catch(() => {});
     } else if (code === "SERVICE_AREAS") {
-      Promise.all([onboardingApi.listAreas(), onboardingApi.getAreaSettings().catch(() => null)]).then(([a, settings]) => {
-        setAreas(a);
-        if (settings) setAreaSettings(settings);
-      }).catch(() => {});
+      Promise.all([onboardingApi.listAreas(), onboardingApi.getAreaSettings().catch(() => null)])
+        .then(([a, settings]) => {
+          setAreas(a);
+          if (settings) setAreaSettings(settings);
+        })
+        .catch(() => {});
     } else if (code === "PAYMENT_INFORMATION") {
-      onboardingApi.listPayoutMethods().then(setPayoutMethods).catch(() => {});
+      onboardingApi
+        .listPayoutMethods()
+        .then(setPayoutMethods)
+        .catch(() => {});
     }
   }, [step, loaded]);
 
@@ -210,9 +253,19 @@ function OnboardingPage() {
     try {
       if (code === "PERSONAL_INFO") {
         await onboardingApi.updateProfile({ ...profile, profile_photo_url: photoUrl ?? undefined });
+        if (business.business_name) {
+          await onboardingApi.upsertBusiness({
+            ...business,
+            business_name: business.business_name,
+          });
+        }
       } else if (code === "BUSINESS_INFO") {
         if (business.business_name) {
-          await onboardingApi.upsertBusiness({ ...business, business_name: business.business_name, logo_url: logoUrl ?? undefined });
+          await onboardingApi.upsertBusiness({
+            ...business,
+            business_name: business.business_name,
+            logo_url: logoUrl ?? undefined,
+          });
         }
       } else if (code === "IDENTITY_VERIFICATION") {
         if (docType && frontUrl) {
@@ -297,6 +350,126 @@ function OnboardingPage() {
   };
   const code = STEP_CODES[step]!;
 
+  if (code === "PERSONAL_INFO") {
+    const fullName =
+      provider?.display_name ||
+      [provider?.first_name, provider?.last_name].filter(Boolean).join(" ");
+    return (
+      <main className="provider-wave-stage relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-8 text-[#111333]">
+        <div className="provider-wave provider-wave-one" />
+        <div className="provider-wave provider-wave-two" />
+        <section className="relative z-10 w-full max-w-[675px] rounded-[28px] bg-white/95 px-8 py-7 shadow-[0_28px_90px_rgba(54,30,116,.16)] md:px-12">
+          <div className="flex items-center justify-center gap-3">
+            <img src="/favicon-32x32.png" className="size-12" alt="FIXO" />
+            <strong className="text-3xl">FIXO</strong>
+          </div>
+          <div className="mx-auto mt-6 grid max-w-[380px] grid-cols-3 text-center text-sm text-[#737795]">
+            <ProviderStep done label="Verify" value="✓" />
+            <ProviderStep active label="Set up" value="2" />
+            <ProviderStep label="Get started" value="3" />
+          </div>
+          <header className="mt-5 text-center">
+            <h1 className="text-3xl font-extrabold">Set up your provider profile</h1>
+            <p className="mx-auto mt-1 max-w-md text-lg text-[#747997]">
+              Tell customers about your business and help them find and trust you.
+            </p>
+          </header>
+          <div className="mt-5">
+            <p className="mb-2 text-sm font-semibold">Profile photo</p>
+            <div className="flex items-center gap-5">
+              <span className="flex size-24 items-center justify-center rounded-full border-4 border-white bg-[#eee5ff] text-[#651cf4] shadow ring-1 ring-[#ded9eb]">
+                <Camera className="size-10" />
+              </span>
+              <FileUploadBox
+                label="Add a professional photo"
+                hint="JPG, PNG (max 5MB)"
+                url={photoUrl}
+                onUploaded={setPhotoUrl}
+              />
+            </div>
+          </div>
+          <div className="mt-5 space-y-3">
+            <ProviderField label="Full name">
+              <input className={field} value={fullName} readOnly />
+            </ProviderField>
+            <ProviderField label="Business name">
+              <input
+                className={field}
+                placeholder="e.g. Mwangi Plumbing Services"
+                value={business.business_name ?? ""}
+                onChange={(event) =>
+                  setBusiness((current) => ({ ...current, business_name: event.target.value }))
+                }
+              />
+            </ProviderField>
+            <ProviderField label="Short bio">
+              <textarea
+                maxLength={300}
+                className="min-h-20 w-full rounded-xl border border-input bg-card p-3.5 text-sm outline-none focus:ring-2 focus:ring-ring/30"
+                placeholder="Tell customers about your services, experience and what makes your business unique."
+                value={profile.bio ?? ""}
+                onChange={(event) =>
+                  setProfile((current) => ({ ...current, bio: event.target.value }))
+                }
+              />
+            </ProviderField>
+            <div className="grid grid-cols-2 gap-4">
+              <ProviderField label="Primary phone number">
+                <input className={field} value={provider?.phone ?? ""} readOnly />
+              </ProviderField>
+              <ProviderField label="Years of experience">
+                <input
+                  className={field}
+                  type="number"
+                  min="0"
+                  placeholder="Select years"
+                  value={profile.years_experience ?? ""}
+                  onChange={(event) =>
+                    setProfile((current) => ({
+                      ...current,
+                      years_experience: Number(event.target.value),
+                    }))
+                  }
+                />
+              </ProviderField>
+            </div>
+          </div>
+          <div className="mt-5 grid grid-cols-3 gap-3">
+            <ProviderBenefit
+              icon={<ShieldCheck />}
+              title="Build trust"
+              copy="A complete profile makes customers feel confident."
+            />
+            <ProviderBenefit
+              icon={<Eye />}
+              title="Get more visibility"
+              copy="Show up in search and reach local customers."
+            />
+            <ProviderBenefit
+              icon={<Clock3 />}
+              title="More bookings"
+              copy="A strong profile helps you win more jobs."
+            />
+          </div>
+          <button
+            onClick={() => void handleNext()}
+            disabled={saving}
+            className="mt-5 flex h-13 w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#a149ff] to-[#4f00e7] text-lg font-bold text-white shadow-lg"
+          >
+            {saving ? "Saving…" : "Continue"}
+            <ArrowRight />
+          </button>
+          <button
+            onClick={() => history.back()}
+            className="mt-3 h-12 w-full rounded-2xl border-2 border-[#deddea] font-bold text-[#651cf4]"
+          >
+            Back
+          </button>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background px-4 py-8">
       <div className="mx-auto w-full max-w-5xl">
@@ -310,7 +483,10 @@ function OnboardingPage() {
             <div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full transition-all"
-                style={{ width: `${((step + 1) / total) * 100}%`, backgroundImage: "var(--gradient-primary)" }}
+                style={{
+                  width: `${((step + 1) / total) * 100}%`,
+                  backgroundImage: "var(--gradient-primary)",
+                }}
               />
             </div>
             <ol className="space-y-1">
@@ -319,12 +495,16 @@ function OnboardingPage() {
                   <button
                     onClick={() => setStep(i)}
                     className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-medium transition-colors ${
-                      i === step ? "bg-primary/10 text-primary" : "text-foreground/80 hover:bg-muted"
+                      i === step
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground/80 hover:bg-muted"
                     }`}
                   >
                     <span
                       className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                        i < step || completedSteps.has(c) ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"
+                        i < step || completedSteps.has(c)
+                          ? "bg-success/15 text-success"
+                          : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {i < step || completedSteps.has(c) ? <Check className="size-3.5" /> : i + 1}
@@ -340,76 +520,80 @@ function OnboardingPage() {
             <h2 className="text-xl font-bold tracking-tight">{STEP_LABELS[code]}</h2>
 
             <div className="mt-5">
-              {code === "PERSONAL_INFO" && (
+              {code === "BUSINESS_INFO" && (
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Professional title">
+                  <p className="sm:col-span-2 text-xs text-muted-foreground">
+                    Optional — skip if you operate as an individual.
+                  </p>
+                  <Field label="Business name">
                     <input
                       className={field}
-                      value={profile.professional_title ?? ""}
-                      onChange={(e) => setProfile((p) => ({ ...p, professional_title: e.target.value }))}
+                      value={business.business_name ?? ""}
+                      onChange={(e) =>
+                        setBusiness((b) => ({ ...b, business_name: e.target.value }))
+                      }
                     />
                   </Field>
-                  <Field label="Years of experience">
+                  <Field label="Registration number">
+                    <input
+                      className={field}
+                      value={business.registration_number ?? ""}
+                      onChange={(e) =>
+                        setBusiness((b) => ({ ...b, registration_number: e.target.value }))
+                      }
+                    />
+                  </Field>
+                  <Field label="Tax / TIN number">
+                    <input
+                      className={field}
+                      value={business.tax_number ?? ""}
+                      onChange={(e) => setBusiness((b) => ({ ...b, tax_number: e.target.value }))}
+                    />
+                  </Field>
+                  <Field label="Year established">
                     <input
                       className={field}
                       type="number"
-                      value={profile.years_experience ?? ""}
-                      onChange={(e) => setProfile((p) => ({ ...p, years_experience: Number(e.target.value) }))}
+                      value={business.year_established ?? ""}
+                      onChange={(e) =>
+                        setBusiness((b) => ({ ...b, year_established: Number(e.target.value) }))
+                      }
+                    />
+                  </Field>
+                  <Field label="Business email">
+                    <input
+                      className={field}
+                      value={business.business_email ?? ""}
+                      onChange={(e) =>
+                        setBusiness((b) => ({ ...b, business_email: e.target.value }))
+                      }
+                    />
+                  </Field>
+                  <Field label="Business phone">
+                    <input
+                      className={field}
+                      value={business.business_phone ?? ""}
+                      onChange={(e) =>
+                        setBusiness((b) => ({ ...b, business_phone: e.target.value }))
+                      }
                     />
                   </Field>
                   <div className="sm:col-span-2">
-                    <Field label="Languages spoken">
+                    <Field label="Business address">
                       <input
                         className={field}
-                        placeholder="English, Swahili"
-                        value={profile.languages ?? ""}
-                        onChange={(e) => setProfile((p) => ({ ...p, languages: e.target.value }))}
+                        value={business.address ?? ""}
+                        onChange={(e) => setBusiness((b) => ({ ...b, address: e.target.value }))}
                       />
                     </Field>
                   </div>
                   <div className="sm:col-span-2">
-                    <Field label="Professional bio">
-                      <textarea
-                        className="min-h-28 w-full rounded-xl border border-input bg-card p-3.5 text-sm outline-none focus:ring-2 focus:ring-ring/30"
-                        value={profile.bio ?? ""}
-                        onChange={(e) => setProfile((p) => ({ ...p, bio: e.target.value }))}
-                      />
-                    </Field>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <FileUploadBox label="Upload profile photo" hint="Clear headshot, JPG or PNG, max 5 MB" url={photoUrl} onUploaded={setPhotoUrl} />
-                  </div>
-                </div>
-              )}
-
-              {code === "BUSINESS_INFO" && (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <p className="sm:col-span-2 text-xs text-muted-foreground">Optional — skip if you operate as an individual.</p>
-                  <Field label="Business name">
-                    <input className={field} value={business.business_name ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, business_name: e.target.value }))} />
-                  </Field>
-                  <Field label="Registration number">
-                    <input className={field} value={business.registration_number ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, registration_number: e.target.value }))} />
-                  </Field>
-                  <Field label="Tax / TIN number">
-                    <input className={field} value={business.tax_number ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, tax_number: e.target.value }))} />
-                  </Field>
-                  <Field label="Year established">
-                    <input className={field} type="number" value={business.year_established ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, year_established: Number(e.target.value) }))} />
-                  </Field>
-                  <Field label="Business email">
-                    <input className={field} value={business.business_email ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, business_email: e.target.value }))} />
-                  </Field>
-                  <Field label="Business phone">
-                    <input className={field} value={business.business_phone ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, business_phone: e.target.value }))} />
-                  </Field>
-                  <div className="sm:col-span-2">
-                    <Field label="Business address">
-                      <input className={field} value={business.address ?? ""} onChange={(e) => setBusiness((b) => ({ ...b, address: e.target.value }))} />
-                    </Field>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <FileUploadBox label="Upload business logo" hint="PDF, JPG or PNG" url={logoUrl} onUploaded={setLogoUrl} />
+                    <FileUploadBox
+                      label="Upload business logo"
+                      hint="PDF, JPG or PNG"
+                      url={logoUrl}
+                      onUploaded={setLogoUrl}
+                    />
                   </div>
                 </div>
               )}
@@ -419,7 +603,10 @@ function OnboardingPage() {
                   {documents.length > 0 && (
                     <div className="sm:col-span-2 space-y-2">
                       {documents.map((d) => (
-                        <div key={d.doc_id} className="flex items-center justify-between rounded-xl bg-muted/50 px-4 py-2.5 text-sm">
+                        <div
+                          key={d.doc_id}
+                          className="flex items-center justify-between rounded-xl bg-muted/50 px-4 py-2.5 text-sm"
+                        >
                           <span className="font-medium">{d.doc_type}</span>
                           <span className="text-muted-foreground">{d.status}</span>
                         </div>
@@ -427,20 +614,41 @@ function OnboardingPage() {
                     </div>
                   )}
                   <Field label="ID type">
-                    <select className={field} value={docType} onChange={(e) => setDocType(e.target.value)}>
+                    <select
+                      className={field}
+                      value={docType}
+                      onChange={(e) => setDocType(e.target.value)}
+                    >
                       <option value="">Select…</option>
                       {docTypes.map((t) => (
-                        <option key={t.code} value={t.code}>{t.name}</option>
+                        <option key={t.code} value={t.code}>
+                          {t.name}
+                        </option>
                       ))}
                     </select>
                   </Field>
                   <Field label="ID number">
-                    <input className={field} value={docNumber} onChange={(e) => setDocNumber(e.target.value)} />
+                    <input
+                      className={field}
+                      value={docNumber}
+                      onChange={(e) => setDocNumber(e.target.value)}
+                    />
                   </Field>
-                  <FileUploadBox label="ID front" hint="Readable photo of the front" url={frontUrl} onUploaded={setFrontUrl} />
-                  <FileUploadBox label="ID back" hint="Readable photo of the back" url={backUrl} onUploaded={setBackUrl} />
+                  <FileUploadBox
+                    label="ID front"
+                    hint="Readable photo of the front"
+                    url={frontUrl}
+                    onUploaded={setFrontUrl}
+                  />
+                  <FileUploadBox
+                    label="ID back"
+                    hint="Readable photo of the back"
+                    url={backUrl}
+                    onUploaded={setBackUrl}
+                  />
                   <div className="sm:col-span-2 rounded-2xl bg-primary/5 p-4 text-sm text-muted-foreground">
-                    Verification usually takes 24–48 hours. You can continue onboarding while we review your documents.
+                    Verification usually takes 24–48 hours. You can continue onboarding while we
+                    review your documents.
                   </div>
                 </div>
               )}
@@ -451,7 +659,10 @@ function OnboardingPage() {
                     {catalog.map((s) => {
                       const selected = selectedServiceIds.has(s.service_id);
                       return (
-                        <label key={s.service_id} className="flex cursor-pointer items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-medium">
+                        <label
+                          key={s.service_id}
+                          className="flex cursor-pointer items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs font-medium"
+                        >
                           <input
                             type="checkbox"
                             className="size-3.5 accent-[var(--primary)]"
@@ -469,28 +680,58 @@ function OnboardingPage() {
                         </label>
                       );
                     })}
-                    {catalog.length === 0 && <p className="text-sm text-muted-foreground">No catalogue services available yet.</p>}
+                    {catalog.length === 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        No catalogue services available yet.
+                      </p>
+                    )}
                   </div>
                   {myServices.length > 0 && (
-                    <p className="text-xs text-muted-foreground">Already configured: {myServices.map((s) => s.display_name || s.service_id).join(", ")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Already configured:{" "}
+                      {myServices.map((s) => s.display_name || s.service_id).join(", ")}
+                    </p>
                   )}
                   <div className="grid gap-4 sm:grid-cols-3">
                     <Field label="Pricing model">
-                      <select className={field} value={pricingModel} onChange={(e) => setPricingModel(e.target.value)}>
-                        {["FIXED", "STARTING", "HOURLY", "INSPECTION_THEN_QUOTE", "CUSTOM_QUOTATION"].map((o) => (
-                          <option key={o} value={o}>{o.replace(/_/g, " ")}</option>
+                      <select
+                        className={field}
+                        value={pricingModel}
+                        onChange={(e) => setPricingModel(e.target.value)}
+                      >
+                        {[
+                          "FIXED",
+                          "STARTING",
+                          "HOURLY",
+                          "INSPECTION_THEN_QUOTE",
+                          "CUSTOM_QUOTATION",
+                        ].map((o) => (
+                          <option key={o} value={o}>
+                            {o.replace(/_/g, " ")}
+                          </option>
                         ))}
                       </select>
                     </Field>
                     <Field label="Base price (TZS)">
-                      <input className={field} type="number" value={baseAmount} onChange={(e) => setBaseAmount(Number(e.target.value))} />
+                      <input
+                        className={field}
+                        type="number"
+                        value={baseAmount}
+                        onChange={(e) => setBaseAmount(Number(e.target.value))}
+                      />
                     </Field>
                     <Field label="Minimum charge (TZS)">
-                      <input className={field} type="number" value={minimumCharge} onChange={(e) => setMinimumCharge(Number(e.target.value))} />
+                      <input
+                        className={field}
+                        type="number"
+                        value={minimumCharge}
+                        onChange={(e) => setMinimumCharge(Number(e.target.value))}
+                      />
                     </Field>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Applies to every service selected above. Set different pricing per service later from Pricing in the sidebar.
+                    Applies to every service selected above. Set different pricing per service later
+                    from Pricing in the sidebar.
                   </p>
                 </div>
               )}
@@ -498,24 +739,43 @@ function OnboardingPage() {
               {code === "SERVICE_AREAS" && (
                 <div className="space-y-4">
                   {areas.map((a) => (
-                    <div key={a.area_id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-muted/50 p-4">
+                    <div
+                      key={a.area_id}
+                      className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-muted/50 p-4"
+                    >
                       <div>
-                        <p className="text-sm font-semibold">{a.label || `${a.city ?? ""} ${a.region ?? ""}`.trim() || a.area_type}</p>
+                        <p className="text-sm font-semibold">
+                          {a.label || `${a.city ?? ""} ${a.region ?? ""}`.trim() || a.area_type}
+                        </p>
                         <p className="text-xs text-muted-foreground">
-                          {a.area_type === "RADIUS" ? `${a.radius_km ?? "—"} km radius` : [a.city, a.region].filter(Boolean).join(", ")}
+                          {a.area_type === "RADIUS"
+                            ? `${a.radius_km ?? "—"} km radius`
+                            : [a.city, a.region].filter(Boolean).join(", ")}
                         </p>
                       </div>
-                      <input type="checkbox" checked={a.is_active} onChange={(e) => toggleArea(a.area_id, e.target.checked)} className="size-5 accent-[var(--primary)]" />
+                      <input
+                        type="checkbox"
+                        checked={a.is_active}
+                        onChange={(e) => toggleArea(a.area_id, e.target.checked)}
+                        className="size-5 accent-[var(--primary)]"
+                      />
                     </div>
                   ))}
-                  {areas.length === 0 && <p className="text-sm text-muted-foreground">No service areas added yet — add them from Service Areas in the sidebar after onboarding, or set your travel policy below.</p>}
+                  {areas.length === 0 && (
+                    <p className="text-sm text-muted-foreground">
+                      No service areas added yet — add them from Service Areas in the sidebar after
+                      onboarding, or set your travel policy below.
+                    </p>
+                  )}
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field label="Maximum travel distance (km)">
                       <input
                         className={field}
                         type="number"
                         value={areaSettings.max_travel_km ?? ""}
-                        onChange={(e) => setAreaSettings((s) => ({ ...s, max_travel_km: Number(e.target.value) }))}
+                        onChange={(e) =>
+                          setAreaSettings((s) => ({ ...s, max_travel_km: Number(e.target.value) }))
+                        }
                       />
                     </Field>
                     <Field label="Travel fee (TZS)">
@@ -523,7 +783,9 @@ function OnboardingPage() {
                         className={field}
                         type="number"
                         value={areaSettings.travel_fee ?? ""}
-                        onChange={(e) => setAreaSettings((s) => ({ ...s, travel_fee: Number(e.target.value) }))}
+                        onChange={(e) =>
+                          setAreaSettings((s) => ({ ...s, travel_fee: Number(e.target.value) }))
+                        }
                       />
                     </Field>
                   </div>
@@ -535,15 +797,24 @@ function OnboardingPage() {
                   {payoutMethods.length > 0 && (
                     <div className="sm:col-span-2 space-y-2">
                       {payoutMethods.map((m) => (
-                        <div key={m.method_id} className="flex items-center justify-between rounded-xl bg-muted/50 px-4 py-2.5 text-sm">
+                        <div
+                          key={m.method_id}
+                          className="flex items-center justify-between rounded-xl bg-muted/50 px-4 py-2.5 text-sm"
+                        >
                           <span className="font-medium">{m.method_type}</span>
-                          <span className="text-muted-foreground">{m.mobile_number || m.account_number || m.provider_name}</span>
+                          <span className="text-muted-foreground">
+                            {m.mobile_number || m.account_number || m.provider_name}
+                          </span>
                         </div>
                       ))}
                     </div>
                   )}
                   <Field label="Payout method">
-                    <select className={field} value={methodType} onChange={(e) => setMethodType(e.target.value as "BANK" | "MOBILE_MONEY")}>
+                    <select
+                      className={field}
+                      value={methodType}
+                      onChange={(e) => setMethodType(e.target.value as "BANK" | "MOBILE_MONEY")}
+                    >
                       <option value="MOBILE_MONEY">Mobile money</option>
                       <option value="BANK">Bank account</option>
                     </select>
@@ -551,22 +822,43 @@ function OnboardingPage() {
                   {methodType === "MOBILE_MONEY" ? (
                     <>
                       <Field label="Mobile money provider">
-                        <input className={field} placeholder="M-Pesa, Tigo Pesa…" value={payoutProviderName} onChange={(e) => setPayoutProviderName(e.target.value)} />
+                        <input
+                          className={field}
+                          placeholder="M-Pesa, Tigo Pesa…"
+                          value={payoutProviderName}
+                          onChange={(e) => setPayoutProviderName(e.target.value)}
+                        />
                       </Field>
                       <Field label="Mobile number">
-                        <input className={field} value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
+                        <input
+                          className={field}
+                          value={mobileNumber}
+                          onChange={(e) => setMobileNumber(e.target.value)}
+                        />
                       </Field>
                     </>
                   ) : (
                     <>
                       <Field label="Account holder name">
-                        <input className={field} value={accountHolder} onChange={(e) => setAccountHolder(e.target.value)} />
+                        <input
+                          className={field}
+                          value={accountHolder}
+                          onChange={(e) => setAccountHolder(e.target.value)}
+                        />
                       </Field>
                       <Field label="Bank / provider">
-                        <input className={field} value={payoutProviderName} onChange={(e) => setPayoutProviderName(e.target.value)} />
+                        <input
+                          className={field}
+                          value={payoutProviderName}
+                          onChange={(e) => setPayoutProviderName(e.target.value)}
+                        />
                       </Field>
                       <Field label="Account number">
-                        <input className={field} value={accountNumber} onChange={(e) => setAccountNumber(e.target.value)} />
+                        <input
+                          className={field}
+                          value={accountNumber}
+                          onChange={(e) => setAccountNumber(e.target.value)}
+                        />
                       </Field>
                     </>
                   )}
@@ -576,7 +868,10 @@ function OnboardingPage() {
               {code === "AGREEMENTS" && (
                 <div className="space-y-3">
                   {AGREEMENTS.map((t) => (
-                    <label key={t} className="flex items-start gap-3 rounded-2xl bg-muted/50 p-4 text-sm">
+                    <label
+                      key={t}
+                      className="flex items-start gap-3 rounded-2xl bg-muted/50 p-4 text-sm"
+                    >
                       <input
                         type="checkbox"
                         className="mt-0.5 size-4 accent-[var(--primary)]"
@@ -614,12 +909,67 @@ function OnboardingPage() {
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
                 {saving ? <Loader2 className="size-4 animate-spin" /> : null}
-                {step === total - 1 ? "Submit for review" : "Save & continue"} <ChevronRight className="size-4" />
+                {step === total - 1 ? "Submit for review" : "Save & continue"}{" "}
+                <ChevronRight className="size-4" />
               </button>
             </div>
           </section>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ProviderStep({
+  label,
+  value,
+  active,
+  done,
+}: {
+  label: string;
+  value: string;
+  active?: boolean;
+  done?: boolean;
+}) {
+  return (
+    <div className="relative flex flex-col items-center gap-1 before:absolute before:left-[65%] before:top-4 before:h-0.5 before:w-[70%] before:bg-[#dedfea] last:before:hidden">
+      <span
+        className={`relative z-10 flex size-8 items-center justify-center rounded-full border-2 font-bold ${active || done ? "border-[#6b1cf4] bg-[#6b1cf4] text-white" : "border-[#cfd2e2] bg-white"}`}
+      >
+        {value}
+      </span>
+      <strong className={active ? "text-[#651cf4]" : "font-medium"}>{label}</strong>
+    </div>
+  );
+}
+
+function ProviderField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-sm font-semibold">{label}</span>
+      {children}
+    </label>
+  );
+}
+
+function ProviderBenefit({
+  icon,
+  title,
+  copy,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  copy: string;
+}) {
+  return (
+    <div className="flex gap-3 rounded-2xl bg-[#f6f1ff] p-3">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#e9ddff] text-[#651cf4]">
+        {icon}
+      </span>
+      <span>
+        <strong className="block text-xs">{title}</strong>
+        <small className="block leading-4 text-[#747997]">{copy}</small>
+      </span>
     </div>
   );
 }
