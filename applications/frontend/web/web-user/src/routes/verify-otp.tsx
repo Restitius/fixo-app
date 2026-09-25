@@ -82,7 +82,7 @@ function VerifyOtpPage() {
 
   return (
     <AnimatedAuthShell>
-      <section className="mx-auto w-full max-w-[700px] overflow-hidden rounded-[28px] bg-white/95 px-7 pb-0 pt-8 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-14">
+      <section className="mx-auto w-full max-w-[590px] overflow-hidden rounded-[26px] bg-white/95 px-7 pb-0 pt-7 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-11">
         <AuthBrand compact />
         <div className="mx-auto mt-8 flex max-w-[280px] gap-1.5">
           {Array.from({ length: 7 }, (_, index) => (

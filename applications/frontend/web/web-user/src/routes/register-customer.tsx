@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Phone, UserRound } from "lucide-react";
+import { Apple, ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Phone, UserRound } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -60,20 +60,20 @@ function RegisterCustomerPage() {
 
   return (
     <AnimatedAuthShell>
-      <section className="mx-auto w-full max-w-[700px] rounded-[28px] bg-white/95 px-7 py-8 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-14">
+      <section className="mx-auto w-full max-w-[590px] rounded-[26px] bg-white/95 px-6 py-6 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-10">
         <AuthBrand compact />
-        <header className="mt-7 text-center">
-          <h1 className="text-4xl font-extrabold tracking-[-.035em]">Create your FIXO account</h1>
+        <header className="mt-5 text-center">
+          <h1 className="text-3xl font-extrabold tracking-[-.035em]">Create your FIXO account</h1>
           <p className="mt-2 text-lg text-[#737795]">
             One account for customers and service providers.
           </p>
         </header>
-        <form onSubmit={handleSubmit(submit)} className="mt-7 space-y-4">
+        <form onSubmit={handleSubmit(submit)} className="mt-5 space-y-3">
           <Field label="Full Name" error={errors.full_name?.message} icon={<UserRound />}>
             <input {...register("full_name")} autoComplete="name" placeholder="John Doe" />
           </Field>
           <Field label="Phone Number" error={errors.phone?.message} icon={<Phone />}>
-            <span className="mr-2 border-r border-[#deddea] pr-3 text-base">🇹🇿</span>
+            <TanzaniaFlag />
             <input
               {...register("phone")}
               autoComplete="tel"
@@ -149,8 +149,8 @@ function RegisterCustomerPage() {
           <span className="h-px flex-1 bg-[#deddea]" />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <SocialButton label="Google" mark="G" />
-          <SocialButton label="Apple" mark="●" />
+          <SocialButton label="Google" icon={<GoogleIcon />} />
+          <SocialButton label="Apple" icon={<Apple className="size-5 fill-current" />} />
         </div>
         <p className="mt-5 text-center text-sm text-[#717694]">
           Already have an account?{" "}
@@ -177,7 +177,7 @@ function Field({
   return (
     <label className="block">
       <span className="mb-1.5 block text-sm font-semibold">{label}</span>
-      <span className="flex h-[54px] items-center rounded-xl border border-[#d9dbea] bg-white px-4 text-[#747b9e] [&>svg]:mr-3 [&>svg]:size-5 [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-[#111333] [&>input]:outline-none [&>input]:placeholder:text-[#8f94af]">
+      <span className="flex h-12 items-center rounded-xl border border-[#d9dbea] bg-white px-4 text-[#747b9e] [&>svg]:mr-3 [&>svg]:size-5 [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-[#111333] [&>input]:outline-none [&>input]:placeholder:text-[#8f94af]">
         {icon}
         {children}
       </span>
@@ -199,14 +199,52 @@ function RevealButton({ shown, onClick }: { shown: boolean; onClick: () => void 
   );
 }
 
-function SocialButton({ label, mark }: { label: string; mark: string }) {
+function TanzaniaFlag() {
+  return (
+    <svg
+      viewBox="0 0 30 20"
+      aria-label="Tanzania"
+      className="mr-3 h-4 w-6 shrink-0 rounded-[2px] shadow-sm"
+    >
+      <path fill="#1eb53a" d="M0 0h30v20H0z" />
+      <path fill="#00a3dd" d="M0 20 30 0v20z" />
+      <path stroke="#fcd116" strokeWidth="8" d="M-2 22 32-2" />
+      <path stroke="#000" strokeWidth="5" d="M-2 22 32-2" />
+    </svg>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="size-5" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M22.6 12.23c0-.75-.07-1.47-.19-2.16H12v4.09h5.95a5.08 5.08 0 0 1-2.2 3.33v2.66h3.56c2.08-1.92 3.29-4.74 3.29-7.92Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.67l-3.56-2.76c-.98.66-2.24 1.06-3.72 1.06-2.87 0-5.3-1.94-6.17-4.54H2.15v2.84A11 11 0 0 0 12 23Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.83 14.09A6.6 6.6 0 0 1 5.48 12c0-.73.13-1.44.35-2.09V7.07H2.15A11 11 0 0 0 1 12c0 1.77.42 3.44 1.15 4.93l3.68-2.84Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.37c1.62 0 3.06.56 4.2 1.64l3.15-3.15A10.56 10.56 0 0 0 12 1a11 11 0 0 0-9.85 6.07l3.68 2.84C6.7 7.31 9.13 5.37 12 5.37Z"
+      />
+    </svg>
+  );
+}
+
+function SocialButton({ label, icon }: { label: string; icon: ReactNode }) {
   return (
     <button
       type="button"
       onClick={() => toast.info(`${label} sign-in is coming soon.`)}
       className="flex h-14 items-center justify-center gap-3 rounded-xl border border-[#d9dbea] bg-white font-semibold"
     >
-      <span className="text-xl font-bold">{mark}</span>
+      {icon}
       {label}
     </button>
   );

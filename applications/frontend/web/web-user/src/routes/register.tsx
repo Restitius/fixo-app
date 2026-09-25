@@ -33,9 +33,9 @@ function RegistrationRolePage() {
 
   return (
     <AnimatedAuthShell>
-      <section className="mx-auto w-full max-w-[835px] rounded-[28px] bg-white/95 px-5 py-9 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-11 md:py-10">
+      <section className="mx-auto w-full max-w-[720px] rounded-[26px] bg-white/95 px-5 py-7 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-9 md:py-8">
         <AuthBrand />
-        <div className="mt-11 text-center">
+        <div className="mt-7 text-center">
           <h1 className="text-3xl font-extrabold tracking-[-.035em] md:text-4xl">
             How would you like to use FIXO?
           </h1>
@@ -43,7 +43,7 @@ function RegistrationRolePage() {
             One account. Choose how you want to continue.
           </p>
         </div>
-        <div className="mt-9 grid gap-5 md:grid-cols-2">
+        <div className="mt-7 grid gap-4 md:grid-cols-2">
           {[
             {
               id: "customer" as const,
@@ -75,21 +75,21 @@ function RegistrationRolePage() {
                 key={option.id}
                 type="button"
                 onClick={() => setRole(option.id)}
-                className={`relative min-h-[360px] overflow-hidden rounded-[22px] border-2 p-5 text-center transition md:p-8 ${selected ? "border-[#7a2cff] bg-[#fbf8ff] shadow-[0_16px_40px_rgba(104,24,246,.15)]" : "border-[#e0deea] bg-white hover:border-[#a66cff]"}`}
+                className={`relative min-h-[300px] overflow-hidden rounded-[20px] border-2 p-5 text-center transition md:p-6 ${selected ? "border-[#7a2cff] bg-[#fbf8ff] shadow-[0_16px_40px_rgba(104,24,246,.15)]" : "border-[#e0deea] bg-white hover:border-[#a66cff]"}`}
               >
                 <span
                   className={`absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border-2 ${selected ? "border-[#6b1cf4] bg-[#6b1cf4] text-white" : "border-[#abb0c5]"}`}
                 >
                   {selected && <Check className="size-5" strokeWidth={3} />}
                 </span>
-                <span className="mx-auto mt-1 flex size-28 items-center justify-center rounded-[30px] bg-[#efe4ff]">
-                  <Icon className="size-14 text-[#651cf4]" strokeWidth={2.2} />
+                <span className="mx-auto mt-1 flex size-20 items-center justify-center rounded-[24px] bg-[#efe4ff]">
+                  <Icon className="size-10 text-[#651cf4]" strokeWidth={2.2} />
                 </span>
                 <strong className="mt-6 block text-2xl">{option.title}</strong>
                 <p className="mx-auto mt-2 max-w-[290px] text-lg leading-7 text-[#737795]">
                   {option.copy}
                 </p>
-                <div className="mt-7 flex flex-wrap justify-center gap-2">
+                <div className="mt-5 flex flex-wrap justify-center gap-2">
                   {option.tags.map(([TagIcon, label]) => (
                     <span
                       key={label}
@@ -106,7 +106,7 @@ function RegistrationRolePage() {
         </div>
         <button
           onClick={continueRegistration}
-          className="mt-8 flex h-[68px] w-full items-center justify-center gap-5 rounded-2xl bg-gradient-to-r from-[#a149ff] to-[#4f00e7] text-xl font-bold text-white shadow-[0_12px_28px_rgba(91,0,237,.28)]"
+          className="mt-6 flex h-14 w-full items-center justify-center gap-4 rounded-2xl bg-gradient-to-r from-[#a149ff] to-[#4f00e7] text-lg font-bold text-white shadow-[0_12px_28px_rgba(91,0,237,.28)]"
         >
           Continue <ArrowRight className="size-7" />
         </button>
@@ -116,7 +116,7 @@ function RegistrationRolePage() {
         >
           Maybe later
         </button>
-        <p className="mt-9 flex items-center justify-center gap-3 text-center text-sm text-[#707493] md:gap-5 md:text-base">
+        <p className="mt-6 flex items-center justify-center gap-3 text-center text-sm text-[#707493] md:gap-4">
           <Repeat2 className="size-8 text-[#651cf4]" />
           You can add another role or switch between customer and provider later from your account.
         </p>
