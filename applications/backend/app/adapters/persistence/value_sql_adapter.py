@@ -29,12 +29,33 @@ class WalletSqlAdapter(WalletRepositoryPort):
             "user_id": customer_id, "limit": min(max(limit, 1), 100), "offset": max(offset, 0),
         })
 
-    async def credit(self, customer_id: str, amount: float) -> dict[str, Any] | None:
-        rows = await self._q.execute("CUS.WALLET.CREDIT", {"user_id": customer_id, "amount": amount})
+    async def credit(
+        self, customer_id: str, amount: float, reference_type: str | None = None,
+        reference_id: str | None = None, description: str | None = None,
+    ) -> dict[str, Any] | None:
+        rows = await self._q.execute("CUS.WALLET.CREDIT", {
+            "user_id": customer_id, "amount": amount, "reference_type": reference_type,
+            "reference_id": reference_id, "description": description,
+        })
         return rows[0] if rows else None
 
-    async def debit(self, customer_id: str, amount: float) -> dict[str, Any] | None:
-        rows = await self._q.execute("CUS.WALLET.DEBIT", {"user_id": customer_id, "amount": amount})
+    async def debit(
+        self, customer_id: str, amount: float, reference_type: str | None = None,
+        reference_id: str | None = None, description: str | None = None,
+    ) -> dict[str, Any] | None:
+        rows = await self._q.execute("CUS.WALLET.DEBIT", {
+            "user_id": customer_id, "amount": amount, "reference_type": reference_type,
+            "reference_id": reference_id, "description": description,
+        })
+        return rows[0] if rows else None
+
+    async def refund_once(
+        self, customer_id: str, amount: float, booking_id: str, description: str | None = None,
+    ) -> dict[str, Any] | None:
+        rows = await self._q.execute("CUS.WALLET.REFUND_ONCE", {
+            "user_id": customer_id, "amount": amount, "reference_id": booking_id,
+            "description": description,
+        })
         return rows[0] if rows else None
 
 
