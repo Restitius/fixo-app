@@ -13,7 +13,7 @@ SELECT
     :name, lower(:asset_type), :brand, :serial_number,
     :purchase_value, :purchase_value, COALESCE(:currency, 'TZS'),
     CAST(:purchased_at AS date), CAST(:warranty_until AS date), :notes
- WHERE :property_id IS NULL OR EXISTS (
+ WHERE CAST(:property_id AS uuid) IS NULL OR EXISTS (
     SELECT 1 FROM "PROPERTIES" p
      WHERE p.property_id = CAST(:property_id AS uuid)
        AND p.customer_id = CAST(:customer_id AS uuid)

@@ -15,5 +15,8 @@ class UpdateAssetDTO(BaseDTO):
     user_id: str
     name: str | None = None
     asset_type: str | None = None
+    brand: str | None = None
+    serial_number: str | None = None
     purchased_at: date | None = None
+    warranty_until: date | None = None
     notes: str | None = None

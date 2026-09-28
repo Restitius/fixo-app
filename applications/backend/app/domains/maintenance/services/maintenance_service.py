@@ -20,8 +20,7 @@ class MaintenanceService:
         if not 1 <= interval <= 1095:
             raise ValidationError("interval_days must be between 1 and 1095")
         if not data.get("next_due_date"):
-            data["next_due_date"] = (
-                date.today() + timedelta(days=interval)).isoformat()
+            data["next_due_date"] = date.today() + timedelta(days=interval)
         row = await self._plans.create_plan(customer_id, data)
         if not row:
             raise ValidationError("Could not create the maintenance plan")

@@ -12,5 +12,8 @@ WITH removed AS (
     RETURNING favorite_id
 )
 SELECT (SELECT COUNT(*) FROM inserted)::INT > 0 AS is_favorite,
-       (SELECT COUNT(*) FROM "FAVORITES"
-         WHERE customer_id = CAST(:customer_id AS uuid))::INT AS favorites_count;
+       -- Sibling CTE writes are not visible to this snapshot, so adjust the stored count.
+       ((SELECT COUNT(*) FROM "FAVORITES"
+          WHERE customer_id = CAST(:customer_id AS uuid))
+        + (SELECT COUNT(*) FROM inserted)
+        - (SELECT COUNT(*) FROM removed))::INT AS favorites_count;
