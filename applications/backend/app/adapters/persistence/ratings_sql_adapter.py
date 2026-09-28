@@ -1,6 +1,7 @@
 """Ratings adapter — owns CUS.RATING.* query IDs."""
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager
@@ -11,10 +12,18 @@ class RatingSqlAdapter(RatingRepositoryPort):
     def __init__(self, queries: SQLQueryManager) -> None:
         self._queries = queries
 
-    async def submit(self, booking_id: str, customer_id: str, rating: int, comment: str | None) -> dict[str, Any] | None:
+    async def submit(
+        self, booking_id: str, customer_id: str, rating: int, comment: str | None,
+        aspects: dict[str, int] | None = None, tags: list[str] | None = None,
+        recommend: bool | None = None,
+    ) -> dict[str, Any] | None:
         rows = await self._queries.execute(
             "CUS.RATING.SUBMIT",
-            {"booking_id": booking_id, "user_id": customer_id, "rating": rating, "comment": comment},
+            {
+                "booking_id": booking_id, "user_id": customer_id, "rating": rating, "comment": comment,
+                "aspects": json.dumps(aspects or {}), "tags": json.dumps(tags or []),
+                "recommend": recommend,
+            },
         )
         return rows[0] if rows else None
 
