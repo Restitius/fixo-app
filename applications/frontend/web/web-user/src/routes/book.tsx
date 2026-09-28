@@ -409,8 +409,16 @@ function BookPage() {
     if (!booking) return;
     setAuthorizing(true);
     try {
-      const updated = await bookingApi.authorizeBookingPayment(booking.booking_id);
+      const method = selectedPaymentKey === "WALLET" ? "WALLET" : "EXTERNAL";
+      const updated = await bookingApi.authorizeBookingPayment(booking.booking_id, method);
       setBooking(updated);
+      if (updated.payment?.status === "FAILED") {
+        // The booking stays payable (PAYMENT_FAILED -> retry); keep the customer on this step.
+        toast.error(updated.payment.failure_reason || t("payment.failed", { defaultValue: "Payment could not be authorized." }));
+        void fixoSdk.walletBalance().then(setWallet).catch(() => undefined);
+        return;
+      }
+      void fixoSdk.walletBalance().then(setWallet).catch(() => undefined);
       goTo("Done");
     } catch {
       // apiClient already toasts the error
@@ -1284,6 +1292,8 @@ function PaymentStep({
     setSelectedPaymentLabel(label);
   }
 
+  const walletShort = wallet != null && wallet.balance < booking.agreed_amount;
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2">
       <h2 className="text-lg font-semibold">{t("payment.title")}</h2>
@@ -1312,7 +1322,9 @@ function PaymentStep({
           <div className="mt-3 space-y-3">
             <button
               onClick={() => pick("WALLET", t("payment.fixoWallet"))}
-              className={`flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
+              disabled={walletShort}
+              aria-disabled={walletShort}
+              className={`${walletShort ? "cursor-not-allowed opacity-60 " : ""}flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ease-[var(--ease-premium)] ${
                 selectedPaymentKey === "WALLET" ? "border-primary bg-primary/5 shadow-[var(--shadow-xs)]" : "border-border shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:bg-muted/50 hover:shadow-[var(--shadow-sm)]"
               }`}
             >
@@ -1321,6 +1333,9 @@ function PaymentStep({
                 <div>
                   <p className="font-semibold">{t("payment.fixoWallet")}</p>
                   <p className="text-sm text-muted-foreground">{t("payment.availableBalance", { amount: wallet ? fmtMoney(wallet.balance, wallet.currency) : "—" })}</p>
+                  {walletShort && (
+                    <p className="text-xs font-medium text-destructive">{t("payment.walletTooLow", { defaultValue: "Not enough balance for this booking" })}</p>
+                  )}
                 </div>
               </div>
               <span className={`flex size-5 items-center justify-center rounded-full border-2 ${selectedPaymentKey === "WALLET" ? "border-primary bg-primary" : "border-border"}`}>
@@ -1557,13 +1572,18 @@ function DoneStep({
             <div className="flex items-center justify-between">
               <p className="font-semibold">{t("done.paymentStatus")}</p>
               <span className="rounded-full bg-success-muted px-2.5 py-1 text-xs font-semibold text-success-foreground">
-                {booking.payment?.status === "AUTHORIZED" ? t("done.paid") : booking.payment?.status ?? "—"}
+                {booking.payment?.status === "AUTHORIZED"
+                  ? t("done.authorized", { defaultValue: "Reserved" })
+                  : booking.payment?.status ?? "—"}
               </span>
             </div>
             <div className="mt-3 space-y-2 text-sm">
               <div className="flex items-center justify-between"><span className="text-muted-foreground">{t("done.amountLabel")}</span><span className="font-semibold">{fmtMoney(booking.agreed_amount, booking.currency)}</span></div>
               <div className="flex items-center justify-between"><span className="text-muted-foreground">{t("done.paymentMethod")}</span><span className="font-semibold">{paymentLabel ?? "—"}</span></div>
             </div>
+            <p className="mt-3 text-xs text-muted-foreground">
+              {t("done.holdNote", { defaultValue: "This amount is reserved now and charged once the job is completed and you confirm it." })}
+            </p>
           </div>
           <div className="flex items-start gap-3 rounded-2xl bg-primary/5 p-4">
             <MessageCircle className="mt-0.5 size-5 shrink-0 text-primary" />
