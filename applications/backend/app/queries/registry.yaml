@@ -232,6 +232,13 @@ queries:
       ownership_filter_required: false
       requires_auth: true
     sql: customers/bookings/mark_started.sql
+  CUS.BOOKING.RESCHEDULE:
+    description: CUS.BOOKING.RESCHEDULE registered query.
+    operation: update
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/bookings/reschedule.sql
   CUS.BOOKING.SET_ARRIVED:
     description: CUS.BOOKING.SET_ARRIVED registered query.
     operation: update

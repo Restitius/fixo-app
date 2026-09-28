@@ -11,6 +11,7 @@ learns which provider charged the card. Depends ONLY on ports + managers.
 from __future__ import annotations
 
 import logging
+from datetime import date, timedelta
 from typing import Any
 
 from app.shared.exceptions.hierarchy import NotFoundError, ValidationError
@@ -167,6 +168,53 @@ class BookingService:
                 "failure_reason": result.get("failure_reason"),
             },
         }
+
+    MAX_RESCHEDULES = 2
+    RESCHEDULE_WINDOWS = ("MORNING", "AFTERNOON", "EVENING")
+    RESCHEDULE_HORIZON_DAYS = 90
+    RESCHEDULABLE = ("CONFIRMED", "PAYMENT_AUTHORIZED")
+
+    async def reschedule(
+        self, customer_id: str, booking_id: str, scheduled_date: str, time_window: str,
+        reason: str | None = None,
+    ) -> dict[str, Any]:
+        """Move a booking that has not started to another day / time window."""
+        try:
+            new_date = date.fromisoformat(scheduled_date)
+        except (TypeError, ValueError):
+            raise ValidationError("Choose a valid date (YYYY-MM-DD)") from None
+        window = (time_window or "").upper()
+        if window not in self.RESCHEDULE_WINDOWS:
+            raise ValidationError("Time window must be MORNING, AFTERNOON or EVENING")
+        today = date.today()
+        if new_date <= today:
+            raise ValidationError("Choose a date after today")
+        if new_date > today + timedelta(days=self.RESCHEDULE_HORIZON_DAYS):
+            raise ValidationError(
+                f"Bookings can only be moved up to {self.RESCHEDULE_HORIZON_DAYS} days ahead"
+            )
+
+        booking = await self.get(customer_id, booking_id)
+        if booking["status"] not in self.RESCHEDULABLE:
+            raise ValidationError("This booking has started or finished and can no longer be rescheduled")
+        if int(booking.get("reschedule_count") or 0) >= self.MAX_RESCHEDULES:
+            raise ValidationError(
+                f"A booking can be rescheduled at most {self.MAX_RESCHEDULES} times"
+            )
+        current = booking.get("scheduled_date")
+        if str(current)[:10] == new_date.isoformat() and (booking.get("time_window") or "").upper() == window:
+            raise ValidationError("The booking is already scheduled for that day and time")
+
+        detail = f"Moved to {new_date.isoformat()} ({window})"
+        if reason and reason.strip():
+            detail += f": {reason.strip()[:300]}"
+        moved = await self._bookings.reschedule(
+            customer_id, booking_id, new_date, window, self.MAX_RESCHEDULES, detail
+        )
+        if moved is None:
+            # Lost a race with another change (status moved on, or the limit was just used).
+            raise ValidationError("This booking can no longer be rescheduled")
+        return await self.get(customer_id, booking_id)
 
     async def cancel(self, customer_id: str, booking_id: str) -> dict[str, Any]:
         booking = await self.get(customer_id, booking_id)
