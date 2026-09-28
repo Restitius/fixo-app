@@ -7,6 +7,7 @@ SELECT i.invoice_id, i.invoice_number, i.subtotal, i.tax_amount,
        s.name AS service_name,
        c.name AS category_name,
        a.city AS address_city, a.region AS address_region,
+       pay.gateway AS payment_gateway,
        COALESCE((
            SELECT json_agg(json_build_object(
                       'item_id', it.item_id, 'description', it.description,
@@ -21,5 +22,10 @@ SELECT i.invoice_id, i.invoice_number, i.subtotal, i.tax_amount,
   LEFT JOIN "SERVICES" s ON s.service_id = b.service_id
   LEFT JOIN "SERVICE_CATEGORIES" c ON c.category_id = s.category_id
   LEFT JOIN "CUSTOMER_ADDRESSES" a ON a.address_id = b.address_id
+  LEFT JOIN LATERAL (
+      SELECT py.gateway FROM "PAYMENTS" py
+       WHERE py.booking_id = i.booking_id AND py.status = 'AUTHORIZED'
+       ORDER BY py.attempt_no DESC LIMIT 1
+  ) pay ON true
  WHERE i.invoice_id = CAST(:invoice_id AS uuid)
    AND i.customer_id = CAST(:customer_id AS uuid);

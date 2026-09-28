@@ -113,9 +113,11 @@ class BookingService:
                 f"(current: {booking['status']})"
             )
 
-        attempt = await self._payments.create_attempt(
-            customer_id, booking_id, getattr(self._gateway, "gateway_name", "MOCK")
+        gateway_name = (
+            "WALLET" if str(payment_method or "").upper() == "WALLET"
+            else getattr(self._gateway, "gateway_name", "MOCK")
         )
+        attempt = await self._payments.create_attempt(customer_id, booking_id, gateway_name)
         if not attempt:
             raise ValidationError("Could not open the payment attempt")
 
