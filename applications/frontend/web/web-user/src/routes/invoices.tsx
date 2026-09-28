@@ -26,6 +26,7 @@ import {
   Truck,
   User,
   Wind,
+  Wallet as WalletIcon,
   Wrench,
   X,
 } from "lucide-react";
@@ -99,6 +100,12 @@ function methodIcon(type?: string) {
   if (type === "mpesa") return Smartphone;
   if (type === "bank") return Landmark;
   return CreditCard;
+}
+
+/** The method the job was actually paid with (recorded on the payment), not the customer's default. */
+function gatewayLabel(gateway?: string | null) {
+  if (!gateway) return "—";
+  return gateway === "WALLET" ? "FIXO Wallet" : "Card or mobile money";
 }
 
 function methodLabel(m: PaymentMethod | null) {
@@ -252,7 +259,7 @@ function InvoicesPage() {
                     {paged.map((inv) => {
                       const Icon = iconForService(inv.service_name);
                       const status = displayStatus(inv);
-                      const MethodIcon = methodIcon(defaultMethod?.type);
+                      const MethodIcon = inv.payment_gateway === "WALLET" ? WalletIcon : CreditCard;
                       return (
                         <tr
                           key={inv.invoice_id}
@@ -274,7 +281,7 @@ function InvoicesPage() {
                           <td className="px-4 py-4 text-muted-foreground">{fmtDate(inv.created_at)}</td>
                           <td className="px-4 py-4">
                             <span className="inline-flex items-center gap-1.5 text-muted-foreground">
-                              <MethodIcon className="size-4" /> {methodLabel(defaultMethod)}
+                              <MethodIcon className="size-4" /> {gatewayLabel(inv.payment_gateway)}
                             </span>
                           </td>
                           <td className="px-4 py-4">
@@ -405,7 +412,7 @@ function PendingInvoicePanel({
               label={t("invoices.fields.location")}
               value={detail.address_city ? `${detail.address_city}${detail.address_region ? `, ${detail.address_region}` : ""}` : "—"}
             />
-            <Field icon={CreditCard} label={t("invoices.fields.paymentMethod")} value={methodLabel(defaultMethod)} />
+            <Field icon={CreditCard} label={t("invoices.fields.paymentMethod")} value={gatewayLabel(detail?.payment_gateway)} />
           </div>
 
           <div className="flex flex-col gap-1 rounded-2xl bg-muted/50 p-4 text-sm">
@@ -570,7 +577,7 @@ function PaidInvoiceDialog({
                 label={t("invoices.fields.location")}
                 value={detail.address_city ? `${detail.address_city}${detail.address_region ? `, ${detail.address_region}` : ""}` : "—"}
               />
-              <Field icon={CreditCard} label={t("invoices.fields.paymentMethod")} value={methodLabel(defaultMethod)} />
+              <Field icon={CreditCard} label={t("invoices.fields.paymentMethod")} value={gatewayLabel(detail?.payment_gateway)} />
             </div>
 
             <div>
