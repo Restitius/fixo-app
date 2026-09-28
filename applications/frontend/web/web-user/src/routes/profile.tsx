@@ -276,7 +276,8 @@ function LoadingRows() {
 
 function PersonalTab() {
   const { t } = useTranslation("profile");
-  const { customer, updateProfile } = useAuth();
+  const { customer, updateProfile, requestOtp } = useAuth();
+  const navigate = useNavigate();
   const [addresses, setAddresses] = useState<Address[] | null>(null);
   const [methods, setMethods] = useState<PaymentMethod[] | null>(null);
   const [tier, setTier] = useState<string | null>(null);
@@ -305,14 +306,46 @@ function PersonalTab() {
     setSaving(true);
     try {
       const trimmedPhone = phoneDraft.trim();
-      await updateProfile(trimmedPhone ? { full_name: fullNameDraft.trim(), phone: trimmedPhone } : { full_name: fullNameDraft.trim() });
+      const phoneChanged =
+        !!trimmedPhone && trimmedPhone.replace(/[\s\-().]/g, "") !== (customer?.phone ?? "");
+      const result = await updateProfile(trimmedPhone ? { full_name: fullNameDraft.trim(), phone: trimmedPhone } : { full_name: fullNameDraft.trim() });
       toast.success(t("personal.profileSaved"));
       setEditing(false);
-    } catch {
-      toast.error(t("personal.profileSaveError"));
+      if (phoneChanged && customer) {
+        toast.info(t("personal.verifyNewPhone", { defaultValue: "Verify your new phone number to keep it trusted." }));
+        void navigate({
+          to: "/verify-otp",
+          search: {
+            email: customer.email,
+            channel: "SMS",
+            ...(result.phone_otp_code ? { phone_otp_from_register: result.phone_otp_code } : {}),
+          },
+        });
+      }
+    } catch (err) {
+      toast.error(err instanceof Error && err.message ? err.message : t("personal.profileSaveError"));
     } finally {
       setSaving(false);
     }
+  }
+
+  async function startVerification(channel: "EMAIL" | "SMS") {
+    if (!customer) return;
+    let devCode: string | null = null;
+    try {
+      devCode = (await requestOtp(customer.email, channel)).code;
+    } catch (err) {
+      // A recent code may already be on its way (resend cooldown) — still open the page.
+      toast.info(err instanceof Error ? err.message : t("personal.saveFailed", { defaultValue: "Could not send a code." }));
+    }
+    void navigate({
+      to: "/verify-otp",
+      search: {
+        email: customer.email,
+        channel,
+        ...(devCode ? (channel === "EMAIL" ? { otp_from_register: devCode } : { phone_otp_from_register: devCode }) : {}),
+      },
+    });
   }
 
   // A real, disclosed completion score — not a fabricated percentage. Each
@@ -371,8 +404,15 @@ function PersonalTab() {
                 label={t("personal.email")}
                 value={customer?.email ?? "—"}
                 action={
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.email_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
-                    {customer?.email_verified ? t("verified") : t("unverified")}
+                  <span className="flex items-center gap-2">
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.email_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
+                      {customer?.email_verified ? t("verified") : t("unverified")}
+                    </span>
+                    {!customer?.email_verified && (
+                      <button onClick={() => void startVerification("EMAIL")} className="text-sm font-semibold text-primary hover:underline">
+                        {t("verifyNow", { defaultValue: "Verify now" })}
+                      </button>
+                    )}
                   </span>
                 }
               />
@@ -382,8 +422,15 @@ function PersonalTab() {
                 value={customer?.phone ?? t("notSet")}
                 action={
                   customer?.phone ? (
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.phone_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
-                      {customer?.phone_verified ? t("verified") : t("unverified")}
+                    <span className="flex items-center gap-2">
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${customer?.phone_verified ? "bg-success/15 text-success" : "bg-amber-500/15 text-amber-600"}`}>
+                        {customer?.phone_verified ? t("verified") : t("unverified")}
+                      </span>
+                      {!customer?.phone_verified && (
+                        <button onClick={() => void startVerification("SMS")} className="text-sm font-semibold text-primary hover:underline">
+                          {t("verifyNow", { defaultValue: "Verify now" })}
+                        </button>
+                      )}
                     </span>
                   ) : (
                     <button onClick={startEditing} className="text-sm font-semibold text-primary hover:underline">{t("add")}</button>

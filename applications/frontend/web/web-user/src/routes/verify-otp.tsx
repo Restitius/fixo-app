@@ -1,47 +1,115 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Check, Mail, MessageCircleMore, ShieldCheck, Smartphone } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  Check,
+  Mail,
+  MessageCircleMore,
+  ShieldCheck,
+  Smartphone,
+} from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { AnimatedAuthShell, AuthBrand } from "@/components/auth/AnimatedAuthShell";
-import { useAuth } from "@/lib/auth-context";
+import { type OtpChannel, useAuth } from "@/lib/auth-context";
 
 interface VerifyOtpSearch {
   email: string;
+  channel?: OtpChannel;
   otp_from_register?: string;
+  phone_otp_from_register?: string;
 }
+
+const RESEND_SECONDS = 30;
+const EMPTY_CODE = ["", "", "", "", "", ""];
 
 export const Route = createFileRoute("/verify-otp")({
   validateSearch: (search: Record<string, unknown>): VerifyOtpSearch => ({
     email: typeof search["email"] === "string" ? search["email"] : "",
+    ...(search["channel"] === "EMAIL" || search["channel"] === "SMS"
+      ? { channel: search["channel"] }
+      : {}),
     ...(typeof search["otp_from_register"] === "string"
       ? { otp_from_register: search["otp_from_register"] }
+      : {}),
+    ...(typeof search["phone_otp_from_register"] === "string"
+      ? { phone_otp_from_register: search["phone_otp_from_register"] }
       : {}),
   }),
   head: () => ({ meta: [{ title: "Verify your FIXO account" }] }),
   component: VerifyOtpPage,
 });
 
+const CHANNELS: Array<{ id: OtpChannel; label: string; icon: typeof Mail }> = [
+  { id: "EMAIL", label: "Email", icon: Mail },
+  { id: "SMS", label: "Phone", icon: Smartphone },
+];
+
 function VerifyOtpPage() {
-  const { email, otp_from_register } = Route.useSearch();
-  const { verifyOtp, requestOtp } = useAuth();
+  const search = Route.useSearch();
+  const { email } = search;
+  const { verifyOtp, requestOtp, customer, access_token } = useAuth();
   const navigate = useNavigate();
-  const [digits, setDigits] = useState(["", "", "", "", "", ""]);
-  const [seconds, setSeconds] = useState(45);
+
+  const [active, setActive] = useState<OtpChannel>(search.channel ?? "EMAIL");
+  const [digits, setDigits] = useState(EMPTY_CODE);
   const [submitting, setSubmitting] = useState(false);
+  const [verified, setVerified] = useState<Record<OtpChannel, boolean>>({
+    EMAIL: false,
+    SMS: false,
+  });
+  const [seconds, setSeconds] = useState<Record<OtpChannel, number>>({
+    EMAIL: search.otp_from_register ? RESEND_SECONDS : 0,
+    SMS: search.phone_otp_from_register ? RESEND_SECONDS : 0,
+  });
+  const [devCodes, setDevCodes] = useState<Record<OtpChannel, string | null>>({
+    EMAIL: search.otp_from_register ?? null,
+    SMS: search.phone_otp_from_register ?? null,
+  });
+  const [destinations, setDestinations] = useState<Record<OtpChannel, string | null>>({
+    EMAIL: null,
+    SMS: null,
+  });
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
 
   useEffect(() => {
-    if (otp_from_register) toast.info(`Development verification code: ${otp_from_register}`);
-  }, [otp_from_register]);
+    if (customer && customer.email === email) {
+      setVerified({ EMAIL: !!customer.email_verified, SMS: !!customer.phone_verified });
+    }
+  }, [customer, email]);
+
   useEffect(() => {
-    if (seconds <= 0) return;
-    const timer = window.setInterval(() => setSeconds((value) => Math.max(0, value - 1)), 1000);
+    const timer = window.setInterval(
+      () =>
+        setSeconds((s) => ({
+          EMAIL: Math.max(0, s.EMAIL - 1),
+          SMS: Math.max(0, s.SMS - 1),
+        })),
+      1000,
+    );
     return () => window.clearInterval(timer);
-  }, [seconds]);
+  }, []);
+
+  const switchChannel = (channel: OtpChannel) => {
+    setActive(channel);
+    setDigits(EMPTY_CODE);
+    inputs.current[0]?.focus();
+  };
 
   const updateDigit = (index: number, value: string) => {
-    const digit = value.replace(/\D/g, "").slice(-1);
+    const cleaned = value.replace(/\D/g, "");
+    if (cleaned.length > 2) {
+      // OTP autofill / paste-like insertion delivers the whole code into one box.
+      const chunk = cleaned.slice(0, 6 - index);
+      setDigits((current) =>
+        current.map((item, position) =>
+          position >= index && position < index + chunk.length ? chunk[position - index]! : item,
+        ),
+      );
+      inputs.current[Math.min(index + chunk.length, 5)]?.focus();
+      return;
+    }
+    const digit = cleaned.slice(-1);
     setDigits((current) => current.map((item, position) => (position === index ? digit : item)));
     if (digit && index < 5) inputs.current[index + 1]?.focus();
   };
@@ -56,29 +124,52 @@ function VerifyOtpPage() {
     setDigits(Array.from({ length: 6 }, (_, index) => pasted[index] ?? ""));
     inputs.current[Math.min(pasted.length, 6) - 1]?.focus();
   };
+
+  const finish = () => navigate({ to: access_token ? "/" : "/login" });
+
   const submit = async () => {
     const code = digits.join("");
     if (!email) return void toast.error("Return to registration and enter your email address.");
     if (code.length !== 6) return void toast.error("Enter the complete 6-digit code.");
     setSubmitting(true);
     try {
-      await verifyOtp(email, code);
+      const result = await verifyOtp(email, code, active);
+      const next = { EMAIL: result.email_verified, SMS: result.phone_verified };
+      setVerified(next);
+      setDigits(EMPTY_CODE);
+      const other: OtpChannel = active === "EMAIL" ? "SMS" : "EMAIL";
+      toast.success(active === "EMAIL" ? "Email address verified" : "Phone number verified");
+      if (next.EMAIL && next.SMS) {
+        toast.success("Your account is fully verified.");
+        finish();
+      } else if (!next[other]) {
+        switchChannel(other);
+      }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Verification failed.");
     } finally {
       setSubmitting(false);
     }
   };
+
   const resend = async () => {
-    if (seconds > 0 || !email) return;
+    if (seconds[active] > 0 || !email) return;
     try {
-      const code = await requestOtp(email);
-      toast.success(code ? `New development code: ${code}` : "A new verification code was sent.");
-      setSeconds(45);
+      const result = await requestOtp(email, active);
+      setDevCodes((c) => ({ ...c, [active]: result.code }));
+      setDestinations((d) => ({ ...d, [active]: result.destination }));
+      toast.success("A new verification code was sent.");
+      setSeconds((s) => ({ ...s, [active]: RESEND_SECONDS }));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Could not resend the code.");
     }
   };
+
+  const target =
+    active === "EMAIL"
+      ? (destinations.EMAIL ?? email ?? "your email address")
+      : (destinations.SMS ?? "the phone number you registered with");
+  const anyVerified = verified.EMAIL || verified.SMS;
 
   return (
     <AnimatedAuthShell>
@@ -95,55 +186,127 @@ function VerifyOtpPage() {
         <header className="mt-8 text-center">
           <h1 className="text-4xl font-extrabold tracking-[-.035em]">Verify your account</h1>
           <p className="mx-auto mt-2 max-w-lg text-lg text-[#777b98]">
-            We’ve sent a 6-digit code to
-            <br />
-            <strong className="text-[#363a5b]">{email || "your email address"}</strong>.
+            {verified[active] ? (
+              <>
+                Your {active === "EMAIL" ? "email address" : "phone number"} is verified.
+              </>
+            ) : (
+              <>
+                We’ve sent a 6-digit code to
+                <br />
+                <strong className="text-[#363a5b]">{target}</strong>.
+              </>
+            )}
           </p>
         </header>
-        <div className="mt-8 flex justify-center gap-2 md:gap-3">
-          {digits.map((digit, index) => (
-            <input
-              key={index}
-              ref={(node) => {
-                inputs.current[index] = node;
-              }}
-              value={digit}
-              onChange={(event) => updateDigit(index, event.target.value)}
-              onKeyDown={(event) => keyDown(index, event)}
-              onPaste={paste}
-              inputMode="numeric"
-              aria-label={`Verification digit ${index + 1}`}
-              className="size-[42px] rounded-xl border-2 border-[#dedfeb] bg-white text-center text-xl font-bold outline-none transition focus:border-[#6b1cf4] focus:shadow-[0_7px_20px_rgba(94,22,240,.16)] sm:size-[58px] md:size-[68px] md:text-2xl"
-            />
+
+        <div role="tablist" className="mx-auto mt-6 grid max-w-[360px] grid-cols-2 gap-2">
+          {CHANNELS.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={active === id}
+              onClick={() => switchChannel(id)}
+              className={`flex h-12 items-center justify-center gap-2 rounded-xl border-2 text-sm font-bold transition ${
+                active === id
+                  ? "border-[#6b1cf4] bg-[#f5efff] text-[#5b18ed]"
+                  : "border-[#dedfeb] bg-white text-[#777b98]"
+              }`}
+            >
+              <Icon className="size-4" />
+              {label}
+              {verified[id] && <Check className="size-4 text-emerald-600" strokeWidth={3} />}
+            </button>
           ))}
         </div>
-        <p className="mt-5 text-center text-base text-[#777b98]">
-          Didn’t receive the code?{" "}
+
+        {!verified[active] && (
+          <>
+            {devCodes[active] && (
+              <p
+                data-testid="dev-otp-code"
+                className="mx-auto mt-5 max-w-[360px] rounded-xl bg-amber-50 px-4 py-2 text-center text-sm text-amber-800"
+              >
+                Development code: <strong className="tracking-widest">{devCodes[active]}</strong>
+                <span className="block text-xs">Shown only outside production.</span>
+              </p>
+            )}
+            <div className="mt-6 flex justify-center gap-2 md:gap-3">
+              {digits.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(node) => {
+                    inputs.current[index] = node;
+                  }}
+                  value={digit}
+                  onChange={(event) => updateDigit(index, event.target.value)}
+                  onKeyDown={(event) => keyDown(index, event)}
+                  onPaste={paste}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  aria-label={`Verification digit ${index + 1}`}
+                  className="size-[42px] rounded-xl border-2 border-[#dedfeb] bg-white text-center text-xl font-bold outline-none transition focus:border-[#6b1cf4] focus:shadow-[0_7px_20px_rgba(94,22,240,.16)] sm:size-[58px] md:size-[68px] md:text-2xl"
+                />
+              ))}
+            </div>
+            <p className="mt-5 text-center text-base text-[#777b98]">
+              Didn’t receive the code?{" "}
+              <button
+                type="button"
+                onClick={resend}
+                disabled={seconds[active] > 0}
+                className="font-semibold text-[#5b18ed] disabled:text-[#777b98]"
+              >
+                Resend{seconds[active] > 0 && ` in 00:${String(seconds[active]).padStart(2, "0")}`}
+              </button>
+            </p>
+            <button
+              type="button"
+              onClick={submit}
+              disabled={submitting}
+              className="mt-8 flex h-14 w-full items-center justify-center gap-4 rounded-2xl bg-gradient-to-r from-[#a149ff] to-[#4f00e7] text-lg font-bold text-white shadow-[0_11px_24px_rgba(91,0,237,.25)] disabled:opacity-60"
+            >
+              {submitting ? "Verifying…" : `Verify ${active === "EMAIL" ? "email" : "phone"}`}
+              <ArrowRight className="size-6" />
+            </button>
+          </>
+        )}
+
+        {anyVerified && (
           <button
             type="button"
-            onClick={resend}
-            disabled={seconds > 0}
-            className="font-semibold text-[#5b18ed] disabled:text-[#777b98]"
+            onClick={finish}
+            className="mt-4 h-14 w-full rounded-2xl border-2 border-[#ddd9e8] text-base font-bold text-[#651cf4]"
           >
-            Resend{seconds > 0 && ` in 00:${String(seconds).padStart(2, "0")}`}
+            {verified.EMAIL && verified.SMS ? "Continue" : "Continue — verify the rest later"}
           </button>
+        )}
+
+        {!anyVerified && (
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/register-customer" })}
+            className="mt-4 h-14 w-full rounded-2xl border-2 border-[#ddd9e8] text-base font-bold text-[#651cf4]"
+          >
+            Use a different email address
+          </button>
+        )}
+        <p className="mt-4 text-center text-sm text-[#777b98]">
+          Wrong phone number?{" "}
+          {access_token ? (
+            <Link to="/profile" className="font-semibold text-[#5b18ed]">
+              Update it in your profile
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="font-semibold text-[#5b18ed]">
+                Sign in
+              </Link>{" "}
+              and update it in your profile.
+            </>
+          )}
         </p>
-        <button
-          type="button"
-          onClick={submit}
-          disabled={submitting}
-          className="mt-8 flex h-14 w-full items-center justify-center gap-4 rounded-2xl bg-gradient-to-r from-[#a149ff] to-[#4f00e7] text-lg font-bold text-white shadow-[0_11px_24px_rgba(91,0,237,.25)] disabled:opacity-60"
-        >
-          {submitting ? "Verifying…" : "Verify"}
-          <ArrowRight className="size-6" />
-        </button>
-        <button
-          type="button"
-          onClick={() => navigate({ to: "/register-customer" })}
-          className="mt-4 h-14 w-full rounded-2xl border-2 border-[#ddd9e8] text-base font-bold text-[#651cf4]"
-        >
-          Use a different email address
-        </button>
         <div className="relative mx-auto mt-6 h-[290px] max-w-[430px]" aria-hidden="true">
           <span className="absolute left-6 top-24 flex size-20 -rotate-12 items-center justify-center rounded-2xl bg-[#8b3cff] text-white shadow-xl">
             <Mail className="size-10" />
