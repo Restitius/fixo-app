@@ -46,7 +46,8 @@ const MAX_FETCH_PAGES = 10;
 const PAGE_SIZE = 8;
 const EXPIRING_SOON_DAYS = 30;
 
-const SUBMITTED_CLAIM_STATES = ["SUBMITTED", "APPROVED"];
+// OPEN is what a freshly filed claim is stored as.
+const SUBMITTED_CLAIM_STATES = ["OPEN", "SUBMITTED", "IN_REVIEW", "APPROVED"];
 
 function daysUntil(iso?: string | null): number | null {
   if (!iso) return null;
@@ -85,7 +86,7 @@ function toneFor(value?: string | null): string {
   const v = (value ?? "").toUpperCase();
   if (v.includes("ACTIVE") || v.includes("APPROVED")) return "bg-success/15 text-success";
   if (v.includes("EXPIRED") || v.includes("REJECTED")) return "bg-destructive/15 text-destructive";
-  if (v.includes("SUBMITTED") || v.includes("PENDING")) return "bg-amber-500/15 text-amber-600";
+  if (v.includes("SUBMITTED") || v.includes("PENDING") || v === "OPEN" || v.includes("REVIEW")) return "bg-amber-500/15 text-amber-600";
   return "bg-muted text-muted-foreground";
 }
 
