@@ -1,5 +1,5 @@
-// Login page — email/password form with OTP fallback.
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+// Login page — email/password form.
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,10 +32,8 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const { t } = useTranslation("auth");
-  const { login, requestOtp } = useAuth();
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [isOtpMode, setIsOtpMode] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [systemMessage, setSystemMessage] = useState<SystemMessage | null>(null);
 
@@ -52,20 +50,12 @@ function LoginPage() {
     setPasswordError(null);
     setSystemMessage(null);
     try {
-      if (isOtpMode) {
-        const otp = await requestOtp(values.email);
-        if (otp) {
-          void otp;
-        }
-        navigate({ to: "/verify-otp", search: { email: values.email } });
-      } else {
-        const password = getValues("password");
-        if (!password || password.length < 6) {
-          setSystemMessage(await resolveSystemMessage("MSG.AUTH.PASSWORD.TOO_SHORT.V1", { minimum: 6 }));
-          return;
-        }
-        await login(values.email, password, navigator.userAgent);
+      const password = getValues("password");
+      if (!password || password.length < 6) {
+        setSystemMessage(await resolveSystemMessage("MSG.AUTH.PASSWORD.TOO_SHORT.V1", { minimum: 6 }));
+        return;
       }
+      await login(values.email, password, navigator.userAgent);
     } catch (err) {
       if (err instanceof ApiError && err.systemMessage) setSystemMessage(err.systemMessage);
       else setPasswordError(err instanceof Error ? err.message : t("login.genericError"));
@@ -103,8 +93,7 @@ function LoginPage() {
             )}
           </div>
 
-          {!isOtpMode && (
-            <div className="space-y-2">
+          <div className="space-y-2">
               <Label htmlFor="password">{t("login.passwordLabel")}</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -133,31 +122,15 @@ function LoginPage() {
                 </Link>
               </div>
             </div>
-          )}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting
-              ? t("login.submittingCta")
-              : isOtpMode
-                ? t("login.submitCtaOtp")
-                : t("login.submitCta")}
+            {isSubmitting ? t("login.submittingCta") : t("login.submitCta")}
           </Button>
         </form>
 
         <div className="text-center text-sm">
-          <button
-            onClick={() => setIsOtpMode(!isOtpMode)}
-            className="text-primary hover:underline"
-          >
-            {isOtpMode
-              ? t("login.usePasswordInstead")
-              : t("login.useOtpInstead")}
-          </button>
-        </div>
-
-        <div className="text-center text-sm">
           {t("login.noAccount")}{" "}
-          <Link to="/register" className="text-primary font-medium hover:underline">
+          <Link to="/register-customer" className="text-primary font-medium hover:underline">
             {t("login.createOneCta")}
           </Link>
         </div>

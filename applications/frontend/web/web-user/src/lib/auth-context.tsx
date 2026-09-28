@@ -33,13 +33,27 @@ interface AuthState {
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string, device_info?: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  requestOtp: (email: string) => Promise<string | null>;
-  verifyOtp: (email: string, code: string) => Promise<void>;
+  requestOtp: (email: string, channel?: OtpChannel) => Promise<OtpRequestResult>;
+  verifyOtp: (email: string, code: string, channel?: OtpChannel) => Promise<OtpVerifyResult>;
   forgotPassword: (email: string) => Promise<string | null>;
   resetPassword: (email: string, code: string, newPassword: string) => Promise<void>;
-  updateProfile: (data: { full_name?: string; phone?: string; preferred_language?: string }) => Promise<void>;
+  updateProfile: (data: { full_name?: string; phone?: string; preferred_language?: string }) => Promise<{ phone_otp_code?: string | null }>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<boolean>;
+}
+
+export type OtpChannel = "EMAIL" | "SMS";
+
+export interface OtpRequestResult {
+  /** Dev-mode only: the code the server would have delivered. */
+  code: string | null;
+  /** Masked destination the code was sent to, e.g. a****@example.com. */
+  destination: string | null;
+}
+
+export interface OtpVerifyResult {
+  email_verified: boolean;
+  phone_verified: boolean;
 }
 
 interface RegisterData {
@@ -198,29 +212,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (data: RegisterData) => {
     const resp = await apiClient.post("/auth/register", data);
-    // In dev mode the OTP code is returned in the response.
-    const otp = resp.data.otp_code;
-    if (otp) {
-      // Auto-navigate to OTP verification screen.
-      navigate({
-        to: "/verify-otp",
-        search: { email: data.email, otp_from_register: otp },
-      });
-    } else {
-      navigate({ to: "/verify-otp", search: { email: data.email } });
-    }
+    // In dev mode the OTP codes are returned in the response.
+    navigate({
+      to: "/verify-otp",
+      search: {
+        email: data.email,
+        ...(resp.data.otp_code ? { otp_from_register: resp.data.otp_code } : {}),
+        ...(resp.data.phone_otp_code ? { phone_otp_from_register: resp.data.phone_otp_code } : {}),
+      },
+    });
   };
 
-  const requestOtp = async (email: string): Promise<string | null> => {
-    const resp = await apiClient.post("/auth/otp/request", { email });
+  const requestOtp = async (email: string, channel: OtpChannel = "EMAIL"): Promise<OtpRequestResult> => {
+    const resp = await apiClient.post("/auth/otp/request", { email, channel });
     // Dev mode returns otp_code in response.
-    return resp.data.otp_code ?? null;
+    return { code: resp.data.otp_code ?? null, destination: resp.data.destination ?? null };
   };
 
-  const verifyOtp = async (email: string, code: string) => {
-    await apiClient.post("/auth/otp/verify", { email, code });
-    toast.success("Email verified!");
-    navigate({ to: "/login" });
+  const verifyOtp = async (email: string, code: string, channel: OtpChannel = "EMAIL"): Promise<OtpVerifyResult> => {
+    const resp = await apiClient.post("/auth/otp/verify", { email, code, channel });
+    setState((prev) =>
+      prev.customer && prev.customer.email === email
+        ? {
+            ...prev,
+            customer: {
+              ...prev.customer,
+              email_verified: resp.data.email_verified,
+              phone_verified: resp.data.phone_verified,
+            },
+          }
+        : prev,
+    );
+    return { email_verified: !!resp.data.email_verified, phone_verified: !!resp.data.phone_verified };
   };
 
   const forgotPassword = async (email: string): Promise<string | null> => {
@@ -237,7 +260,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = async (data: { full_name?: string; phone?: string; preferred_language?: string }) => {
     const resp = await apiClient.patch("/auth/me", data);
-    setState((prev) => ({ ...prev, customer: resp.data }));
+    const { phone_otp_code, ...profile } = resp.data;
+    setState((prev) => ({ ...prev, customer: profile }));
+    return { phone_otp_code: phone_otp_code ?? null };
   };
 
   const logout = async () => {
