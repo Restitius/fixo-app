@@ -35,39 +35,44 @@ class FinalPaymentService:
         self, customer_id: str, booking_id: str
     ) -> dict[str, Any]:
         booking = await self._bookings.get(customer_id, booking_id)
-        if booking["status"] != "CUSTOMER_CONFIRMED":
+        # PAID means an earlier attempt captured the money but failed while
+        # closing; resume at the close step instead of charging again.
+        resuming = booking["status"] == "PAID"
+        if booking["status"] != "CUSTOMER_CONFIRMED" and not resuming:
             raise ValidationError(
                 f"Final payment requires CUSTOMER_CONFIRMED "
                 f"(current: {booking['status']})"
             )
 
-        auth = await self._payments.get_authorization(customer_id, booking_id)
-        if not auth or not auth.get("gateway_ref"):
-            raise ValidationError("No live authorization found for capture")
+        captured: dict[str, Any] = {}
+        if not resuming:
+            auth = await self._payments.get_authorization(customer_id, booking_id)
+            if not auth or not auth.get("gateway_ref"):
+                raise ValidationError("No live authorization found for capture")
 
-        amount_cents = int(round(float(booking["agreed_amount"]) * 100))
-        captured = await self._gateway.capture(str(auth["gateway_ref"]), amount_cents)
-        if not captured.get("captured"):
-            raise ValidationError(
-                f"Capture failed: {captured.get('failure_reason')}"
+            amount_cents = int(round(float(booking["agreed_amount"]) * 100))
+            captured = await self._gateway.capture(str(auth["gateway_ref"]), amount_cents)
+            if not captured.get("captured"):
+                raise ValidationError(
+                    f"Capture failed: {captured.get('failure_reason')}"
+                )
+
+            await self._payments.mark_captured(
+                customer_id, str(auth["payment_id"]), captured.get("capture_ref")
             )
 
-        await self._payments.mark_captured(
-            customer_id, str(auth["payment_id"]), captured.get("capture_ref")
-        )
-
-        # Workflow guards + persisted status.
-        await self._workflows.transition(
-            workflow_id="WF.BOOKING.CUSTOMER.V1",
-            from_state="CUSTOMER_CONFIRMED", to_state="PAID",
-            context={"booking_number": booking["booking_number"]},
-        )
-        row = await self._bookings.set_status(
-            customer_id, booking_id,
-            from_state="CUSTOMER_CONFIRMED", to_state="PAID",
-        )
-        if not row:
-            raise ValidationError("Booking state moved during capture")
+            # Workflow guards + persisted status.
+            await self._workflows.transition(
+                workflow_id="WF.BOOKING.CUSTOMER.V1",
+                from_state="CUSTOMER_CONFIRMED", to_state="PAID",
+                context={"booking_number": booking["booking_number"]},
+            )
+            row = await self._bookings.set_status(
+                customer_id, booking_id,
+                from_state="CUSTOMER_CONFIRMED", to_state="PAID",
+            )
+            if not row:
+                raise ValidationError("Booking state moved during capture")
 
         # Invoice family snapshot follows the money.
         try:

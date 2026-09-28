@@ -70,7 +70,7 @@ async def confirm_completion(booking_id: str, customer: CurrentCustomer) -> dict
 
 @router.post("/{booking_id}/close")
 async def close_booking(booking_id: str, customer: CurrentCustomer) -> dict:
-    svc = get_composition().completion_service()
+    svc = get_composition().booking_close_service()
     result = await svc.close_booking(str(customer["customer_id"]), booking_id)
     return ok(result, title="Booking closed", status_code=201)
 
