@@ -18,7 +18,9 @@ class CancellationService:
         repository: CancellationRepositoryPort,
         policy: CancellationPolicyEngine | None = None,
         refund_policy: RefundPolicyEngine | None = None,
+        settlement: Any | None = None,   # PaymentSettlementService
     ) -> None:
+        self._settlement = settlement
         self._repo = repository
         self._policy = policy or CancellationPolicyEngine()
         self._refunds = refund_policy or RefundPolicyEngine()
@@ -64,6 +66,8 @@ class CancellationService:
         record = await self._repo.record_cancellation(
             booking_id, customer_id, outcome.fee, refund, reason, requested_by
         )
+        if self._settlement is not None:
+            await self._settlement.release(customer_id, booking_id, refund, "Refund for a cancelled booking")
         return {
             "booking": updated,
             "tier": outcome.tier,

@@ -8,6 +8,11 @@ arbitrary - usually another customer's - invoice instead of the one just created
 The function now keeps the new id in an unambiguous variable, is idempotent per
 booking (returns the existing invoice rather than creating a duplicate) and uses a
 longer random suffix for the invoice number.
+
+It also treats the agreed amount as the VAT-inclusive price the customer is charged
+("full amount, no hidden fees"): the invoice total equals the amount paid and the
+VAT line shows the tax contained in it, instead of adding 18% on top of what was
+already charged.
 """
 
 from alembic import op
@@ -55,9 +60,9 @@ def upgrade() -> None:
                 )
                 VALUES (
                     v_booking.booking_id, v_booking.customer_id, v_booking.provider_id,
+                    v_booking.agreed_amount - round(v_booking.agreed_amount * p_tax_rate / (1 + p_tax_rate), 2),
+                    round(v_booking.agreed_amount * p_tax_rate / (1 + p_tax_rate), 2),
                     v_booking.agreed_amount,
-                    round(v_booking.agreed_amount * p_tax_rate, 2),
-                    round(v_booking.agreed_amount * (1 + p_tax_rate), 2),
                     v_booking.currency, 'DRAFT',
                     'INV-' || to_char(now(), 'YYMMDDHH24MI') || '-'
                         || upper(substr(md5(random()::text), 1, 6))
@@ -67,10 +72,11 @@ def upgrade() -> None:
                 INSERT INTO "INVOICE_ITEMS" (invoice_id, description, quantity, unit_amount, line_total)
                 VALUES
                     (v_invoice_id, 'Professional service - ' || v_booking.booking_number, 1,
-                     v_booking.agreed_amount, v_booking.agreed_amount),
-                    (v_invoice_id, 'VAT (' || round(p_tax_rate * 100)::int || '%)', 1,
-                     round(v_booking.agreed_amount * p_tax_rate, 2),
-                     round(v_booking.agreed_amount * p_tax_rate, 2));
+                     v_booking.agreed_amount - round(v_booking.agreed_amount * p_tax_rate / (1 + p_tax_rate), 2),
+                     v_booking.agreed_amount - round(v_booking.agreed_amount * p_tax_rate / (1 + p_tax_rate), 2)),
+                    (v_invoice_id, 'VAT (' || round(p_tax_rate * 100)::int || '% included)', 1,
+                     round(v_booking.agreed_amount * p_tax_rate / (1 + p_tax_rate), 2),
+                     round(v_booking.agreed_amount * p_tax_rate / (1 + p_tax_rate), 2));
             END IF;
 
             RETURN QUERY

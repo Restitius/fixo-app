@@ -1,6 +1,8 @@
 """Booking domain router — Modules 16 & 17 endpoints."""
 from __future__ import annotations
 
+from typing import Literal
+
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
@@ -40,10 +42,17 @@ async def get_booking(booking_id: str, customer: CurrentCustomer) -> dict:
     return ok(await svc.get(str(customer["customer_id"]), booking_id))
 
 
+class AuthorizePaymentRequest(BaseModel):
+    payment_method: Literal["WALLET", "EXTERNAL"] = "EXTERNAL"
+
+
 @router.post("/{booking_id}/authorize-payment")
-async def authorize_payment(booking_id: str, customer: CurrentCustomer) -> dict:
+async def authorize_payment(
+    booking_id: str, customer: CurrentCustomer, payload: AuthorizePaymentRequest | None = None
+) -> dict:
     svc = get_composition().booking_service()
-    result = await svc.authorize_payment(str(customer["customer_id"]), booking_id)
+    method = payload.payment_method if payload else "EXTERNAL"
+    result = await svc.authorize_payment(str(customer["customer_id"]), booking_id, method)
     return ok(result, title=f"Payment {result['payment']['status']}")
 
 
