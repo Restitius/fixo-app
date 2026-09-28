@@ -42,9 +42,29 @@ export const Route = createFileRoute("/bookings")({
 
 const TABS = ["Upcoming", "Completed", "Cancelled"] as const;
 
-const UPCOMING_STATUSES = ["CONFIRMED", "PAYMENT_AUTHORIZED", "PROVIDER_SELECTED", "QUOTE_ACCEPTED"];
-const COMPLETED_STATUSES = ["PAID", "CLOSED"];
-const SPENT_STATUSES = ["PAYMENT_AUTHORIZED", "PAID", "CLOSED"];
+// Every booking status must land in exactly one tab, otherwise a booking vanishes
+// from the list while the provider is on the way or the job is being done.
+const IN_FLIGHT_STATUSES = [
+  "ON_THE_WAY",
+  "ARRIVED",
+  "AT_LOCATION",
+  "STARTED",
+  "WORK_STARTED",
+  "IN_PROGRESS",
+  "WORK_COMPLETED",
+  "COMPLETION_REQUESTED",
+  "CUSTOMER_CONFIRMED",
+];
+const UPCOMING_STATUSES = [
+  "CONFIRMED",
+  "PAYMENT_AUTHORIZED",
+  "PAYMENT_FAILED",
+  "PROVIDER_SELECTED",
+  "QUOTE_ACCEPTED",
+  ...IN_FLIGHT_STATUSES,
+];
+const COMPLETED_STATUSES = ["PAID", "COMPLETED", "CLOSED"];
+const SPENT_STATUSES = ["PAYMENT_AUTHORIZED", ...IN_FLIGHT_STATUSES, "PAID", "COMPLETED", "CLOSED"];
 
 function statusLabel(status: string) {
   return humanize(status);
@@ -140,7 +160,7 @@ function BookingsPage() {
     const d = new Date(b.completed_at);
     return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   }).length;
-  const pendingPayments = (rows ?? []).filter((b) => b.status === "CONFIRMED");
+  const pendingPayments = (rows ?? []).filter((b) => b.status === "CONFIRMED" || b.status === "PAYMENT_FAILED");
   const totalSpent = (rows ?? []).filter((b) => SPENT_STATUSES.includes(b.status)).reduce((s, b) => s + b.agreed_amount, 0);
   const currency = rows?.[0]?.currency ?? "TZS";
 

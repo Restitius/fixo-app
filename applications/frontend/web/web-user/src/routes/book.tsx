@@ -471,8 +471,10 @@ function BookPage() {
   }, [search.providerId, quotes, matches]);
 
   const avgMatchRating = useMemo(() => {
-    if (!matches || matches.length === 0) return 0;
-    return matches.reduce((s, m) => s + m.rating_avg, 0) / matches.length;
+    // Unrated (new) providers have no rating yet; averaging their 0 would drag the score down.
+    const rated = (matches ?? []).filter((m) => m.rating_avg > 0);
+    if (rated.length === 0) return 0;
+    return rated.reduce((s, m) => s + m.rating_avg, 0) / rated.length;
   }, [matches]);
   const fastestLeadDays = useMemo(
     () => (quotes && quotes.length > 0 ? Math.min(...quotes.map((q) => q.lead_time_days)) : null),
@@ -1148,7 +1150,7 @@ function BookPage() {
                               <p className="text-sm text-muted-foreground">{q.headline}</p>
                               <p className="mt-0.5 flex items-center gap-1 text-sm">
                                 <Star className="size-3.5 fill-current text-[#FFB800]" />
-                                {q.rating_avg}
+                                {q.rating_avg > 0 ? q.rating_avg.toFixed(1) : t("provider.newProvider", { defaultValue: "New" })}
                                 <span className="text-muted-foreground"> · {t("provider.leadTime", { count: q.lead_time_days })}</span>
                               </p>
                             </div>
