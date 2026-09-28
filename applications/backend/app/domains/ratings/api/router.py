@@ -12,6 +12,11 @@ from app.startup.composition import get_composition
 class RatingSubmitRequest(BaseModel):
     rating: int = Field(..., ge=1, le=5, description="Star rating 1-5")
     comment: str | None = Field(default=None, max_length=500, description="Optional review comment")
+    aspects: dict[str, int] | None = Field(
+        default=None, description="Optional 1-5 scores: quality, punctuality, communication, professionalism, value"
+    )
+    tags: list[str] | None = Field(default=None, max_length=8, description="Optional highlight tags")
+    recommend: bool | None = Field(default=None, description="Would the customer recommend the provider")
 
 
 router = APIRouter(prefix="/ratings", tags=["ratings"])
@@ -26,7 +31,10 @@ async def list_mine(customer: CurrentCustomer) -> dict:
 @router.post("/{booking_id}", status_code=201)
 async def submit_rating(booking_id: str, payload: RatingSubmitRequest, customer: CurrentCustomer) -> dict:
     svc = get_composition().rating_service()
-    result = await svc.submit(booking_id, str(customer["customer_id"]), payload.rating, payload.comment)
+    result = await svc.submit(
+        booking_id, str(customer["customer_id"]), payload.rating, payload.comment,
+        payload.aspects, payload.tags, payload.recommend,
+    )
     return ok(result, title="Rating submitted", status_code=201)
 
 
