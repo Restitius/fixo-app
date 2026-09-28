@@ -49,9 +49,12 @@ class CustomerSqlAdapter:
         )
 
     async def update_profile(self, user_id: str, params: dict[str, Any]) -> Any | None:
-        return await self._sql.execute(
-            CustomerQueryIds.UPDATE_PROFILE, {"user_id": user_id, **params}, fetch="one"
-        )
+        try:
+            return await self._sql.execute(
+                CustomerQueryIds.UPDATE_PROFILE, {"user_id": user_id, **params}, fetch="one"
+            )
+        except IntegrityError as exc:
+            raise ConflictError("This phone number is already registered to another account") from exc
 
     async def update_password(self, user_id: str, password_hash: str) -> Any | None:
         return await self._sql.execute(
