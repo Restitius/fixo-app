@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
-import Button from '../../components/Button'
-import Sheet from '../../components/Sheet'
 import { ArrowDownLeftIcon, ArrowUpRightIcon, WalletIcon } from '../../components/icons'
 import { fixoSdk, type WalletBalance, type WalletTxn } from '../../lib/api-client'
 import { fmtDateTime, fmtMoney, humanize } from '../../lib/format'
@@ -13,9 +11,6 @@ export default function Wallet() {
   const { t } = useTranslation('profile')
   const [wallet, setWallet] = useState<WalletBalance | null>(null)
   const [txns, setTxns] = useState<WalletTxn[] | null>(null)
-  const [sheet, setSheet] = useState<'topup' | 'withdraw' | null>(null)
-  const [amount, setAmount] = useState('')
-  const [submitting, setSubmitting] = useState(false)
 
   function refresh() {
     fixoSdk.walletBalance().then(setWallet).catch(() => setWallet(null))
@@ -23,23 +18,6 @@ export default function Wallet() {
   }
 
   useEffect(refresh, [])
-
-  async function submit() {
-    const value = Number(amount)
-    if (!value || value <= 0 || !sheet) return
-    setSubmitting(true)
-    try {
-      if (sheet === 'topup') await fixoSdk.walletCredit(value)
-      else await fixoSdk.walletDebit(value)
-      refresh()
-      setAmount('')
-      setSheet(null)
-    } catch {
-      // apiClient throws on failure; balance simply won't have moved
-    } finally {
-      setSubmitting(false)
-    }
-  }
 
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top']}>
@@ -52,15 +30,13 @@ export default function Wallet() {
               <Text className="text-[13px] text-white/80">{t('wallet.availableBalance')}</Text>
             </View>
             <Text className="text-[32px] font-extrabold text-white mt-2">{wallet ? fmtMoney(wallet.balance, wallet.currency) : '—'}</Text>
-            <View className="flex-row gap-3 mt-5">
-              <Pressable onPress={() => setSheet('topup')} className="flex-1 items-center rounded-xl bg-white/15 py-3">
-                <Text className="text-[14px] font-bold text-white">{t('wallet.topUp')}</Text>
-              </Pressable>
-              <Pressable onPress={() => setSheet('withdraw')} className="flex-1 items-center rounded-xl bg-white/15 py-3">
-                <Text className="text-[14px] font-bold text-white">{t('wallet.withdraw')}</Text>
-              </Pressable>
-            </View>
           </View>
+
+          <Text className="text-[12px] text-muted mt-3">
+            {t('wallet.creditsNote', {
+              defaultValue: 'Wallet credit comes from refunds, promotions and loyalty rewards, and can be used when you pay for a booking.',
+            })}
+          </Text>
 
           <Text className="text-[16px] font-bold text-ink mt-7 mb-3">{t('wallet.recentTransactions')}</Text>
           <View className="flex-col gap-3">
@@ -96,26 +72,6 @@ export default function Wallet() {
         </View>
       </ScrollView>
 
-      <Sheet open={sheet !== null} onClose={() => setSheet(null)}>
-        <View className="w-10 h-1 bg-hairline rounded-full self-center mb-6" />
-        <Text className="text-[18px] font-bold text-ink text-center">{sheet === 'topup' ? t('wallet.topUpWallet') : t('wallet.withdrawFunds')}</Text>
-        <View className="flex-row items-center gap-3 rounded-2xl bg-[#f5f5f5] px-5 py-4 mt-5">
-          <Text className="text-[15px] text-muted">{wallet?.currency ?? 'TZS'}</Text>
-          <TextInput
-            value={amount}
-            onChangeText={setAmount}
-            keyboardType="decimal-pad"
-            placeholder="0.00"
-            placeholderTextColor="#9e9e9e"
-            className="flex-1 text-[15px] text-ink"
-          />
-        </View>
-        <View className="mt-6">
-          <Button onPress={submit} loading={submitting} disabled={!Number(amount)}>
-            {sheet === 'topup' ? t('wallet.topUp') : t('wallet.withdraw')}
-          </Button>
-        </View>
-      </Sheet>
     </SafeAreaView>
   )
 }

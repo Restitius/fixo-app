@@ -82,7 +82,8 @@
     "rewardPriorityTitle": "Priority booking",
     "rewardPriorityDesc": "Jump the matching queue",
     "rewardInspectionTitle": "Free inspection",
-    "rewardInspectionDesc": "A complimentary site visit"
+    "rewardInspectionDesc": "A complimentary site visit",
+    "earnNote": "You earn 1 point for every TZS 1,000 of a completed booking. Reward redemption is coming soon."
   },
   "notifications": {
     "title": "Notification Settings",
@@ -151,7 +152,8 @@
     "noTransactions": "No transactions yet.",
     "balShort": "Bal {{amount}}",
     "topUpWallet": "Top Up Wallet",
-    "withdrawFunds": "Withdraw Funds"
+    "withdrawFunds": "Withdraw Funds",
+    "creditsNote": "Wallet credit comes from refunds, promotions and loyalty rewards, and can be used when you pay for a booking."
   },
   "payment": {
     "title": "Payment Methods",
