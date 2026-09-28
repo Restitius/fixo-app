@@ -51,7 +51,11 @@ class FinalPaymentService:
                 raise ValidationError("No live authorization found for capture")
 
             amount_cents = int(round(float(booking["agreed_amount"]) * 100))
-            captured = await self._gateway.capture(str(auth["gateway_ref"]), amount_cents)
+            captured = await self._gateway.capture(
+                str(auth["gateway_ref"]), amount_cents,
+                customer_id=customer_id, booking_id=booking_id,
+                held_cents=int(round(float(auth.get("amount") or 0) * 100)),
+            )
             if not captured.get("captured"):
                 raise ValidationError(
                     f"Capture failed: {captured.get('failure_reason')}"

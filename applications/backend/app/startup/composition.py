@@ -656,7 +656,13 @@ class Composition:
         # Payment gateway: mock now, real providers behind the same port later.
         from app.integrations.external.payments.mock_gateway import MockPaymentGateway
 
-        self._payment_gateway = MockPaymentGateway()
+        from app.integrations.external.payments.routing_gateway import RoutingPaymentGateway
+        from app.integrations.external.payments.wallet_gateway import WalletPaymentGateway
+
+        self._payment_gateway = RoutingPaymentGateway(
+            default=MockPaymentGateway(),
+            wallet=WalletPaymentGateway(lambda: self.wallet_service()),
+        )
 
         # Home aggregator read ports (stubs swap for real adapters in later phases).
         self._home_environment = HomeEnvironmentReadAdapter(self.sql_query_manager)
@@ -1287,7 +1293,14 @@ class Composition:
             gateway=self._payment_gateway,
             workflows=self.workflow_manager,
             notifications=self.notification_manager,
+            settlement=self.payment_settlement_service(),
         )
+
+    def payment_settlement_service(self) -> Any:
+        """Releases / refunds money held for a booking (wallet payments)."""
+        from app.domains.payments.services.settlement_service import PaymentSettlementService
+
+        return PaymentSettlementService(self.payment_repository, self._payment_gateway)
 
     def conversation_service(self) -> Any:
         """ConversationService â Module 19."""
@@ -1413,7 +1426,9 @@ class Composition:
             CancellationService,
         )
 
-        return CancellationService(self.cancellation_repository)
+        return CancellationService(
+            self.cancellation_repository, settlement=self.payment_settlement_service()
+        )
 
     def support_service(self) -> Any:
         """SupportService â Module 38 (helpdesk, ports only)."""

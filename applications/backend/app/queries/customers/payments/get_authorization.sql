@@ -1,5 +1,5 @@
 -- CUS.PAYMENT.GET_AUTHORIZATION — fetch the live authorization ref for capture.
-SELECT p.payment_id, p.gateway_ref
+SELECT p.payment_id, p.gateway_ref, p.amount
   FROM "PAYMENTS" p
  WHERE p.booking_id = CAST(:booking_id AS uuid)
    AND p.status = 'AUTHORIZED'
