@@ -225,7 +225,7 @@ function PromotionsPage() {
     }
   };
 
-  async function useThisPromotion(p: Promotion) {
+  async function applyPromotion(p: Promotion) {
     const amt = Number(amount);
     if (!amt || amt <= 0) {
       toast.error(t("promotions.toasts.enterOrderAmountToCalc"));
@@ -549,7 +549,7 @@ function PromotionsPage() {
 
               <button
                 disabled={applying}
-                onClick={() => void useThisPromotion(selected)}
+                onClick={() => void applyPromotion(selected)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
