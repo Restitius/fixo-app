@@ -343,7 +343,11 @@ function BookingsPage() {
         </TableCard>
       )}
 
-      <BookingDetailsDialog bookingId={openBookingId} onOpenChange={(o) => !o && setOpenBookingId(null)} />
+      <BookingDetailsDialog
+        bookingId={openBookingId}
+        onOpenChange={(o) => !o && setOpenBookingId(null)}
+        onChanged={load}
+      />
     </PageShell>
   );
 }
