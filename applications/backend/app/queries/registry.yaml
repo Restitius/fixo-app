@@ -1340,6 +1340,13 @@ queries:
       ownership_filter_required: true
       requires_auth: true
     sql: customers/wallet/credit.sql
+  CUS.WALLET.REFUND_ONCE:
+    description: Credits a booking refund to the wallet at most once per booking (idempotent cancellation refunds).
+    operation: create
+    security:
+      ownership_filter_required: true
+      requires_auth: true
+    sql: customers/wallet/refund_once.sql
   CUS.WALLET.DEBIT:
     description: CUS.WALLET.DEBIT registered query.
     operation: update

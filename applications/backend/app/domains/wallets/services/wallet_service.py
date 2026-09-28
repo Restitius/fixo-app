@@ -23,22 +23,37 @@ class WalletService:
         await self._wallet(customer_id)
         return await self._repo.list_transactions(customer_id, limit, offset)
 
-    async def credit(self, customer_id: str, amount: float) -> dict[str, Any]:
+    async def credit(
+        self, customer_id: str, amount: float, *, reference_type: str | None = None,
+        reference_id: str | None = None, description: str | None = None,
+    ) -> dict[str, Any]:
         if amount <= 0:
             raise ValueError("Credit amount must be positive")
         await self._wallet(customer_id)
-        row = await self._repo.credit(customer_id, amount)
+        row = await self._repo.credit(customer_id, amount, reference_type, reference_id, description)
         if not row:
             raise RuntimeError("Credit failed")
         return row
 
-    async def debit(self, customer_id: str, amount: float) -> dict[str, Any]:
+    async def debit(
+        self, customer_id: str, amount: float, *, reference_type: str | None = None,
+        reference_id: str | None = None, description: str | None = None,
+    ) -> dict[str, Any]:
         if amount <= 0:
             raise ValueError("Debit amount must be positive")
         wallet = await self._wallet(customer_id)
         if float(wallet["balance"]) < amount:
             raise ValueError("Insufficient wallet balance")
-        row = await self._repo.debit(customer_id, amount)
+        row = await self._repo.debit(customer_id, amount, reference_type, reference_id, description)
         if not row:
             raise ValueError("Insufficient wallet balance")
         return row
+
+    async def refund_booking(
+        self, customer_id: str, amount: float, booking_id: str, description: str | None = None,
+    ) -> dict[str, Any] | None:
+        """Credit a booking refund once; returns None when it was already refunded."""
+        if amount <= 0:
+            return None
+        await self._wallet(customer_id)
+        return await self._repo.refund_once(customer_id, amount, booking_id, description)

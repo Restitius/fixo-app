@@ -30,7 +30,9 @@ class BookingService:
         gateway: Any,       # PaymentGateway port
         workflows: Any,     # WorkflowManager (injected)
         notifications: Any | None = None,
+        settlement: Any | None = None,   # PaymentSettlementService
     ) -> None:
+        self._settlement = settlement
         self._bookings = bookings
         self._payments = payments
         self._quotations = quotations
@@ -101,7 +103,9 @@ class BookingService:
 
     # -- Module 17: initial payment authorization --------------------------------
 
-    async def authorize_payment(self, customer_id: str, booking_id: str) -> dict[str, Any]:
+    async def authorize_payment(
+        self, customer_id: str, booking_id: str, payment_method: str | None = None
+    ) -> dict[str, Any]:
         booking = await self.get(customer_id, booking_id)
         if booking["status"] not in ("CONFIRMED", "PAYMENT_FAILED"):
             raise ValidationError(
@@ -117,7 +121,8 @@ class BookingService:
 
         amount_cents = int(round(float(booking["agreed_amount"]) * 100))
         result = await self._gateway.authorize(
-            str(attempt["payment_id"]), amount_cents, booking["currency"]
+            str(attempt["payment_id"]), amount_cents, booking["currency"],
+            method=payment_method, customer_id=customer_id, booking_id=booking_id,
         )
 
         ok_auth = bool(result.get("authorized"))
@@ -177,4 +182,10 @@ class BookingService:
             from_state=booking["status"], to_state="CANCELLED",
         )
         await self._timeline(customer_id, booking_id, "CANCELLED", None)
+        if self._settlement is not None:
+            # No cancellation fee on this path: hand back everything that was held.
+            await self._settlement.release(
+                customer_id, booking_id, float(booking.get("agreed_amount") or 0),
+                "Refund for a cancelled booking",
+            )
         return await self.get(customer_id, booking_id)
