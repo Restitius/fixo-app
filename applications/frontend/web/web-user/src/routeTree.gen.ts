@@ -28,6 +28,7 @@ import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PaymentsRouteImport } from './routes/payments'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PromotionsRouteImport } from './routes/promotions'
 import { Route as PropertiesRouteImport } from './routes/properties'
@@ -39,6 +40,7 @@ import { Route as RegisterCustomerRouteImport } from './routes/register-customer
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as VerifyOtpRouteImport } from './routes/verify-otp'
 import { Route as WalletRouteImport } from './routes/wallet'
 import { Route as WarrantiesRouteImport } from './routes/warranties'
@@ -138,6 +140,11 @@ const PaymentsRoute = PaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -193,6 +200,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyOtpRoute = VerifyOtpRouteImport.update({
   id: '/verify-otp',
   path: '/verify-otp',
@@ -229,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
   '/properties': typeof PropertiesRoute
@@ -240,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
   '/warranties': typeof WarrantiesRoute
@@ -264,6 +278,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
   '/properties': typeof PropertiesRoute
@@ -275,6 +290,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
   '/warranties': typeof WarrantiesRoute
@@ -300,6 +316,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/onboarding': typeof OnboardingRoute
   '/payments': typeof PaymentsRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/promotions': typeof PromotionsRoute
   '/properties': typeof PropertiesRoute
@@ -311,6 +328,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
+  '/terms': typeof TermsRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/wallet': typeof WalletRoute
   '/warranties': typeof WarrantiesRoute
@@ -337,6 +355,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/payments'
+    | '/privacy'
     | '/profile'
     | '/promotions'
     | '/properties'
@@ -348,6 +367,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/services'
+    | '/terms'
     | '/verify-otp'
     | '/wallet'
     | '/warranties'
@@ -372,6 +392,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/payments'
+    | '/privacy'
     | '/profile'
     | '/promotions'
     | '/properties'
@@ -383,6 +404,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/services'
+    | '/terms'
     | '/verify-otp'
     | '/wallet'
     | '/warranties'
@@ -407,6 +429,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/onboarding'
     | '/payments'
+    | '/privacy'
     | '/profile'
     | '/promotions'
     | '/properties'
@@ -418,6 +441,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/services'
+    | '/terms'
     | '/verify-otp'
     | '/wallet'
     | '/warranties'
@@ -443,6 +467,7 @@ export interface RootRouteChildren {
   NotificationsRoute: typeof NotificationsRoute
   OnboardingRoute: typeof OnboardingRoute
   PaymentsRoute: typeof PaymentsRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   PromotionsRoute: typeof PromotionsRoute
   PropertiesRoute: typeof PropertiesRoute
@@ -454,6 +479,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   ServicesRoute: typeof ServicesRoute
+  TermsRoute: typeof TermsRoute
   VerifyOtpRoute: typeof VerifyOtpRoute
   WalletRoute: typeof WalletRoute
   WarrantiesRoute: typeof WarrantiesRoute
@@ -594,6 +620,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -671,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify-otp': {
       id: '/verify-otp'
       path: '/verify-otp'
@@ -715,6 +755,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotificationsRoute: NotificationsRoute,
   OnboardingRoute: OnboardingRoute,
   PaymentsRoute: PaymentsRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   PromotionsRoute: PromotionsRoute,
   PropertiesRoute: PropertiesRoute,
@@ -726,6 +767,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   ServicesRoute: ServicesRoute,
+  TermsRoute: TermsRoute,
   VerifyOtpRoute: VerifyOtpRoute,
   WalletRoute: WalletRoute,
   WarrantiesRoute: WarrantiesRoute,

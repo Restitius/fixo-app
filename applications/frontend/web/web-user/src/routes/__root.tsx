@@ -29,6 +29,8 @@ const SKIP_PATHS = new Set([
   "/register-customer",
   "/verify-otp",
   "/onboarding",
+  "/terms",
+  "/privacy",
 ]);
 
 function OnboardingGate() {
