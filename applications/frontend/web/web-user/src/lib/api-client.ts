@@ -228,6 +228,9 @@ export interface BookingRating {
   provider_id: string;
   rating: number;
   comment?: string | null;
+  aspects?: Record<string, number> | null;
+  tags?: string[] | null;
+  recommend?: boolean | null;
   created_at: string;
   updated_at?: string;
   booking_number?: string;
@@ -412,9 +415,24 @@ export const fixoSdk = {
   // GET /ratings/{id} errors (and toasts) when a booking has no rating yet, so
   // it isn't safe to poll speculatively — listMyRatings (a real bulk endpoint)
   // is how the Feedback page finds out which bookings are already rated.
-  submitRating: (bookingId: string, rating: number, comment?: string) =>
+  submitRating: (
+    bookingId: string,
+    rating: number,
+    extras: {
+      comment?: string;
+      aspects?: Record<string, number>;
+      tags?: string[];
+      recommend?: boolean | null;
+    } = {},
+  ) =>
     apiClient
-      .post<BookingRating>(`/ratings/${bookingId}`, { rating, comment: comment || undefined })
+      .post<BookingRating>(`/ratings/${bookingId}`, {
+        rating,
+        comment: extras.comment || undefined,
+        aspects: extras.aspects && Object.keys(extras.aspects).length ? extras.aspects : undefined,
+        tags: extras.tags && extras.tags.length ? extras.tags : undefined,
+        recommend: extras.recommend ?? undefined,
+      })
       .then((r) => r.data),
   listMyRatings: () => apiClient.get<BookingRating[]>("/ratings").then((r) => r.data),
 
