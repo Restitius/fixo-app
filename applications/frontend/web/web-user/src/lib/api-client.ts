@@ -31,6 +31,16 @@ export class ApiError extends Error {
   }
 }
 
+// Endpoints that carry credentials or end a session: a 401 there is a final answer.
+const NO_REFRESH_PATHS = [
+  "/auth/token/refresh",
+  "/auth/login",
+  "/auth/register",
+  "/auth/logout",
+  "/auth/otp/",
+  "/auth/password/",
+];
+
 class ApiClient {
   private token: string | null = null;
   private _onUnauthorized: (() => Promise<boolean>) | null = null;
@@ -53,10 +63,18 @@ class ApiClient {
     return h;
   }
 
-  private async request<T>(path: string, init: RequestInit, sendJsonHeader = true): Promise<ApiResponse<T>> {
+  private async request<T>(
+    path: string,
+    init: RequestInit,
+    sendJsonHeader = true,
+    silent = false,
+  ): Promise<ApiResponse<T>> {
     let res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers(sendJsonHeader) });
 
-    if (res.status === 401 && this._onUnauthorized && (await this._onUnauthorized())) {
+    // Never refresh-and-retry the auth endpoints themselves: a 401 from the refresh
+    // call would wait on its own in-flight refresh and hang every request forever.
+    const isCredentialEndpoint = NO_REFRESH_PATHS.some((prefix) => path.startsWith(prefix));
+    if (res.status === 401 && !isCredentialEndpoint && this._onUnauthorized && (await this._onUnauthorized())) {
       res = await fetch(`${BASE_URL}${path}`, { ...init, headers: this.headers(sendJsonHeader) });
     }
 
@@ -64,7 +82,7 @@ class ApiClient {
     if (!res.ok || !json?.success) {
       const msg =
         json?.message?.body || json?.message?.title || `Request failed (${res.status})`;
-      toast.error(msg);
+      if (!silent) toast.error(msg);
       throw new ApiError(msg, json?.message);
     }
     return json as ApiResponse<T>;
@@ -74,8 +92,8 @@ class ApiClient {
     return this.request<T>(path, { method: "GET" });
   }
 
-  post<T = any>(path: string, body: unknown = {}) {
-    return this.request<T>(path, { method: "POST", body: JSON.stringify(body) });
+  post<T = any>(path: string, body: unknown = {}, opts?: { silent?: boolean }) {
+    return this.request<T>(path, { method: "POST", body: JSON.stringify(body) }, true, opts?.silent);
   }
 
   patch<T = any>(path: string, body: unknown = {}) {
@@ -301,6 +319,17 @@ export interface Consent {
   revoked_at?: string | null;
 }
 
+export interface ClosurePreview {
+  active_bookings: number;
+  pending_payments: number;
+  open_disputes: number;
+  active_warranties: number;
+  wallet_balance: number;
+  blockers: string[];
+  can_close: boolean;
+  retained_data: string;
+}
+
 export interface DataExport {
   request_id: string;
   status: string;
@@ -450,6 +479,14 @@ export const fixoSdk = {
       .then((r) => r.data),
   listSessions: () =>
     apiClient.get<AuthSession[]>("/account/security/sessions").then((r) => r.data),
+
+  // ---- Account closure ------------------------------------------------------
+  closurePreview: () =>
+    apiClient.get<ClosurePreview>("/account/closure/preview").then((r) => r.data),
+  requestAccountClosure: (password: string) =>
+    apiClient
+      .post<{ closed: boolean }>("/account/closure", { password })
+      .then((r) => r.data),
 
   // ---- Privacy / consents --------------------------------------------------
   listConsents: () =>
