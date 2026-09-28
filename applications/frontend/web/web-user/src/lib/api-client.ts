@@ -671,6 +671,27 @@ export interface Quote {
   request_status?: string;
 }
 
+export interface CancellationPreview {
+  booking_id: string;
+  status: string;
+  tier: string;
+  fee: number;
+  refund: number;
+  explanation: string;
+}
+
+export interface TrackingSnapshot {
+  booking_status: string;
+  on_the_way: boolean;
+  latest_position: {
+    latitude: number;
+    longitude: number;
+    recorded_at: string;
+    eta_minutes?: number | null;
+    ping_count?: number;
+  } | null;
+}
+
 export interface BookingRow {
   booking_id: string;
   booking_number: string;
@@ -680,6 +701,7 @@ export interface BookingRow {
   scheduled_date: string;
   time_window?: string | null;
   arrival_code?: string;
+  reschedule_count?: number;
   selected_provider_id: string;
   provider_name?: string;
   provider_headline?: string;
@@ -760,6 +782,19 @@ export const bookingApi = {
       .then((r) => r.data),
   getBooking: (bookingId: string) =>
     apiClient.get<BookingRow>(`/bookings/${bookingId}`).then((r) => r.data),
+
+  tracking: (bookingId: string) =>
+    apiClient.get<TrackingSnapshot>(`/bookings/${bookingId}/tracking`).then((r) => r.data),
+  cancelPreview: (bookingId: string) =>
+    apiClient.post<CancellationPreview>(`/cancellations/preview${qs({ booking_id: bookingId })}`).then((r) => r.data),
+  cancelBooking: (bookingId: string, reason: string) =>
+    apiClient.post<unknown>("/cancellations/cancel", { booking_id: bookingId, reason }).then((r) => r.data),
+  reschedule: (bookingId: string, payload: { scheduled_date: string; time_window: string; reason?: string }) =>
+    apiClient.post<BookingRow>(`/bookings/${bookingId}/reschedule`, payload).then((r) => r.data),
+  confirmCompletion: (bookingId: string) =>
+    apiClient.post<unknown>(`/bookings/${bookingId}/confirm-completion`).then((r) => r.data),
+  captureFinalPayment: (bookingId: string) =>
+    apiClient.post<unknown>(`/bookings/${bookingId}/capture-final-payment`).then((r) => r.data),
 
   sendBookingMessage: (bookingId: string, body: string) =>
     apiClient.post<{ message_id: string }>(`/bookings/${bookingId}/messages`, { body }).then((r) => r.data),

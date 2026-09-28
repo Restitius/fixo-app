@@ -1,6 +1,6 @@
 // "Booking details" modal for the My Bookings page — centered dialog with a
 // horizontal progress stepper built from the booking's real event timeline.
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Calendar,
@@ -16,6 +16,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { bookingApi, fixoSdk, type BookingRow, type TimelineEvent } from "@/lib/api-client";
 import { fmtDate, humanize } from "@/lib/format";
+import { BookingActions } from "@/components/dashboard/BookingActions";
 
 function iconForService(name?: string) {
   const n = (name ?? "").toLowerCase();
@@ -33,12 +34,16 @@ function statusStyle(status: string) {
 interface BookingDetailsDialogProps {
   bookingId: string | null;
   onOpenChange: (open: boolean) => void;
+  /** Called after the customer changes the booking, so the list behind the dialog can reload. */
+  onChanged?: () => void;
 }
 
-export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetailsDialogProps) {
+export function BookingDetailsDialog({ bookingId, onOpenChange, onChanged }: BookingDetailsDialogProps) {
   const navigate = useNavigate();
   const [booking, setBooking] = useState<BookingRow | null>(null);
   const [timeline, setTimeline] = useState<TimelineEvent[] | null>(null);
+
+  const [version, setVersion] = useState(0);
 
   useEffect(() => {
     if (!bookingId) {
@@ -55,7 +60,12 @@ export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetails
     return () => {
       cancelled = true;
     };
-  }, [bookingId]);
+  }, [bookingId, version]);
+
+  const handleChanged = useCallback(() => {
+    setVersion((v) => v + 1);
+    onChanged?.();
+  }, [onChanged]);
 
   const Icon = iconForService(booking?.service_name);
 
@@ -125,6 +135,8 @@ export function BookingDetailsDialog({ bookingId, onOpenChange }: BookingDetails
                 </div>
               )}
             </div>
+
+            <BookingActions booking={booking} onChanged={handleChanged} />
 
             <div className="flex items-center justify-between rounded-2xl bg-primary/5 p-4 shadow-[var(--shadow-xs)]">
               <div className="flex items-center gap-2">
