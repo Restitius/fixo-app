@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Literal
 
 from fastapi import APIRouter, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.api.deps.auth import CurrentCustomer
 from app.api.responses.response import ok
@@ -54,6 +54,22 @@ async def authorize_payment(
     method = payload.payment_method if payload else "EXTERNAL"
     result = await svc.authorize_payment(str(customer["customer_id"]), booking_id, method)
     return ok(result, title=f"Payment {result['payment']['status']}")
+
+
+class RescheduleRequest(BaseModel):
+    scheduled_date: str = Field(description="New date, YYYY-MM-DD")
+    time_window: str = Field(description="MORNING | AFTERNOON | EVENING")
+    reason: str | None = Field(default=None, max_length=300)
+
+
+@router.post("/{booking_id}/reschedule")
+async def reschedule(booking_id: str, payload: RescheduleRequest, customer: CurrentCustomer) -> dict:
+    svc = get_composition().booking_service()
+    result = await svc.reschedule(
+        str(customer["customer_id"]), booking_id, payload.scheduled_date,
+        payload.time_window, payload.reason,
+    )
+    return ok(result, title="Booking rescheduled")
 
 
 @router.post("/{booking_id}/cancel")

@@ -136,6 +136,17 @@ NOTIFICATION_DEFINITIONS = (
         "booking_number",
     ),
     _event(
+        "NTF.BOOKING.RESCHEDULED.V1",
+        "BOOKING_UPDATES",
+        "provider",
+        "Booking rescheduled",
+        "The customer moved booking {booking_number} to {new_date} ({time_window}).",
+        "booking_id",
+        "booking_number",
+        "new_date",
+        "time_window",
+    ),
+    _event(
         "NTF.REVIEW.RECEIVED.V1",
         "REVIEW_UPDATES",
         "provider",
