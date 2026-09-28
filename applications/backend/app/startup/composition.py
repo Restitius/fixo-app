@@ -1339,6 +1339,7 @@ class Composition:
             bookings=self.booking_repository,
             workflows=self.workflow_manager,
             notifications=self.notification_manager,
+            invoices=self.invoice_service(),
         )
 
     def final_payment_service(self) -> Any:
@@ -1490,7 +1491,7 @@ class Composition:
         from app.domains.ratings.services.rating_service import RatingService
         return RatingService(self.rating_repository, bookings=self.booking_repository)
 
-    def completion_service(self) -> Any:
+    def booking_close_service(self) -> Any:
         """CompletionService  Module 53 (atomic booking close)."""
         from app.domains.bookings.services.completion_service import CompletionService
         return CompletionService(

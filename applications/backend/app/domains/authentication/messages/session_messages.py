@@ -1,7 +1,7 @@
 """AuthenticationMessages — user-facing copy catalog."""
 from __future__ import annotations
 
-from app.registries.messages.message_definition import MessageDefinition
+from app.shared.messages.definition import MessageDefinition
 
 MESSAGE_DEFINITIONS = (
     MessageDefinition(
