@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
@@ -92,7 +93,9 @@ def register_exception_handlers(app: FastAPI) -> None:
                 code="VALIDATION.FAILED",
                 title="Validation Failed",
                 body="One or more fields failed validation.",
-                details={"errors": exc.errors()},
+                # ctx may hold the original ValueError raised by a custom validator, which
+                # is not JSON serializable on its own.
+                details={"errors": jsonable_encoder(exc.errors())},
                 request_id=_request_id(request),
             ),
         )

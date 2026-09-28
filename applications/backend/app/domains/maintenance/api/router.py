@@ -25,8 +25,6 @@ class PlanCreate(BaseModel):
 async def create_plan(payload: PlanCreate, customer: CurrentCustomer) -> dict:
     svc = get_composition().maintenance_service()
     data = payload.model_dump()
-    if data["next_due_date"]:
-        data["next_due_date"] = data["next_due_date"].isoformat()
     return ok(await svc.create_plan(str(customer["customer_id"]), data),
               title="Maintenance plan created", status_code=201)
 

@@ -26,8 +26,6 @@ class RecurringCreate(BaseModel):
 async def create_subscription(payload: RecurringCreate, customer: CurrentCustomer) -> dict:
     svc = get_composition().recurring_service()
     data = payload.model_dump()
-    if data["next_run_date"]:
-        data["next_run_date"] = data["next_run_date"].isoformat()
     return ok(await svc.create(str(customer["customer_id"]), data),
               title="Subscription created", status_code=201)
 
