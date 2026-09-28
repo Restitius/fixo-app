@@ -47,9 +47,12 @@ import { LandingPage } from "@/components/landing/LandingPage";
 import { AnimatedAuthShell, AuthBrand } from "@/components/auth/AnimatedAuthShell";
 import { useAuth } from "@/lib/auth-context";
 import {
+  bookingApi,
   fixoSdk,
   type ActivityEvent,
   type BookingHistoryRow,
+  type CatalogCategory,
+  type HomeDashboard,
   type WalletBalance,
 } from "@/lib/api-client";
 import { fmtDate, fmtMoney, humanize, timeAgo } from "@/lib/format";
@@ -104,6 +107,27 @@ function CustomerQuickHome({
 }) {
   const navigate = useNavigate();
   const firstName = customerName.trim().split(/\s+/)[0] || "there";
+  const [home, setHome] = useState<HomeDashboard | null>(null);
+  const [categories, setCategories] = useState<CatalogCategory[]>([]);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    void fixoSdk
+      .homeDashboard()
+      .then(setHome)
+      .catch(() => setHome(null));
+    void bookingApi
+      .catalogCategories()
+      .then(setCategories)
+      .catch(() => setCategories([]));
+  }, []);
+
+  const submitSearch = () => {
+    const q = query.trim();
+    void navigate({ to: "/search", search: q ? { q } : {} });
+  };
+  const unread = home?.quick_stats.unread_notifications ?? 0;
+  const activeBooking = home?.active_bookings[0];
   const actions = [
     {
       icon: ClipboardList,
@@ -113,34 +137,25 @@ function CustomerQuickHome({
     },
     { icon: Grid2X2, title: "Browse services", copy: "Explore all categories.", to: "/services" },
     { icon: Calendar, title: "Track bookings", copy: "View your upcoming jobs.", to: "/bookings" },
-    { icon: Heart, title: "Saved providers", copy: "Keep your favorite pros.", to: "/providers" },
+    { icon: Heart, title: "Saved providers", copy: "Keep your favorite pros.", to: "/bookmarks" },
   ];
-  const services = [
-    {
-      icon: Sparkles,
-      title: "Home Cleaning",
-      price: "From TZS 20k",
-      color: "text-[#7828ef] bg-[#f0e8ff]",
-    },
-    {
-      icon: Wrench,
-      title: "Plumbing Repairs",
-      price: "From TZS 25k",
-      color: "text-blue-500 bg-blue-50",
-    },
-    {
-      icon: Bolt,
-      title: "Electrical Services",
-      price: "From TZS 30k",
-      color: "text-orange-500 bg-orange-50",
-    },
-    {
-      icon: Paintbrush,
-      title: "Painting Services",
-      price: "From TZS 40k",
-      color: "text-pink-500 bg-pink-50",
-    },
-  ];
+  // Real catalogue data: the four categories with the most providers, priced from
+  // the cheapest active offer (no invented prices).
+  const services = [...categories]
+    .filter((c) => c.min_price != null)
+    .sort((a, b) => (b.provider_count ?? 0) - (a.provider_count ?? 0))
+    .slice(0, 4)
+    .map((c, index) => ({
+      icon: iconForService(c.name),
+      title: c.name,
+      price: `From ${fmtMoney(c.min_price ?? 0, "TZS")}`,
+      color: [
+        "text-[#7828ef] bg-[#f0e8ff]",
+        "text-blue-500 bg-blue-50",
+        "text-orange-500 bg-orange-50",
+        "text-pink-500 bg-pink-50",
+      ][index % 4]!,
+    }));
 
   return (
     <AnimatedAuthShell>
@@ -154,7 +169,14 @@ function CustomerQuickHome({
               className="relative flex size-11 items-center justify-center rounded-full bg-[#f4efff]"
             >
               <Bell className="size-5" />
-              <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-[#6b1cf4]" />
+              {unread > 0 && (
+                <span
+                  data-testid="home-unread-badge"
+                  className="absolute -right-1 -top-1 flex min-w-5 items-center justify-center rounded-full bg-[#6b1cf4] px-1 text-[11px] font-bold text-white"
+                >
+                  {unread > 99 ? "99+" : unread}
+                </span>
+              )}
             </button>
           </div>
           <div className="relative mt-7 min-h-[120px]">
@@ -170,10 +192,16 @@ function CustomerQuickHome({
             <input
               className="ml-4 min-w-0 flex-1 text-lg outline-none"
               placeholder="What service do you need?"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submitSearch();
+              }}
             />
             <button
               type="button"
-              onClick={() => navigate({ to: "/services" })}
+              aria-label="Search"
+              onClick={submitSearch}
               className="flex size-11 items-center justify-center rounded-full bg-[#651cf4] text-white"
             >
               <ArrowRight />
@@ -183,7 +211,7 @@ function CustomerQuickHome({
             {["Cleaning", "Plumbing", "Electrical", "Painting"].map((item) => (
               <button
                 key={item}
-                onClick={() => navigate({ to: "/services" })}
+                onClick={() => navigate({ to: "/search", search: { q: item } })}
                 className="rounded-full bg-[#f5f1fc] px-5 py-2 text-sm"
               >
                 {item}
@@ -209,6 +237,32 @@ function CustomerQuickHome({
             </button>
           ))}
         </div>
+        {activeBooking && (
+          <button
+            type="button"
+            data-testid="home-active-booking"
+            onClick={() => navigate({ to: "/bookings" })}
+            className="mx-5 mt-5 flex w-[calc(100%-2.5rem)] items-center gap-4 rounded-2xl bg-[#f5f1fc] p-4 text-left"
+          >
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white text-[#651cf4]">
+              <Calendar />
+            </span>
+            <span className="min-w-0 flex-1">
+              <strong className="block truncate">
+                {activeBooking.service_name ?? "Your booking"}
+                {activeBooking.provider_name ? ` · ${activeBooking.provider_name}` : ""}
+              </strong>
+              <small className="text-[#767b98]">
+                {humanize(activeBooking.status)}
+                {activeBooking.scheduled_date ? ` · ${fmtDate(activeBooking.scheduled_date)}` : ""}
+                {(home?.quick_stats.active_bookings ?? 0) > 1
+                  ? ` · +${(home?.quick_stats.active_bookings ?? 1) - 1} more`
+                  : ""}
+              </small>
+            </span>
+            <ChevronRight className="size-5 shrink-0 text-[#8a90aa]" />
+          </button>
+        )}
         <div className="px-5 pb-5 pt-7">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">Popular services</h2>
@@ -245,9 +299,13 @@ function CustomerQuickHome({
           <NavButton
             icon={<Heart />}
             label="Saved"
-            onClick={() => navigate({ to: "/providers" })}
+            onClick={() => navigate({ to: "/bookmarks" })}
           />
-          <NavButton icon={<UserRound />} label="Profile" onClick={onLogout} />
+          <NavButton
+            icon={<UserRound />}
+            label="Profile"
+            onClick={() => navigate({ to: "/profile" })}
+          />
         </nav>
       </section>
     </AnimatedAuthShell>
