@@ -34,8 +34,6 @@ function WalletPage() {
   const { access_token, loading, logout, customer } = useAuth();
   const [balance, setBalance] = useState<{ balance: number; currency: string } | null>(null);
   const [txns, setTxns] = useState<WalletTxn[] | null>(null);
-  const [amount, setAmount] = useState("");
-  const [busy, setBusy] = useState(false);
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [page, setPage] = useState(1);
@@ -72,29 +70,6 @@ function WalletPage() {
   }
   if (!access_token) return <Navigate to="/login" replace />;
 
-  const applyAmount = async (kind: "credit" | "debit") => {
-    const n = Number(amount);
-    if (!n || n <= 0) {
-      toast.error(t("wallet.errors.positiveAmount"));
-      return;
-    }
-    setBusy(true);
-    try {
-      const row = kind === "credit" ? await fixoSdk.walletCredit(n) : await fixoSdk.walletDebit(n);
-      toast.success(
-        t(kind === "credit" ? "wallet.toast.credited" : "wallet.toast.debited", {
-          amount: fmtMoney(row.amount, row.currency),
-        }),
-      );
-      setAmount("");
-      await load();
-    } catch {
-      // toast already emitted
-    } finally {
-      setBusy(false);
-    }
-  };
-
   const currency = balance?.currency ?? "TZS";
   const credited = (txns ?? []).filter((t) => t.entry_type === "CREDIT").reduce((s, t) => s + t.amount, 0);
   const debited = (txns ?? []).filter((t) => t.entry_type === "DEBIT").reduce((s, t) => s + t.amount, 0);
@@ -117,26 +92,12 @@ function WalletPage() {
         <MetricCard icon={ArrowUpRight} label={t("wallet.metrics.totalDebited")} hint={t("wallet.metrics.allTime")} value={fmtMoney(debited, currency)} tone="destructive" />
       </div>
 
-      <div className="mt-6 flex flex-wrap items-end gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
-        <div className="min-w-[180px] flex-1 space-y-1.5">
-          <Label htmlFor="amount">{t("wallet.amountLabel", { currency })}</Label>
-          <Input
-            id="amount"
-            type="number"
-            min="1"
-            step="0.01"
-            inputMode="decimal"
-            placeholder={t("wallet.amountPlaceholder")}
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-        </div>
-        <Button disabled={busy} onClick={() => void applyAmount("credit")} className="gap-2">
-          <ArrowDownLeft className="size-4" /> {t("wallet.creditButton")}
-        </Button>
-        <Button disabled={busy} variant="outline" onClick={() => void applyAmount("debit")} className="gap-2">
-          <ArrowUpRight className="size-4" /> {t("wallet.debitButton")}
-        </Button>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-card p-4 shadow-[var(--shadow-card)]">
+        <p className="text-sm text-muted-foreground">
+          {t("wallet.creditsNote", {
+            defaultValue: "Wallet credit comes from refunds, promotions, referrals and loyalty rewards, and can be used when you pay for a booking.",
+          })}
+        </p>
         <Button variant="ghost" size="icon" onClick={() => void load()} title={t("wallet.refresh")}>
           <RefreshCw className="size-4" />
         </Button>
