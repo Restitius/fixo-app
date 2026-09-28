@@ -111,12 +111,12 @@ class Composition:
         from app.adapters.persistence.evidence_sql_adapter import EvidenceSqlAdapter
         from app.adapters.persistence.favorite_sql_adapter import FavoriteSqlAdapter
         from app.adapters.persistence.home_read_adapter import (
-            ActiveBookingStubReader,
+            ActiveBookingReader,
             HomeCatalogReadAdapter,
             HomeEnvironmentReadAdapter,
-            NotificationStubReader,
+            NotificationReader,
             RecommendationStubReader,
-            WalletStubReader,
+            WalletReader,
         )
         from app.adapters.persistence.invoice_sql_adapter import InvoiceSqlAdapter
         from app.adapters.persistence.location_sql_adapter import LocationSqlAdapter
@@ -661,9 +661,9 @@ class Composition:
         # Home aggregator read ports (stubs swap for real adapters in later phases).
         self._home_environment = HomeEnvironmentReadAdapter(self.sql_query_manager)
         self._home_catalog = HomeCatalogReadAdapter(self.sql_query_manager)
-        self._home_bookings = ActiveBookingStubReader()
-        self._home_wallet = WalletStubReader()
-        self._home_notifications = NotificationStubReader()
+        self._home_bookings = ActiveBookingReader(lambda: self.booking_service())
+        self._home_wallet = WalletReader(lambda: self.wallet_service())
+        self._home_notifications = NotificationReader(lambda: self.notification_service())
         self._home_recommendations = RecommendationStubReader()
 
         settings = get_settings()
