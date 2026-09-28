@@ -10,7 +10,7 @@ SELECT CAST(:request_id AS uuid), CAST(:user_id AS uuid),
                  JOIN "SERVICE_REQUESTS" r ON r.request_id = mc.request_id
                 WHERE mc.provider_id = CAST(:user_id AS uuid)
                   AND mc.request_id = CAST(:request_id AS uuid)
-                  AND r.status IN ('VALID', 'SUBMITTED'))
+                  AND r.status IN ('VALID', 'SUBMITTED', 'MATCHING'))
    AND NOT EXISTS (SELECT 1 FROM "QUOTATIONS" q
                     WHERE q.request_id = CAST(:request_id AS uuid)
                       AND q.provider_id = CAST(:user_id AS uuid))

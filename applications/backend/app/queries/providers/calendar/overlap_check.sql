@@ -6,6 +6,6 @@ SELECT b.booking_id, b.booking_number, b.scheduled_date, b.time_window, b.status
   JOIN "CUSTOMERS" c ON c.customer_id = b.customer_id
  WHERE b.provider_id = CAST(:user_id AS uuid)
    AND b.scheduled_date = CAST(:scheduled_date AS date)
-   AND b.status IN ('CONFIRMED', 'PREPARING', 'TRAVELING', 'ARRIVED', 'WORK_STARTED')
+   AND b.status IN ('CONFIRMED', 'PAYMENT_AUTHORIZED', 'ON_THE_WAY', 'ARRIVED', 'STARTED', 'IN_PROGRESS')
    AND (CAST(:exclude_booking_id AS uuid) IS NULL OR b.booking_id != CAST(:exclude_booking_id AS uuid))
  ORDER BY b.scheduled_date;

@@ -27,7 +27,7 @@ WITH updated AS (
                       JOIN "SERVICE_REQUESTS" r ON r.request_id = mc.request_id
                      WHERE mc.provider_id = CAST(:user_id AS uuid)
                        AND mc.request_id = CAST(:request_id AS uuid)
-                       AND r.status IN ('VALID', 'SUBMITTED'))
+                       AND r.status IN ('VALID', 'SUBMITTED', 'MATCHING'))
     RETURNING q.quote_id, q.status
 ), created AS (
     INSERT INTO "QUOTATIONS" (
@@ -47,7 +47,7 @@ WITH updated AS (
                      JOIN "SERVICE_REQUESTS" r ON r.request_id = mc.request_id
                     WHERE mc.provider_id = CAST(:user_id AS uuid)
                       AND mc.request_id = CAST(:request_id AS uuid)
-                      AND r.status IN ('VALID', 'SUBMITTED'))
+                      AND r.status IN ('VALID', 'SUBMITTED', 'MATCHING'))
     RETURNING quote_id, status
 )
 SELECT quote_id, status FROM created

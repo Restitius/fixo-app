@@ -1,4 +1,5 @@
--- CUS.MATCH.PROVIDERS.SEARCH — candidate pool: offers the service, active,
+-- CUS.MATCH.PROVIDERS.SEARCH — candidate pool: offers the service (approved
+-- listing only, never DRAFT/PENDING/ARCHIVED), active,
 -- located in the request's city or region. repeat_customer flags prior
 -- ACCEPTED-quote history with this customer (drives MATCH.REPEAT_PROVIDER).
 SELECT p.provider_id, p.display_name, p.city, p.region,
@@ -15,6 +16,7 @@ SELECT p.provider_id, p.display_name, p.city, p.region,
   FROM "PROVIDER_SERVICES" ps
   JOIN "PROVIDERS" p ON p.provider_id = ps.provider_id
  WHERE ps.service_id = CAST(:service_id AS uuid)
+   AND ps.status = 'APPROVED'
    AND p.is_active
    AND (p.city = COALESCE(NULLIF(:city, ''), p.city)
         OR p.region = COALESCE(NULLIF(:region, ''), p.region))

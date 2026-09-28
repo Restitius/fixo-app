@@ -1,8 +1,9 @@
 -- CUS.TRACKING.LATEST — most recent known provider position + trail summary.
-SELECT l.latitude, l.longitude, l.recorded_at,
+SELECT l.latitude, l.longitude, l.recorded_at, b0.eta_minutes,
        (SELECT count(*) FROM "PROVIDER_LOCATIONS" t
          WHERE t.booking_id = l.booking_id) AS ping_count
   FROM "PROVIDER_LOCATIONS" l
+  JOIN "BOOKINGS" b0 ON b0.booking_id = l.booking_id
  WHERE l.booking_id = CAST(:booking_id AS uuid)
    AND EXISTS (
        SELECT 1 FROM "BOOKINGS" b

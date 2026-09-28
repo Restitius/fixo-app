@@ -56,7 +56,7 @@ export const Route = createFileRoute("/bookings")({
   component: BookingsPage,
 });
 
-const STAGES = ["CONFIRMED", "ON_THE_WAY", "ARRIVED", "STARTED", "IN_PROGRESS", "COMPLETION_REQUESTED", "CUSTOMER_CONFIRMED", "PAID", "CLOSED"];
+const STAGES = ["CONFIRMED", "PAYMENT_AUTHORIZED", "ON_THE_WAY", "ARRIVED", "STARTED", "IN_PROGRESS", "COMPLETION_REQUESTED", "CUSTOMER_CONFIRMED", "PAID", "CLOSED"];
 
 function BookingsPage() {
   const [search, setSearch] = useState("");
@@ -299,7 +299,7 @@ function BookingsPage() {
               </ol>
 
               <div className="mt-5 grid grid-cols-2 gap-2">
-                <ActionButton icon={Navigation} label="Start trip" onClick={startTrip} disabled={busy || detail.status !== "CONFIRMED"} />
+                <ActionButton icon={Navigation} label="Start trip" onClick={startTrip} disabled={busy || detail.status !== "PAYMENT_AUTHORIZED"} />
                 <ActionButton icon={PlayCircle} label="Start job" onClick={startJob} disabled={busy || detail.status !== "ARRIVED" || !arrival?.verified_at} />
                 <ActionButton icon={Camera} label="Add evidence" onClick={() => toast.info("Use the file picker on this booking's evidence tab (see Evidence panel below).")} disabled={busy} />
                 <ActionButton icon={ClipboardList} label="Mark complete" onClick={markComplete} disabled={busy || (detail.status !== "STARTED" && detail.status !== "IN_PROGRESS")} />

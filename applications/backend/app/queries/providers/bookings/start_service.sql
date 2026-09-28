@@ -11,9 +11,9 @@ UPDATE "BOOKINGS"
                              WHEN ps.pricing_model = 'HOURLY' THEN now()
                              ELSE timer_started_at
                            END,
-       current_latitude  = CASE WHEN :gps_lat IS NOT NULL THEN CAST(:gps_lat AS numeric)
+       current_latitude  = CASE WHEN CAST(:gps_lat AS numeric) IS NOT NULL THEN CAST(:gps_lat AS numeric)
                                 ELSE current_latitude END,
-       current_longitude = CASE WHEN :gps_lng IS NOT NULL THEN CAST(:gps_lng AS numeric)
+       current_longitude = CASE WHEN CAST(:gps_lng AS numeric) IS NOT NULL THEN CAST(:gps_lng AS numeric)
                                 ELSE current_longitude END,
        updated_at        = now()
   FROM "PROVIDER_SERVICES" ps
@@ -31,6 +31,9 @@ RETURNING "BOOKINGS".booking_id, "BOOKINGS".booking_number,
     SELECT 'NTF.SERVICE.STARTED.V1', 'customer', customer_id,
            jsonb_build_object('booking_id', booking_id, 'booking_number', booking_number)
       FROM changed
+), tl AS (
+    INSERT INTO "BOOKING_TIMELINE" (booking_id, event, detail)
+    SELECT booking_id, 'SERVICE_STARTED', 'Work has started' FROM changed
 )
 SELECT booking_id, status, started_at, timer_started_at,
        current_latitude, current_longitude, updated_at FROM changed;
