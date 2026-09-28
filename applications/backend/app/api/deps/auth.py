@@ -28,6 +28,9 @@ async def get_current_customer(
     customer = await composition.customer_repository.get_by_id(str(claims.get("sub", "")))
     if not customer:
         raise AuthenticationError("Account no longer exists")
+    if customer.get("status") != "ACTIVE":
+        # Closed / suspended accounts lose access immediately, not when the token expires.
+        raise AuthenticationError("Account is not active")
     return customer
 
 

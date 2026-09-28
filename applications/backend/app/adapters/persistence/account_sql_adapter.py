@@ -125,3 +125,9 @@ class AccountClosureSqlAdapter(AccountClosureRepositoryPort):
             "CUS.ACCOUNT.CLOSURE.SCHEDULE", {"user_id": customer_id}
         )
         return rows[0] if rows else None
+
+    async def closure_preview(self, customer_id: str) -> dict[str, Any]:
+        rows = await self._queries.execute(
+            "CUS.ACCOUNT.CLOSURE.PREVIEW", {"user_id": customer_id}
+        )
+        return dict(rows[0]) if rows else {}

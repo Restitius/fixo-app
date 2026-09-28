@@ -95,3 +95,13 @@ def test_screen_permissions_wildcard():
     assert ScreenPermissions.satisfies(frozenset({"*"}), screen)
     assert ScreenPermissions.satisfies(frozenset({"t.view"}), screen)
     assert not ScreenPermissions.satisfies(frozenset({"other.view"}), screen)
+
+
+def test_tokens_minted_in_the_same_second_are_distinct():
+    from app.security.jwt import JwtService
+
+    jwt_service = JwtService("s" * 32)
+    claims = {"sub": "user-1", "role": "customer"}
+    refresh = {jwt_service.encode_refresh(claims) for _ in range(20)}
+    access = {jwt_service.encode_access(claims) for _ in range(20)}
+    assert len(refresh) == 20 and len(access) == 20

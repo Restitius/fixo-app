@@ -1,6 +1,7 @@
 """JwtService — token minting/verification (PyJWT)."""
 from __future__ import annotations
 
+import uuid
 from datetime import UTC, datetime, timedelta
 
 import jwt
@@ -59,5 +60,9 @@ class JwtService:
             "iat": now,
             "exp": now + timedelta(seconds=ttl),
             "typ": typ,
+            # Unique per token: two tokens minted for the same subject within one
+            # second would otherwise be byte-identical, so a rotated refresh
+            # token could equal (and revive) the one it just replaced.
+            "jti": uuid.uuid4().hex,
         }
         return jwt.encode(payload, self.secret, algorithm=self.algorithm)

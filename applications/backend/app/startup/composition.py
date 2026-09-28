@@ -1460,7 +1460,11 @@ class Composition:
         """AccountClosureService â Module 50."""
         from app.domains.accounts.services.account_service import AccountClosureService
 
-        return AccountClosureService(self.account_closure_repository)
+        return AccountClosureService(
+            self.account_closure_repository,
+            customers=self.customer_repository,
+            hasher=self._hasher,
+        )
 
     def wallet_service(self) -> Any:
         """WalletService â Module 34."""

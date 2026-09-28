@@ -126,7 +126,21 @@ async def list_exports(
     return ok(await svc.list_exports(str(customer["customer_id"]), limit=limit, offset=offset))
 
 
-@router.post("/closure")
-async def schedule_closure(customer: CurrentCustomer) -> dict:
+class ClosureRequest(BaseModel):
+    password: str | None = None
+
+
+@router.get("/closure/preview")
+async def closure_preview(customer: CurrentCustomer) -> dict:
     svc = get_composition().account_closure_service()
-    return ok(await svc.schedule_closure(str(customer["customer_id"])), title="Account closure scheduled")
+    return ok(await svc.preview(str(customer["customer_id"])))
+
+
+@router.post("/closure")
+async def schedule_closure(customer: CurrentCustomer, payload: ClosureRequest | None = None) -> dict:
+    svc = get_composition().account_closure_service()
+    password = payload.password if payload else None
+    return ok(
+        await svc.schedule_closure(str(customer["customer_id"]), password),
+        title="Account closure scheduled",
+    )
