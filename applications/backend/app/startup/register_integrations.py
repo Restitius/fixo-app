@@ -6,6 +6,7 @@ definitions here establish the stable IDs (INT-*) domains will reference.
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,13 @@ def register_integrations(integration_registry: Any) -> None:
     adapters reference are seeded so the registry stays self-consistent as the
     platform/ adapter layers come online.
     """
+    from app.config import get_settings
     from app.registries.integrations.integration_definition import IntegrationDefinition
+
+    settings = get_settings()
+    # Kill switches: SMS follows SWALA_SMS_ENABLED (and needs a key); email needs an SMTP host.
+    sms_enabled = bool(settings.swala_sms_enabled and settings.swala_sms_api_key)
+    email_enabled = bool(os.environ.get("EMAIL_PRIMARY_HOST"))
 
     seeds = [
         IntegrationDefinition(
@@ -56,8 +63,8 @@ def register_integrations(integration_registry: Any) -> None:
             provider="smtp",
             category="email",
             credentials_key="EMAIL_PRIMARY",
-            enabled=False,
-            description="Transactional email (adapter pending).",
+            enabled=email_enabled,
+            description="Transactional email over SMTP (enabled when EMAIL_PRIMARY_HOST is set).",
         ),
         IntegrationDefinition(
             integration_id="INT-SMS-001",
@@ -72,7 +79,7 @@ def register_integrations(integration_registry: Any) -> None:
             category="sms",
             credentials_key="SWALA_SMS",
             base_url_env="SWALA_SMS_BASE_URL",
-            enabled=True,
+            enabled=sms_enabled,
             timeout_seconds=10.0,
             max_retries=2,
             environment="sandbox",

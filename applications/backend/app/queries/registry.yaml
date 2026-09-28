@@ -123,6 +123,13 @@ queries:
       ownership_filter_required: false
       requires_auth: false
     sql: customers/auth/otp_issue.sql
+  CUS.AUTH.OTP.RECENT_COUNT:
+    description: Counts OTPs issued for a customer and purpose inside a rolling window, used to rate-limit resends.
+    operation: read
+    security:
+      ownership_filter_required: false
+      requires_auth: false
+    sql: customers/auth/otp_recent_count.sql
   CUS.AUTH.OTP.VERIFY:
     description: CUS.AUTH.OTP.VERIFY registered query.
     operation: read
