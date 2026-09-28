@@ -10,7 +10,6 @@ from app.ports.persistence.account_ports import (
     PrivacyRepositoryPort,
     SecurityRepositoryPort,
 )
-from app.shared.exceptions.hierarchy import AuthenticationError
 
 
 class PaymentMethodService:
@@ -85,7 +84,7 @@ class SecurityService:
         # actually verify the current password and hash the new one.
         customer = await self._customers.get_by_id_with_hash(customer_id)
         if not customer or not self._hasher.verify(current_password, customer["password_hash"]):
-            raise AuthenticationError("Current password is incorrect")
+            raise ValueError("Current password is incorrect")
         result = await self._repo.change_password(customer_id, self._hasher.hash(new_password))
         if not result:
             raise ValueError("Password update failed")
@@ -134,13 +133,39 @@ class PrivacyService:
 
 
 class AccountClosureService:
-    """Module 50 — reversible account closure (30-day window via DB trigger)."""
+    """Module 50 — account closure with a consequences preview and identity check."""
 
-    def __init__(self, repo: AccountClosureRepositoryPort) -> None:
+    RETAINED_NOTE = (
+        "Bookings, invoices and payment records are kept for legal and financial "
+        "reasons; your profile, addresses, saved payment methods and preferences "
+        "are no longer used."
+    )
+
+    def __init__(self, repo: AccountClosureRepositoryPort, customers: Any = None, hasher: Any = None) -> None:
         self._repo = repo
+        self._customers = customers
+        self._hasher = hasher
 
-    async def schedule_closure(self, customer_id: str) -> dict[str, Any]:
+    async def preview(self, customer_id: str) -> dict[str, Any]:
+        info = await self._repo.closure_preview(customer_id)
+        blockers = []
+        if info.get("active_bookings"):
+            blockers.append("You have bookings in progress. Complete or cancel them first.")
+        if info.get("open_disputes"):
+            blockers.append("You have open disputes. Wait for them to be resolved or withdraw them.")
+        return {**info, "blockers": blockers, "can_close": not blockers, "retained_data": self.RETAINED_NOTE}
+
+    async def schedule_closure(self, customer_id: str, password: str | None = None) -> dict[str, Any]:
+        from app.shared.exceptions.hierarchy import ConflictError, ValidationError
+
+        if self._customers is not None and self._hasher is not None:
+            customer = await self._customers.get_by_id_with_hash(customer_id)
+            if not password or not customer or not self._hasher.verify(password, customer["password_hash"]):
+                raise ValidationError("Enter your current password to confirm account closure")
+        preview = await self.preview(customer_id)
+        if not preview["can_close"]:
+            raise ConflictError(" ".join(preview["blockers"]))
         result = await self._repo.schedule_closure(customer_id)
-        if result is None:
-            raise RuntimeError("Failed to schedule account closure")
-        return result
+        if not result or not result.get("closed"):
+            raise ConflictError("This account cannot be closed right now")
+        return {**result, "retained_data": self.RETAINED_NOTE}
