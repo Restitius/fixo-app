@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { VerificationBadge } from "@/components/providers/VerificationBadge";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -230,6 +231,7 @@ function ProvidersPage() {
                       <div className="min-w-[180px] flex-1">
                         <div className="flex items-center gap-2">
                           <h3 className="font-semibold">{p.display_name}</h3>
+                          <VerificationBadge verified={p.is_verified} />
                           {p.rating_avg >= 4.8 && (
                             <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
                               <Award className="size-3" /> {t("common.topRated")}

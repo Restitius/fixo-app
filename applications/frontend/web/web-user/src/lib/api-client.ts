@@ -561,10 +561,13 @@ export interface ProviderListing {
   rating_count: number;
   jobs_completed: number;
   base_amount: number;
+  is_verified?: boolean;
+  verification_status?: string;
 }
 
 export interface ProviderProfile extends Omit<ProviderListing, "base_amount"> {
   bio?: string | null;
+  years_experience?: number | null;
   created_at: string;
   services: { service_id: string; slug: string; name: string; base_amount: number }[];
 }
@@ -626,7 +629,9 @@ export interface MatchCandidate {
   headline: string;
   city: string;
   rating_avg: number;
+  rating_count?: number;
   jobs_completed: number;
+  is_verified?: boolean;
 }
 
 export interface Quote {
@@ -642,6 +647,8 @@ export interface Quote {
   display_name: string;
   headline: string;
   rating_avg: number;
+  rating_count?: number;
+  is_verified?: boolean;
   request_status?: string;
 }
 
