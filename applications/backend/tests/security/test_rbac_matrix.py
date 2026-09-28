@@ -117,6 +117,8 @@ _KNOWN_EXCEPTIONS = {
     ("GET", "/api/v1/public/services"): "public service catalogue",
     ("GET", "/api/v1/public/services/search"): "public service catalogue search",
     ("GET", "/api/v1/public/faqs"): "public FAQ content",
+    ("GET", "/api/v1/messages"): "public catalogue of system message copy (no user data)",
+    ("GET", "/api/v1/messages/{message_key}"): "public system message copy lookup (no user data)",
     ("GET", "/api/v1/ratings/providers/{provider_id}/stars"): "public rating summary for a provider profile",
     ("GET", "/api/v1/providers/me/ranking/leaderboard"):
         "intentionally public despite the /me/ path segment — verified in "

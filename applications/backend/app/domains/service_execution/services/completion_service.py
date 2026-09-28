@@ -15,7 +15,9 @@ class CompletionService:
         bookings: Any,       # BookingRepository port
         workflows: Any,      # WorkflowManager (injected)
         notifications: Any | None = None,
+        invoices: Any | None = None,     # InvoiceService (Module 27)
     ) -> None:
+        self._invoices = invoices
         self._bookings = bookings
         self._workflows = workflows
         self._notifications = notifications
@@ -45,5 +47,13 @@ class CompletionService:
         )
         # NTF.SERVICE.COMPLETED.V1 outbox row is queued atomically inside
         # CUS.BOOKING.MARK_COMPLETED.
+
+        # The customer receives their invoice as soon as they confirm the job.
+        # Best-effort: a billing hiccup must not undo a confirmed completion.
+        if self._invoices is not None:
+            try:
+                await self._invoices.ensure_issued(customer_id, booking_id)
+            except Exception as exc:  # noqa: BLE001
+                logger.warning("invoice not issued for %s: %s", booking["booking_number"], exc)
         logger.info("completion confirmed for %s", booking["booking_number"])
         return await self._bookings.get(customer_id, booking_id)
