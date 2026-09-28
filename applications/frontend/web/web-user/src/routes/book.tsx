@@ -6,7 +6,6 @@ import {
   Award,
   Bug,
   Banknote,
-  BadgeCheck,
   Briefcase,
   Calendar as CalendarIcon,
   Camera,
@@ -44,6 +43,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
+import { VerificationBadge } from "@/components/providers/VerificationBadge";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Textarea } from "@/components/ui/textarea";
@@ -1140,7 +1140,7 @@ function BookPage() {
                             <div>
                               <div className="flex items-center gap-2">
                                 <p className="font-semibold">{q.display_name}</p>
-                                <BadgeCheck className="size-4 text-primary" />
+                                <VerificationBadge verified={q.is_verified} compact />
                                 {isPreferred && (
                                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
                                     {t("provider.yourPick")}
