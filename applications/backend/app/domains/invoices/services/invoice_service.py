@@ -38,6 +38,13 @@ class InvoiceService:
             raise ValidationError("Could not finalize the invoice")
         return row
 
+    async def ensure_issued(self, customer_id: str, booking_id: str) -> dict[str, Any]:
+        """Finalize (idempotent) and issue the invoice for a confirmed booking."""
+        row = await self.finalize(customer_id, booking_id)
+        if row.get("status") == "DRAFT":
+            await self.issue(customer_id, str(row["invoice_id"]))
+        return row
+
     async def issue(self, customer_id: str, invoice_id: str) -> dict[str, Any]:
         invoice = await self.get(customer_id, invoice_id)
         if invoice["status"] != "DRAFT":
