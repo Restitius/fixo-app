@@ -14,7 +14,7 @@ UPDATE "ASSETS"
  WHERE asset_id = CAST(:asset_id AS uuid)
    AND customer_id = CAST(:customer_id AS uuid)
    AND status <> 'ARCHIVED'
-   AND (:property_id IS NULL OR EXISTS (
+   AND (CAST(:property_id AS uuid) IS NULL OR EXISTS (
         SELECT 1 FROM "PROPERTIES" p
          WHERE p.property_id = CAST(:property_id AS uuid)
            AND p.customer_id = CAST(:customer_id AS uuid)

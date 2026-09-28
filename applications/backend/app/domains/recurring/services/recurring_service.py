@@ -26,7 +26,7 @@ class RecurringService:
         if data["frequency"] not in FREQUENCIES:
             raise ValidationError(f"frequency must be one of {sorted(FREQUENCIES)}")
         if "next_run_date" not in data or not data["next_run_date"]:
-            data["next_run_date"] = (date.today() + timedelta(days=7)).isoformat()
+            data["next_run_date"] = date.today() + timedelta(days=7)
         row = await self._recurrings.create(customer_id, data)
         if not row:
             raise ValidationError("Could not create the subscription")
