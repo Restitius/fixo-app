@@ -1,6 +1,6 @@
 -- CUS.BOOKING.GET — owned booking with full context.
 SELECT b.booking_id, b.booking_number, b.status, b.agreed_amount, b.currency,
-       b.scheduled_date, b.time_window, b.payment_attempts,
+       b.scheduled_date, b.time_window, b.payment_attempts, b.reschedule_count,
        b.arrival_code, b.arrived_at, b.verified_at,
        b.started_at, b.completed_at,
        r.selected_provider_id, b.created_at, b.updated_at,

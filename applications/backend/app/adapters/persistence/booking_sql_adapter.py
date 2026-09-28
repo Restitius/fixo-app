@@ -155,6 +155,20 @@ class BookingSqlAdapter:
             fetch="one",
         )
 
+    async def reschedule(
+        self, customer_id: str, booking_id: str, scheduled_date: Any, time_window: str,
+        max_reschedules: int, detail: str,
+    ) -> dict[str, Any] | None:
+        return await self._sql.execute(
+            "CUS.BOOKING.RESCHEDULE",
+            {
+                "customer_id": customer_id, "booking_id": booking_id,
+                "scheduled_date": scheduled_date, "time_window": time_window,
+                "max_reschedules": max_reschedules, "detail": detail,
+            },
+            fetch="one",
+        )
+
     async def set_scheduled_date(self, booking_id: str, scheduled_date: str) -> dict[str, Any] | None:
         return await self._sql.execute(
             "CUS.BOOKING.SET_SCHEDULE",
