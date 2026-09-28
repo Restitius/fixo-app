@@ -669,7 +669,7 @@ export interface BookingRow {
   address_label?: string;
   address_street?: string;
   address_city?: string;
-  payment?: { payment_id: string; status: string; gateway_ref?: string | null };
+  payment?: { payment_id: string; status: string; gateway_ref?: string | null; failure_reason?: string | null };
 }
 
 export const bookingApi = {
@@ -735,8 +735,10 @@ export const bookingApi = {
 
   confirmBooking: (quoteId: string) =>
     apiClient.post<BookingRow>("/bookings", { quote_id: quoteId }).then((r) => r.data),
-  authorizeBookingPayment: (bookingId: string) =>
-    apiClient.post<BookingRow>(`/bookings/${bookingId}/authorize-payment`).then((r) => r.data),
+  authorizeBookingPayment: (bookingId: string, paymentMethod: "WALLET" | "EXTERNAL" = "EXTERNAL") =>
+    apiClient
+      .post<BookingRow>(`/bookings/${bookingId}/authorize-payment`, { payment_method: paymentMethod })
+      .then((r) => r.data),
   getBooking: (bookingId: string) =>
     apiClient.get<BookingRow>(`/bookings/${bookingId}`).then((r) => r.data),
 
