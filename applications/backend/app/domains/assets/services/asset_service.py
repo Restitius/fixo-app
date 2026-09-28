@@ -32,12 +32,12 @@ class AssetService:
             "name": dto.name,
             "asset_type": dto.asset_type,
             "property_id": dto.property_id,
-            "brand": None,
-            "serial_number": None,
+            "brand": dto.brand,
+            "serial_number": dto.serial_number,
             "purchase_value": dto.purchase_value,
             "currency": dto.currency,
             "purchased_at": dto.purchased_at,
-            "warranty_until": None,
+            "warranty_until": dto.warranty_until,
             "notes": dto.notes,
         })
         if not row:
@@ -80,11 +80,11 @@ class AssetService:
             "asset_id": str(dto.asset_id),
             "name": dto.name,
             "asset_type": dto.asset_type,
-            "brand": None,
-            "serial_number": None,
+            "brand": dto.brand,
+            "serial_number": dto.serial_number,
             "property_id": None,
             "purchased_at": dto.purchased_at,
-            "warranty_until": None,
+            "warranty_until": dto.warranty_until,
             "notes": dto.notes,
         })
         if not row:
