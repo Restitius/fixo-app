@@ -79,7 +79,13 @@ class MatchingService:
             matches.append(saved)
 
         # Instant estimates from the top providers' rate cards.
-        base_by_provider = {str(c["provider_id"]): float(c["base_amount"]) for c in pool}
+        # Providers that offer the service but haven't set a base price get no
+        # instant estimate; they can still respond with a real quote.
+        base_by_provider = {
+            str(c["provider_id"]): float(c["base_amount"])
+            for c in pool
+            if c.get("base_amount") is not None
+        }
         for m in matches[:INSTANT_QUOTES]:
             pid = str(m["provider_id"])
             if pid in base_by_provider:
