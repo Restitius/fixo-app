@@ -1,7 +1,8 @@
 -- CUS.QUOTES.LIST — all quotes of one owned request with provider identity.
 SELECT q.quote_id, q.provider_id, q.amount, q.currency, q.lead_time_days,
        q.message, q.status, q.valid_until, q.created_at,
-       p.display_name, p.headline, p.rating_avg
+       p.display_name, p.headline, p.rating_avg, p.rating_count,
+       p.verification_status, (p.verification_status = 'VERIFIED') AS is_verified
   FROM "QUOTATIONS" q
   JOIN "PROVIDERS" p ON p.provider_id = q.provider_id
  WHERE q.request_id = CAST(:request_id AS uuid)
