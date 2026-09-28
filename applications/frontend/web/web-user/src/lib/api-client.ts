@@ -319,6 +319,19 @@ export interface Consent {
   revoked_at?: string | null;
 }
 
+export interface HomeDashboard {
+  quick_stats: { active_bookings: number; unread_notifications: number; wallet_balance: number };
+  active_bookings: Array<{
+    booking_id: string;
+    booking_number: string;
+    status: string;
+    scheduled_date?: string | null;
+    time_window?: string | null;
+    service_name?: string | null;
+    provider_name?: string | null;
+  }>;
+}
+
 export interface ClosurePreview {
   active_bookings: number;
   pending_payments: number;
@@ -479,6 +492,9 @@ export const fixoSdk = {
       .then((r) => r.data),
   listSessions: () =>
     apiClient.get<AuthSession[]>("/account/security/sessions").then((r) => r.data),
+
+  // ---- Home ------------------------------------------------------------------
+  homeDashboard: () => apiClient.get<HomeDashboard>("/home/dashboard").then((r) => r.data),
 
   // ---- Account closure ------------------------------------------------------
   closurePreview: () =>
