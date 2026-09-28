@@ -87,15 +87,20 @@ const HIGHLIGHT_TAG_LABEL_KEYS: Record<string, string> = {
 };
 const ENCODE_RE = /^\[\[A:([^\]]*)\]\](?:\[\[T:([^\]]*)\]\])?\s?/;
 
-function encodeComment(aspects: Record<string, number>, tags: string[], text: string): string {
-  const aspectStr = ASPECTS.map((a) => `${a.key}${aspects[a.key] ?? 0}`).join("");
-  const parts = [`[[A:${aspectStr}]]`];
-  if (tags.length) parts.push(`[[T:${tags.join(",")}]]`);
-  const prefix = parts.join("");
-  const remaining = Math.max(0, 500 - prefix.length - 1);
-  return `${prefix} ${text.trim().slice(0, remaining)}`.trim();
+// Aspect scores are stored as named fields (quality / punctuality / communication / value);
+// the dialog keeps the one-letter keys internally.
+const ASPECT_NAMES: Record<string, string> = { Q: "quality", P: "punctuality", C: "communication", V: "value" };
+
+function toWireAspects(aspects: Record<string, number>): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const [letter, name] of Object.entries(ASPECT_NAMES)) {
+    const v = aspects[letter] ?? 0;
+    if (v > 0) out[name] = v;
+  }
+  return out;
 }
 
+/** Reads the structured fields; falls back to the legacy packed comment of older reviews. */
 function decodeComment(comment?: string | null): { aspects: Record<string, number>; tags: string[]; text: string } {
   const aspects: Record<string, number> = {};
   let tags: string[] = [];
@@ -111,6 +116,19 @@ function decodeComment(comment?: string | null): { aspects: Record<string, numbe
     text = text.slice(m[0].length);
   }
   return { aspects, tags, text };
+}
+
+function ratingParts(rating: BookingRating): { aspects: Record<string, number>; tags: string[]; text: string } {
+  const structured = rating.aspects && Object.keys(rating.aspects).length > 0;
+  if (structured || (rating.tags && rating.tags.length > 0)) {
+    const aspects: Record<string, number> = {};
+    for (const [letter, name] of Object.entries(ASPECT_NAMES)) {
+      const v = rating.aspects?.[name];
+      if (v) aspects[letter] = v;
+    }
+    return { aspects, tags: rating.tags ?? [], text: rating.comment ?? "" };
+  }
+  return decodeComment(rating.comment);
 }
 
 function iconForService(name?: string | null) {
@@ -395,7 +413,7 @@ function ReviewDetailsPanel({ row, onClose, onEdit }: { row: FeedbackRow; onClos
   const { t } = useTranslation("support");
   const navigate = useNavigate();
   const rating = row.rating!;
-  const decoded = decodeComment(rating.comment);
+  const decoded = ratingParts(rating);
   const aspectValues = ASPECTS.map((a) => decoded.aspects[a.key] ?? 0).filter((v) => v > 0);
   const hasAspects = aspectValues.length > 0;
 
@@ -488,6 +506,7 @@ function RateDialog({
   const [overall, setOverall] = useState(0);
   const [aspects, setAspects] = useState<Record<string, number>>({});
   const [tags, setTags] = useState<string[]>([]);
+  const [recommend, setRecommend] = useState<boolean | null>(null);
   const [text, setText] = useState("");
   const [photoNames, setPhotoNames] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -495,13 +514,15 @@ function RateDialog({
   useEffect(() => {
     if (!row) return;
     if (row.rating) {
-      const decoded = decodeComment(row.rating.comment);
+      const decoded = ratingParts(row.rating);
       setOverall(row.rating.rating);
+      setRecommend(row.rating.recommend ?? null);
       setAspects(decoded.aspects);
       setTags(decoded.tags);
       setText(decoded.text);
     } else {
       setOverall(0);
+      setRecommend(null);
       setAspects({});
       setTags([]);
       setText("");
@@ -520,8 +541,12 @@ function RateDialog({
     }
     setSubmitting(true);
     try {
-      const comment = encodeComment(aspects, tags, text);
-      const res = await fixoSdk.submitRating(row.booking.booking_id, overall, comment);
+      const res = await fixoSdk.submitRating(row.booking.booking_id, overall, {
+        comment: text.trim(),
+        aspects: toWireAspects(aspects),
+        tags,
+        recommend,
+      });
       if (photoNames.length > 0) {
         toast.info(t("feedback.dialog.photoAttachmentsNotAvailable"));
       }
@@ -589,6 +614,28 @@ function RateDialog({
                     <span className="text-xs font-medium">{t(`feedback.aspects.${a.labelKey}`)}</span>
                     <StarPicker size="size-3.5" value={aspects[a.key] ?? 0} onChange={(n) => setAspects((prev) => ({ ...prev, [a.key]: n }))} />
                   </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 font-semibold">
+                {t("feedback.dialog.recommendQuestion", { defaultValue: "Would you recommend this provider?" })}{" "}
+                <span className="font-normal text-muted-foreground">({t("feedback.dialog.optional")})</span>
+              </p>
+              <div className="flex gap-2">
+                {([true, false] as const).map((v) => (
+                  <button
+                    key={String(v)}
+                    type="button"
+                    aria-pressed={recommend === v}
+                    onClick={() => setRecommend((prev) => (prev === v ? null : v))}
+                    className={`rounded-xl border px-4 py-2 text-sm font-medium ${
+                      recommend === v ? "border-primary bg-primary/5 text-primary" : "border-border hover:bg-muted"
+                    }`}
+                  >
+                    {v ? t("feedback.dialog.yes", { defaultValue: "Yes" }) : t("feedback.dialog.no", { defaultValue: "No" })}
+                  </button>
                 ))}
               </div>
             </div>
