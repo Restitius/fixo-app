@@ -290,7 +290,12 @@ function LoyaltyPage() {
 
           <div className="rounded-3xl bg-card p-5 shadow-[var(--shadow-card)]">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{t("loyalty.rewards.availableRewards")}</h3>
+              <h3 className="text-lg font-semibold">
+                {t("loyalty.rewards.availableRewards")}{" "}
+                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 align-middle text-xs font-medium text-muted-foreground">
+                  {t("loyalty.rewards.comingSoon", { defaultValue: "Coming soon" })}
+                </span>
+              </h3>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3">
               {REWARD_CATALOG.slice(0, 2).map((r) => (

@@ -26,8 +26,7 @@
       "quickActions": "快捷操作",
       "earnPoints": "赚取积分",
       "redeemReward": "兑换奖励",
-      "viewRules": "查看规则",
-      "conversionNote": "100 积分 = TZS 1,000 奖励额度"
+      "viewRules": "查看规则"
     },
     "activity": {
       "recentActivity": "最近积分动态",
