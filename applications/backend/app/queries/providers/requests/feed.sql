@@ -26,7 +26,8 @@ SELECT mc.match_id, mc.score, mc.rank_pos, mc.strategy,
   LEFT JOIN "QUOTATIONS" q
     ON q.request_id = mc.request_id AND q.provider_id = mc.provider_id
  WHERE mc.provider_id = CAST(:user_id AS uuid)
-   AND r.status IN ('VALID', 'SUBMITTED')
+   AND (r.status IN ('VALID', 'SUBMITTED', 'MATCHING')
+        OR (r.status = 'PROVIDER_SELECTED' AND r.selected_provider_id = mc.provider_id))
    AND NOT EXISTS (SELECT 1 FROM "PROVIDER_REQUEST_RESPONSES" resp
                     WHERE resp.provider_id = mc.provider_id
                       AND resp.request_id = mc.request_id

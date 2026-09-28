@@ -38,7 +38,7 @@ SELECT CAST(:user_id AS uuid), CAST(:request_id AS uuid),
                       JOIN "SERVICE_REQUESTS" r ON r.request_id = mc.request_id
                      WHERE mc.provider_id = CAST(:user_id AS uuid)
                        AND mc.request_id = CAST(:request_id AS uuid)
-                       AND r.status IN ('VALID', 'SUBMITTED'))
+                       AND r.status IN ('VALID', 'SUBMITTED', 'MATCHING'))
         AND (CAST(:response_type AS VARCHAR(12)) = 'QUESTION'
              OR NOT EXISTS (SELECT 1 FROM "PROVIDER_REQUEST_RESPONSES" x
                              WHERE x.provider_id = CAST(:user_id AS uuid)

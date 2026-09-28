@@ -42,6 +42,11 @@ WITH ins AS (
            jsonb_build_object('booking_id', upd.booking_id, 'booking_number', upd.booking_number)
       FROM upd
     RETURNING outbox_id
+), tl AS (
+    INSERT INTO "BOOKING_TIMELINE" (booking_id, event, detail)
+    SELECT booking_id, 'COMPLETION_REQUESTED', 'Provider marked the job complete - awaiting your confirmation'
+      FROM upd
+    RETURNING timeline_id
 )
 SELECT i.completion_id, i.booking_id, i.provider_id, i.completion_notes,
        i.work_performed, i.materials_summary, i.before_after_evidence,
