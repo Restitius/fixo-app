@@ -65,9 +65,12 @@ const TAB_LABEL_KEYS: Record<Tab, string> = {
 // The real notification types the backend actually emits (see notify() call
 // sites across bookings/payments/invoices/tracking/maintenance services).
 // "Bookings" groups the booking lifecycle; "Payments" groups money/billing.
+// The API returns registry ids such as NTF.BOOKING.CONFIRMED.V1; classify on the part after NTF.
+const normType = (type: string) => type.replace(/^NTF\./, "");
+
 function category(type: string): "bookings" | "payments" | "other" {
-  if (type.startsWith("BOOKING") || type.startsWith("SERVICE") || type.startsWith("MAINTENANCE")) return "bookings";
-  if (type.startsWith("PAYMENT") || type.startsWith("INVOICE")) return "payments";
+  if (normType(type).startsWith("BOOKING") || normType(type).startsWith("SERVICE") || normType(type).startsWith("MAINTENANCE")) return "bookings";
+  if (normType(type).startsWith("PAYMENT") || normType(type).startsWith("INVOICE")) return "payments";
   return "other";
 }
 
@@ -79,11 +82,11 @@ function matchesTab(n: NotificationRow, tab: Tab): boolean {
 }
 
 function iconFor(type: string) {
-  if (type.startsWith("PAYMENT")) return { Icon: Wallet, tone: "bg-primary/10 text-primary" };
-  if (type.startsWith("INVOICE")) return { Icon: FileText, tone: "bg-sky-500/15 text-sky-600" };
-  if (type.startsWith("SERVICE")) return { Icon: CheckCircle2, tone: "bg-success/15 text-success" };
-  if (type.startsWith("MAINTENANCE")) return { Icon: Wrench, tone: "bg-amber-500/15 text-amber-600" };
-  if (type.startsWith("BOOKING")) return { Icon: Calendar, tone: "bg-sky-500/15 text-sky-600" };
+  if (normType(type).startsWith("PAYMENT")) return { Icon: Wallet, tone: "bg-primary/10 text-primary" };
+  if (normType(type).startsWith("INVOICE")) return { Icon: FileText, tone: "bg-sky-500/15 text-sky-600" };
+  if (normType(type).startsWith("SERVICE")) return { Icon: CheckCircle2, tone: "bg-success/15 text-success" };
+  if (normType(type).startsWith("MAINTENANCE")) return { Icon: Wrench, tone: "bg-amber-500/15 text-amber-600" };
+  if (normType(type).startsWith("BOOKING")) return { Icon: Calendar, tone: "bg-sky-500/15 text-sky-600" };
   return { Icon: Bell, tone: "bg-muted text-muted-foreground" };
 }
 
@@ -146,7 +149,7 @@ function detailFields(n: NotificationRow, enrich: Enrichment | null, defaultMeth
       value: b.address_city ? `${b.address_street ? `${b.address_street}, ` : ""}${b.address_city}` : "—",
     });
     rows.push({ icon: Receipt, label: t("detail.relatedAmount"), value: fmtMoney(b.agreed_amount, b.currency) });
-    if (n.type.startsWith("PAYMENT")) {
+    if (normType(n.type).startsWith("PAYMENT")) {
       rows.push({ icon: methodIcon(defaultMethod?.type), label: t("detail.paymentMethod"), value: methodLabel(defaultMethod) });
     }
   } else if (enrich?.invoice) {
