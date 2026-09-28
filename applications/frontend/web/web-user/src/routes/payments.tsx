@@ -165,6 +165,8 @@ function PaymentsPage() {
 
   const now = new Date();
   const thisMonthCharges = (charges ?? []).filter((c) => {
+    // Cancelled and failed bookings were never charged.
+    if (c.status === "CANCELLED" || c.status === "PAYMENT_FAILED") return false;
     const d = new Date(c.created_at);
     return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   });

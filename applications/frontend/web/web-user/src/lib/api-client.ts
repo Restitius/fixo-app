@@ -292,6 +292,7 @@ export interface InvoiceRow {
   booking_number: string;
   provider_name: string;
   service_name?: string | null;
+  payment_gateway?: string | null;
 }
 
 export interface InvoiceItem {
