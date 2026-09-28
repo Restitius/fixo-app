@@ -19,6 +19,8 @@ const STATUS_TONES: Record<string, PillTone> = {
   WORK_COMPLETED: "success",
   AUTHORIZED: "primary",
   CONFIRMED: "primary",
+  PAYMENT_AUTHORIZED: "primary",
+  ON_THE_WAY: "primary",
   SUBMITTED: "primary",
   VIEWED: "primary",
   PROCESSING: "primary",
