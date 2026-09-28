@@ -1,16 +1,18 @@
 -- CUS.CATALOG.CATEGORIES — active categories with live service counts and
--- real pricing/rating/jobs aggregates from providers who offer this category.
+-- real pricing/rating/jobs aggregates from providers with an APPROVED listing in this category.
 WITH provider_category AS (
-    SELECT s.category_id, p.provider_id, p.rating_avg, p.jobs_completed,
+    SELECT s.category_id, p.provider_id, p.rating_avg, p.rating_count, p.jobs_completed,
            MIN(ps.base_amount) AS min_amount
       FROM "PROVIDER_SERVICES" ps
       JOIN "SERVICES" s ON s.service_id = ps.service_id AND s.is_active
       JOIN "PROVIDERS" p ON p.provider_id = ps.provider_id AND p.is_active
-     GROUP BY s.category_id, p.provider_id, p.rating_avg, p.jobs_completed
+     WHERE ps.status = 'APPROVED'
+     GROUP BY s.category_id, p.provider_id, p.rating_avg, p.rating_count, p.jobs_completed
 ), category_stats AS (
     SELECT category_id,
            MIN(min_amount) AS min_price,
-           ROUND(AVG(rating_avg)::numeric, 1) AS avg_rating,
+           -- unrated (new) providers have no rating; averaging their 0 would drag it down
+           ROUND((AVG(rating_avg) FILTER (WHERE rating_count > 0))::numeric, 1) AS avg_rating,
            SUM(jobs_completed) AS total_jobs,
            COUNT(DISTINCT provider_id) AS provider_count
       FROM provider_category
