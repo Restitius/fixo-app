@@ -17,12 +17,28 @@ class RatingService:
         self._repo = repo
         self._bookings = bookings
 
-    async def submit(self, booking_id: str, customer_id: str, rating: int, comment: str | None = None) -> dict[str, Any]:
+    ASPECTS = ("quality", "punctuality", "communication", "professionalism", "value")
+
+    async def submit(
+        self, booking_id: str, customer_id: str, rating: int, comment: str | None = None,
+        aspects: dict[str, int] | None = None, tags: list[str] | None = None,
+        recommend: bool | None = None,
+    ) -> dict[str, Any]:
         if not (1 <= rating <= 5):
             raise ValueError("Rating must be 1-5")
         if comment is not None and len(comment) > 500:
             raise ValueError("Comment must be ≤500 characters")
-        result = await self._repo.submit(booking_id, customer_id, rating, comment)
+        clean_aspects: dict[str, int] = {}
+        for name, score in (aspects or {}).items():
+            if name not in self.ASPECTS:
+                raise ValueError(f"Unknown rating aspect '{name}'")
+            if not (1 <= int(score) <= 5):
+                raise ValueError(f"Aspect '{name}' must be scored 1-5")
+            clean_aspects[name] = int(score)
+        clean_tags = [t.strip()[:40] for t in (tags or []) if t and t.strip()][:8]
+        result = await self._repo.submit(
+            booking_id, customer_id, rating, comment, clean_aspects, clean_tags, recommend
+        )
         if result is None:
             raise ValueError("Cannot rate this booking (must be CLOSED and owned by you)")
         if self._bookings is not None:
