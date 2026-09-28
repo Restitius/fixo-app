@@ -29,6 +29,7 @@ class HomeService:
     async def dashboard(self, customer_id: str, full_name: str = "") -> dict[str, Any]:
         env, categories, popular = await self._gather_core(customer_id)
         active_bookings = await self._bookings.active(customer_id)
+        active_total = await self._bookings.active_count(customer_id)
         balance = await self._wallet.balance(customer_id)
         unread = await self._notifications.unread_count(customer_id)
         recommended = await self._recommendations.for_customer(customer_id)
@@ -38,7 +39,7 @@ class HomeService:
             "greeting": f"Welcome back, {first}",
             "environment": env,
             "quick_stats": {
-                "active_bookings": len(active_bookings),
+                "active_bookings": active_total,
                 "unread_notifications": unread,
                 "wallet_balance": balance.get("balance", 0),
             },
