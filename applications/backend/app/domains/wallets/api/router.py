@@ -25,17 +25,3 @@ async def transactions(
     svc = get_composition().wallet_service()
     rows = await svc.transactions(str(customer["customer_id"]), limit, offset)
     return ok(rows)
-
-
-@router.post("/credit")
-async def credit(customer: CurrentCustomer, amount: float = Query(..., gt=0)) -> dict:
-    svc = get_composition().wallet_service()
-    row = await svc.credit(str(customer["customer_id"]), amount)
-    return ok(row, title="Wallet credited")
-
-
-@router.post("/debit")
-async def debit(customer: CurrentCustomer, amount: float = Query(..., gt=0)) -> dict:
-    svc = get_composition().wallet_service()
-    row = await svc.debit(str(customer["customer_id"]), amount)
-    return ok(row, title="Wallet debited")

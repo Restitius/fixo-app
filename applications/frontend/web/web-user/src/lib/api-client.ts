@@ -326,14 +326,6 @@ export const fixoSdk = {
     apiClient
       .get<WalletTxn[]>(`/wallet/transactions${qs({ limit, offset })}`)
       .then((r) => r.data),
-  walletCredit: (amount: number) =>
-    apiClient
-      .post<WalletTxn>(`/wallet/credit${qs({ amount })}`)
-      .then((r) => r.data),
-  walletDebit: (amount: number) =>
-    apiClient
-      .post<WalletTxn>(`/wallet/debit${qs({ amount })}`)
-      .then((r) => r.data),
 
   // ---- Promotions ---------------------------------------------------------
   listPromotions: (limit = 20, offset = 0) =>
@@ -355,14 +347,6 @@ export const fixoSdk = {
   loyaltyTransactions: (limit = 20, offset = 0) =>
     apiClient
       .get<LoyaltyTxn[]>(`/loyalty/transactions${qs({ limit, offset })}`)
-      .then((r) => r.data),
-  loyaltyEarn: (points: number, activity = "MANUAL") =>
-    apiClient
-      .post<LoyaltyTxn>(`/loyalty/earn${qs({ points, activity })}`)
-      .then((r) => r.data),
-  loyaltySpend: (points: number, activity = "REDEMPTION") =>
-    apiClient
-      .post<LoyaltyTxn>(`/loyalty/spend${qs({ points, activity })}`)
       .then((r) => r.data),
 
   // ---- History / Activity -------------------------------------------------
