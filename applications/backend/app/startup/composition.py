@@ -688,6 +688,7 @@ class Composition:
     def auth_service(self) -> Any:
         """AuthService with ONLY ports + security helpers injected."""
         from app.domains.customers.services.auth_service import AuthService
+        from app.domains.customers.services.otp_delivery import OtpDelivery
         from app.platform.events.event_manager import EventManager
 
         events = EventManager() if _event_bus_available() else None
@@ -698,6 +699,7 @@ class Composition:
             hasher=self._hasher,
             jwt_service=self.jwt,
             events=events,
+            otp_delivery=OtpDelivery(self.messaging_adapter),
         )
 
     def provider_auth_service(self) -> Any:
