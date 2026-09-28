@@ -6,6 +6,7 @@
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Trash2,
   User,
   MapPin,
   CreditCard,
@@ -48,6 +49,7 @@ import { PageShell } from "@/components/dashboard/PageShell";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { DeleteAccountDialog } from "@/components/profile/DeleteAccountDialog";
 import { LANGUAGE_NAMES } from "@/lib/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1071,6 +1073,7 @@ function PrivacyTab() {
   const [requesting, setRequesting] = useState(false);
   const [showSharing, setShowSharing] = useState(false);
   const [showCookies, setShowCookies] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const { values: sharing, toggle: toggleSharing } = usePreferenceMap(SHARING_KINDS.map((k) => k.key), SHARING_DEFAULTS);
   const { values: cookiePrefs, toggle: toggleCookie } = usePreferenceMap(["COOKIES_ANALYTICS"], { COOKIES_ANALYTICS: false });
   const { setValue: setVisibility } = usePreferenceMap([], {});
@@ -1188,6 +1191,13 @@ function PrivacyTab() {
               value={t("privacy.downloadOrDeleteHint")}
               action={<Button size="sm" variant="outline" disabled={requesting} onClick={() => void requestExport()} className="gap-1">{requesting ? t("privacy.requesting") : t("privacy.downloadMyData")} <ChevronRight className="size-3.5" /></Button>}
             />
+            <Field
+              icon={Trash2}
+              label={t("privacy.deleteAccount", { defaultValue: "Delete account" })}
+              value={t("privacy.deleteAccountHint", { defaultValue: "Close your account. Some records are kept as required by law." })}
+              action={<Button size="sm" variant="outline" onClick={() => setShowDelete(true)} className="gap-1 text-destructive">{t("privacy.deleteAccountCta", { defaultValue: "Delete account" })}</Button>}
+            />
+            <DeleteAccountDialog open={showDelete} onOpenChange={setShowDelete} />
           </div>
           {exports && exports.length > 0 && (
             <div className="mt-2 border-t border-border pt-3">
