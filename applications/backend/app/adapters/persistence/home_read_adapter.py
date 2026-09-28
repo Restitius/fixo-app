@@ -7,6 +7,7 @@ dashboard response shape stays stable across phases.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from typing import Any
 
 from app.platform.query.sql_query_manager import SQLQueryManager
@@ -61,25 +62,44 @@ class HomeCatalogReadAdapter:
 # -- Future-phase ports: stable empty payloads until their domains land --------
 
 
-class ActiveBookingStubReader:
-    """ActiveBookingReadPort — bookings arrive with Phase 6/7."""
+_TERMINAL_BOOKING_STATUSES = frozenset({"CLOSED", "CANCELLED"})
+
+
+class ActiveBookingReader:
+    """ActiveBookingReadPort — the customer's bookings that are still in flight."""
+
+    def __init__(self, booking_service_factory: Callable[[], Any]) -> None:
+        self._factory = booking_service_factory
 
     async def active(self, customer_id: str, limit: int = 3) -> list[dict[str, Any]]:
-        return []
+        rows = await self._factory().list(customer_id, limit=50)
+        live = [r for r in rows if r.get("status") not in _TERMINAL_BOOKING_STATUSES]
+        return live[:limit]
+
+    async def active_count(self, customer_id: str) -> int:
+        rows = await self._factory().list(customer_id, limit=200)
+        return sum(1 for r in rows if r.get("status") not in _TERMINAL_BOOKING_STATUSES)
 
 
-class WalletStubReader:
-    """WalletReadPort — wallet arrives with Phase 12."""
+class WalletReader:
+    """WalletReadPort — the customer's real wallet balance."""
+
+    def __init__(self, wallet_service_factory: Callable[[], Any]) -> None:
+        self._factory = wallet_service_factory
 
     async def balance(self, customer_id: str) -> dict[str, Any]:
-        return {"balance": 0, "currency": "USD", "available": False}
+        row = await self._factory().balance(customer_id)
+        return {**row, "available": True}
 
 
-class NotificationStubReader:
-    """NotificationReadPort — notification center arrives with Phase 14."""
+class NotificationReader:
+    """NotificationReadPort — the real unread badge count."""
+
+    def __init__(self, notification_service_factory: Callable[[], Any]) -> None:
+        self._factory = notification_service_factory
 
     async def unread_count(self, customer_id: str) -> int:
-        return 0
+        return int(await self._factory().unread_count(customer_id))
 
 
 class RecommendationStubReader:
