@@ -1,7 +1,7 @@
 """Authentication router — register / login / OTP / refresh / me."""
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Header
 from pydantic import BaseModel, EmailStr, Field
@@ -31,11 +31,13 @@ class LoginRequest(BaseModel):
 
 class OtpRequestRequest(BaseModel):
     email: EmailStr
+    channel: Literal["EMAIL", "SMS"] = "EMAIL"
 
 
 class OtpVerifyRequest(BaseModel):
     email: EmailStr
     code: str = Field(min_length=4, max_length=8)
+    channel: Literal["EMAIL", "SMS"] = "EMAIL"
 
 
 class RefreshRequest(BaseModel):
@@ -84,7 +86,7 @@ async def login(
 @router.post("/otp/request")
 async def request_otp(payload: OtpRequestRequest) -> dict:
     return ok(
-        await get_composition().auth_service().request_otp(payload.email),
+        await get_composition().auth_service().request_otp(payload.email, payload.channel),
         message_id="MSG.AUTH.OTP.SENT.V1",
     )
 
@@ -92,7 +94,7 @@ async def request_otp(payload: OtpRequestRequest) -> dict:
 @router.post("/otp/verify")
 async def verify_otp(payload: OtpVerifyRequest) -> dict:
     return ok(
-        await get_composition().auth_service().verify_otp(payload.email, payload.code),
+        await get_composition().auth_service().verify_otp(payload.email, payload.code, payload.channel),
         message_id="MSG.AUTH.OTP.VERIFIED.V1",
     )
 
