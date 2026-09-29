@@ -68,12 +68,10 @@ class PromotionSqlAdapter(PromotionRepositoryPort):
             "limit": min(max(limit, 1), 100), "offset": max(offset, 0),
         })
 
-    async def validate(self, code: str, amount: float) -> dict[str, Any] | None:
-        rows = await self._q.execute("CUS.PROMOTION.VALIDATE", {"code": code, "amount": amount})
-        return rows[0] if rows else None
-
-    async def use(self, promo_id: str) -> dict[str, Any] | None:
-        rows = await self._q.execute("CUS.PROMOTION.USE", {"promo_id": promo_id})
+    async def validate(self, code: str, amount: float, customer_id: str | None = None) -> dict[str, Any] | None:
+        rows = await self._q.execute(
+            "CUS.PROMOTION.VALIDATE", {"code": code, "amount": amount, "customer_id": customer_id}
+        )
         return rows[0] if rows else None
 
 

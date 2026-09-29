@@ -1294,6 +1294,7 @@ class Composition:
             workflows=self.workflow_manager,
             notifications=self.notification_manager,
             settlement=self.payment_settlement_service(),
+            promotions=self.promotion_service(),
         )
 
     def payment_settlement_service(self) -> Any:
