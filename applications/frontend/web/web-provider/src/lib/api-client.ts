@@ -828,6 +828,10 @@ export const bookingsApi = {
 export const trackingApi = {
   startTrip: (bookingId: string) => apiClient.post<{ booking_id: string; trip_started_at: string }>(`/providers/me/tracking/bookings/${bookingId}/start-trip`).then((r) => r.data),
   endTrip: (bookingId: string) => apiClient.post(`/providers/me/tracking/bookings/${bookingId}/end-trip`).then((r) => r.data),
+  updateLocation: (bookingId: string, latitude: number, longitude: number, etaMinutes?: number) =>
+    apiClient
+      .put(`/providers/me/tracking/bookings/${bookingId}/location${qs({ latitude, longitude, eta_minutes: etaMinutes })}`)
+      .then((r) => r.data),
 };
 
 export const arrivalApi = {
@@ -853,21 +857,30 @@ export const checklistApi = {
 export const evidenceApi = {
   add: (bookingId: string, data: { phase: string; kind: string; title?: string; media_url?: string }) =>
     apiClient.post<EvidenceItem>(`/providers/me/evidence/bookings/${bookingId}`, data).then((r) => r.data),
-  list: (bookingId: string) => apiClient.get<EvidenceItem[]>(`/providers/me/evidence/bookings/${bookingId}`).then((r) => r.data),
+  list: (bookingId: string) =>
+    apiClient
+      .get<{ booking_id: string; items: EvidenceItem[] }>(`/providers/me/evidence/bookings/${bookingId}`)
+      .then((r) => r.data.items),
   delete: (bookingId: string, evidenceId: string) => apiClient.delete(`/providers/me/evidence/bookings/${bookingId}/${evidenceId}`).then((r) => r.data),
 };
 
 export const materialsApi = {
   add: (bookingId: string, data: { item_name: string; quantity: number; amount?: number; currency?: string }) =>
     apiClient.post<MaterialItem>(`/providers/me/materials/bookings/${bookingId}`, data).then((r) => r.data),
-  list: (bookingId: string) => apiClient.get<MaterialItem[]>(`/providers/me/materials/bookings/${bookingId}`).then((r) => r.data),
+  list: (bookingId: string) =>
+    apiClient
+      .get<{ booking_id: string; items: MaterialItem[] }>(`/providers/me/materials/bookings/${bookingId}`)
+      .then((r) => r.data.items),
   delete: (bookingId: string, materialId: string) => apiClient.delete(`/providers/me/materials/bookings/${bookingId}/${materialId}`).then((r) => r.data),
 };
 
 export const changeRequestsApi = {
   submit: (bookingId: string, data: { change_type: string; proposed_value: string; reason?: string }) =>
     apiClient.post<ChangeRequestItem>(`/providers/me/change-requests/bookings/${bookingId}`, data).then((r) => r.data),
-  list: (bookingId: string) => apiClient.get<ChangeRequestItem[]>(`/providers/me/change-requests/bookings/${bookingId}`).then((r) => r.data),
+  list: (bookingId: string) =>
+    apiClient
+      .get<{ booking_id: string; items: ChangeRequestItem[] }>(`/providers/me/change-requests/bookings/${bookingId}`)
+      .then((r) => r.data.items),
 };
 
 export const completionApi = {
