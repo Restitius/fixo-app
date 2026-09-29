@@ -180,6 +180,8 @@ export interface BookingHistoryRow {
   currency: string
   created_at: string
   completed_at?: string | null
+  promo_code?: string | null
+  discount_amount?: number | null
   service_name?: string | null
   provider_name?: string | null
 }
@@ -308,7 +310,6 @@ export const fixoSdk = {
     apiClient.get<Promotion[]>(`/promotions${qs({ limit, offset })}`).then((r) => r.data),
   validatePromotion: (code: string, amount: number) =>
     apiClient.post<PromotionValidation>(`/promotions/validate${qs({ code, amount })}`).then((r) => r.data),
-  usePromotion: (promoId: string) => apiClient.post<Promotion>(`/promotions/${promoId}/use`).then((r) => r.data),
 
   // ---- Loyalty ------------------------------------------------------------
   loyaltyAccount: () => apiClient.get<LoyaltyAccount>('/loyalty/account').then((r) => r.data),
@@ -486,6 +487,8 @@ export interface BookingRow {
   scheduled_date: string
   time_window?: string | null
   arrival_code?: string
+  promo_code?: string | null
+  discount_amount?: number | null
   selected_provider_id: string
   provider_name?: string
   provider_headline?: string
@@ -532,7 +535,8 @@ export const bookingApi = {
   listQuotes: (id: string) => apiClient.get<Quote[]>(`/service-requests/${id}/quotes`).then((r) => r.data),
   acceptQuote: (quoteId: string) => apiClient.post<Quote>(`/quotes/${quoteId}/accept`).then((r) => r.data),
 
-  confirmBooking: (quoteId: string) => apiClient.post<BookingRow>('/bookings', { quote_id: quoteId }).then((r) => r.data),
+  confirmBooking: (quoteId: string, promoCode?: string) =>
+    apiClient.post<BookingRow>('/bookings', { quote_id: quoteId, promo_code: promoCode || undefined }).then((r) => r.data),
   authorizeBookingPayment: (bookingId: string) => apiClient.post<BookingRow>(`/bookings/${bookingId}/authorize-payment`).then((r) => r.data),
   cancelBooking: (bookingId: string) => apiClient.post<BookingRow>(`/bookings/${bookingId}/cancel`).then((r) => r.data),
   getBooking: (bookingId: string) => apiClient.get<BookingRow>(`/bookings/${bookingId}`).then((r) => r.data),
