@@ -146,6 +146,7 @@ function RequestsPage() {
                       </button>
                       <Link
                         to="/quotes"
+                        search={{ requestId: r.request_id }}
                         onClick={(e) => e.stopPropagation()}
                         className="rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold hover:bg-muted"
                       >
