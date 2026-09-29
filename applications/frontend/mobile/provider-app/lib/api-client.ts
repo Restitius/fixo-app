@@ -681,13 +681,24 @@ export const requestsApi = {
   get: (requestId: string) => apiClient.get<RequestFeedItem>(`/providers/requests/${requestId}`).then((r) => r.data),
 };
 
+// submit/withdraw only RETURN the guarded UPDATE's confirmation row - quote_id,
+// the new status and a timestamp - never the full quote. Typing them as
+// QuoteDetail let a caller trust fields (total_amount, currency, ...) that
+// were never actually in the response.
+export interface QuoteStatusChange {
+  quote_id: string;
+  status: string;
+  submitted_at?: string | null;
+  updated_at?: string | null;
+}
+
 export const quotesApi = {
   list: () => apiClient.get<QuoteRow[]>("/providers/quotations").then((r) => r.data),
   get: (quoteId: string) => apiClient.get<QuoteDetail>(`/providers/quotations/${quoteId}`).then((r) => r.data),
   save: (requestId: string, data: Partial<QuoteDetail> & { total_amount: number }) =>
     apiClient.post<QuoteDetail>(`/providers/quotations/${requestId}`, data).then((r) => r.data),
-  submit: (quoteId: string) => apiClient.post<QuoteDetail>(`/providers/quotations/${quoteId}/submit`).then((r) => r.data),
-  withdraw: (quoteId: string) => apiClient.post<QuoteDetail>(`/providers/quotations/${quoteId}/withdraw`).then((r) => r.data),
+  submit: (quoteId: string) => apiClient.post<QuoteStatusChange>(`/providers/quotations/${quoteId}/submit`).then((r) => r.data),
+  withdraw: (quoteId: string) => apiClient.post<QuoteStatusChange>(`/providers/quotations/${quoteId}/withdraw`).then((r) => r.data),
 };
 
 // ---------------------------------------------------------------------------
