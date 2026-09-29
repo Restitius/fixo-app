@@ -195,6 +195,8 @@ export interface BookingHistoryRow {
   currency: string;
   created_at: string;
   completed_at?: string | null;
+  promo_code?: string | null;
+  discount_amount?: number | null;
   service_name?: string | null;
   provider_name?: string | null;
 }
@@ -381,10 +383,6 @@ export const fixoSdk = {
   validatePromotion: (code: string, amount: number) =>
     apiClient
       .post<PromotionValidation>(`/promotions/validate${qs({ code, amount })}`)
-      .then((r) => r.data),
-  usePromotion: (promoId: string) =>
-    apiClient
-      .post<Promotion>(`/promotions/${promoId}/use`)
       .then((r) => r.data),
 
   // ---- Loyalty ------------------------------------------------------------
@@ -702,6 +700,8 @@ export interface BookingRow {
   time_window?: string | null;
   arrival_code?: string;
   reschedule_count?: number;
+  promo_code?: string | null;
+  discount_amount?: number | null;
   selected_provider_id: string;
   provider_name?: string;
   provider_headline?: string;
@@ -774,8 +774,10 @@ export const bookingApi = {
   acceptQuote: (quoteId: string) =>
     apiClient.post<Quote>(`/quotes/${quoteId}/accept`).then((r) => r.data),
 
-  confirmBooking: (quoteId: string) =>
-    apiClient.post<BookingRow>("/bookings", { quote_id: quoteId }).then((r) => r.data),
+  confirmBooking: (quoteId: string, promoCode?: string) =>
+    apiClient
+      .post<BookingRow>("/bookings", { quote_id: quoteId, promo_code: promoCode || undefined })
+      .then((r) => r.data),
   authorizeBookingPayment: (bookingId: string, paymentMethod: "WALLET" | "EXTERNAL" = "EXTERNAL") =>
     apiClient
       .post<BookingRow>(`/bookings/${bookingId}/authorize-payment`, { payment_method: paymentMethod })

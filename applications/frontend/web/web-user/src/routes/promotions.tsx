@@ -1,7 +1,7 @@
 // Promotions — active offers, code validation, and a promotion-details side
 // panel that squeezes the page layout (no dark overlay), matching the
 // pattern established on the Invoices page.
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BadgePercent,
@@ -52,11 +52,6 @@ export const Route = createFileRoute("/promotions")({
   component: PromotionsPage,
 });
 
-// The backend never records per-customer redemption history (PROMOTIONS.used_count
-// is a single global counter with no customer/date/amount trail), so "Recent
-// redemptions" is a local, honest ledger of promotions this browser has actually
-// applied via the real /promotions/{id}/use call — never invented example rows.
-const LEDGER_PREFIX = "fixo.promo_redemptions.";
 const EXPIRING_SOON_DAYS = 7;
 const ROW_TONES = [
   "bg-primary/10 text-primary",
@@ -64,35 +59,15 @@ const ROW_TONES = [
   "bg-sky-500/15 text-sky-600",
 ];
 
+// "Recent redemptions" is real data: past bookings that actually carried a promo
+// code, read straight off the booking's own discount_amount/promo_code snapshot —
+// never a client-side or invented record.
 interface RedemptionEntry {
-  promo_id: string;
   code: string;
   savings: number;
   currency: string;
   at: string;
-}
-
-function ledgerKey(customerId?: string) {
-  return `${LEDGER_PREFIX}${customerId ?? "anon"}`;
-}
-
-function loadLedger(customerId?: string): RedemptionEntry[] {
-  try {
-    const raw = localStorage.getItem(ledgerKey(customerId));
-    return raw ? (JSON.parse(raw) as RedemptionEntry[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function appendLedger(customerId: string | undefined, entry: RedemptionEntry): RedemptionEntry[] {
-  const next = [entry, ...loadLedger(customerId)].slice(0, 50);
-  try {
-    localStorage.setItem(ledgerKey(customerId), JSON.stringify(next));
-  } catch {
-    // storage unavailable — the ledger just won't persist across reloads
-  }
-  return next;
+  bookingNumber: string;
 }
 
 // Category keys are canonical, English identifiers used only to look up a
@@ -170,13 +145,13 @@ function Field({ icon: Icon, label, value }: { icon: typeof MapPin; label: strin
 
 function PromotionsPage() {
   const { t } = useTranslation("rewards");
+  const navigate = useNavigate();
   const { access_token, loading, logout, customer } = useAuth();
   const [promos, setPromos] = useState<Promotion[] | null>(null);
   const [code, setCode] = useState("");
   const [amount, setAmount] = useState("40000");
   const [result, setResult] = useState<PromotionValidation | null>(null);
   const [validating, setValidating] = useState(false);
-  const [applying, setApplying] = useState(false);
   const [ledger, setLedger] = useState<RedemptionEntry[]>([]);
   const [selected, setSelected] = useState<Promotion | null>(null);
   const [showAllPromos, setShowAllPromos] = useState(false);
@@ -195,8 +170,24 @@ function PromotionsPage() {
   }, [access_token, loading, load]);
 
   useEffect(() => {
-    if (customer?.customer_id) setLedger(loadLedger(customer.customer_id));
-  }, [customer?.customer_id]);
+    if (!(access_token && !loading)) return;
+    void fixoSdk
+      .bookingHistory(undefined, 100, 0)
+      .then((rows) =>
+        setLedger(
+          rows
+            .filter((r) => (r.discount_amount ?? 0) > 0 && r.promo_code)
+            .map((r) => ({
+              code: r.promo_code as string,
+              savings: r.discount_amount as number,
+              currency: r.currency,
+              at: r.created_at,
+              bookingNumber: r.booking_number,
+            })),
+        ),
+      )
+      .catch(() => setLedger([]));
+  }, [access_token, loading]);
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center">{t("promotions.loading")}</div>;
@@ -225,33 +216,17 @@ function PromotionsPage() {
     }
   };
 
-  async function applyPromotion(p: Promotion) {
-    const amt = Number(amount);
-    if (!amt || amt <= 0) {
-      toast.error(t("promotions.toasts.enterOrderAmountToCalc"));
-      return;
-    }
-    setApplying(true);
+  // Promo codes are only ever spent for real at checkout (each customer can use a
+  // given code once — enforced when the booking is created). This just carries
+  // the code over to Book a Service so it's ready to apply there.
+  function applyAtCheckout(p: Promotion) {
     try {
-      const validated = await fixoSdk.validatePromotion(p.code, amt);
-      await fixoSdk.usePromotion(p.promo_id);
-      const entry: RedemptionEntry = {
-        promo_id: p.promo_id,
-        code: p.code,
-        savings: validated.discount_amount,
-        currency: "TZS",
-        at: new Date().toISOString(),
-      };
-      setLedger(appendLedger(customer?.customer_id, entry));
-      toast.success(t("promotions.toasts.appliedSaved", { code: p.code, amount: fmtMoney(validated.discount_amount) }));
-      setResult(null);
-      setCode("");
-      load();
+      sessionStorage.setItem("fixo.pendingPromoCode", p.code);
     } catch {
-      // toast emitted by client
-    } finally {
-      setApplying(false);
+      // sessionStorage unavailable — the customer can still type the code by hand
     }
+    toast.success(t("promotions.toasts.readyAtCheckout", { code: p.code, defaultValue: "{{code}} is ready — it'll apply when you book." }));
+    void navigate({ to: "/book" });
   }
 
   async function shareCode(p: Promotion) {
@@ -275,7 +250,7 @@ function PromotionsPage() {
 
   const visiblePromos = showAllPromos ? promos ?? [] : (promos ?? []).slice(0, 3);
   const visibleRedemptions = showAllRedemptions ? ledger : ledger.slice(0, 5);
-  const selectedRecentUse = selected ? ledger.filter((r) => r.promo_id === selected.promo_id).slice(0, 3) : [];
+  const selectedRecentUse = selected ? ledger.filter((r) => r.code === selected.code).slice(0, 3) : [];
   const selectedCategoryKey = selected ? inferCategoryKey(selected) : null;
 
   return (
@@ -431,7 +406,7 @@ function PromotionsPage() {
                   </thead>
                   <tbody>
                     {visibleRedemptions.map((r, i) => (
-                      <tr key={`${r.promo_id}-${r.at}-${i}`} className="border-b border-border last:border-0">
+                      <tr key={`${r.code}-${r.at}-${i}`} className="border-b border-border last:border-0">
                         <td className="py-3 font-semibold text-primary">{r.code}</td>
                         <td className="px-4 py-3 text-muted-foreground">{fmtDate(r.at)}</td>
                         <td className="px-4 py-3 font-semibold">{fmtMoney(r.savings, r.currency)}</td>
@@ -522,7 +497,7 @@ function PromotionsPage() {
                     <tbody>
                       {selectedRecentUse.map((r, i) => (
                         <tr key={`${r.at}-${i}`}>
-                          <td className="py-1.5 text-muted-foreground">—</td>
+                          <td className="py-1.5 text-muted-foreground">{r.bookingNumber}</td>
                           <td className="py-1.5 text-muted-foreground">{fmtDate(r.at)}</td>
                           <td className="py-1.5 font-semibold">{fmtMoney(r.savings, r.currency)}</td>
                         </tr>
@@ -548,8 +523,7 @@ function PromotionsPage() {
               </div>
 
               <button
-                disabled={applying}
-                onClick={() => void applyPromotion(selected)}
+                onClick={() => applyAtCheckout(selected)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
                 style={{ backgroundImage: "var(--gradient-primary)" }}
               >
