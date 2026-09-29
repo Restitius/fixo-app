@@ -927,13 +927,6 @@ queries:
       ownership_filter_required: false
       requires_auth: true
     sql: customers/promotions/list_active.sql
-  CUS.PROMOTION.USE:
-    description: CUS.PROMOTION.USE registered query.
-    operation: update
-    security:
-      ownership_filter_required: false
-      requires_auth: true
-    sql: customers/promotions/use.sql
   CUS.PROMOTION.VALIDATE:
     description: CUS.PROMOTION.VALIDATE registered query.
     operation: read
