@@ -74,7 +74,7 @@ function RegisterCustomerPage() {
 
   return (
     <AnimatedAuthShell>
-      <section className="mx-auto w-full max-w-[590px] rounded-[26px] bg-white/95 px-6 py-6 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-10">
+      <section className="auth-register-card rounded-[26px] bg-white/95 px-6 py-6 shadow-[0_28px_90px_rgba(54,30,116,.16)] backdrop-blur md:px-10">
         <AuthBrand compact />
         <header className="mt-5 text-center">
           <h1 className="text-3xl font-extrabold tracking-[-.035em]">Create your FIXO account</h1>
