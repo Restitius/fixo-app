@@ -15,6 +15,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as BookmarksRouteImport } from './routes/bookmarks'
 import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DisputesRouteImport } from './routes/disputes'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
@@ -73,6 +74,11 @@ const BookmarksRoute = BookmarksRouteImport.update({
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DisputesRoute = DisputesRouteImport.update({
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/bookings': typeof BookingsRoute
   '/bookmarks': typeof BookmarksRoute
   '/calendar': typeof CalendarRoute
+  '/dashboard': typeof DashboardRoute
   '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -265,6 +272,7 @@ export interface FileRoutesByTo {
   '/bookings': typeof BookingsRoute
   '/bookmarks': typeof BookmarksRoute
   '/calendar': typeof CalendarRoute
+  '/dashboard': typeof DashboardRoute
   '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -303,6 +311,7 @@ export interface FileRoutesById {
   '/bookings': typeof BookingsRoute
   '/bookmarks': typeof BookmarksRoute
   '/calendar': typeof CalendarRoute
+  '/dashboard': typeof DashboardRoute
   '/disputes': typeof DisputesRoute
   '/feedback': typeof FeedbackRoute
   '/forgot-password': typeof ForgotPasswordRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/bookmarks'
     | '/calendar'
+    | '/dashboard'
     | '/disputes'
     | '/feedback'
     | '/forgot-password'
@@ -379,6 +389,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/bookmarks'
     | '/calendar'
+    | '/dashboard'
     | '/disputes'
     | '/feedback'
     | '/forgot-password'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/bookings'
     | '/bookmarks'
     | '/calendar'
+    | '/dashboard'
     | '/disputes'
     | '/feedback'
     | '/forgot-password'
@@ -454,6 +466,7 @@ export interface RootRouteChildren {
   BookingsRoute: typeof BookingsRoute
   BookmarksRoute: typeof BookmarksRoute
   CalendarRoute: typeof CalendarRoute
+  DashboardRoute: typeof DashboardRoute
   DisputesRoute: typeof DisputesRoute
   FeedbackRoute: typeof FeedbackRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
@@ -527,6 +540,13 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/calendar'
       preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/disputes': {
@@ -742,6 +762,7 @@ const rootRouteChildren: RootRouteChildren = {
   BookingsRoute: BookingsRoute,
   BookmarksRoute: BookmarksRoute,
   CalendarRoute: CalendarRoute,
+  DashboardRoute: DashboardRoute,
   DisputesRoute: DisputesRoute,
   FeedbackRoute: FeedbackRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
