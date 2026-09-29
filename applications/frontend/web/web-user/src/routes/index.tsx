@@ -74,31 +74,18 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-// Entry point: landing for guests, dashboard for signed-in customers.
+// The public root is always the marketing landing page. Authenticated customers
+// enter the application through /dashboard so a saved session cannot replace
+// the public homepage with the legacy dashboard.
 function Home() {
-  const { t } = useTranslation("home");
-  const { customer, loading, logout } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-muted-foreground">{t("loading")}</div>
-      </div>
-    );
-  }
-
-  return customer ? (
-    <CustomerQuickHome customerName={customer.full_name} onLogout={logout} />
-  ) : (
-    <Landing />
-  );
+  return <Landing />;
 }
 
 function Landing() {
   return <LandingPage />;
 }
 
-function CustomerQuickHome({
+export function CustomerQuickHome({
   customerName,
   onLogout,
 }: {
