@@ -206,7 +206,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionStorage.removeItem("fixo.postAuthPath");
       window.location.assign(postAuthPath);
     } else {
-      navigate({ to: "/" });
+      navigate({ to: "/dashboard" });
     }
   };
 
