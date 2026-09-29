@@ -127,6 +127,36 @@
   background-size: 24px 24px;
 }
 
+/* Keep the registration card anchored to the viewport. Height-based scaling
+   preserves the complete form on compact laptop displays without introducing
+   document scrolling. */
+.auth-register-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: min(590px, calc(100vw - 24px));
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+@media (max-height: 900px) {
+  .auth-register-card {
+    transform: translate(-50%, -50%) scale(0.88);
+  }
+}
+
+@media (max-height: 780px) {
+  .auth-register-card {
+    transform: translate(-50%, -50%) scale(0.78);
+  }
+}
+
+@media (max-height: 660px) {
+  .auth-register-card {
+    transform: translate(-50%, -50%) scale(0.66);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .auth-wave {
     animation: none;
