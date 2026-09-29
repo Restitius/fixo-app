@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Location from 'expo-location'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -71,7 +72,23 @@ export default function BookingFlow() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
   const [showAddressForm, setShowAddressForm] = useState(false)
   const [addrDraft, setAddrDraft] = useState({ label: 'Home', recipient_name: '', phone: '', street_address: '', city: '', region: '' })
+  const [addrCoords, setAddrCoords] = useState<{ latitude: number; longitude: number } | null>(null)
+  const [locatingAddr, setLocatingAddr] = useState(false)
   const [savingAddress, setSavingAddress] = useState(false)
+
+  async function useMyLocationForAddress() {
+    setLocatingAddr(true)
+    try {
+      const perm = await Location.requestForegroundPermissionsAsync()
+      if (perm.status !== 'granted') return
+      const pos = await Location.getCurrentPositionAsync({})
+      setAddrCoords({ latitude: pos.coords.latitude, longitude: pos.coords.longitude })
+    } catch {
+      // permission denied or location unavailable — the customer can still type the address
+    } finally {
+      setLocatingAddr(false)
+    }
+  }
 
   const [promoCode, setPromoCode] = useState('')
   const [promoDiscount, setPromoDiscount] = useState<number | null>(null)
@@ -176,11 +193,14 @@ export default function BookingFlow() {
         street_address: addrDraft.street_address,
         city: addrDraft.city,
         region: addrDraft.region || null,
+        latitude: addrCoords?.latitude ?? null,
+        longitude: addrCoords?.longitude ?? null,
         is_default: (addresses ?? []).length === 0,
       })
       setAddresses((prev) => [...(prev ?? []), created])
       setSelectedAddressId(created.address_id)
       setShowAddressForm(false)
+      setAddrCoords(null)
     } finally {
       setSavingAddress(false)
     }
@@ -387,6 +407,12 @@ export default function BookingFlow() {
                           <TextInput value={addrDraft.city} onChangeText={(v) => setAddrDraft((d) => ({ ...d, city: v }))} placeholder={t('address.cityPlaceholder')} placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
                           <TextInput value={addrDraft.region} onChangeText={(v) => setAddrDraft((d) => ({ ...d, region: v }))} placeholder={t('address.regionPlaceholder')} placeholderTextColor="#9e9e9e" className="flex-1 rounded-xl bg-[#f5f5f5] px-4 py-3 text-[14px] text-ink" />
                         </View>
+                        <Pressable onPress={useMyLocationForAddress} disabled={locatingAddr} className="flex-row items-center gap-1.5">
+                          <LocationIcon size={16} color="#7210FF" />
+                          <Text className="text-[13px] font-medium text-primary">
+                            {locatingAddr ? t('address.locating', { defaultValue: 'Locating…' }) : addrCoords ? t('address.locationCaptured', { defaultValue: 'Location captured' }) : t('address.useMyLocation', { defaultValue: 'Use my current location' })}
+                          </Text>
+                        </Pressable>
                         <Button onPress={saveNewAddress} loading={savingAddress}>{t('address.saveAddress')}</Button>
                         {(addresses ?? []).length > 0 && (
                           <Pressable onPress={() => setShowAddressForm(false)}><Text className="text-center text-[13px] text-muted">{t('address.cancel')}</Text></Pressable>
