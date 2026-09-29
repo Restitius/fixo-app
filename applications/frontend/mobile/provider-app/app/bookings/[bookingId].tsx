@@ -64,6 +64,28 @@ export default function BookingDetailScreen() {
     load().finally(() => setLoading(false))
   }, [authLoading, access_token, bookingId])
 
+  // While the job is ON_THE_WAY, stream this device's real position so the
+  // customer's live-tracking view has something to show.
+  useEffect(() => {
+    if (detail?.status !== 'ON_THE_WAY') return
+    let sub: Location.LocationSubscription | null = null
+    let cancelled = false
+    Location.requestForegroundPermissionsAsync().then((perm) => {
+      if (cancelled || perm.status !== 'granted') return
+      return Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.Balanced, timeInterval: 15000, distanceInterval: 50 },
+        (pos) => void trackingApi.updateLocation(bookingId, pos.coords.latitude, pos.coords.longitude).catch(() => undefined),
+      )
+    }).then((s) => {
+      if (cancelled) s?.remove()
+      else sub = s ?? null
+    }).catch(() => undefined)
+    return () => {
+      cancelled = true
+      sub?.remove()
+    }
+  }, [detail?.status, bookingId])
+
   if (authLoading) return null
   if (!access_token) return <Redirect href="/auth" />
 
