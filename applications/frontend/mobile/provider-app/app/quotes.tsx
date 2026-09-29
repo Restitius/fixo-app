@@ -53,11 +53,16 @@ export default function Quotes() {
     setSelected(detail)
   }
 
+  // submit/withdraw only return {quote_id, status, ...timestamp} - the
+  // guarded UPDATE's confirmation row, not a full quote - so `selected` is
+  // updated by merging that into what's already loaded, never by trusting
+  // the mutation response as the full QuoteDetail (it crashed fmtMoney on a
+  // now-missing total_amount before this merge).
   async function submit(quoteId: string) {
     setBusy(true)
     try {
       const updated = await quotesApi.submit(quoteId)
-      setSelected(updated)
+      setSelected((prev) => (prev && prev.quote_id === quoteId ? { ...prev, status: updated.status } : prev))
       await load()
     } finally {
       setBusy(false)
@@ -68,7 +73,7 @@ export default function Quotes() {
     setBusy(true)
     try {
       const updated = await quotesApi.withdraw(quoteId)
-      setSelected(updated)
+      setSelected((prev) => (prev && prev.quote_id === quoteId ? { ...prev, status: updated.status } : prev))
       await load()
     } finally {
       setBusy(false)
