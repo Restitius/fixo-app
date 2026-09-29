@@ -7,6 +7,7 @@
 // service catalog, not fabricated line items.
 import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { router, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -99,6 +100,18 @@ export default function BookingFlow() {
   useEffect(() => {
     bookingApi.getProviderProfile(providerId).then(setProvider).catch(() => setLoadError(true))
   }, [providerId])
+
+  // A code picked on the Promotions screen arrives via AsyncStorage.
+  useEffect(() => {
+    AsyncStorage.getItem('fixo.pendingPromoCode')
+      .then((pending) => {
+        if (pending) {
+          setPromoCode(pending)
+          void AsyncStorage.removeItem('fixo.pendingPromoCode')
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     bookingApi.listAddresses().then((rows) => {
@@ -219,8 +232,11 @@ export default function BookingFlow() {
     try {
       await bookingApi.selectProvider(request.request_id, quote.provider_id)
       await bookingApi.acceptQuote(quote.quote_id)
-      const confirmed = await bookingApi.confirmBooking(quote.quote_id)
-      if (promoId) await fixoSdk.usePromotion(promoId).catch(() => {})
+      // The promo preview above was priced against the base service amount; the
+      // booking is created from the accepted quote, so the server re-validates and
+      // re-prices the discount against the quote's real amount — this is only ever
+      // a best-effort code to try, never the final say on what gets charged.
+      const confirmed = await bookingApi.confirmBooking(quote.quote_id, promoId ? promoCode.trim() : undefined)
       setBooking(confirmed)
       setStep('payment')
     } catch {

@@ -2,48 +2,13 @@ import { useEffect, useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import ScreenHeader from '../../components/ScreenHeader'
 import { CheckCircleIcon, HistoryIcon, TagIcon } from '../../components/icons'
-import { fixoSdk, type Promotion } from '../../lib/api-client'
-import { useAuth } from '../../lib/auth-context'
+import { fixoSdk, type BookingHistoryRow, type Promotion } from '../../lib/api-client'
 import { colorForSeed } from '../../lib/category-visuals'
 import { fmtMoney, timeAgo } from '../../lib/format'
-
-// The backend never records per-customer redemption history (PROMOTIONS.used_count
-// is a single global counter with no customer/date/amount trail), so "Redemption
-// History" below is a local, honest ledger of promotions this device has actually
-// applied via the real /promotions/{id}/use call — never invented example rows.
-interface RedemptionEntry {
-  promo_id: string
-  code: string
-  savings: number
-  currency: string
-  at: string
-}
-
-function ledgerKey(customerId?: string) {
-  return `fixo.promo_redemptions.${customerId ?? 'anon'}`
-}
-
-async function loadLedger(customerId?: string): Promise<RedemptionEntry[]> {
-  try {
-    const raw = await AsyncStorage.getItem(ledgerKey(customerId))
-    return raw ? (JSON.parse(raw) as RedemptionEntry[]) : []
-  } catch {
-    return []
-  }
-}
-
-async function appendLedger(customerId: string | undefined, entry: RedemptionEntry): Promise<RedemptionEntry[]> {
-  const next = [entry, ...(await loadLedger(customerId))].slice(0, 50)
-  try {
-    await AsyncStorage.setItem(ledgerKey(customerId), JSON.stringify(next))
-  } catch {
-    // storage unavailable — the ledger just won't persist across reloads
-  }
-  return next
-}
 
 export default function Promotions() {
   const { t } = useTranslation('profile')
@@ -51,23 +16,30 @@ export default function Promotions() {
     if (p.description) return p.description
     return t('promotions.discountOff', { amount: p.discount_type === 'PERCENT' ? `${p.discount_value}%` : fmtMoney(p.discount_value) })
   }
-  const { customer } = useAuth()
   const [promos, setPromos] = useState<Promotion[]>([])
-  const [ledger, setLedger] = useState<RedemptionEntry[]>([])
+  const [redemptions, setRedemptions] = useState<BookingHistoryRow[]>([])
   const [code, setCode] = useState('')
   const [amount, setAmount] = useState('')
-  const [applied, setApplied] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [applying, setApplying] = useState(false)
+  const [checking, setChecking] = useState(false)
 
   useEffect(() => {
     fixoSdk.listPromotions(20, 0).then(setPromos).catch(() => setPromos([]))
-    loadLedger(customer?.customer_id).then(setLedger)
-  }, [customer?.customer_id])
+    // "Recent redemptions" is real data: past bookings that actually carried a promo
+    // code, read off the booking's own discount snapshot — never a local, invented record.
+    fixoSdk
+      .bookingHistory(undefined, 100, 0)
+      .then((rows) => setRedemptions(rows.filter((r) => (r.discount_amount ?? 0) > 0 && r.promo_code)))
+      .catch(() => setRedemptions([]))
+  }, [])
 
-  async function apply(p?: Promotion) {
+  // Promo codes are only ever spent for real at checkout (each customer can use a
+  // given code once). This just previews the discount and hands the code to the
+  // booking screen — nothing is "used" from here.
+  async function check(p?: Promotion) {
     setError(null)
-    setApplied(null)
+    setPreview(null)
     const useCode = (p?.code ?? code).trim()
     const amt = Number(amount)
     if (!useCode) {
@@ -78,18 +50,19 @@ export default function Promotions() {
       setError(t('promotions.enterAmountError'))
       return
     }
-    setApplying(true)
+    setChecking(true)
     try {
       const validated = await fixoSdk.validatePromotion(useCode, amt)
-      await fixoSdk.usePromotion(validated.promo_id)
-      const entry: RedemptionEntry = { promo_id: validated.promo_id, code: validated.code, savings: validated.discount_amount, currency: 'TZS', at: new Date().toISOString() }
-      setLedger(await appendLedger(customer?.customer_id, entry))
-      setApplied(t('promotions.appliedMessage', { code: validated.code, amount: fmtMoney(validated.discount_amount) }))
-      setCode('')
+      setPreview(t('promotions.appliedMessage', { code: validated.code, amount: fmtMoney(validated.discount_amount) }))
+      try {
+        await AsyncStorage.setItem('fixo.pendingPromoCode', validated.code)
+      } catch {
+        // storage unavailable — the customer can still type the code at checkout
+      }
     } catch {
       setError(t('promotions.invalidError'))
     } finally {
-      setApplying(false)
+      setChecking(false)
     }
   }
 
@@ -117,16 +90,18 @@ export default function Promotions() {
                 placeholderTextColor="#9e9e9e"
                 className="flex-1 rounded-2xl bg-[#f5f5f5] px-5 py-4 text-[15px] text-ink"
               />
-              <Pressable onPress={() => apply()} disabled={applying} className="items-center justify-center rounded-2xl bg-primary px-5 py-4">
-                <Text className="text-[14px] font-bold text-white">{t('promotions.apply')}</Text>
+              <Pressable onPress={() => void check()} disabled={checking} className="items-center justify-center rounded-2xl bg-primary px-5 py-4">
+                <Text className="text-[14px] font-bold text-white">{t('promotions.check', { defaultValue: 'Check' })}</Text>
               </Pressable>
             </View>
           </View>
-          {applied && (
-            <View className="flex-row items-center gap-2 mt-3 rounded-xl bg-[#00B894]/10 px-4 py-3">
+          {preview && (
+            <Pressable onPress={() => router.push('/search')} className="flex-row items-center gap-2 mt-3 rounded-xl bg-[#00B894]/10 px-4 py-3">
               <CheckCircleIcon size={16} color="#00B894" />
-              <Text className="text-[13px] font-medium flex-1" style={{ color: '#00B894' }}>{applied}</Text>
-            </View>
+              <Text className="text-[13px] font-medium flex-1" style={{ color: '#00B894' }}>
+                {preview} {t('promotions.readyAtCheckout', { defaultValue: '— ready to book.' })}
+              </Text>
+            </Pressable>
           )}
           {error && (
             <View className="rounded-xl bg-[#FF6B6B]/10 px-4 py-3 mt-3">
@@ -155,20 +130,20 @@ export default function Promotions() {
           </View>
 
           <Text className="text-[16px] font-bold text-ink mt-7 mb-3">{t('promotions.redemptionHistory')}</Text>
-          {ledger.length === 0 ? (
+          {redemptions.length === 0 ? (
             <View className="items-center py-8">
               <HistoryIcon size={40} color="#e0e0e0" />
               <Text className="text-[13px] text-muted mt-2">{t('promotions.redemptionEmpty')}</Text>
             </View>
           ) : (
             <View className="flex-col gap-3">
-              {ledger.map((r, i) => (
-                <View key={i} className="flex-row items-center justify-between rounded-2xl border border-hairline p-4">
+              {redemptions.map((r) => (
+                <View key={r.booking_id} className="flex-row items-center justify-between rounded-2xl border border-hairline p-4">
                   <View>
-                    <Text className="font-bold text-primary text-[14px]">{r.code}</Text>
-                    <Text className="text-[12px] text-muted mt-0.5">{timeAgo(r.at)}</Text>
+                    <Text className="font-bold text-primary text-[14px]">{r.promo_code}</Text>
+                    <Text className="text-[12px] text-muted mt-0.5">{r.booking_number} · {timeAgo(r.created_at)}</Text>
                   </View>
-                  <Text className="font-bold text-[#00B894] text-[14px]">-{fmtMoney(r.savings, r.currency)}</Text>
+                  <Text className="font-bold text-[#00B894] text-[14px]">-{fmtMoney(r.discount_amount ?? 0, r.currency)}</Text>
                 </View>
               ))}
             </View>
