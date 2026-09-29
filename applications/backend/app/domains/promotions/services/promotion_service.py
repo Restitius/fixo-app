@@ -13,16 +13,10 @@ class PromotionService:
     async def list_active(self, limit: int = 20, offset: int = 0) -> list[dict[str, Any]]:
         return await self._repo.list_active(limit, offset)
 
-    async def validate(self, code: str, amount: float) -> dict[str, Any]:
+    async def validate(self, code: str, amount: float, customer_id: str | None = None) -> dict[str, Any]:
         if amount <= 0:
             raise ValueError("Order amount must be positive")
-        row = await self._repo.validate(code.strip().upper(), amount)
+        row = await self._repo.validate(code.strip().upper(), amount, customer_id)
         if not row:
             raise ValueError("Promotion code is not valid or has expired")
-        return row
-
-    async def use(self, promo_id: str) -> dict[str, Any]:
-        row = await self._repo.use(promo_id)
-        if not row:
-            raise ValueError("Promotion is no longer available")
         return row
