@@ -91,6 +91,22 @@ function BookingsPage() {
     materialsApi.list(selectedId).then(setMaterials).catch(() => setMaterials([]));
   }, [selectedId]);
 
+  // While a job is ON_THE_WAY, share this device's real position every 15s so the
+  // customer's live-tracking view has something to show — nothing sent this before.
+  useEffect(() => {
+    if (!selectedId || detail?.status !== "ON_THE_WAY" || !navigator.geolocation) return;
+    const ping = () => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => void trackingApi.updateLocation(selectedId, pos.coords.latitude, pos.coords.longitude).catch(() => undefined),
+        () => undefined,
+        { timeout: 8000 },
+      );
+    };
+    ping();
+    const timer = setInterval(ping, 15000);
+    return () => clearInterval(timer);
+  }, [selectedId, detail?.status]);
+
   const rows = useMemo(
     () =>
       bookings.filter(
