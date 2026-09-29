@@ -201,6 +201,9 @@ function BookPage() {
   const [quotes, setQuotes] = useState<Quote[] | null>(null);
   const [acceptingQuoteId, setAcceptingQuoteId] = useState<string | null>(null);
   const [providerSort, setProviderSort] = useState<"Best Match" | "Fastest" | "Lowest Price">("Best Match");
+  const [promoCode, setPromoCode] = useState("");
+  const [promoPreview, setPromoPreview] = useState<{ code: string; discount_amount: number } | null>(null);
+  const [checkingPromo, setCheckingPromo] = useState(false);
 
   // Step 6: payment
   const [booking, setBooking] = useState<BookingRow | null>(null);
@@ -223,6 +226,19 @@ function BookPage() {
     if (!(access_token && !loading)) return;
     bookingApi.catalogCategories().then(setCategories).catch(() => setCategories([]));
   }, [access_token, loading]);
+
+  // A code picked on the Promotions page ("Use at checkout") arrives via sessionStorage.
+  useEffect(() => {
+    try {
+      const pending = sessionStorage.getItem("fixo.pendingPromoCode");
+      if (pending) {
+        setPromoCode(pending);
+        sessionStorage.removeItem("fixo.pendingPromoCode");
+      }
+    } catch {
+      // sessionStorage unavailable — the customer can still type the code by hand
+    }
+  }, []);
 
   const resolvedCategory = useMemo(
     () => categories?.find((c) => c.name === categoryName || c.code === categoryName) ?? null,
@@ -395,13 +411,45 @@ function BookPage() {
     try {
       await bookingApi.selectProvider(request.request_id, quote.provider_id);
       await bookingApi.acceptQuote(quote.quote_id);
-      const confirmed = await bookingApi.confirmBooking(quote.quote_id);
+      const confirmed = await bookingApi.confirmBooking(quote.quote_id, promoCode.trim() || undefined);
       setBooking(confirmed);
+      if (confirmed.discount_amount) {
+        toast.success(
+          t("provider.promo.appliedToast", {
+            defaultValue: "{{code}} saved you {{amount}}",
+            code: confirmed.promo_code,
+            amount: fmtMoney(confirmed.discount_amount, confirmed.currency),
+          }),
+        );
+      }
       goTo("Payment");
     } catch {
       // apiClient already toasts the error
     } finally {
       setAcceptingQuoteId(null);
+    }
+  }
+
+  async function checkPromoCode() {
+    const code = promoCode.trim();
+    const quote = sortedQuotes[0];
+    if (!code || !quote) return;
+    setCheckingPromo(true);
+    try {
+      const res = await fixoSdk.validatePromotion(code, quote.amount);
+      setPromoPreview({ code: res.code, discount_amount: res.discount_amount });
+      toast.success(
+        t("provider.promo.previewToast", {
+          defaultValue: "{{code}} applies — saves {{amount}} at checkout",
+          code: res.code,
+          amount: fmtMoney(res.discount_amount, quote.currency),
+        }),
+      );
+    } catch {
+      setPromoPreview(null);
+      // apiClient already toasts the error
+    } finally {
+      setCheckingPromo(false);
     }
   }
 
@@ -1130,6 +1178,35 @@ function BookPage() {
                   >
                     <Sparkles className="size-4" /> {t("provider.autoAssignNow")}
                   </button>
+                </div>
+
+                <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-dashed border-border p-3">
+                  <Tag className="size-4 shrink-0 text-muted-foreground" />
+                  <input
+                    value={promoCode}
+                    onChange={(e) => {
+                      setPromoCode(e.target.value);
+                      setPromoPreview(null);
+                    }}
+                    placeholder={t("provider.promo.placeholder", { defaultValue: "Promo code (optional)" })}
+                    className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  />
+                  <button
+                    onClick={() => void checkPromoCode()}
+                    disabled={!promoCode.trim() || checkingPromo}
+                    className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted disabled:opacity-50"
+                  >
+                    {checkingPromo && <Loader2 className="size-3.5 animate-spin" />}
+                    {t("provider.promo.check", { defaultValue: "Check code" })}
+                  </button>
+                  {promoPreview && (
+                    <span className="w-full text-xs font-medium text-success">
+                      {t("provider.promo.willApply", {
+                        defaultValue: "{{code}} will be applied when you accept a quote.",
+                        code: promoPreview.code,
+                      })}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mt-4 space-y-3">
