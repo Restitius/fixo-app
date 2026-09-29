@@ -2,7 +2,7 @@
 // names read directly from quotations_router.py / the real PRV.QUOTE.*
 // SQL this session (list is a summary shape, get is the full breakdown).
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { FileText, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,6 +18,9 @@ const title = "Quotations — FIXO Provider";
 const description = "Build, send and track quotations with labour, materials, transport, tax and discount breakdowns.";
 
 export const Route = createFileRoute("/quotes")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    requestId: typeof search["requestId"] === "string" ? search["requestId"] : undefined,
+  }),
   head: () => ({
     meta: [
       { title },
@@ -31,6 +34,8 @@ export const Route = createFileRoute("/quotes")({
 });
 
 function QuotesPage() {
+  const { requestId } = Route.useSearch();
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ALL");
   const [quotes, setQuotes] = useState<QuoteRow[]>([]);
@@ -38,16 +43,19 @@ function QuotesPage() {
   const [selectedDetail, setSelectedDetail] = useState<QuoteDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [showCreate, setShowCreate] = useState(!!requestId);
 
-  useEffect(() => {
+  const load = () =>
     quotesApi
       .list()
       .then((rows) => {
         setQuotes(rows);
         if (rows[0]) setSelectedId(rows[0].quote_id);
       })
-      .catch((err) => toast.error(err instanceof Error ? err.message : "Could not load quotations."))
-      .finally(() => setLoading(false));
+      .catch((err) => toast.error(err instanceof Error ? err.message : "Could not load quotations."));
+
+  useEffect(() => {
+    load().finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -68,12 +76,16 @@ function QuotesPage() {
     [quotes, search, status],
   );
 
+  // Both mutations return only {quote_id, status, updated_at/submitted_at} -
+  // the guarded UPDATE's RETURNING clause, not a full quote - so the list row
+  // and the open detail panel are updated by merging that into what's already
+  // loaded, never by treating the mutation response as the full QuoteDetail.
   async function withdraw(quoteId: string) {
     setBusy(true);
     try {
       const updated = await quotesApi.withdraw(quoteId);
       setQuotes((prev) => prev.map((q) => (q.quote_id === quoteId ? { ...q, status: updated.status } : q)));
-      setSelectedDetail(updated);
+      setSelectedDetail((prev) => (prev && prev.quote_id === quoteId ? { ...prev, status: updated.status } : prev));
       toast.success("Quote withdrawn.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not withdraw this quote.");
@@ -87,7 +99,7 @@ function QuotesPage() {
     try {
       const updated = await quotesApi.submit(quoteId);
       setQuotes((prev) => prev.map((q) => (q.quote_id === quoteId ? { ...q, status: updated.status } : q)));
-      setSelectedDetail(updated);
+      setSelectedDetail((prev) => (prev && prev.quote_id === quoteId ? { ...prev, status: updated.status } : prev));
       toast.success("Quote sent to the customer.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not submit this quote.");
@@ -127,9 +139,44 @@ function QuotesPage() {
           },
         ]}
       />
-      <p className="mt-2 text-xs text-muted-foreground">
-        New quotes are created from a request's "Send quotation" action on the Requests page.
-      </p>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground">
+          New quotes are created from a request's "Send quotation" action on the Requests page.
+        </p>
+        {requestId && (
+          <button
+            onClick={() => setShowCreate((v) => !v)}
+            className="shrink-0 rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-muted"
+          >
+            {showCreate ? "Cancel" : "New quote"}
+          </button>
+        )}
+      </div>
+
+      {requestId && showCreate && (
+        <div className="mt-4">
+          <Panel title="New quote">
+            <CreateQuoteForm
+              requestId={requestId}
+              busy={busy}
+              setBusy={setBusy}
+              onSaved={async (quoteId) => {
+                setShowCreate(false);
+                await load();
+                // save() upgrades the request's existing auto-quote in place
+                // (same quote_id) far more often than it creates a new one, so
+                // setSelectedId(quoteId) alone is frequently a no-op - the id
+                // was already selected, the [selectedId] effect never re-fires,
+                // and the panel keeps showing the pre-save total/status. Fetch
+                // the fresh detail directly instead of relying on that effect.
+                setSelectedId(quoteId);
+                quotesApi.get(quoteId).then(setSelectedDetail).catch(() => undefined);
+                void navigate({ to: "/quotes", search: { requestId: undefined } });
+              }}
+            />
+          </Panel>
+        </div>
+      )}
 
       <div className="mt-4 grid gap-4 pb-6 lg:grid-cols-[1fr_360px]">
         {rows.length === 0 ? (
@@ -218,6 +265,82 @@ function Line({ label, value }: { label: string; value: string }) {
     <div className="flex items-center justify-between">
       <dt className="text-muted-foreground">{label}</dt>
       <dd className="font-semibold">{value}</dd>
+    </div>
+  );
+}
+
+function CreateQuoteForm({
+  requestId,
+  busy,
+  setBusy,
+  onSaved,
+}: {
+  requestId: string;
+  busy: boolean;
+  setBusy: (v: boolean) => void;
+  onSaved: (quoteId: string) => void;
+}) {
+  const [totalAmount, setTotalAmount] = useState("");
+  const [labourCost, setLabourCost] = useState("");
+  const [materialsCost, setMaterialsCost] = useState("");
+  const [notes, setNotes] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  async function save() {
+    setError(null);
+    const total = Number(totalAmount);
+    if (!total || total <= 0) {
+      setError("Enter a valid total amount");
+      return;
+    }
+    setBusy(true);
+    try {
+      const created = await quotesApi.save(requestId, {
+        total_amount: total,
+        labour_cost: labourCost ? Number(labourCost) : null,
+        materials_cost: materialsCost ? Number(materialsCost) : null,
+        notes: notes || null,
+      });
+      toast.success("Quote saved as a draft.");
+      onSaved(created.quote_id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save this quote.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const field = "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none";
+
+  return (
+    <div className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-3">
+        <label className="text-xs text-muted-foreground">
+          Total amount *
+          <input type="number" min="1" value={totalAmount} onChange={(e) => setTotalAmount(e.target.value)} className={`mt-1 ${field}`} />
+        </label>
+        <label className="text-xs text-muted-foreground">
+          Labour cost
+          <input type="number" min="0" value={labourCost} onChange={(e) => setLabourCost(e.target.value)} className={`mt-1 ${field}`} />
+        </label>
+        <label className="text-xs text-muted-foreground">
+          Materials cost
+          <input type="number" min="0" value={materialsCost} onChange={(e) => setMaterialsCost(e.target.value)} className={`mt-1 ${field}`} />
+        </label>
+      </div>
+      <label className="block text-xs text-muted-foreground">
+        Notes for the customer (optional)
+        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className={`mt-1 ${field}`} />
+      </label>
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      <button
+        onClick={() => void save()}
+        disabled={busy}
+        className="rounded-xl px-4 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
+        style={{ backgroundImage: "var(--gradient-primary)" }}
+      >
+        Save as draft
+      </button>
     </div>
   );
 }
