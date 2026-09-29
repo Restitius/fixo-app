@@ -138,6 +138,7 @@ api_v1_router.include_router(provider_auth_router)
 # every one of its endpoints 404'd unconditionally. Found via live
 # end-to-end testing while wiring web-provider's availability.tsx.
 api_v1_router.include_router(provider_availability_router)
+api_v1_router.include_router(provider_dashboard_router)
 api_v1_router.include_router(provider_onboarding_router)
 api_v1_router.include_router(provider_profile_router)
 api_v1_router.include_router(provider_business_router)
