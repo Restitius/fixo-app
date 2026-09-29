@@ -30,6 +30,7 @@ import {
   Sparkles,
   Star,
   Tag,
+  LocateFixed,
   Truck,
   Tv,
   UserX,
@@ -51,6 +52,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
 import { fmtMoney } from "@/lib/format";
+import { getCurrentPosition, type Coordinates } from "@/lib/geolocation";
 import {
   bookingApi,
   fixoSdk,
@@ -185,6 +187,19 @@ function BookPage() {
     region: "",
   });
   const [savingAddress, setSavingAddress] = useState(false);
+  const [addrCoords, setAddrCoords] = useState<Coordinates | null>(null);
+  const [locatingAddr, setLocatingAddr] = useState(false);
+
+  async function goLocateAddress() {
+    setLocatingAddr(true);
+    try {
+      setAddrCoords(await getCurrentPosition());
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not get your location.");
+    } finally {
+      setLocatingAddr(false);
+    }
+  }
   const [preferredDate, setPreferredDate] = useState<Date | undefined>(undefined);
   const [timeWindow, setTimeWindow] = useState<(typeof TIME_WINDOWS)[number]["value"] | null>(null);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -352,11 +367,14 @@ function BookPage() {
         street_address: addrDraft.street_address,
         city: addrDraft.city,
         region: addrDraft.region || null,
+        latitude: addrCoords?.latitude ?? null,
+        longitude: addrCoords?.longitude ?? null,
         is_default: (addresses ?? []).length === 0,
       });
       setAddresses((prev) => [...(prev ?? []), created]);
       setSelectedAddressId(created.address_id);
       setShowAddressForm(false);
+      setAddrCoords(null);
     } finally {
       setSavingAddress(false);
     }
@@ -898,6 +916,16 @@ function BookPage() {
                             className="h-11 rounded-xl border border-input bg-transparent px-3 text-sm outline-none"
                           />
                         </div>
+                        <button
+                          onClick={() => void goLocateAddress()}
+                          disabled={locatingAddr}
+                          className="mt-3 flex items-center gap-1.5 text-sm font-medium text-primary hover:underline disabled:opacity-60"
+                        >
+                          {locatingAddr ? <Loader2 className="size-3.5 animate-spin" /> : <LocateFixed className="size-3.5" />}
+                          {addrCoords
+                            ? t("address.locationCaptured", { defaultValue: "Location captured" })
+                            : t("address.useMyLocation", { defaultValue: "Use my current location" })}
+                        </button>
                         <div className="mt-4 flex gap-2">
                           <button
                             onClick={saveNewAddress}
