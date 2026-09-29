@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { AnimatedAuthShell, AuthBrand } from "@/components/auth/AnimatedAuthShell";
 import { bookingApi, onboardingApi } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
+import { getCurrentPosition, type Coordinates } from "@/lib/geolocation";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({ meta: [{ title: "Set up your FIXO account" }] }),
@@ -34,7 +35,27 @@ function CustomerSetupPage() {
   const [language, setLanguage] = useState("English");
   const [notifications, setNotifications] = useState(true);
   const [useLocation, setUseLocation] = useState(false);
+  const [coords, setCoords] = useState<Coordinates | null>(null);
+  const [locating, setLocating] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  async function toggleUseLocation() {
+    const next = !useLocation;
+    setUseLocation(next);
+    if (!next) {
+      setCoords(null);
+      return;
+    }
+    setLocating(true);
+    try {
+      setCoords(await getCurrentPosition());
+    } catch (error) {
+      setUseLocation(false);
+      toast.error(error instanceof Error ? error.message : "Could not get your location.");
+    } finally {
+      setLocating(false);
+    }
+  }
 
   useEffect(() => {
     if (!access_token || !customer) return;
@@ -64,8 +85,8 @@ function CustomerSetupPage() {
         city,
         region: city,
         postal_code: null,
-        latitude: null,
-        longitude: null,
+        latitude: coords?.latitude ?? null,
+        longitude: coords?.longitude ?? null,
         delivery_instructions: null,
         is_default: true,
       });
@@ -120,14 +141,19 @@ function CustomerSetupPage() {
               type="button"
               role="switch"
               aria-checked={useLocation}
-              onClick={() => setUseLocation((value) => !value)}
-              className={`relative h-8 w-14 rounded-full transition ${useLocation ? "bg-[#6b1cf4]" : "bg-[#d9dbe6]"}`}
+              disabled={locating}
+              onClick={() => void toggleUseLocation()}
+              className={`relative h-8 w-14 rounded-full transition disabled:opacity-60 ${useLocation ? "bg-[#6b1cf4]" : "bg-[#d9dbe6]"}`}
             >
               <span
                 className={`absolute top-1 size-6 rounded-full bg-white shadow transition ${useLocation ? "left-7" : "left-1"}`}
               />
             </button>
           </div>
+          {locating && <p className="px-1 text-xs text-[#747997]">Getting your location…</p>}
+          {coords && (
+            <p className="px-1 text-xs text-[#00b894]">Location captured — we'll pin your address precisely.</p>
+          )}
           <SetupField label="City / Area" icon={<MapPin />}>
             <select value={city} onChange={(event) => setCity(event.target.value)}>
               {cities.map((item) => (

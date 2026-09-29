@@ -43,6 +43,8 @@ import {
   Cookie,
   CloudDownload,
   ChevronRight,
+  Loader2,
+  LocateFixed,
 } from "lucide-react";
 
 import { PageShell } from "@/components/dashboard/PageShell";
@@ -51,6 +53,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { DeleteAccountDialog } from "@/components/profile/DeleteAccountDialog";
 import { LANGUAGE_NAMES } from "@/lib/language";
+import { getCurrentPosition, type Coordinates } from "@/lib/geolocation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -498,6 +501,20 @@ function AddressesTab() {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [draft, setDraft] = useState({ label: "Home", recipient_name: "", phone: "", street_address: "", city: "", region: "" });
+  const [coords, setCoords] = useState<Coordinates | null>(null);
+  const [locating, setLocating] = useState(false);
+
+  async function goLocateAddress() {
+    setLocating(true);
+    try {
+      setCoords(await getCurrentPosition());
+      toast.success(t("addresses.locationCaptured", { defaultValue: "Location captured." }));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not get your location.");
+    } finally {
+      setLocating(false);
+    }
+  }
 
   const load = useCallback(() => {
     void bookingApi.listAddresses().then(setAddresses).catch(() => setAddresses([]));
@@ -519,9 +536,12 @@ function AddressesTab() {
         street_address: draft.street_address,
         city: draft.city,
         region: draft.region || null,
+        latitude: coords?.latitude ?? null,
+        longitude: coords?.longitude ?? null,
         is_default: (addresses ?? []).length === 0,
       });
       setDraft({ label: "Home", recipient_name: "", phone: "", street_address: "", city: "", region: "" });
+      setCoords(null);
       setShowForm(false);
       load();
       toast.success(t("addresses.addressSaved"));
@@ -591,6 +611,17 @@ function AddressesTab() {
                   <Input value={draft.region} onChange={(e) => setDraft((d) => ({ ...d, region: e.target.value }))} />
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={() => void goLocateAddress()}
+                disabled={locating}
+                className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline disabled:opacity-60"
+              >
+                {locating ? <Loader2 className="size-3.5 animate-spin" /> : <LocateFixed className="size-3.5" />}
+                {coords
+                  ? t("addresses.locationCaptured", { defaultValue: "Location captured" })
+                  : t("addresses.useMyLocation", { defaultValue: "Use my current location" })}
+              </button>
               <div className="flex gap-2">
                 <Button disabled={saving} onClick={() => void save()}>{saving ? t("addresses.saving") : t("addresses.saveAddress")}</Button>
                 <Button variant="ghost" onClick={() => setShowForm(false)}>{t("addresses.cancel")}</Button>
