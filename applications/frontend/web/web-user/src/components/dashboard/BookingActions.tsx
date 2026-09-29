@@ -122,15 +122,20 @@ export function BookingActions({ booking, onChanged }: Props) {
   }
 
   if (status === "ON_THE_WAY") {
-    const eta = tracking?.latest_position?.eta_minutes;
+    const position = tracking?.latest_position;
+    const eta = position?.eta_minutes;
     cards.push(
       <Card key="track" icon={MapPinned} title="Your provider is on the way">
         <p className="text-sm">
-          {eta != null ? `Arriving in about ${eta} min.` : "Waiting for the provider's first location update."}
+          {!position
+            ? "Waiting for the provider's first location update."
+            : eta != null
+              ? `Arriving in about ${eta} min.`
+              : "Your provider is on the move — an ETA isn't available yet."}
         </p>
-        {tracking?.latest_position?.recorded_at && (
+        {position?.recorded_at && (
           <p className="mt-1 text-xs text-muted-foreground">
-            Last update {new Date(tracking.latest_position.recorded_at).toLocaleTimeString()}
+            Last update {new Date(position.recorded_at).toLocaleTimeString()}
           </p>
         )}
       </Card>,
@@ -146,7 +151,8 @@ export function BookingActions({ booking, onChanged }: Props) {
   }
 
   for (const change of changes) {
-    const extra = change.additional_price ?? Number(change.proposed_value) ?? 0;
+    const parsedValue = Number(change.proposed_value);
+    const extra = change.additional_price ?? (Number.isFinite(parsedValue) ? parsedValue : 0);
     cards.push(
       <Card key={change.change_id} icon={CheckCircle2} title="Your provider proposed a change">
         <p className="text-sm">{change.new_work || change.reason || `${humanize(change.change_type)} change`}</p>
