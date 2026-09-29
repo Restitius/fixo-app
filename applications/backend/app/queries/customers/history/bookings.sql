@@ -1,6 +1,7 @@
 -- CUS.HISTORY.BOOKINGS - past bookings with service/provider context
 SELECT b.booking_id, b.booking_number, b.status, b.scheduled_date, b.time_window,
        b.agreed_amount, b.currency, b.created_at, b.completed_at,
+       b.promo_code, b.discount_amount,
        s.name AS service_name, p.display_name AS provider_name
 FROM "BOOKINGS" b
 LEFT JOIN "SERVICES" s ON s.service_id = b.service_id

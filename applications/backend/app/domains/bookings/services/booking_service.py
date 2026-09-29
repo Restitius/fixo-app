@@ -32,6 +32,7 @@ class BookingService:
         workflows: Any,     # WorkflowManager (injected)
         notifications: Any | None = None,
         settlement: Any | None = None,   # PaymentSettlementService
+        promotions: Any | None = None,   # PromotionService — resolves a promo code at checkout
     ) -> None:
         self._settlement = settlement
         self._bookings = bookings
@@ -41,10 +42,13 @@ class BookingService:
         self._gateway = gateway
         self._workflows = workflows
         self._notifications = notifications
+        self._promotions = promotions
 
     # -- Module 16: confirmation ------------------------------------------------
 
-    async def confirm_from_quote(self, customer_id: str, quote_id: str) -> dict[str, Any]:
+    async def confirm_from_quote(
+        self, customer_id: str, quote_id: str, promo_code: str | None = None,
+    ) -> dict[str, Any]:
         """QUOTE_ACCEPTED request + ACCEPTED quote → CONFIRMED booking."""
         quote = await self._quotations.get_owned(customer_id, quote_id)
         if not quote or quote["status"] != "ACCEPTED":
@@ -58,9 +62,27 @@ class BookingService:
                 f"Request must be QUOTE_ACCEPTED to book (current: {request['status']})"
             )
 
-        row = await self._bookings.create(customer_id, quote_id)
+        promo_id = None
+        discount_amount = 0.0
+        code = (promo_code or "").strip().upper()
+        if code:
+            if self._promotions is None:
+                raise ValidationError("Promotion code is not valid or has expired")
+            try:
+                promo = await self._promotions.validate(code, float(quote["amount"]), customer_id)
+            except ValueError as exc:
+                raise ValidationError(str(exc)) from None
+            promo_id = str(promo["promo_id"])
+            discount_amount = float(promo["discount_amount"])
+
+        row = await self._bookings.create(customer_id, quote_id, promo_id, code or None, discount_amount)
         if not row:
-            raise ValidationError("Could not create the booking")
+            # Either the quote/request guard failed, or (rarely) a concurrent booking
+            # just used the same code — the SQL guard refuses both the same way.
+            raise ValidationError(
+                "This promotion was just used up. Try booking again without a code."
+                if promo_id else "Could not create the booking"
+            )
 
         # Mirror the confirmation on the request machine.
         await self._workflows.transition(
@@ -73,8 +95,10 @@ class BookingService:
             from_state="QUOTE_ACCEPTED", to_state="CONFIRMED",
         )
 
-        await self._timeline(customer_id, row["booking_id"],
-                             "CREATED", f"Booking {row['booking_number']} confirmed")
+        detail = f"Booking {row['booking_number']} confirmed"
+        if discount_amount:
+            detail += f" — promo {code} saved {discount_amount:g} {row.get('currency', '')}".rstrip()
+        await self._timeline(customer_id, row["booking_id"], "CREATED", detail)
         # NTF.BOOKING.CONFIRMED.V1 outbox rows (customer + assigned provider)
         # are queued atomically inside CUS.BOOKING.CREATE itself.
         logger.info("booking %s confirmed for customer %s",

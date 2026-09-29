@@ -23,10 +23,18 @@ class BookingSqlAdapter:
     def __init__(self, sql_manager: SQLQueryManager) -> None:
         self._sql = sql_manager
 
-    async def create(self, customer_id: str, quote_id: str) -> dict[str, Any] | None:
+    async def create(
+        self, customer_id: str, quote_id: str,
+        promo_id: str | None = None, promo_code: str | None = None,
+        discount_amount: float = 0,
+    ) -> dict[str, Any] | None:
         return await self._sql.execute(
             BookingQueryIds.CREATE,
-            {"customer_id": customer_id, "quote_id": quote_id},
+            {
+                "customer_id": customer_id, "quote_id": quote_id,
+                "promo_id": promo_id, "promo_code": promo_code,
+                "discount_amount": discount_amount if promo_id else None,
+            },
             fetch="one",
         )
 

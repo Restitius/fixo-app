@@ -27,10 +27,4 @@ async def validate(
     amount: float = Query(..., gt=0),
 ) -> dict:
     svc = get_composition().promotion_service()
-    return ok(await svc.validate(code, amount))
-
-
-@router.post("/{promo_id}/use")
-async def use(promo_id: str, customer: CurrentCustomer) -> dict:
-    svc = get_composition().promotion_service()
-    return ok(await svc.use(promo_id), title="Promotion applied")
+    return ok(await svc.validate(code, amount, str(customer["customer_id"])))

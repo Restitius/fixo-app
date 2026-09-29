@@ -15,12 +15,15 @@ router = APIRouter(prefix="/bookings", tags=["bookings"])
 
 class BookingCreate(BaseModel):
     quote_id: str
+    promo_code: str | None = Field(default=None, max_length=40)
 
 
 @router.post("", status_code=201)
 async def confirm(payload: BookingCreate, customer: CurrentCustomer) -> dict:
     svc = get_composition().booking_service()
-    result = await svc.confirm_from_quote(str(customer["customer_id"]), payload.quote_id)
+    result = await svc.confirm_from_quote(
+        str(customer["customer_id"]), payload.quote_id, payload.promo_code
+    )
     return ok(result, title="Booking confirmed", status_code=201)
 
 
